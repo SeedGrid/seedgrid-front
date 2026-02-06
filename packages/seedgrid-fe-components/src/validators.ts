@@ -1,3 +1,44 @@
+import blockedEmailDomainsConfig from "./blocked-email-domains.json";
+
+type BlockedEmailDomainsConfig = {
+  blockedEmailDomains?: string[];
+};
+
+export const DEFAULT_BLOCKED_EMAIL_DOMAINS = (
+  blockedEmailDomainsConfig as BlockedEmailDomainsConfig
+).blockedEmailDomains ?? [];
+
+type SeedgridGlobal = {
+  __seedgridBlockedEmailDomains?: string[];
+};
+
+function getRuntimeBlockedEmailDomains() {
+  if (typeof globalThis === "undefined") return [];
+  const globalConfig = globalThis as SeedgridGlobal;
+  if (!Array.isArray(globalConfig.__seedgridBlockedEmailDomains)) return [];
+  return globalConfig.__seedgridBlockedEmailDomains;
+}
+
+export function getBlockedEmailDomains(extra?: string[]) {
+  const merged = [
+    ...DEFAULT_BLOCKED_EMAIL_DOMAINS,
+    ...getRuntimeBlockedEmailDomains(),
+    ...(extra ?? [])
+  ];
+  const normalized = merged
+    .map((domain) => domain.trim().toLowerCase())
+    .filter(Boolean);
+  return Array.from(new Set(normalized));
+}
+
+export function isBlockedEmailDomain(email: string, extra?: string[]) {
+  const parts = email.trim().toLowerCase().split("@");
+  const domain = parts.length > 1 ? parts[parts.length - 1] : "";
+  if (!domain) return false;
+  const blocked = new Set(getBlockedEmailDomains(extra));
+  return blocked.has(domain);
+}
+
 export function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }

@@ -35,8 +35,6 @@ export type SgInputTextProps = {
   showCharCounter?: boolean;
   iconButtons?: React.ReactNode[];
   readOnly?: boolean;
-  contentPaddingHorizontal?: number;
-  contentPaddingVertical?: number;
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;

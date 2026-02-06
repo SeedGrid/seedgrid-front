@@ -34,8 +34,6 @@ export type SgInputTextAreaProps = {
   onClear?: () => void;
   withBorder?: boolean;
   borderRadius?: number | string;
-  contentPaddingHorizontal?: number;
-  contentPaddingVertical?: number;
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;
@@ -177,7 +175,8 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
     bgClass,
     paddingLeft,
     paddingRight,
-    "pt-5"
+    "pt-4",
+    "pb-3"
   ].join(" ");
   let resolvedBorderRadius: string | undefined;
   if (props.borderRadius !== undefined) {
@@ -211,7 +210,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
           className={props.className ?? finalClass}
           style={textareaStyle}
           maxLength={props.maxLength}
-          rows={props.maxLines ?? 4}
+          rows={props.maxLines ?? 2}
           readOnly={props.enabled === false ? true : textareaProps.readOnly}
           disabled={props.enabled === false}
           {...textareaProps}

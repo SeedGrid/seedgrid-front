@@ -4,6 +4,9 @@
   "packageManager": "pnpm@9.12.0",
   "scripts": {
     "dev": "turbo dev",
+    "dev:components": "pnpm -C packages/seedgrid-fe-components build --watch",
+    "dev:showcase": "pnpm -C apps/showcase dev",
+    "dev:showcase:with-components": "pnpm -r --parallel dev:components dev:showcase",
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck"

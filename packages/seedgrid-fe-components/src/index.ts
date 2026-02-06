@@ -14,7 +14,7 @@ export { SgInputCEP } from "./inputs/SgInputCEP";
 export type { SgInputCEPProps } from "./inputs/SgInputCEP";
 export { SgInputFone } from "./inputs/SgInputFone";
 export type { SgInputFoneProps } from "./inputs/SgInputFone";
-export { SgInputEmail } from "./inputs/InputEmail";
+export { SgInputEmail } from "./inputs/SgInputEmail";
 export { SgInputPassword } from "./inputs/SgInputPassword";
 export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
@@ -23,6 +23,9 @@ export {
   isValidCpf,
   isValidCnpj,
   isValidEmail,
+  isBlockedEmailDomain,
+  getBlockedEmailDomains,
+  DEFAULT_BLOCKED_EMAIL_DOMAINS,
   validatePassword,
   validateBirthDate,
   isDateAfter,
