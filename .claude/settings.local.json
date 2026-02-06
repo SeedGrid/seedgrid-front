@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(npx next dev:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)",
+      "Bash(while read:*)",
+      "Bash(do node -e \"console.log\\(require\\(''$f''\\).version\\)\")",
+      "Bash(done)",
+      "Bash(pnpm build:*)"
+    ]
+  }
+}

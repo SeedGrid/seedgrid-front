@@ -1,0 +1,33 @@
+﻿{
+  "name": "@seedgrid/fe-multitenancy",
+  "version": "0.2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ./scripts/copy-i18n.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@seedgrid/fe-core": "workspace:*",
+    "@seedgrid/fe-audit": "workspace:*",
+    "@seedgrid/fe-backup": "workspace:*",
+    "@seedgrid/fe-commons": "workspace:*",
+    "@seedgrid/fe-components": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-hook-form": "^7.52.2"
+  },
+  "devDependencies": {
+    "fs-extra": "^11.2.0",
+    "react-hook-form": "^7.52.2"
+  }
+}

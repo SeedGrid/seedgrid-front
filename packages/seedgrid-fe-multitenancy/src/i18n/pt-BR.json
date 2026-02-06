@@ -1,0 +1,7 @@
+{
+  "multitenancy.nav.multitenancy": "Multitenancy",
+  "multitenancy.signup.title": "Crie sua conta em minutos",
+  "multitenancy.signup.subtitle": "Preencha os dados abaixo para configurar sua conta e criar o acesso inicial ao {appName}.",
+  "multitenancy.signup.disclaimer": "Ao continuar, você confirma que as informações fornecidas são verdadeiras.",
+  "multitenancy.signup.submit": "Criar conta"
+}

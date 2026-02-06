@@ -1,0 +1,16 @@
+
+> @seedgrid/fe-commons@0.2.0 build C:\empreendedorismo\seedgrid\front\packages\seedgrid-fe-commons
+> tsc -p tsconfig.json && node ./scripts/copy-i18n.mjs
+
+src/manifest.ts(1,63): error TS6059: File 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/index.ts' is not under 'rootDir' 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-commons/src'. 'rootDir' is expected to contain all source files.
+../seedgrid-fe-core/src/index.ts(1,15): error TS6059: File 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/module.ts' is not under 'rootDir' 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-commons/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./module" from file 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/index.ts'
+    Imported via "./module" from file 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/registry.ts'
+../seedgrid-fe-core/src/index.ts(3,15): error TS6059: File 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/i18n.ts' is not under 'rootDir' 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-commons/src'. 'rootDir' is expected to contain all source files.
+../seedgrid-fe-core/src/module.ts(38,31): error TS6059: File 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/registry.ts' is not under 'rootDir' 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-commons/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./registry" from file 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/module.ts'
+    Imported via "./registry" from file 'C:/empreendedorismo/seedgrid/front/packages/seedgrid-fe-core/src/index.ts'
+ ELIFECYCLE  Command failed with exit code 2.
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?

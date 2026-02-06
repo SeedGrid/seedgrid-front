@@ -1,0 +1,4 @@
+
+> @seedgrid/fe-security@0.2.0 build C:\empreendedorismo\seedgrid\front\packages\seedgrid-fe-security
+> tsc -p tsconfig.json && node ./scripts/copy-i18n.mjs
+
