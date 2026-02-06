@@ -172,12 +172,13 @@ export function SgInputText(props: SgInputTextProps) {
     paddingRight,
     "pt-4"
   ].join(" ");
-  const resolvedBorderRadius =
-    props.borderRadius !== undefined
-      ? typeof props.borderRadius === "number"
+  let resolvedBorderRadius: string | undefined;
+  if (props.borderRadius !== undefined) {
+    resolvedBorderRadius =
+      typeof props.borderRadius === "number"
         ? `${props.borderRadius}px`
-        : props.borderRadius
-      : undefined;
+        : props.borderRadius;
+  }
 
   return (
     <div style={{ width: props.width ?? "100%" }}>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SgInputCEP } from "@seedgrid/fe-components";
+import { SgInputCEP, type ViaCepResponse } from "@seedgrid/fe-components";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -25,6 +25,7 @@ export default function SgInputCEPPage() {
   const [basicValue, setBasicValue] = React.useState("");
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
+  const [viaCepResult, setViaCepResult] = React.useState<ViaCepResponse | null>(null);
 
   const log = (msg: string) => {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
@@ -121,6 +122,36 @@ export default function SgInputCEPPage() {
   validation={(v) => (v.startsWith("00") ? "CEP nao pode iniciar com 00." : null)}
   onValidation={(msg) => console.log(msg)}
 />`} />
+      </Section>
+
+      <Section title="Validacao ViaCEP" description="Consulta ViaCEP para verificar se o CEP existe.">
+        <div className="w-80">
+          <SgInputCEP
+            id="demo-viacep"
+            label="CEP"
+            hintText="00000-000"
+            validateWithViaCep
+            viaCepErrorMessage="CEP invalido."
+            onViaCepResult={(data) => setViaCepResult(data)}
+          />
+        </div>
+        <CodeBlock code={`<SgInputCEP
+  id="cep"
+  label="CEP"
+  hintText="00000-000"
+  validateWithViaCep
+  viaCepErrorMessage="CEP invalido."
+  onViaCepResult={(data) => console.log(data)}
+/>`} />
+        {viaCepResult ? (
+          <div className="mt-3 w-full rounded border border-border bg-foreground/5 p-3 text-xs">
+            <div className="mb-2 text-sm font-semibold">Resultado ViaCEP</div>
+            <pre className="whitespace-pre-wrap">{JSON.stringify(viaCepResult, null, 2)}</pre>
+          </div>
+        ) : null}
+        <p className="mt-2 text-xs text-muted-foreground">
+          Se a API estiver fora do ar, o componente nao bloqueia o usuario.
+        </p>
       </Section>
 
       <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">

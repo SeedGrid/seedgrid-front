@@ -10,11 +10,11 @@ const COMPONENTS = [
       { slug: "sg-input-select", name: "SgInputSelect", desc: "Dropdown select com floating label" },
       { slug: "sg-input-date", name: "SgInputDate", desc: "Seletor de data com restricoes min/max" },
       { slug: "sg-input-birth-date", name: "SgInputBirthDate", desc: "Data de nascimento com validacao de idade minima/maxima" },
-      { slug: "sg-input-email", name: "SgInputEmail", desc: "Input de email com validacao integrada" },
+      { slug: "sg-input-email", name: "SgInputEmail", desc: "Input de email com validacao integrada e bloqueio de temporarios" },
       { slug: "sg-input-cpf", name: "SgInputCPF", desc: "Input de CPF com mascara e validacao de digitos" },
       { slug: "sg-input-cnpj", name: "SgInputCNPJ", desc: "Input de CNPJ com mascara e validacao de digitos" },
       { slug: "sg-input-cpf-cnpj", name: "SgInputCPFCNPJ", desc: "Input que aceita CPF ou CNPJ com deteccao automatica" },
-      { slug: "sg-input-cep", name: "SgInputCEP", desc: "Input de CEP com mascara XXXXX-XXX" },
+      { slug: "sg-input-cep", name: "SgInputCEP", desc: "Input de CEP com mascara e validacao" },
       { slug: "sg-input-fone", name: "SgInputFone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" }
     ]
   },

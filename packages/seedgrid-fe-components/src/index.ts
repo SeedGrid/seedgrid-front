@@ -11,7 +11,7 @@ export type { SgInputCNPJProps } from "./inputs/SgInputCNPJ";
 export { SgInputCPFCNPJ } from "./inputs/SgInputCPFCNPJ";
 export type { SgInputCPFCNPJProps } from "./inputs/SgInputCPFCNPJ";
 export { SgInputCEP } from "./inputs/SgInputCEP";
-export type { SgInputCEPProps } from "./inputs/SgInputCEP";
+export type { SgInputCEPProps, ViaCepResponse } from "./inputs/SgInputCEP";
 export { SgInputFone } from "./inputs/SgInputFone";
 export type { SgInputFoneProps } from "./inputs/SgInputFone";
 export { SgInputEmail } from "./inputs/SgInputEmail";

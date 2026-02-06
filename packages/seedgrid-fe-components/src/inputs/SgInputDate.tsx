@@ -15,23 +15,120 @@ function toDateValue(value?: string | Date) {
   return value.toISOString().slice(0, 10);
 }
 
+function formatDateDisplay(value?: string | Date) {
+  const iso = toDateValue(value);
+  if (!iso) return "";
+  const [year, month, day] = iso.split("-");
+  if (!year || !month || !day) return iso;
+  return `${day}/${month}/${year}`;
+}
+
+function parseDateValue(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+}
+
 export function SgInputDate(props: SgInputDateProps) {
-  const { minDate, maxDate, inputProps, alwaysFloat, ...rest } = props;
-  const showStaticLabel = Boolean(alwaysFloat);
+  const {
+    minDate,
+    maxDate,
+    inputProps,
+    alwaysFloat,
+    required,
+    requiredMessage,
+    validateOnBlur,
+    validation,
+    onValidation,
+    error,
+    ...rest
+  } = props;
+  const showStaticLabel = true;
   const labelText = rest.labelText ?? rest.label ?? "";
+  const [internalError, setInternalError] = React.useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = React.useState(false);
+  const minDateValue = toDateValue(minDate);
+  const maxDateValue = toDateValue(maxDate);
+
+  const runValidation = React.useCallback(
+    (value: string) => {
+      if (!value && !required) {
+        setInternalError(null);
+        onValidation?.(null);
+        return;
+      }
+      if (!value && required) {
+        const message = requiredMessage ?? "Campo obrigatório.";
+        setInternalError(message);
+        onValidation?.(message);
+        return;
+      }
+      const customMessage = validation?.(value) ?? null;
+      if (customMessage) {
+        setInternalError(customMessage);
+        onValidation?.(customMessage);
+        return;
+      }
+      const parsed = parseDateValue(value);
+      if (!parsed) {
+        const message = "Data inválida.";
+        setInternalError(message);
+        onValidation?.(message);
+        return;
+      }
+      const min = minDateValue ? parseDateValue(minDateValue) : null;
+      const max = maxDateValue ? parseDateValue(maxDateValue) : null;
+      if (min && parsed < min || max && parsed > max) {
+        const minLabel = formatDateDisplay(minDateValue);
+        const maxLabel = formatDateDisplay(maxDateValue);
+        const message =
+          minLabel && maxLabel
+            ? `Data deve estar entre ${minLabel} e ${maxLabel}.`
+            : minLabel
+              ? `Data deve ser a partir de ${minLabel}.`
+              : `Data deve ser até ${maxLabel}.`;
+        setInternalError(message);
+        onValidation?.(message);
+        return;
+      }
+      setInternalError(null);
+      onValidation?.(null);
+    },
+    [maxDateValue, minDateValue, onValidation, required, requiredMessage, validation]
+  );
+
   const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {
     ...inputProps,
     placeholder: showStaticLabel ? " " : (inputProps?.placeholder ?? rest.hintText ?? labelText),
-    min: toDateValue(minDate),
-    max: toDateValue(maxDate)
+    min: minDateValue,
+    max: maxDateValue,
+    readOnly: inputProps?.readOnly,
+    onChange: (event) => {
+      setHasInteracted(true);
+      if (validateOnBlur === false || internalError) {
+        runValidation(event.currentTarget.value);
+      }
+      inputProps?.onChange?.(event);
+    },
+    onBlur: (event) => {
+      if ((validateOnBlur ?? true) || hasInteracted) {
+        runValidation(event.currentTarget.value);
+      }
+      inputProps?.onBlur?.(event);
+    }
   };
 
   const inputClassName =
     mergedInputProps.className ??
-    "peer h-11 w-full rounded-md border border-border bg-white px-3 py-2.5 text-sm shadow-sm placeholder-transparent focus:border-[hsl(var(--primary))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
+    "peer h-11 w-full rounded-md border border-border bg-white pl-3 pr-7 py-2.5 text-sm shadow-sm placeholder-transparent focus:border-[hsl(var(--primary))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
 
   return (
     <div className={showStaticLabel ? "relative" : undefined}>
+      <style>{`
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          cursor: pointer;
+        }
+      `}</style>
       {showStaticLabel && labelText ? (
         <label
           htmlFor={rest.id}
@@ -43,6 +140,7 @@ export function SgInputDate(props: SgInputDateProps) {
       <SgInputText
         {...rest}
         type="date"
+        error={error ?? internalError ?? undefined}
         inputProps={mergedInputProps}
         className={inputClassName}
         labelClassName={showStaticLabel ? "sr-only" : undefined}
