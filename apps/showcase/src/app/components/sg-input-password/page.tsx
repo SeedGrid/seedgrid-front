@@ -138,6 +138,8 @@ export default function SgInputPasswordPage() {
             numberRequired={false}
             specialCharacterRequired={false}
             prohibitsRepeatedCharactersInSequence={false}
+            prohibitsSequentialAscCharacters={false}
+            prohibitsSequentialDescCharacters={false}
             minSize={4}
           />
         </div>
@@ -150,7 +152,26 @@ export default function SgInputPasswordPage() {
   numberRequired={false}
   specialCharacterRequired={false}
   prohibitsRepeatedCharactersInSequence={false}
+  prohibitsSequentialAscCharacters={false}
+  prohibitsSequentialDescCharacters={false}
   minSize={4}
+/>`} />
+      </Section>
+
+      <Section title="Senha comum" description="Trata senha comum como erro.">
+        <div className="w-80">
+          <SgInputPassword
+            id="demo-common-error"
+            label="Senha comum (erro)"
+            hintText="Ex: Senha1234"
+            commonPasswordCheck
+          />
+        </div>
+        <CodeBlock code={`<SgInputPassword
+  id="senha"
+  label="Senha comum (erro)"
+  hintText="Ex: Senha1234"
+  commonPasswordCheck
 />`} />
       </Section>
 
@@ -162,6 +183,7 @@ export default function SgInputPasswordPage() {
             hintText="Clique para gerar"
             createNewPasswordButton
             minSize={10}
+            showStrengthBar
           />
         </div>
         <CodeBlock code={`<SgInputPassword
@@ -170,6 +192,7 @@ export default function SgInputPasswordPage() {
   hintText="Clique para gerar"
   createNewPasswordButton
   minSize={10}
+  showStrengthBar
 />`} />
       </Section>
 

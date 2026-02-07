@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { buildCommonPasswordSet } from "../commons/common-passwords";
 
 export type SgInputPasswordProps = Omit<
   SgInputTextProps,
@@ -17,11 +18,16 @@ export type SgInputPasswordProps = Omit<
   validation?: (value: string) => string | null;
   createNewPasswordButton?: boolean;
   showStrengthBar?: boolean;
+  commonPasswordCheck?: boolean;
+  commonPasswordMessage?: string;
+  commonPasswordList?: string[];
   upperRequired?: boolean;
   lowerRequired?: boolean;
   numberRequired?: boolean;
   specialCharacterRequired?: boolean;
   prohibitsRepeatedCharactersInSequence?: boolean;
+  prohibitsSequentialAscCharacters?: boolean;
+  prohibitsSequentialDescCharacters?: boolean;
   minSize?: number;
 };
 
@@ -39,12 +45,17 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     validation,
     createNewPasswordButton = false,
     showStrengthBar = true,
+    commonPasswordCheck = true,
+    commonPasswordMessage = "Senha muito comum. Escolha uma mais forte.",
+    commonPasswordList,
     onChange,
     upperRequired = true,
     lowerRequired = true,
     numberRequired = true,
     specialCharacterRequired = true,
     prohibitsRepeatedCharactersInSequence = true,
+    prohibitsSequentialAscCharacters = true,
+    prohibitsSequentialDescCharacters = true,
     minSize = 8,
     ...rest
   } = props;
@@ -53,6 +64,23 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
   const [hasInteracted, setHasInteracted] = React.useState(false);
   const [unmetRequirements, setUnmetRequirements] = React.useState<string[]>([]);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const commonPasswordSet = React.useMemo(() => {
+    if (!commonPasswordCheck) return null;
+    return buildCommonPasswordSet(commonPasswordList);
+  }, [commonPasswordCheck, commonPasswordList]);
+
+  const isCommonPassword = React.useCallback(
+    (value: string) => {
+      if (!commonPasswordSet) return false;
+      const normalized = value.trim().toLowerCase();
+      if (!normalized) return false;
+      if (commonPasswordSet.has(normalized)) return true;
+      const simplified = normalized.replace(/[^a-z0-9]/g, "");
+      if (!simplified) return false;
+      return commonPasswordSet.has(simplified);
+    },
+    [commonPasswordSet]
+  );
 
   const getUnmetRequirements = React.useCallback(
     (value: string) => {
@@ -67,9 +95,24 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       if (prohibitsRepeatedCharactersInSequence && /(.)\1/.test(value)) {
         unmet.push("Nao repetir caracteres em sequencia.");
       }
+      if (prohibitsSequentialAscCharacters && hasSequentialCharacters(value, 3, "asc")) {
+        unmet.push("Nao usar sequencias crescentes (ex: 1234, abcd).");
+      }
+      if (prohibitsSequentialDescCharacters && hasSequentialCharacters(value, 3, "desc")) {
+        unmet.push("Nao usar sequencias decrescentes (ex: 4321, dcba).");
+      }
       return unmet;
     },
-    [lowerRequired, minSize, numberRequired, prohibitsRepeatedCharactersInSequence, specialCharacterRequired, upperRequired]
+    [
+      lowerRequired,
+      minSize,
+      numberRequired,
+      prohibitsRepeatedCharactersInSequence,
+      prohibitsSequentialAscCharacters,
+      prohibitsSequentialDescCharacters,
+      specialCharacterRequired,
+      upperRequired
+    ]
   );
 
   const strengthScore = React.useMemo(() => {
@@ -79,7 +122,9 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       lowerRequired,
       numberRequired,
       specialCharacterRequired,
-      prohibitsRepeatedCharactersInSequence
+      prohibitsRepeatedCharactersInSequence,
+      prohibitsSequentialAscCharacters,
+      prohibitsSequentialDescCharacters
     ];
     const activeChecks = totalChecks.filter((v) => v !== false).length;
     if (activeChecks === 0) return 0;
@@ -181,6 +226,10 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         return;
       }
       const unmet = getUnmetRequirements(value);
+      const isCommon = commonPasswordCheck ? isCommonPassword(value) : false;
+      if (isCommon) {
+        unmet.push(commonPasswordMessage);
+      }
       const customMessage = validation?.(value) ?? null;
       const combined = customMessage ? [...unmet, customMessage] : unmet;
       setUnmetRequirements(combined);
@@ -188,7 +237,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       setInternalError(message);
       onValidation?.(message);
     },
-    [getUnmetRequirements, onValidation, required, requiredMessage, validation]
+    [commonPasswordCheck, commonPasswordMessage, getUnmetRequirements, isCommonPassword, onValidation, required, requiredMessage, validation]
   );
 
   const mergedInputProps: (React.InputHTMLAttributes<HTMLInputElement> & {
@@ -342,14 +391,36 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
             ))}
           </div>
         ) : null}
-        {unmetRequirements.length > 0 ? (
-          <ul className="space-y-1 text-xs text-destructive">
-            {unmetRequirements.map((req, index) => (
-              <li key={`${req}-${index}`}>{req}</li>
-            ))}
-          </ul>
-        ) : null}
+        {(() => {
+          const unique = Array.from(
+            new Set(
+              unmetRequirements.filter((req) => req !== commonPasswordMessage && req !== internalError)
+            )
+          );
+          return unique.length > 0 ? (
+            <ul className="space-y-1 text-xs text-destructive">
+              {unique.map((req) => (
+                <li key={req}>{req}</li>
+              ))}
+            </ul>
+          ) : null;
+        })()}
       </div>
     </>
   );
+}
+
+function hasSequentialCharacters(value: string, minLength: number, direction: "asc" | "desc") {
+  const normalized = value.toLowerCase();
+  const sequences = ["abcdefghijklmnopqrstuvwxyz", "0123456789"];
+  for (const seq of sequences) {
+    for (let i = 0; i <= seq.length - minLength; i += 1) {
+      const part = seq.slice(i, i + minLength);
+      const pattern = direction === "asc" ? part : part.split("").reverse().join("");
+      if (normalized.includes(pattern)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
