@@ -78,7 +78,7 @@ export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
     ...inputProps,
     onChange: (event) => {
       setHasInteracted(true);
-      if (validateOnBlur === false) runValidation(event.currentTarget.value);
+      runValidation(event.currentTarget.value);
       inputProps?.onChange?.(event);
     },
     onBlur: (event) => {

@@ -15,7 +15,7 @@ const COMPONENTS = [
       { slug: "sg-input-cnpj", name: "SgInputCNPJ", desc: "Input de CNPJ com mascara e validacao de digitos" },
       { slug: "sg-input-cpf-cnpj", name: "SgInputCPFCNPJ", desc: "Input que aceita CPF ou CNPJ com deteccao automatica" },
       { slug: "sg-input-cep", name: "SgInputCEP", desc: "Input de CEP com mascara e validacao" },
-      { slug: "sg-input-fone", name: "SgInputFone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" }
+      { slug: "sg-input-phone", name: "SgInputPhone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" }
     ]
   },
   {

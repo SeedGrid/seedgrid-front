@@ -4,8 +4,8 @@ import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskPhone } from "../masks";
 
-export type SgInputFoneProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
-  inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+export type SgInputPhoneProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   error?: string;
   required?: boolean;
   requiredMessage?: string;
@@ -20,9 +20,21 @@ function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
-export function SgInputFone(props: SgInputFoneProps) {
-  const { required, requiredMessage, lengthMessage, invalidMessage, validateOnBlur, error, validation, ...rest } = props;
+export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
+  const {
+    required,
+    requiredMessage,
+    lengthMessage,
+    invalidMessage,
+    validateOnBlur,
+    error,
+    validation,
+    onClear,
+    inputProps,
+    ...rest
+  } = props;
   const [internalError, setInternalError] = React.useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = React.useState(false);
 
   const runValidation = React.useCallback(
     (value: string) => {
@@ -58,29 +70,34 @@ export function SgInputFone(props: SgInputFoneProps) {
     [required, requiredMessage, lengthMessage, invalidMessage, validation, props]
   );
 
-  const inputProps = {
-    ...rest.inputProps,
-    inputMode: rest.inputProps.inputMode ?? "numeric",
+  const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {
+    ...inputProps,
+    inputMode: inputProps?.inputMode ?? "numeric",
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+      setHasInteracted(true);
       event.target.value = maskPhone(event.target.value);
-      rest.inputProps.onChange?.(event);
+      runValidation(event.currentTarget.value);
+      inputProps?.onChange?.(event);
+    },
+    onBlur: (event) => {
+      if ((validateOnBlur ?? true) || hasInteracted) {
+        runValidation(event.currentTarget.value);
+      }
+      inputProps?.onBlur?.(event);
     }
   };
-
-  const onBlur = inputProps.onBlur;
-  const shouldValidateOnBlur = validateOnBlur ?? true;
 
   return (
     <SgInputText
       {...rest}
       error={error ?? internalError ?? undefined}
-      inputProps={{
-        ...inputProps,
-        onBlur: (event) => {
-          if (shouldValidateOnBlur) runValidation(event.currentTarget.value);
-          onBlur?.(event);
-        }
+      textInputType={props.textInputType ?? "numeric"}
+      onClear={() => {
+        setInternalError(null);
+        props.onValidation?.(null);
+        onClear?.();
       }}
+      inputProps={mergedInputProps}
     />
   );
 }

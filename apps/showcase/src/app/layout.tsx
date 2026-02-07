@@ -18,7 +18,7 @@ const COMPONENTS = [
   { slug: "sg-input-cnpj", label: "SgInputCNPJ" },
   { slug: "sg-input-cpf-cnpj", label: "SgInputCPFCNPJ" },
   { slug: "sg-input-cep", label: "SgInputCEP" },
-  { slug: "sg-input-fone", label: "SgInputFone" },
+  { slug: "sg-input-phone", label: "SgInputPhone" },
   { slug: "sg-group-box", label: "SgGroupBox" },
   { slug: "sg-wizard", label: "SgWizard" }
 ];

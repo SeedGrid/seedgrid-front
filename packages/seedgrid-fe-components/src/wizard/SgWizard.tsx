@@ -22,6 +22,9 @@ export type SgWizardProps = {
   children: React.ReactNode;
   onFinish: () => void | Promise<void>;
   onStepChange?: (index: number) => void;
+  onBeforeNext?: (index: number) => boolean | Promise<boolean>;
+  onBeforeFinish?: (index: number) => boolean | Promise<boolean>;
+  validateStep?: (index: number) => boolean | Promise<boolean>;
   initialStep?: number;
   labels?: Partial<SgWizardLabels>;
   className?: string;
@@ -43,6 +46,7 @@ export function SgWizard(props: SgWizardProps) {
     return Math.min(Math.max(idx, 0), Math.max(pages.length - 1, 0));
   });
   const [isFinishing, setIsFinishing] = React.useState(false);
+  const [isValidating, setIsValidating] = React.useState(false);
 
   React.useEffect(() => {
     props.onStepChange?.(step);
@@ -52,8 +56,28 @@ export function SgWizard(props: SgWizardProps) {
   const isFirst = step <= 0;
   const isLast = step >= pages.length - 1;
 
-  const goNext = () => {
+  const goNext = async () => {
     if (isLast) return;
+    if (isValidating) return;
+    const current = step;
+    if (props.validateStep) {
+      setIsValidating(true);
+      try {
+        const ok = await props.validateStep(current);
+        if (!ok) return;
+      } finally {
+        setIsValidating(false);
+      }
+    }
+    if (props.onBeforeNext) {
+      setIsValidating(true);
+      try {
+        const ok = await props.onBeforeNext(current);
+        if (!ok) return;
+      } finally {
+        setIsValidating(false);
+      }
+    }
     setStep((prev) => Math.min(prev + 1, pages.length - 1));
   };
 
@@ -64,6 +88,16 @@ export function SgWizard(props: SgWizardProps) {
 
   const handleFinish = async () => {
     if (isFinishing) return;
+    if (isValidating) return;
+    if (props.onBeforeFinish) {
+      setIsValidating(true);
+      try {
+        const ok = await props.onBeforeFinish(step);
+        if (!ok) return;
+      } finally {
+        setIsValidating(false);
+      }
+    }
     setIsFinishing(true);
     try {
       await props.onFinish();
@@ -92,7 +126,8 @@ export function SgWizard(props: SgWizardProps) {
             <button
               type="button"
               onClick={goNext}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-[hsl(var(--primary))] px-5 text-sm font-semibold text-white shadow-lg shadow-[hsl(var(--primary)/0.35)] transition hover:brightness-95"
+              disabled={isValidating}
+              className="inline-flex h-10 items-center justify-center rounded-full bg-[hsl(var(--primary))] px-5 text-sm font-semibold text-white shadow-lg shadow-[hsl(var(--primary)/0.35)] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {labels.next}
             </button>
@@ -100,7 +135,7 @@ export function SgWizard(props: SgWizardProps) {
             <button
               type="button"
               onClick={handleFinish}
-              disabled={isFinishing}
+              disabled={isFinishing || isValidating}
               className="inline-flex h-10 items-center justify-center rounded-full bg-[hsl(var(--primary))] px-5 text-sm font-semibold text-white shadow-lg shadow-[hsl(var(--primary)/0.35)] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {labels.finish}

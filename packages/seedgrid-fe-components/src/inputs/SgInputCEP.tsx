@@ -139,7 +139,7 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
       setHasInteracted(true);
       event.target.value = maskCep(event.target.value);
-      if (validateOnBlur === false) runValidation(event.currentTarget.value);
+      runValidation(event.currentTarget.value);
       inputProps?.onChange?.(event);
     },
     onBlur: (event) => {

@@ -50,6 +50,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
   const placeholder = props.hintText ?? labelText;
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [internalError, setInternalError] = React.useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = React.useState(false);
   const [isFilled, setIsFilled] = React.useState<boolean>(() => {
     const value = textareaProps.value ?? textareaProps.defaultValue ?? "";
     return String(value).length > 0;
@@ -131,13 +132,17 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setIsFilled(event.currentTarget.value.length > 0);
     setValueLength(event.currentTarget.value.length);
+    setHasInteracted(true);
+    runValidation(event.currentTarget.value);
     textareaProps.onChange?.(event);
     props.onChange?.(event.currentTarget.value);
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement>) => {
     setIsFilled(event.currentTarget.value.length > 0);
-    if (props.validateOnBlur ?? true) runValidation(event.currentTarget.value);
+    if ((props.validateOnBlur ?? true) || hasInteracted) {
+      runValidation(event.currentTarget.value);
+    }
     textareaProps.onBlur?.(event);
     props.onExit?.();
   };

@@ -51,6 +51,7 @@ export function SgInputText(props: SgInputTextProps) {
   const placeholder = props.placeholder ?? props.hintText ?? labelText;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [internalError, setInternalError] = React.useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = React.useState(false);
   const [isFilled, setIsFilled] = React.useState<boolean>(() => {
     const value = inputProps.value ?? inputProps.defaultValue ?? "";
     return String(value).length > 0;
@@ -126,13 +127,17 @@ export function SgInputText(props: SgInputTextProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsFilled(event.currentTarget.value.length > 0);
     setValueLength(event.currentTarget.value.length);
+    setHasInteracted(true);
+    runValidation(event.currentTarget.value);
     inputProps.onChange?.(event);
     props.onChange?.(event.currentTarget.value);
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     setIsFilled(event.currentTarget.value.length > 0);
-    if (props.validateOnBlur ?? true) runValidation(event.currentTarget.value);
+    if ((props.validateOnBlur ?? true) || hasInteracted) {
+      runValidation(event.currentTarget.value);
+    }
     inputProps.onBlur?.(event);
     props.onExit?.();
   };
