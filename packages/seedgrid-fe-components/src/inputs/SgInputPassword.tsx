@@ -16,6 +16,7 @@ export type SgInputPasswordProps = Omit<
   maxLength?: number;
   validation?: (value: string) => string | null;
   createNewPasswordButton?: boolean;
+  showStrengthBar?: boolean;
   upperRequired?: boolean;
   lowerRequired?: boolean;
   numberRequired?: boolean;
@@ -37,6 +38,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     maxLength,
     validation,
     createNewPasswordButton = false,
+    showStrengthBar = true,
     onChange,
     upperRequired = true,
     lowerRequired = true,
@@ -328,16 +330,18 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         iconButtons={[toggleIcon, ...(generateIcon ? [generateIcon] : []), ...(props.iconButtons ?? [])]}
       />
       <div className="mt-2">
-        <div className="mb-2 flex h-1 w-full gap-1">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <span
-              key={index}
-              className={`h-full flex-1 rounded-full transition-all duration-300 ease-out ${
-                index < Math.min(5, strengthScore) ? getStrengthColor(strengthScore) : "bg-border"
-              }`}
-            />
-          ))}
-        </div>
+        {showStrengthBar ? (
+          <div className="mb-2 flex h-1 w-full gap-1">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <span
+                key={index}
+                className={`h-full flex-1 rounded-full transition-all duration-300 ease-out ${
+                  index < Math.min(5, strengthScore) ? getStrengthColor(strengthScore) : "bg-border"
+                }`}
+              />
+            ))}
+          </div>
+        ) : null}
         {unmetRequirements.length > 0 ? (
           <ul className="space-y-1 text-xs text-destructive">
             {unmetRequirements.map((req, index) => (
