@@ -159,6 +159,7 @@ export default function SgInputCEPPage() {
   validateWithViaCep
   viaCepErrorMessage="CEP invalido."
   onViaCepResult={(data) => console.log(data)}
+  onValidation={(msg) => console.log(msg)}
 />`} />
         {viaCepResult ? (
           <div className="mt-3 w-full rounded border border-border bg-foreground/5 p-3 text-xs">

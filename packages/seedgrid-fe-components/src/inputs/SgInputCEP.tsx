@@ -65,6 +65,7 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
   const [internalError, setInternalError] = React.useState<string | null>(null);
   const [hasInteracted, setHasInteracted] = React.useState(false);
   const lastValidatedCepRef = React.useRef<string | null>(null);
+  const lastViaCepErroRef = React.useRef<boolean | null>(null);
 
   const runValidation = React.useCallback(
     async (value: string) => {
@@ -96,14 +97,21 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
       }
       if (validateWithViaCep) {
         if (lastValidatedCepRef.current === digits) {
-          setInternalError(null);
-          props.onValidation?.(null);
+          const message = viaCepErrorMessage ?? invalidMessage ?? "CEP invalido.";
+          if (lastViaCepErroRef.current) {
+            setInternalError(message);
+            props.onValidation?.(message);
+          } else {
+            setInternalError(null);
+            props.onValidation?.(null);
+          }
           return;
         }
         try {
           const checker = viaCepFetch ?? defaultViaCepFetch;
           const data = await checker(digits);
           lastValidatedCepRef.current = digits;
+          lastViaCepErroRef.current = Boolean(data?.erro);
           onViaCepResult?.(data);
           if (data?.erro) {
             const message = viaCepErrorMessage ?? invalidMessage ?? "CEP invalido.";
@@ -159,8 +167,10 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
       onClear={() => {
         setInternalError(null);
         props.onValidation?.(null);
-        onClear?.();
-      }}
+      onClear?.();
+      lastValidatedCepRef.current = null;
+      lastViaCepErroRef.current = null;
+    }}
       inputProps={mergedInputProps}
     />
   );

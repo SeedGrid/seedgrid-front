@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { SgGroupBox } from "@seedgrid/fe-components";
+import { useForm } from "react-hook-form";
+import { SgGroupBox, SgInputCEP, SgInputEmail, SgInputPassword, SgInputPhone, SgInputText } from "@seedgrid/fe-components";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -22,6 +23,17 @@ function CodeBlock(props: { code: string }) {
 }
 
 export default function SgGroupBoxPage() {
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: {
+      nome: "",
+      email: "",
+      telefone: "",
+      cep: "",
+      senha: ""
+    }
+  });
+  const values = watch();
+
   return (
     <div className="max-w-4xl space-y-8">
       <div>
@@ -46,6 +58,69 @@ export default function SgGroupBoxPage() {
     <div>Campo 2</div>
   </div>
 </SgGroupBox>`} />
+      </Section>
+
+      <Section title="Formulario" description="Exemplo com inputs reais dentro do GroupBox.">
+        <div className="w-full">
+          <form onSubmit={handleSubmit((data) => console.log(data))}>
+            <SgGroupBox title="Cadastro">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <SgInputText id="nome" name="nome" control={control} label="Nome completo" required />
+                <SgInputEmail id="email" name="email" control={control} label="Email" required />
+                <SgInputPhone id="telefone" name="telefone" control={control} label="Telefone" required />
+                <SgInputCEP id="cep" name="cep" control={control} label="CEP" required />
+                <div className="sm:col-span-2">
+                  <SgInputPassword id="senha" name="senha" control={control} label="Senha" required />
+                </div>
+              </div>
+            </SgGroupBox>
+          </form>
+          <p className="mt-3 text-xs text-muted-foreground">Valores: {JSON.stringify(values)}</p>
+        </div>
+        <CodeBlock
+          code={`import React from "react";
+import { useForm } from "react-hook-form";
+import {
+  SgGroupBox,
+  SgInputCEP,
+  SgInputEmail,
+  SgInputPassword,
+  SgInputPhone,
+  SgInputText
+} from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { control, handleSubmit, watch } = useForm({
+    defaultValues: {
+      nome: "",
+      email: "",
+      telefone: "",
+      cep: "",
+      senha: ""
+    }
+  });
+  const values = watch();
+
+  const onSubmit = (data) => console.log(data);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SgGroupBox title="Cadastro">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <SgInputText id="nome" name="nome" control={control} label="Nome completo" required />
+          <SgInputEmail id="email" name="email" control={control} label="Email" required />
+          <SgInputPhone id="telefone" name="telefone" control={control} label="Telefone" required />
+          <SgInputCEP id="cep" name="cep" control={control} label="CEP" required />
+          <div className="sm:col-span-2">
+            <SgInputPassword id="senha" name="senha" control={control} label="Senha" required />
+          </div>
+        </div>
+      </SgGroupBox>
+      <p>Valores: {JSON.stringify(values)}</p>
+    </form>
+  );
+}`}
+        />
       </Section>
 
       <Section title="Tamanho" description="Largura e altura customizaveis.">
