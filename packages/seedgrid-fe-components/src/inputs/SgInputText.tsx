@@ -203,13 +203,18 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     props.onClear?.();
   };
 
-  const hasSuffix = (props.clearButton ?? true) || (props.iconButtons?.length ?? 0) > 0;
+  const isDisabled = props.enabled === false || props.readOnly || inputProps.readOnly;
+  const canShowClear = (props.clearButton ?? true) && !isDisabled;
+  const hasSuffix = canShowClear || (props.iconButtons?.length ?? 0) > 0;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
   const baseClass =
-    "peer h-11 w-full rounded-md text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
-  const borderClass = props.withBorder ?? true
-    ? "border border-border shadow-sm focus:border-[hsl(var(--primary))]"
+    "peer h-11 w-full rounded-md text-sm placeholder-transparent focus:outline-none";
+  const hasError = Boolean(props.error ?? internalError);
+  const borderClass = (props.withBorder ?? true) || hasError
+    ? hasError
+      ? "border border-[hsl(var(--destructive))] shadow-sm focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
+      : "border border-border shadow-sm focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
     : "border border-transparent";
   const bgClass = props.filled ? "bg-muted/40" : "bg-white";
   const finalClass = [
@@ -267,7 +272,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
         </label>
         {hasSuffix ? (
           <span className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
-            {(props.clearButton ?? true) ? (
+            {canShowClear ? (
               <button
                 type="button"
                 onClick={handleClear}

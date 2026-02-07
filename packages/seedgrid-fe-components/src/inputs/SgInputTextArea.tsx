@@ -202,13 +202,18 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
     props.onClear?.();
   };
 
-  const hasSuffix = (props.clearButton ?? true);
+  const isDisabled = props.enabled === false || textareaProps.readOnly;
+  const canShowClear = (props.clearButton ?? true) && !isDisabled;
+  const hasSuffix = canShowClear;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
   const baseClass =
-    "peer w-full rounded-md text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
-  const borderClass = props.withBorder ?? true
-    ? "border border-border shadow-sm focus:border-[hsl(var(--primary))]"
+    "peer w-full rounded-md text-sm placeholder-transparent focus:outline-none";
+  const hasError = Boolean(props.error ?? internalError);
+  const borderClass = (props.withBorder ?? true) || hasError
+    ? hasError
+      ? "border border-[hsl(var(--destructive))] shadow-sm focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
+      : "border border-border shadow-sm focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
     : "border border-transparent";
   const bgClass = props.filled ? "bg-muted/40" : "bg-white";
   const finalClass = [
@@ -272,7 +277,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
         >
           {labelText}
         </label>
-        {(props.clearButton ?? true) ? (
+            {canShowClear ? (
           <button
             type="button"
             onClick={handleClear}

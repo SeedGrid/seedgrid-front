@@ -111,24 +111,32 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
             {props.label}
           </label>
         ) : null}
-        <select
+        {(() => {
+          const hasError = Boolean(props.error);
+          const baseClass =
+            "peer h-11 w-full rounded-md bg-white px-3 pt-4 text-sm shadow-sm focus:outline-none";
+          const borderClass = hasError
+            ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
+            : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
+          const resolvedClassName = props.className ?? [baseClass, borderClass].join(" ");
+          return (
+            <select
           id={props.id}
-          className={
-            props.className ??
-            "peer h-11 w-full rounded-md border border-border bg-white px-3 pt-4 text-sm shadow-sm focus:border-[hsl(var(--primary))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
-          }
+          className={resolvedClassName}
           {...props.selectProps}
           ref={setRefs}
           onChange={handleChange}
           onBlur={handleBlur}
-        >
-          <option value="">Selecione</option>
-          {props.options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+            >
+              <option value="">Selecione</option>
+              {props.options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          );
+        })()}
         {alwaysFloat ? (
           <label htmlFor={props.id} className="sr-only">
             {props.label}
