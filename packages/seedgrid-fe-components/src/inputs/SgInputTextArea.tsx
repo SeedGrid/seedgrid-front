@@ -270,8 +270,11 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
           htmlFor={props.id}
           className={[
             "absolute left-3 bg-white px-1 transition-all",
-            isFilled ? "-top-2 text-xs text-[hsl(var(--primary))]" : "top-3 text-sm text-foreground/60",
-            "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]",
+            isFilled ? "-top-2 text-xs" : "top-3 text-sm",
+            hasError ? "text-[hsl(var(--destructive))]" : isFilled ? "text-[hsl(var(--primary))]" : "text-foreground/60",
+            hasError
+              ? "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
+              : "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]",
             props.labelClassName ?? ""
           ].join(" ")}
         >

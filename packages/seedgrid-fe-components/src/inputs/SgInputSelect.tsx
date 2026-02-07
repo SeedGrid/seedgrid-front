@@ -106,7 +106,10 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
         {alwaysFloat ? (
           <label
             htmlFor={props.id}
-            className="pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none text-foreground/70"
+            className={[
+              "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none",
+              props.error ? "text-[hsl(var(--destructive))]" : "text-foreground/70"
+            ].join(" ")}
           >
             {props.label}
           </label>
@@ -146,8 +149,11 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
             htmlFor={props.id}
             className={[
               "absolute left-3 bg-white px-1 transition-all",
-              isFilled ? "-top-2 text-xs text-[hsl(var(--primary))]" : "top-3 text-sm text-foreground/60",
-              "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]"
+              isFilled ? "-top-2 text-xs" : "top-3 text-sm",
+              props.error ? "text-[hsl(var(--destructive))]" : isFilled ? "text-[hsl(var(--primary))]" : "text-foreground/60",
+              props.error
+                ? "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
+                : "peer-focus:-top-2 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]"
             ].join(" ")}
           >
             {props.label}

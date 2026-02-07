@@ -11,6 +11,8 @@ export type SgInputTextProps = {
   label?: string;
   labelText?: string;
   hintText?: string;
+  prefixText?: string;
+  suffixText?: string;
   error?: string;
   type?: React.HTMLInputTypeAttribute;
   placeholder?: string;
@@ -53,22 +55,32 @@ function ErrorText(props: { message?: string }) {
 
 function mergeInputPropsWithField(
   inputProps: React.InputHTMLAttributes<HTMLInputElement> | undefined,
-  field: ControllerRenderProps<FieldValues, string>
+  field: ControllerRenderProps<FieldValues, string>,
+  options?: {
+    normalizeValue?: (value: unknown) => string;
+    toFieldValue?: (raw: string) => string;
+  }
 ) {
   const resolvedValue =
-    typeof field.value === "string" ||
-    typeof field.value === "number" ||
-    Array.isArray(field.value)
-      ? field.value
-      : field.value == null
-        ? ""
-        : String(field.value);
+    options?.normalizeValue
+      ? options.normalizeValue(field.value)
+      : typeof field.value === "string" ||
+          typeof field.value === "number" ||
+          Array.isArray(field.value)
+        ? field.value
+        : field.value == null
+          ? ""
+          : String(field.value);
 
   return {
     ...inputProps,
     value: resolvedValue,
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-      field.onChange(event);
+      if (options?.toFieldValue) {
+        field.onChange(options.toFieldValue(event.currentTarget.value));
+      } else {
+        field.onChange(event);
+      }
       inputProps?.onChange?.(event);
     },
     onBlur: (event: React.FocusEvent<HTMLInputElement>) => {
@@ -90,18 +102,52 @@ function mergeInputPropsWithField(
 
 function SgInputTextBase(props: SgInputTextBaseProps) {
   const inputProps = props.inputProps ?? {};
+  const prefixText = props.prefixText ?? "";
+  const suffixText = props.suffixText ?? "";
+  const stripAffixes = React.useCallback(
+    (value: unknown) => {
+      if (value == null) return "";
+      let text = String(value);
+      if (!text) return "";
+      if (prefixText && text.startsWith(prefixText)) {
+        text = text.slice(prefixText.length);
+      }
+      if (suffixText && text.endsWith(suffixText)) {
+        text = text.slice(0, -suffixText.length);
+      }
+      return text;
+    },
+    [prefixText, suffixText]
+  );
+  const buildFullValue = React.useCallback(
+    (raw: string) => {
+      if (!raw) return "";
+      return `${prefixText}${raw}${suffixText}`;
+    },
+    [prefixText, suffixText]
+  );
+  const resolvedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {
+    ...inputProps
+  };
+  if (inputProps.value !== undefined) {
+    resolvedInputProps.value = stripAffixes(inputProps.value);
+  }
   const labelText = props.labelText ?? props.label ?? "";
   const placeholder = props.placeholder ?? props.hintText ?? labelText;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const prefixRef = React.useRef<HTMLSpanElement | null>(null);
+  const suffixRef = React.useRef<HTMLSpanElement | null>(null);
+  const [prefixWidth, setPrefixWidth] = React.useState(0);
+  const [suffixWidth, setSuffixWidth] = React.useState(0);
   const [internalError, setInternalError] = React.useState<string | null>(null);
   const [hasInteracted, setHasInteracted] = React.useState(false);
   const [isFilled, setIsFilled] = React.useState<boolean>(() => {
-    const value = inputProps.value ?? inputProps.defaultValue ?? "";
-    return String(value).length > 0;
+    const value = stripAffixes(inputProps.value ?? inputProps.defaultValue ?? "");
+    return value.length > 0;
   });
   const [valueLength, setValueLength] = React.useState<number>(() => {
-    const value = inputProps.value ?? inputProps.defaultValue ?? "";
-    return String(value).length;
+    const value = stripAffixes(inputProps.value ?? inputProps.defaultValue ?? "");
+    return value.length;
   });
 
   React.useEffect(() => {
@@ -112,14 +158,30 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
 
   React.useEffect(() => {
     if (inputProps.value === undefined) return;
-    setIsFilled(String(inputProps.value ?? "").length > 0);
-    setValueLength(String(inputProps.value ?? "").length);
-  }, [inputProps.value]);
+    const raw = stripAffixes(inputProps.value ?? "");
+    setIsFilled(raw.length > 0);
+    setValueLength(raw.length);
+  }, [inputProps.value, stripAffixes]);
+
+  React.useLayoutEffect(() => {
+    if (prefixRef.current) {
+      const next = prefixRef.current.offsetWidth;
+      if (next !== prefixWidth) setPrefixWidth(next);
+    } else if (prefixWidth !== 0) {
+      setPrefixWidth(0);
+    }
+    if (suffixRef.current) {
+      const next = suffixRef.current.offsetWidth;
+      if (next !== suffixWidth) setSuffixWidth(next);
+    } else if (suffixWidth !== 0) {
+      setSuffixWidth(0);
+    }
+  }, [prefixText, suffixText, prefixWidth, suffixWidth]);
 
   const setRefs = React.useCallback(
     (node: HTMLInputElement | null) => {
       inputRef.current = node;
-      const ref = (inputProps as { ref?: React.Ref<HTMLInputElement> }).ref;
+      const ref = (resolvedInputProps as { ref?: React.Ref<HTMLInputElement> }).ref;
       if (!ref) return;
       if (typeof ref === "function") {
         ref(node);
@@ -168,12 +230,13 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsFilled(event.currentTarget.value.length > 0);
-    setValueLength(event.currentTarget.value.length);
+    const rawValue = event.currentTarget.value;
+    setIsFilled(rawValue.length > 0);
+    setValueLength(rawValue.length);
     setHasInteracted(true);
-    runValidation(event.currentTarget.value);
-    inputProps.onChange?.(event);
-    props.onChange?.(event.currentTarget.value);
+    runValidation(rawValue);
+    resolvedInputProps.onChange?.(event);
+    props.onChange?.(buildFullValue(rawValue));
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -181,7 +244,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     if ((props.validateOnBlur ?? true) || hasInteracted) {
       runValidation(event.currentTarget.value);
     }
-    inputProps.onBlur?.(event);
+    resolvedInputProps.onBlur?.(event);
     props.onExit?.();
   };
 
@@ -198,12 +261,12 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       target: inputRef.current,
       currentTarget: inputRef.current
     } as React.ChangeEvent<HTMLInputElement>;
-    inputProps.onChange?.(event);
+    resolvedInputProps.onChange?.(event);
     props.onChange?.("");
     props.onClear?.();
   };
 
-  const isDisabled = props.enabled === false || props.readOnly || inputProps.readOnly;
+  const isDisabled = props.enabled === false || props.readOnly || resolvedInputProps.readOnly;
   const canShowClear = (props.clearButton ?? true) && !isDisabled;
   const hasSuffix = canShowClear || (props.iconButtons?.length ?? 0) > 0;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
@@ -223,7 +286,8 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     bgClass,
     paddingLeft,
     paddingRight,
-    "pt-4"
+    "py-2",
+    "leading-[1.2]"
   ].join(" ");
   let resolvedBorderRadius: string | undefined;
   if (props.borderRadius !== undefined) {
@@ -232,10 +296,27 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
         ? `${props.borderRadius}px`
         : props.borderRadius;
   }
+  const prefixPaddingStyle = prefixText
+    ? `calc(${prefixWidth}px + 0.75rem${props.prefixIcon ? " + 0.75rem" : ""})`
+    : undefined;
+  const suffixPaddingStyle = suffixText
+    ? `calc(${suffixWidth}px + ${canShowClear ? "2rem" : "0.75rem"})`
+    : undefined;
+  const clearRightStyle = suffixText && suffixWidth
+    ? `${suffixWidth}px`
+    : undefined;
 
   return (
     <div style={{ width: props.width ?? "100%" }}>
       <div className="relative">
+        {prefixText ? (
+          <span
+            ref={prefixRef}
+            className="pointer-events-none absolute left-0 top-0 z-10 flex h-11 items-center rounded-l-md border border-border bg-muted/40 px-3 text-xs leading-none text-foreground/70"
+          >
+            {prefixText}
+          </span>
+        ) : null}
         {props.prefixIcon ? (
           <span className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-foreground/60">
             {props.prefixIcon}
@@ -246,32 +327,54 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
           type={props.type ?? "text"}
           placeholder={placeholder}
           className={props.className ?? finalClass}
-          style={{ borderRadius: resolvedBorderRadius, ...(inputProps.style ?? {}) }}
+          style={{
+            borderRadius: resolvedBorderRadius,
+            paddingLeft: prefixPaddingStyle,
+            paddingRight: suffixPaddingStyle,
+            ...(prefixText ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0, borderLeftWidth: 0 } : {}),
+            ...(suffixText ? { borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 } : {}),
+            ...(resolvedInputProps.style ?? {})
+          }}
           maxLength={props.maxLength}
           readOnly={props.readOnly}
           disabled={props.enabled === false}
-          inputMode={props.textInputType ?? inputProps.inputMode}
-          {...inputProps}
+          inputMode={props.textInputType ?? resolvedInputProps.inputMode}
+          {...resolvedInputProps}
           ref={setRefs}
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
         />
+        {suffixText ? (
+          <span
+            ref={suffixRef}
+            className="pointer-events-none absolute right-0 top-0 z-10 flex h-11 items-center rounded-r-md border border-border bg-muted/40 px-3 text-xs leading-none text-foreground/70"
+          >
+            {suffixText}
+          </span>
+        ) : null}
         <label
           htmlFor={props.id}
           className={[
             "absolute bg-white px-1 transition-all",
             isFilled
-              ? "-top-2 left-3 text-xs text-[hsl(var(--primary))]"
-              : `top-3 text-sm text-foreground/60 ${props.prefixIcon ? "left-10" : "left-3"}`,
-            `peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]`,
+              ? "-top-2 left-3 text-xs"
+              : `top-3 text-sm ${props.prefixIcon ? "left-10" : "left-3"}`,
+            hasError ? "text-[hsl(var(--destructive))]" : isFilled ? "text-[hsl(var(--primary))]" : "text-foreground/60",
+            hasError
+              ? "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
+              : "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]",
             props.labelClassName ?? ""
           ].join(" ")}
+          style={prefixPaddingStyle ? { left: prefixPaddingStyle } : undefined}
         >
           {labelText}
         </label>
         {hasSuffix ? (
-          <span className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
+          <span
+            className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1"
+            style={clearRightStyle ? { right: clearRightStyle } : undefined}
+          >
             {canShowClear ? (
               <button
                 type="button"
@@ -303,6 +406,23 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
 export function SgInputText(props: SgInputTextProps) {
   const { control, name, ...rest } = props;
   if (control && name) {
+    const prefixText = rest.prefixText ?? "";
+    const suffixText = rest.suffixText ?? "";
+    const normalizeValue = (value: unknown) => {
+      if (value == null) return "";
+      let text = String(value);
+      if (prefixText && text.startsWith(prefixText)) {
+        text = text.slice(prefixText.length);
+      }
+      if (suffixText && text.endsWith(suffixText)) {
+        text = text.slice(0, -suffixText.length);
+      }
+      return text;
+    };
+    const toFieldValue = (raw: string) => {
+      if (!raw) return "";
+      return `${prefixText}${raw}${suffixText}`;
+    };
     return (
       <Controller
         name={name}
@@ -317,7 +437,7 @@ export function SgInputText(props: SgInputTextProps) {
           <SgInputTextBase
             {...rest}
             error={rest.error ?? fieldState.error?.message}
-            inputProps={mergeInputPropsWithField(rest.inputProps, field)}
+            inputProps={mergeInputPropsWithField(rest.inputProps, field, { normalizeValue, toFieldValue })}
           />
         )}
       />

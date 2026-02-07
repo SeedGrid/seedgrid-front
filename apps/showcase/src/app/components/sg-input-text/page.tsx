@@ -50,6 +50,9 @@ export default function SgInputTextPage() {
 
   const [iconBtnValue, setIconBtnValue] = React.useState("");
   const [iconBtnLog, setIconBtnLog] = React.useState<string[]>([]);
+  const [suffixRaw, setSuffixRaw] = React.useState("usuario");
+  const [prefixRaw, setPrefixRaw] = React.useState("test.com.br");
+  const [bothRaw, setBothRaw] = React.useState("app");
 
   return (
     <div className="max-w-4xl space-y-8">
@@ -289,6 +292,101 @@ export default function Example() {
       </Section>
 
       {/* ── Icon Buttons ── */}
+      {/* â”€â”€ Prefixo / Sufixo â”€â”€ */}
+      <Section title="Prefixo e sufixo" description="Prefixo/sufixo sao apenas visuais. O valor retornado ja vem concatenado.">
+        <div className="w-80 space-y-2">
+          <SgInputText
+            id="demo-suffix"
+            label="Email"
+            suffixText="@gmail.com"
+            inputProps={{
+              value: suffixRaw,
+              onChange: (e) => setSuffixRaw(e.target.value)
+            }}
+            onChange={(value) => log(`valor completo: ${value}`)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Valor completo: <code className="rounded bg-muted px-1">{suffixRaw}@gmail.com</code>
+          </p>
+        </div>
+        <div className="w-80 space-y-2">
+          <SgInputText
+            id="demo-prefix-text"
+            label="Website"
+            prefixText="www."
+            inputProps={{
+              value: prefixRaw,
+              onChange: (e) => setPrefixRaw(e.target.value)
+            }}
+            onChange={(value) => log(`valor completo: ${value}`)}
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="rounded border px-2 py-1 text-xs hover:bg-muted"
+              onClick={() => setPrefixRaw("test.com.br")}
+            >
+              Setar valor externo (test.com.br)
+            </button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Valor completo: <code className="rounded bg-muted px-1">www.{prefixRaw}</code>
+          </p>
+        </div>
+        <div className="w-96 space-y-2">
+          <SgInputText
+            id="demo-both"
+            label="Dominio"
+            prefixText="www."
+            suffixText=".seedgrid.com.br"
+            inputProps={{
+              value: bothRaw,
+              onChange: (e) => setBothRaw(e.target.value)
+            }}
+          />
+          <p className="text-xs text-muted-foreground">
+            Valor completo:{" "}
+            <code className="rounded bg-muted px-1">www.{bothRaw}.seedgrid.com.br</code>
+          </p>
+        </div>
+        <CodeBlock
+          wrapRHF={false}
+          code={`import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { control, handleSubmit, setValue, watch } = useForm({
+    defaultValues: { site: "test.com.br" }
+  });
+
+  const onSubmit = (data) => console.log(data);
+  const raw = watch("site");
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SgInputText
+        id="site"
+        name="site"
+        control={control}
+        label="Website"
+        prefixText="www."
+        suffixText=".seedgrid.com.br"
+      />
+
+      {/* Setando valor completo: o input mostra apenas a parte do meio */}
+      <button type="button" onClick={() => setValue("site", "www.test.com.br.seedgrid.com.br")}>
+        Setar valor externamente
+      </button>
+
+      <p>Valor completo: {"www." + raw + ".seedgrid.com.br"}</p>
+    </form>
+  );
+}`}
+        />
+      </Section>
+
+      {/* â”€â”€ Icon Buttons â”€â”€ */}
       <Section title="Botoes de icone" description="iconButtons recebe um array de ReactNode. Cada elemento e um botao com onClick que voce controla.">
         <div className="w-96 space-y-3">
           <SgInputText
@@ -500,6 +598,8 @@ export default function Example() {
               <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do floating label.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Alias para label.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Placeholder alternativo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prefixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto fixo antes do valor (visual + concatenado no valor).</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">suffixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto fixo depois do valor (visual + concatenado no valor).</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Mensagem de erro externa (sobrescreve validacao interna).</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">type</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">&quot;text&quot;</td><td className="py-2">Tipo HTML do input.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">placeholder</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">labelText</td><td className="py-2">Placeholder do input.</td></tr>

@@ -46,6 +46,7 @@ export function SgInputDate(props: SgInputDateProps) {
   const showStaticLabel = true;
   const labelText = rest.labelText ?? rest.label ?? "";
   const [internalError, setInternalError] = React.useState<string | null>(null);
+  const hasError = Boolean(error ?? internalError);
   const [hasInteracted, setHasInteracted] = React.useState(false);
   const minDateValue = toDateValue(minDate);
   const maxDateValue = toDateValue(maxDate);
@@ -139,7 +140,10 @@ export function SgInputDate(props: SgInputDateProps) {
       {showStaticLabel && labelText ? (
         <label
           htmlFor={rest.id}
-          className="pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none text-foreground/70"
+          className={[
+            "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none",
+            hasError ? "text-[hsl(var(--destructive))]" : "text-foreground/70"
+          ].join(" ")}
         >
           {labelText}
         </label>
