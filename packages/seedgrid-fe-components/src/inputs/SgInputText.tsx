@@ -287,7 +287,8 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     paddingLeft,
     paddingRight,
     "py-2",
-    "leading-[1.2]"
+    "leading-[1.2]",
+    prefixText && suffixText ? "text-center" : suffixText ? "text-right" : "text-left"
   ].join(" ");
   let resolvedBorderRadius: string | undefined;
   if (props.borderRadius !== undefined) {
