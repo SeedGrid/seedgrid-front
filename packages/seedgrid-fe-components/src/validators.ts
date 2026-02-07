@@ -43,6 +43,10 @@ export function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
+function onlyAlnumUpper(value: string) {
+  return value.replace(/[^0-9A-Za-z]/g, "").toUpperCase();
+}
+
 export function isValidCpf(value: string) {
   const digits = onlyDigits(value);
   if (digits.length !== 11) return false;
@@ -63,24 +67,49 @@ export function isValidCpf(value: string) {
 }
 
 export function isValidCnpj(value: string) {
-  const digits = onlyDigits(value);
-  if (digits.length !== 14) return false;
-  if (/^(\d)\1+$/.test(digits)) return false;
+  const raw = onlyAlnumUpper(value);
+  if (raw.length !== 14) return false;
 
-  const calc = (weights: number[]) => {
+  // opcional: eu manteria só para CNPJ numérico.
+  // Para alfanumérico, isso pode bloquear casos "ok" (embora improváveis).
+  // if (/^([0-9A-Z])\1+$/.test(raw)) return false;
+
+  if (/[A-Z]/.test(raw.slice(12))) return false; // DV precisa ser numérico
+
+  const toValue = (char: string) => {
+    if (char >= "0" && char <= "9") return char.charCodeAt(0) - 48;
+    if (char >= "A" && char <= "Z") return char.charCodeAt(0) - 55; // A=10..Z=35
+    return Number.NaN;
+  };
+
+  const calc = (base: string, weights: readonly number[]) => {
     let total = 0;
+
     for (let i = 0; i < weights.length; i++) {
-      const weight = weights[i] ?? 0;
-      total += parseInt(digits.charAt(i), 10) * weight;
+      const weight = weights[i];
+      const v = toValue(base.charAt(i));
+
+      if (weight === undefined || Number.isNaN(v)) return Number.NaN;
+
+      total += v * weight;
     }
+
     const mod = total % 11;
     return mod < 2 ? 0 : 11 - mod;
   };
 
-  const d1 = calc([5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  const d2 = calc([6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-  return d1 === parseInt(digits.charAt(12), 10) && d2 === parseInt(digits.charAt(13), 10);
+
+  const base12 = raw.slice(0, 12);
+
+  const d1 = calc(base12, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  if (!Number.isFinite(d1)) return false;
+
+  const d2 = calc(base12 + String(d1), [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  if (!Number.isFinite(d2)) return false;
+
+  return d1 === Number(raw.charAt(12)) && d2 === Number(raw.charAt(13));
 }
+
 
 export function isValidEmail(value: string) {
   return /.+@.+\..+/.test(value.trim());

@@ -70,6 +70,7 @@ export function SgInputCPF(props: SgInputCPFProps) {
     inputMode: rest.inputProps.inputMode ?? "numeric",
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
       event.target.value = maskCpf(event.target.value);
+      runValidation(event.currentTarget.value);
       rest.inputProps.onChange?.(event);
     }
   };

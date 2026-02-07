@@ -232,12 +232,12 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    resolvedInputProps.onChange?.(event);
     const rawValue = event.currentTarget.value;
     setIsFilled(rawValue.length > 0);
     setValueLength(rawValue.length);
     setHasInteracted(true);
     runValidation(rawValue);
-    resolvedInputProps.onChange?.(event);
     props.onChange?.(buildFullValue(rawValue));
   };
 

@@ -15,26 +15,57 @@ export type SgInputCNPJProps = Omit<SgInputTextProps, "inputProps" | "error"> & 
   validation?: (value: string) => string | null;
   onValidation?: (message: string | null) => void;
   validateOnBlur?: boolean;
+  validateWithPublicaCnpj?: boolean;
+  publicaCnpjErrorMessage?: string;
+  publicaCnpjFetch?: (cnpj: string) => Promise<unknown | null>;
+  onPublicaCnpjResult?: (data: unknown | null) => void;
+  onPublicaCnpjError?: (error: unknown) => void;
 };
+
+function onlyAlnumUpper(value: string) {
+  return value.replace(/[^0-9A-Za-z]/g, "").toUpperCase();
+}
 
 function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
+const defaultPublicaCnpjFetch = async (cnpj: string) => {
+  const response = await fetch(`https://publica.cnpj.ws/cnpj/${cnpj}`);
+  if (!response.ok) return null;
+  return response.json();
+};
+
 export function SgInputCNPJ(props: SgInputCNPJProps) {
-  const { required, requiredMessage, lengthMessage, invalidMessage, validateOnBlur, error, validation, ...rest } = props;
+  const {
+    required,
+    requiredMessage,
+    lengthMessage,
+    invalidMessage,
+    validateOnBlur,
+    error,
+    validation,
+    validateWithPublicaCnpj,
+    publicaCnpjErrorMessage,
+    publicaCnpjFetch,
+    onPublicaCnpjResult,
+    onPublicaCnpjError,
+    ...rest
+  } = props;
   const [internalError, setInternalError] = React.useState<string | null>(null);
+  const lastValidatedCnpjRef = React.useRef<string | null>(null);
+  const lastPublicaFoundRef = React.useRef<boolean | null>(null);
 
   const runValidation = React.useCallback(
-    (value: string) => {
-      const digits = onlyDigits(value);
-      if (!digits && !required) {
+    async (value: string) => {
+      const raw = onlyAlnumUpper(value);
+      if (!raw && !required) {
         setInternalError(null);
         props.onValidation?.(null);
         return;
       }
-      if (!digits && required) {
-        const message = requiredMessage ?? "Campo obrigatório ";
+      if (!raw && required) {
+        const message = requiredMessage ?? "Campo obrigatorio.";
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -47,29 +78,73 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
           return;
         }
       }
-      if (digits.length !== 14) {
-        const message = lengthMessage ?? "CNPJ deve ter 14 dígitos.";
+      if (raw.length !== 14) {
+        const message = lengthMessage ?? "CNPJ deve ter 14 digitos.";
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (!isValidCnpj(value)) {
-        const message = invalidMessage ?? "CNPJ inválido.";
+        const message = invalidMessage ?? "CNPJ invalido.";
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
+      if (validateWithPublicaCnpj && !/[A-Z]/.test(raw)) {
+        const digits = onlyDigits(raw);
+        if (digits.length === 14) {
+          if (lastValidatedCnpjRef.current === digits) {
+            const message = publicaCnpjErrorMessage ?? invalidMessage ?? "CNPJ invalido.";
+            if (lastPublicaFoundRef.current === false) {
+              setInternalError(message);
+              props.onValidation?.(message);
+            } else {
+              setInternalError(null);
+              props.onValidation?.(null);
+            }
+            return;
+          }
+          try {
+            const checker = publicaCnpjFetch ?? defaultPublicaCnpjFetch;
+            const data = await checker(digits);
+            lastValidatedCnpjRef.current = digits;
+            lastPublicaFoundRef.current = Boolean(data);
+            onPublicaCnpjResult?.(data);
+            if (!data) {
+              const message = publicaCnpjErrorMessage ?? invalidMessage ?? "CNPJ invalido.";
+              setInternalError(message);
+              props.onValidation?.(message);
+              return;
+            }
+          } catch (err) {
+            onPublicaCnpjError?.(err);
+          }
+        }
+      }
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [required, requiredMessage, lengthMessage, invalidMessage, validation, props]
+    [
+      required,
+      requiredMessage,
+      lengthMessage,
+      invalidMessage,
+      validation,
+      props,
+      validateWithPublicaCnpj,
+      publicaCnpjErrorMessage,
+      publicaCnpjFetch,
+      onPublicaCnpjResult,
+      onPublicaCnpjError
+    ]
   );
 
   const inputProps = {
     ...rest.inputProps,
-    inputMode: rest.inputProps.inputMode ?? "numeric",
+    inputMode: rest.inputProps.inputMode ?? "text",
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
       event.target.value = maskCnpj(event.target.value);
+      runValidation(event.currentTarget.value);
       rest.inputProps.onChange?.(event);
     }
   };
@@ -82,6 +157,13 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
       {...rest}
       maxLength={rest.maxLength ?? 18}
       error={error ?? internalError ?? undefined}
+      onClear={() => {
+        setInternalError(null);
+        props.onValidation?.(null);
+        lastValidatedCnpjRef.current = null;
+        lastPublicaFoundRef.current = null;
+        rest.onClear?.();
+      }}
       inputProps={{
         ...inputProps,
         onBlur: (event) => {

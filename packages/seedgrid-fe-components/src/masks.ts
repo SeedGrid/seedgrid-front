@@ -2,6 +2,10 @@ export function onlyDigits(value: string) {
   return value.replace(/\D/g, "");
 }
 
+function onlyAlnumUpper(value: string) {
+  return value.replace(/[^0-9A-Za-z]/g, "").toUpperCase();
+}
+
 export function maskCpf(value: string) {
   const digits = onlyDigits(value).slice(0, 11);
   const part1 = digits.slice(0, 3);
@@ -13,12 +17,12 @@ export function maskCpf(value: string) {
 }
 
 export function maskCnpj(value: string) {
-  const digits = onlyDigits(value).slice(0, 14);
-  const part1 = digits.slice(0, 2);
-  const part2 = digits.slice(2, 5);
-  const part3 = digits.slice(5, 8);
-  const part4 = digits.slice(8, 12);
-  const part5 = digits.slice(12, 14);
+  const chars = onlyAlnumUpper(value).slice(0, 14);
+  const part1 = chars.slice(0, 2);
+  const part2 = chars.slice(2, 5);
+  const part3 = chars.slice(5, 8);
+  const part4 = chars.slice(8, 12);
+  const part5 = chars.slice(12, 14);
   let out = [part1, part2, part3].filter(Boolean).join(".");
   if (part4) out += `/${part4}`;
   if (part5) out += `-${part5}`;
@@ -26,6 +30,10 @@ export function maskCnpj(value: string) {
 }
 
 export function maskCpfCnpj(value: string) {
+  const alnum = onlyAlnumUpper(value);
+  if (/[A-Z]/.test(alnum)) {
+    return maskCnpj(alnum);
+  }
   const digits = onlyDigits(value);
   return digits.length <= 11 ? maskCpf(digits) : maskCnpj(digits);
 }
