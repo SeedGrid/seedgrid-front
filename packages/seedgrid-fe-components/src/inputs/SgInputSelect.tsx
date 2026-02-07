@@ -1,6 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import type { RhfFieldProps } from "../rhf";
 
 export type SgInputSelectProps = {
   id: string;
@@ -10,14 +13,51 @@ export type SgInputSelectProps = {
   options: Array<{ value: string; label: string }>;
   selectProps: React.SelectHTMLAttributes<HTMLSelectElement>;
   alwaysFloat?: boolean;
-};
+} & RhfFieldProps;
+
+type SgInputSelectBaseProps = Omit<SgInputSelectProps, keyof RhfFieldProps>;
 
 function ErrorText(props: { message?: string }) {
   if (!props.message) return null;
   return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
 }
 
-export function SgInputSelect(props: SgInputSelectProps) {
+function mergeSelectPropsWithField(
+  selectProps: React.SelectHTMLAttributes<HTMLSelectElement> | undefined,
+  field: ControllerRenderProps<FieldValues, string>
+) {
+  const resolvedValue =
+    typeof field.value === "string" || typeof field.value === "number" || Array.isArray(field.value)
+      ? field.value
+      : field.value == null
+        ? ""
+        : String(field.value);
+
+  return {
+    ...selectProps,
+    value: resolvedValue,
+    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => {
+      field.onChange(event);
+      selectProps?.onChange?.(event);
+    },
+    onBlur: (event: React.FocusEvent<HTMLSelectElement>) => {
+      field.onBlur();
+      selectProps?.onBlur?.(event);
+    },
+    ref: (node: HTMLSelectElement | null) => {
+      field.ref(node);
+      const ref = (selectProps as { ref?: React.Ref<HTMLSelectElement> })?.ref;
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref && typeof ref === "object" && "current" in ref) {
+        (ref as { current: HTMLSelectElement | null }).current = node;
+      }
+    }
+  };
+}
+
+function SgInputSelectBase(props: SgInputSelectBaseProps) {
   const selectRef = React.useRef<HTMLSelectElement | null>(null);
   const [isFilled, setIsFilled] = React.useState<boolean>(() => {
     const value = props.selectProps.value ?? props.selectProps.defaultValue ?? "";
@@ -42,7 +82,7 @@ export function SgInputSelect(props: SgInputSelectProps) {
       if (typeof ref === "function") {
         ref(node);
       } else if (typeof ref === "object") {
-        (ref as React.MutableRefObject<HTMLSelectElement | null>).current = node;
+        (ref as { current: HTMLSelectElement | null }).current = node;
       }
     },
     [props.selectProps]
@@ -111,6 +151,28 @@ export function SgInputSelect(props: SgInputSelectProps) {
   );
 }
 
-
-
-
+export function SgInputSelect(props: SgInputSelectProps) {
+  const { control, name, ...rest } = props;
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({
+          field,
+          fieldState
+        }: {
+          field: ControllerRenderProps<FieldValues, string>;
+          fieldState: ControllerFieldState;
+        }) => (
+          <SgInputSelectBase
+            {...rest}
+            error={rest.error ?? fieldState.error?.message}
+            selectProps={mergeSelectPropsWithField(rest.selectProps, field)}
+          />
+        )}
+      />
+    );
+  }
+  return <SgInputSelectBase {...rest} />;
+}

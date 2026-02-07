@@ -1,6 +1,10 @@
-﻿"use client";
+"use client";
 
 import React from "react";
+import { X } from "lucide-react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import type { RhfFieldProps } from "../rhf";
 
 export type SgInputTextAreaProps = {
   id: string;
@@ -37,14 +41,47 @@ export type SgInputTextAreaProps = {
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;
-};
+} & RhfFieldProps;
+
+type SgInputTextAreaBaseProps = Omit<SgInputTextAreaProps, keyof RhfFieldProps>;
 
 function ErrorText(props: Readonly<{ message?: string }>) {
   if (!props.message) return null;
-  return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
+  return <p className="text-xs text-red-600">{props.message}</p>;
 }
 
-export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
+function mergeTextareaPropsWithField(
+  textareaProps: React.TextareaHTMLAttributes<HTMLTextAreaElement> | undefined,
+  field: ControllerRenderProps<FieldValues, string>
+) {
+  const resolvedValue =
+    typeof field.value === "string" ? field.value : field.value == null ? "" : String(field.value);
+
+  return {
+    ...textareaProps,
+    value: resolvedValue,
+    onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      field.onChange(event);
+      textareaProps?.onChange?.(event);
+    },
+    onBlur: (event: React.FocusEvent<HTMLTextAreaElement>) => {
+      field.onBlur();
+      textareaProps?.onBlur?.(event);
+    },
+    ref: (node: HTMLTextAreaElement | null) => {
+      field.ref(node);
+      const ref = (textareaProps as { ref?: React.Ref<HTMLTextAreaElement> })?.ref;
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref && typeof ref === "object" && "current" in ref) {
+        (ref as { current: HTMLTextAreaElement | null }).current = node;
+      }
+    }
+  };
+}
+
+function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
   const textareaProps = props.textareaProps ?? {};
   const labelText = props.labelText ?? props.label ?? "";
   const placeholder = props.hintText ?? labelText;
@@ -79,7 +116,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
       if (!ref) return;
       if (typeof ref === "function") {
         ref(node);
-      } else if (ref && typeof ref === "object" && "current" in ref) {
+      } else if (typeof ref === "object") {
         (ref as { current: HTMLTextAreaElement | null }).current = node;
       }
     },
@@ -90,7 +127,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
     (value: string) => {
       const required = props.required ?? false;
       if (!value && required) {
-        const message = props.requiredMessage ?? "Campo de preenchimento obrigatório.";
+        const message = props.requiredMessage ?? "Campo de preenchimento obrigatorio.";
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -106,13 +143,13 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
       if (props.minNumberOfWords && wordCount(value) < props.minNumberOfWords) {
         const message =
           props.minNumberOfWordsMessage ??
-          `Texto tem de ter no mínimo ${props.minNumberOfWords} palavra(s).`;
+          `Texto tem de ter no minimo ${props.minNumberOfWords} palavra(s).`;
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (props.minLines && lineCount(value) < props.minLines) {
-        const message = props.minLinesMessage ?? `Texto tem de ter no mínimo ${props.minLines} linha(s)`;
+        const message = props.minLinesMessage ?? `Texto tem de ter no minimo ${props.minLines} linha(s)`;
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -242,7 +279,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
             className="absolute right-2 top-3 rounded px-1 text-xs text-foreground/60 hover:text-foreground"
             aria-label="Limpar"
           >
-            ×
+ <X size={16} /> 
           </button>
         ) : null}
       </div>
@@ -256,6 +293,32 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
       </div>
     </div>
   );
+}
+
+export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
+  const { control, name, ...rest } = props;
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({
+          field,
+          fieldState
+        }: {
+          field: ControllerRenderProps<FieldValues, string>;
+          fieldState: ControllerFieldState;
+        }) => (
+          <SgInputTextAreaBase
+            {...rest}
+            error={rest.error ?? fieldState.error?.message}
+            textareaProps={mergeTextareaPropsWithField(rest.textareaProps, field)}
+          />
+        )}
+      />
+    );
+  }
+  return <SgInputTextAreaBase {...rest} />;
 }
 
 function wordCount(value: string) {

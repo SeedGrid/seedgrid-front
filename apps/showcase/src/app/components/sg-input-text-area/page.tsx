@@ -13,10 +13,27 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
+function buildRhfCode(code: string, baseName = "campo", defaultValues?: string) {
+  const matches = code.match(/<SgInputTextArea\b/g) ?? [];
+  const count = Math.max(matches.length, 1);
+  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
+  let cursor = 0;
+  const withControl = code.replace(/<SgInputTextArea\b/g, () => {
+    const name = names[cursor] ?? baseName;
+    cursor += 1;
+    return `<SgInputTextArea\n  name="${name}"\n  control={control}`;
+  });
+  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
+  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputTextArea } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+}
+
+function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
+  const content = props.wrapRHF === false
+    ? props.code
+    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
   return (
     <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
-      {props.code}
+      {content}
     </pre>
   );
 }
@@ -126,27 +143,42 @@ export default function SgInputTextAreaPage() {
             <li>Para setar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;novo texto&quot;)</code></li>
             <li>Para limpar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;&quot;)</code></li>
           </ul>
-          <CodeBlock code={`const [value, setValue] = useState("");
+          <CodeBlock
+            wrapRHF={false}
+            code={`import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputTextArea } from "@seedgrid/fe-components";
 
-// O textarea exibe e sincroniza com o estado
-<SgInputTextArea
-  id="obs"
-  label="Observacoes"
-  textareaProps={{
-    value,
-    onChange: (e) => setValue(e.target.value)
-  }}
-/>
+export default function Example() {
+  const { control, handleSubmit, setValue, watch } = useForm({
+    defaultValues: { obs: "" }
+  });
 
-// Botao que preenche via API
-<button onClick={() => setValue("Texto via API.\\nSegunda linha.")}>
-  Simular preenchimento via API
-</button>
+  const onSubmit = (data) => console.log(data);
+  const value = watch("obs");
 
-// Botao que limpa o campo
-<button onClick={() => setValue("")}>
-  Limpar campo
-</button>`} />
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SgInputTextArea
+        id="obs"
+        name="obs"
+        control={control}
+        label="Observacoes"
+      />
+
+      <button type="button" onClick={() => setValue("obs", "Texto via API.\\nSegunda linha.")}>
+        Simular preenchimento via API
+      </button>
+
+      <button type="button" onClick={() => setValue("obs", "")}>
+        Limpar campo
+      </button>
+
+      <p>Valor atual: "{value}"</p>
+    </form>
+  );
+}`}
+          />
         </div>
       </Section>
 

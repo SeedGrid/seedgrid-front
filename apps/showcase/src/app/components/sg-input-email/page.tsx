@@ -13,10 +13,27 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
+function buildRhfCode(code: string, baseName = "email", defaultValues?: string) {
+  const matches = code.match(/<SgInputEmail\b/g) ?? [];
+  const count = Math.max(matches.length, 1);
+  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
+  let cursor = 0;
+  const withControl = code.replace(/<SgInputEmail\b/g, () => {
+    const name = names[cursor] ?? baseName;
+    cursor += 1;
+    return `<SgInputEmail\n  name="${name}"\n  control={control}`;
+  });
+  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
+  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputEmail } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+}
+
+function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
+  const content = props.wrapRHF === false
+    ? props.code
+    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
   return (
     <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
-      {props.code}
+      {content}
     </pre>
   );
 }
@@ -147,11 +164,11 @@ export default function SgInputEmailPage() {
       </Section>
 
       <Section title="Lista bloqueada padrao" description="Dominios bloqueados por default.">
-        <CodeBlock code={JSON.stringify({ blockedEmailDomains: DEFAULT_BLOCKED_EMAIL_DOMAINS }, null, 2)} />
+        <CodeBlock wrapRHF={false} code={JSON.stringify({ blockedEmailDomains: DEFAULT_BLOCKED_EMAIL_DOMAINS }, null, 2)} />
       </Section>
 
       <Section title="Config JSON" description="A aplicacao host pode carregar um JSON e adicionar dominios em runtime.">
-        <CodeBlock code={`// Exemplo (app host)
+        <CodeBlock wrapRHF={false} code={`// Exemplo (app host)
 // 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
 // {
 //   "blockedEmailDomains": ["exemplo.com", "teste.com"]

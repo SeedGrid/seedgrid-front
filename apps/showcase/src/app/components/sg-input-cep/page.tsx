@@ -13,10 +13,27 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
+function buildRhfCode(code: string, baseName = "cep", defaultValues?: string) {
+  const matches = code.match(/<SgInputCEP\b/g) ?? [];
+  const count = Math.max(matches.length, 1);
+  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
+  let cursor = 0;
+  const withControl = code.replace(/<SgInputCEP\b/g, () => {
+    const name = names[cursor] ?? baseName;
+    cursor += 1;
+    return `<SgInputCEP\n  name="${name}"\n  control={control}`;
+  });
+  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
+  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputCEP } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+}
+
+function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
+  const content = props.wrapRHF === false
+    ? props.code
+    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
   return (
     <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
-      {props.code}
+      {content}
     </pre>
   );
 }
