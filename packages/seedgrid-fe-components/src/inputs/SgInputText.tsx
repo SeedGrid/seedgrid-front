@@ -18,7 +18,9 @@ export type SgInputTextProps = {
   placeholder?: string;
   className?: string;
   labelClassName?: string;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: (React.InputHTMLAttributes<HTMLInputElement> & {
+    ref?: React.Ref<HTMLInputElement>;
+  });
   maxLength?: number;
   minLength?: number;
   minLengthMessage?: string;

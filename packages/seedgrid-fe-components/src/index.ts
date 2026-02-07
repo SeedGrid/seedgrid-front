@@ -18,6 +18,11 @@ export { SgInputEmail } from "./inputs/SgInputEmail";
 export { SgInputPassword } from "./inputs/SgInputPassword";
 export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
+export { SgAutocomplete } from "./inputs/SgAutocomplete";
+export type { SgAutocompleteItem, SgAutocompleteProps } from "./inputs/SgAutocomplete";
+export { SgToaster } from "./commons/SgToaster";
+export type { SgToasterProps } from "./commons/SgToaster";
+export { toast } from "sonner";
 export { onlyDigits, maskCpf, maskCnpj, maskCpfCnpj, maskCep, maskPhone } from "./masks";
 export {
   isValidCpf,

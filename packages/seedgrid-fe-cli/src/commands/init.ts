@@ -178,7 +178,9 @@ export async function cmdInit(params: { appName?: string }) {
         "class-variance-authority": "^0.7.0",
         "@seedgrid/fe-core": vendorDependencySpec("@seedgrid/fe-core"),
         "@seedgrid/fe-commons": vendorDependencySpec("@seedgrid/fe-commons"),
-        "@seedgrid/fe-theme": vendorDependencySpec("@seedgrid/fe-theme")
+        "@seedgrid/fe-theme": vendorDependencySpec("@seedgrid/fe-theme"),
+        "@seedgrid/fe-components": vendorDependencySpec("@seedgrid/fe-components"),
+        "sonner": "^1.7.0"
       },
       devDependencies: {
         tailwindcss: "^3.4.10",
@@ -331,7 +333,7 @@ export const seedgridConfig: SeedGridAppConfig = {
     },
     {
       path: path.join(appRoot, "src", "app", "layout.tsx"),
-      content: `import "./globals.css";\nimport React from "react";\nimport { SeedGridAppProvider } from "../seedgrid/provider";\nimport { SeedGridNav } from "../seedgrid/navigation";\nimport { AppShell } from "@seedgrid/fe-theme";\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"pt-BR\">\n      <body>\n        <SeedGridAppProvider>\n          <AppShell nav={<SeedGridNav />}>{children}</AppShell>\n        </SeedGridAppProvider>\n      </body>\n    </html>\n  );\n}\n`
+      content: `import "./globals.css";\nimport React from "react";\nimport { SeedGridAppProvider } from "../seedgrid/provider";\nimport { SeedGridNav } from "../seedgrid/navigation";\nimport { AppShell } from "@seedgrid/fe-theme";\nimport { SgToaster } from "@seedgrid/fe-components";\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"pt-BR\">\n      <body>\n        <SeedGridAppProvider>\n          <AppShell nav={<SeedGridNav />}>{children}</AppShell>\n          <SgToaster />\n        </SeedGridAppProvider>\n      </body>\n    </html>\n  );\n}\n`
     },
     {
       path: path.join(appRoot, "src", "app", "page.tsx"),

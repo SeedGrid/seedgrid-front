@@ -1,6 +1,7 @@
 import "./globals.css";
 import React from "react";
 import Link from "next/link";
+import { SgToaster } from "@seedgrid/fe-components";
 
 export const metadata = {
   title: "SeedGrid Components Showcase"
@@ -19,6 +20,7 @@ const COMPONENTS = [
   { slug: "sg-input-cpf-cnpj", label: "SgInputCPFCNPJ" },
   { slug: "sg-input-cep", label: "SgInputCEP" },
   { slug: "sg-input-phone", label: "SgInputPhone" },
+  { slug: "sg-autocomplete", label: "SgAutocomplete" },
   { slug: "sg-group-box", label: "SgGroupBox" },
   { slug: "sg-wizard", label: "SgWizard" }
 ];
@@ -45,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </nav>
         </aside>
         <main className="flex-1 p-8 overflow-y-auto">{children}</main>
+        <SgToaster />
       </body>
     </html>
   );

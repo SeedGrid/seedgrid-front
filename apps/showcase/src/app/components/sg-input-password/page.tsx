@@ -127,6 +127,52 @@ export default function SgInputPasswordPage() {
 />`} />
       </Section>
 
+      <Section title="Regras configuraveis" description="Exemplo com regras desativadas.">
+        <div className="w-80">
+          <SgInputPassword
+            id="demo-rules-off"
+            label="Senha simples"
+            hintText="Sem regras extras"
+            upperRequired={false}
+            lowerRequired={false}
+            numberRequired={false}
+            specialCharacterRequired={false}
+            prohibitsRepeatedCharactersInSequence={false}
+            minSize={4}
+          />
+        </div>
+        <CodeBlock code={`<SgInputPassword
+  id="senha"
+  label="Senha simples"
+  hintText="Sem regras extras"
+  upperRequired={false}
+  lowerRequired={false}
+  numberRequired={false}
+  specialCharacterRequired={false}
+  prohibitsRepeatedCharactersInSequence={false}
+  minSize={4}
+/>`} />
+      </Section>
+
+      <Section title="Gerador de senha" description="Botao para criar senha conforme regras.">
+        <div className="w-80">
+          <SgInputPassword
+            id="demo-generate"
+            label="Senha segura"
+            hintText="Clique para gerar"
+            createNewPasswordButton
+            minSize={10}
+          />
+        </div>
+        <CodeBlock code={`<SgInputPassword
+  id="senha"
+  label="Senha segura"
+  hintText="Clique para gerar"
+  createNewPasswordButton
+  minSize={10}
+/>`} />
+      </Section>
+
       <Section title="Contador de caracteres" description="Limita e exibe contagem.">
         <div className="w-80">
           <SgInputPassword

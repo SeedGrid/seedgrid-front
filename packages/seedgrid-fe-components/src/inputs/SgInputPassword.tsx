@@ -15,6 +15,13 @@ export type SgInputPasswordProps = Omit<
   hidePassword?: boolean;
   maxLength?: number;
   validation?: (value: string) => string | null;
+  createNewPasswordButton?: boolean;
+  upperRequired?: boolean;
+  lowerRequired?: boolean;
+  numberRequired?: boolean;
+  specialCharacterRequired?: boolean;
+  prohibitsRepeatedCharactersInSequence?: boolean;
+  minSize?: number;
 };
 
 export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
@@ -29,35 +36,163 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     hidePassword,
     maxLength,
     validation,
+    createNewPasswordButton = false,
+    onChange,
+    upperRequired = true,
+    lowerRequired = true,
+    numberRequired = true,
+    specialCharacterRequired = true,
+    prohibitsRepeatedCharactersInSequence = true,
+    minSize = 8,
     ...rest
   } = props;
   const [internalError, setInternalError] = React.useState<string | null>(null);
   const [isHidden, setIsHidden] = React.useState(hidePassword ?? true);
   const [hasInteracted, setHasInteracted] = React.useState(false);
+  const [unmetRequirements, setUnmetRequirements] = React.useState<string[]>([]);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const getUnmetRequirements = React.useCallback(
+    (value: string) => {
+      const unmet: string[] = [];
+      if (value.length < minSize) unmet.push(`Minimo ${minSize} caracteres.`);
+      if (upperRequired && !/[A-Z]/.test(value)) unmet.push("Pelo menos 1 letra maiuscula.");
+      if (lowerRequired && !/[a-z]/.test(value)) unmet.push("Pelo menos 1 letra minuscula.");
+      if (numberRequired && !/[0-9]/.test(value)) unmet.push("Pelo menos 1 numero.");
+      if (specialCharacterRequired && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value)) {
+        unmet.push("Pelo menos 1 caractere especial.");
+      }
+      if (prohibitsRepeatedCharactersInSequence && /(.)\1/.test(value)) {
+        unmet.push("Nao repetir caracteres em sequencia.");
+      }
+      return unmet;
+    },
+    [lowerRequired, minSize, numberRequired, prohibitsRepeatedCharactersInSequence, specialCharacterRequired, upperRequired]
+  );
+
+  const strengthScore = React.useMemo(() => {
+    const totalChecks = [
+      minSize,
+      upperRequired,
+      lowerRequired,
+      numberRequired,
+      specialCharacterRequired,
+      prohibitsRepeatedCharactersInSequence
+    ];
+    const activeChecks = totalChecks.filter((v) => v !== false).length;
+    if (activeChecks === 0) return 0;
+    return activeChecks - unmetRequirements.length;
+  }, [
+    lowerRequired,
+    minSize,
+    numberRequired,
+    prohibitsRepeatedCharactersInSequence,
+    specialCharacterRequired,
+    upperRequired,
+    unmetRequirements.length
+  ]);
+
+  const getStrengthColor = (score: number) => {
+    if (score === 0) return "bg-border";
+    if (score <= 1) return "bg-destructive";
+    if (score <= 2) return "bg-orange-500";
+    if (score <= 3) return "bg-amber-500";
+    if (score === 4) return "bg-yellow-400";
+    return "bg-green-500";
+  };
+
+  const generatePassword = React.useCallback(() => {
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const numbers = "0123456789";
+    const specials = "!@#$%^&*()_+-=[]{};':\"\\|,.<>/?";
+    const requiredGroups: string[] = [];
+    if (upperRequired) requiredGroups.push(upper);
+    if (lowerRequired) requiredGroups.push(lower);
+    if (numberRequired) requiredGroups.push(numbers);
+    if (specialCharacterRequired) requiredGroups.push(specials);
+
+    const pool =
+      (upperRequired ? upper : "") +
+      (lowerRequired ? lower : "") +
+      (numberRequired ? numbers : "") +
+      (specialCharacterRequired ? specials : "") ||
+      upper + lower + numbers;
+
+    const targetLength = Math.max(minSize, maxLength ?? minSize);
+    const randomInt = (max: number) => {
+      const array = new Uint32Array(1);
+      crypto.getRandomValues(array);
+      return (array[0] ?? 0) % max;
+    };
+    const pick = (set: string) => set[randomInt(set.length)] ?? "";
+    const shuffle = (arr: string[]) => {
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = randomInt(i + 1);
+        const left = arr[i] ?? "";
+        const right = arr[j] ?? "";
+        arr[i] = right;
+        arr[j] = left;
+      }
+      return arr;
+    };
+
+    let candidate = "";
+    let attempts = 0;
+    while (attempts < 50) {
+      attempts += 1;
+      const chars: string[] = [];
+      requiredGroups.forEach((group) => {
+        chars.push(pick(group));
+      });
+      while (chars.length < targetLength) {
+        chars.push(pick(pool));
+      }
+      candidate = shuffle(chars).join("");
+      const unmet = getUnmetRequirements(candidate);
+      if (unmet.length === 0) break;
+    }
+    return candidate;
+  }, [
+    getUnmetRequirements,
+    lowerRequired,
+    maxLength,
+    minSize,
+    numberRequired,
+    specialCharacterRequired,
+    upperRequired
+  ]);
 
   const runValidation = React.useCallback(
     (value: string) => {
       if (!value && !required) {
         setInternalError(null);
         onValidation?.(null);
+        setUnmetRequirements([]);
         return;
       }
       if (!value && required) {
         const message = requiredMessage ?? "Campo obrigatório";
         setInternalError(message);
         onValidation?.(message);
+        setUnmetRequirements([]);
         return;
       }
-      const message = validation?.(value) ?? null;
+      const unmet = getUnmetRequirements(value);
+      const customMessage = validation?.(value) ?? null;
+      const combined = customMessage ? [...unmet, customMessage] : unmet;
+      setUnmetRequirements(combined);
+      const message: string | null = combined.length > 0 ? (combined[0] ?? null) : null;
       setInternalError(message);
       onValidation?.(message);
     },
-    [onValidation, required, requiredMessage, validation]
+    [getUnmetRequirements, onValidation, required, requiredMessage, validation]
   );
 
-  const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> & {
+  const mergedInputProps: (React.InputHTMLAttributes<HTMLInputElement> & {
     "data-sg-password"?: string;
-  } = {
+    ref?: React.Ref<HTMLInputElement>;
+  }) = {
     ...inputProps,
     "data-sg-password": "true",
     onChange: (event) => {
@@ -70,7 +205,31 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         runValidation(event.currentTarget.value);
       }
       inputProps?.onBlur?.(event);
+    },
+    ref: undefined
+  };
+
+  const setRef = (node: HTMLInputElement | null) => {
+    inputRef.current = node;
+    const ref = (inputProps as { ref?: React.Ref<HTMLInputElement> })?.ref;
+    if (!ref) return;
+    if (typeof ref === "function") {
+      ref(node);
+    } else if (ref && typeof ref === "object" && "current" in ref) {
+      (ref as { current: HTMLInputElement | null }).current = node;
     }
+  };
+
+  const applyValue = (value: string) => {
+    if (inputRef.current) {
+      inputRef.current.value = value;
+    }
+    const event = {
+      target: inputRef.current ?? { value },
+      currentTarget: inputRef.current ?? { value }
+    } as React.ChangeEvent<HTMLInputElement>;
+    mergedInputProps.onChange?.(event);
+    onChange?.(value);
   };
 
   const toggleIcon = (
@@ -118,6 +277,35 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     </button>
   );
 
+  const generateIcon = createNewPasswordButton ? (
+    <button
+      type="button"
+      onClick={() => {
+        const next = generatePassword();
+        applyValue(next);
+      }}
+      className="rounded p-1 text-foreground/60 hover:text-foreground"
+      aria-label="Gerar senha"
+      title="Gerar senha"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M3 12a9 9 0 1 0 3-6.7" />
+        <path d="M3 3v6h6" />
+      </svg>
+    </button>
+  ) : null;
+
   return (
     <>
       <style>{`
@@ -136,9 +324,28 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
           onValidation?.(null);
           onClear?.();
         }}
-        inputProps={mergedInputProps}
-        iconButtons={[toggleIcon, ...(props.iconButtons ?? [])]}
+        inputProps={{ ...mergedInputProps, ref: setRef }}
+        iconButtons={[toggleIcon, ...(generateIcon ? [generateIcon] : []), ...(props.iconButtons ?? [])]}
       />
+      <div className="mt-2">
+        <div className="mb-2 flex h-1 w-full gap-1">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <span
+              key={index}
+              className={`h-full flex-1 rounded-full transition-all duration-300 ease-out ${
+                index < Math.min(5, strengthScore) ? getStrengthColor(strengthScore) : "bg-border"
+              }`}
+            />
+          ))}
+        </div>
+        {unmetRequirements.length > 0 ? (
+          <ul className="space-y-1 text-xs text-destructive">
+            {unmetRequirements.map((req, index) => (
+              <li key={`${req}-${index}`}>{req}</li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
     </>
   );
 }
