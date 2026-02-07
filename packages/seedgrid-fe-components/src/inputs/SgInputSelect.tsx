@@ -14,7 +14,7 @@ export type SgInputSelectProps = {
 
 function ErrorText(props: { message?: string }) {
   if (!props.message) return null;
-  return <p className="text-xs text-red-600">{props.message}</p>;
+  return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
 }
 
 export function SgInputSelect(props: SgInputSelectProps) {

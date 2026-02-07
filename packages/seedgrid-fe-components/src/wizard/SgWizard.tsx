@@ -47,6 +47,7 @@ export function SgWizard(props: SgWizardProps) {
   });
   const [isFinishing, setIsFinishing] = React.useState(false);
   const [isValidating, setIsValidating] = React.useState(false);
+  const pageRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     props.onStepChange?.(step);
@@ -56,29 +57,38 @@ export function SgWizard(props: SgWizardProps) {
   const isFirst = step <= 0;
   const isLast = step >= pages.length - 1;
 
+  const validateCurrentPage = async (): Promise<boolean> => {
+    const container = pageRef.current;
+    if (!container) return true;
+    const inputs = container.querySelectorAll<HTMLElement>("input, select, textarea");
+    for (const input of Array.from(inputs)) {
+      input.focus({ preventScroll: true });
+      input.blur();
+    }
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const errors = container.querySelectorAll("[data-sg-error]");
+    return errors.length === 0;
+  };
+
   const goNext = async () => {
     if (isLast) return;
     if (isValidating) return;
-    const current = step;
-    if (props.validateStep) {
-      setIsValidating(true);
-      try {
-        const ok = await props.validateStep(current);
+    setIsValidating(true);
+    try {
+      const pageValid = await validateCurrentPage();
+      if (!pageValid) return;
+      if (props.validateStep) {
+        const ok = await props.validateStep(step);
         if (!ok) return;
-      } finally {
-        setIsValidating(false);
       }
-    }
-    if (props.onBeforeNext) {
-      setIsValidating(true);
-      try {
-        const ok = await props.onBeforeNext(current);
+      if (props.onBeforeNext) {
+        const ok = await props.onBeforeNext(step);
         if (!ok) return;
-      } finally {
-        setIsValidating(false);
       }
+      setStep((prev) => Math.min(prev + 1, pages.length - 1));
+    } finally {
+      setIsValidating(false);
     }
-    setStep((prev) => Math.min(prev + 1, pages.length - 1));
   };
 
   const goPrevious = () => {
@@ -89,14 +99,20 @@ export function SgWizard(props: SgWizardProps) {
   const handleFinish = async () => {
     if (isFinishing) return;
     if (isValidating) return;
-    if (props.onBeforeFinish) {
-      setIsValidating(true);
-      try {
+    setIsValidating(true);
+    try {
+      const pageValid = await validateCurrentPage();
+      if (!pageValid) return;
+      if (props.validateStep) {
+        const ok = await props.validateStep(step);
+        if (!ok) return;
+      }
+      if (props.onBeforeFinish) {
         const ok = await props.onBeforeFinish(step);
         if (!ok) return;
-      } finally {
-        setIsValidating(false);
       }
+    } finally {
+      setIsValidating(false);
     }
     setIsFinishing(true);
     try {
@@ -108,7 +124,7 @@ export function SgWizard(props: SgWizardProps) {
 
   return (
     <div className={props.className}>
-      <div>{pages[step]}</div>
+      <div ref={pageRef}>{pages[step]}</div>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           {!isFirst ? (
