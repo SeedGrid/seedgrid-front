@@ -1,8 +1,12 @@
+"use client";
+
+import React from "react";
 import Link from "next/link";
+import { t, useShowcaseI18n } from "../i18n";
 
 const COMPONENTS = [
   {
-    category: "Inputs",
+    categoryKey: "showcase.nav.inputs",
     items: [
       { slug: "sg-input-text", name: "SgInputText", desc: "Input de texto base com floating label, validacao, contador e botao limpar" },
       { slug: "sg-input-text-area", name: "SgInputTextArea", desc: "Input multi-linha com contagem de palavras e linhas" },
@@ -20,13 +24,13 @@ const COMPONENTS = [
     ]
   },
   {
-    category: "Layout",
+    categoryKey: "showcase.nav.layout",
     items: [
       { slug: "sg-group-box", name: "SgGroupBox", desc: "Container agrupado com legenda (fieldset/legend)" }
     ]
   },
   {
-    category: "Wizard",
+    categoryKey: "showcase.nav.wizard",
     items: [
       { slug: "sg-wizard", name: "SgWizard", desc: "Formulario multi-etapas com navegacao e callback async" }
     ]
@@ -34,30 +38,45 @@ const COMPONENTS = [
 ];
 
 export default function HomePage() {
+  const i18n = useShowcaseI18n();
+
+  const renderWithTokens = (text: string, tokens: Record<string, React.ReactNode>) => {
+    const pattern = new RegExp(`(${Object.keys(tokens).map((k) => `\\{${k}\\}`).join("|")})`, "g");
+    return text.split(pattern).map((part, index) => {
+      const key = part.replace(/[{}]/g, "");
+      return tokens[key] ? <span key={index}>{tokens[key]}</span> : <span key={index}>{part}</span>;
+    });
+  };
+
   return (
     <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold">SeedGrid Components</h1>
+      <h1 className="text-3xl font-bold">{t(i18n, "showcase.home.title")}</h1>
       <p className="mt-2 text-muted-foreground">
-        Catalogo interativo de todos os componentes do pacote <code className="rounded bg-muted px-1.5 py-0.5 text-sm font-mono">@seedgrid/fe-components</code>.
-        Clique em qualquer componente para ver exemplos interativos e documentacao de props.
+        {renderWithTokens(t(i18n, "showcase.home.description"), {
+          pkg: <code className="rounded bg-muted px-1.5 py-0.5 text-sm font-mono">@seedgrid/fe-components</code>
+        })}
       </p>
 
       <section className="mt-6 rounded-lg border border-border bg-foreground/5 p-5">
-        <h2 className="text-lg font-semibold">About</h2>
+        <h2 className="text-lg font-semibold">{t(i18n, "showcase.home.about.title")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Os componentes SG encapsulam o React Hook Form. Quando voce informa{" "}
-          <code className="rounded bg-muted px-1">name</code> e <code className="rounded bg-muted px-1">control</code>, o componente
-          ja aplica o <code className="rounded bg-muted px-1">Controller</code> internamente.
+          {renderWithTokens(t(i18n, "showcase.home.about.p1"), {
+            name: <code className="rounded bg-muted px-1">name</code>,
+            control: <code className="rounded bg-muted px-1">control</code>,
+            controller: <code className="rounded bg-muted px-1">Controller</code>
+          })}
         </p>
         <ul className="mt-3 list-disc pl-5 text-sm text-muted-foreground space-y-1">
-          <li>Menos boilerplate: nao precisa escrever Controller em cada campo.</li>
-          <li>Validacao e mensagens padronizadas no proprio componente.</li>
-          <li>UI consistente (labels, errors, spacing e comportamento).</li>
-          <li>Fica mais simples reaproveitar layouts e regras entre telas.</li>
+          <li>{t(i18n, "showcase.home.about.li1")}</li>
+          <li>{t(i18n, "showcase.home.about.li2")}</li>
+          <li>{t(i18n, "showcase.home.about.li3")}</li>
+          <li>{t(i18n, "showcase.home.about.li4")}</li>
         </ul>
         <p className="mt-3 text-sm text-muted-foreground">
-          Voce ainda pode usar o componente sem RHF (apenas como input controlado), mas com{" "}
-          <code className="rounded bg-muted px-1">name</code> e <code className="rounded bg-muted px-1">control</code> ele vira um wrapper do RHF.
+          {renderWithTokens(t(i18n, "showcase.home.about.p2"), {
+            name: <code className="rounded bg-muted px-1">name</code>,
+            control: <code className="rounded bg-muted px-1">control</code>
+          })}
         </p>
         <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { useForm } from "react-hook-form";
 import { SgInputText, SgInputEmail } from "@seedgrid/fe-components";
@@ -86,9 +105,53 @@ const { control, handleSubmit } = useForm({
 </form>`}</pre>
       </section>
 
+      <section className="mt-8 rounded-lg border border-border bg-foreground/5 p-5">
+        <h2 className="text-lg font-semibold">{t(i18n, "showcase.home.i18n.title")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {renderWithTokens(t(i18n, "showcase.home.i18n.p1"), {
+            namespace: <code className="rounded bg-muted px-1">components.*</code>
+          })}
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t(i18n, "showcase.home.i18n.p2")}
+        </p>
+        <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
+
+const messagesEn = {
+  "components.inputs.required": "Required field.",
+  "components.inputs.email.invalid": "Invalid email."
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en-US">
+      <body>
+        <SgComponentsI18nProvider locale="en-US" messages={messagesEn}>
+          {children}
+        </SgComponentsI18nProvider>
+      </body>
+    </html>
+  );
+}`}</pre>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {t(i18n, "showcase.home.i18n.p3")}
+        </p>
+        <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { setComponentsI18n } from "@seedgrid/fe-components";
+
+setComponentsI18n({
+  locale: "en-US",
+  messages: {
+    "components.inputs.required": "Required field.",
+    "components.password.common": "Password is too common."
+  }
+});`}</pre>
+      </section>
+
       {COMPONENTS.map((group) => (
-        <section key={group.category} className="mt-8">
-          <h2 className="text-xl font-semibold border-b border-border pb-2 mb-4">{group.category}</h2>
+        <section key={group.categoryKey} className="mt-8">
+          <h2 className="text-xl font-semibold border-b border-border pb-2 mb-4">
+            {t(i18n, group.categoryKey)}
+          </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {group.items.map((item) => (
               <Link
@@ -105,7 +168,7 @@ const { control, handleSubmit } = useForm({
       ))}
 
       <section className="mt-12 rounded-lg bg-muted/50 p-6">
-        <h2 className="text-lg font-semibold">Instalacao</h2>
+        <h2 className="text-lg font-semibold">{t(i18n, "showcase.home.install.title")}</h2>
         <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto">
 {`import { SgInputText } from "@seedgrid/fe-components";
 import type { SgInputTextProps } from "@seedgrid/fe-components";`}

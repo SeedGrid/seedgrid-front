@@ -4,6 +4,7 @@ import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskCnpj } from "../masks";
 import { isValidCnpj } from "../validators";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputCNPJProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
   inputProps: React.InputHTMLAttributes<HTMLInputElement>;
@@ -37,6 +38,7 @@ const defaultPublicaCnpjFetch = async (cnpj: string) => {
 };
 
 export function SgInputCNPJ(props: SgInputCNPJProps) {
+  const i18n = useComponentsI18n();
   const {
     required,
     requiredMessage,
@@ -65,7 +67,7 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
         return;
       }
       if (!raw && required) {
-        const message = requiredMessage ?? "Campo obrigatorio.";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -79,13 +81,13 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
         }
       }
       if (raw.length !== 14) {
-        const message = lengthMessage ?? "CNPJ deve ter 14 digitos.";
+        const message = lengthMessage ?? t(i18n, "components.inputs.cnpj.length");
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (!isValidCnpj(value)) {
-        const message = invalidMessage ?? "CNPJ invalido.";
+        const message = invalidMessage ?? t(i18n, "components.inputs.cnpj.invalid");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -94,7 +96,7 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
         const digits = onlyDigits(raw);
         if (digits.length === 14) {
           if (lastValidatedCnpjRef.current === digits) {
-            const message = publicaCnpjErrorMessage ?? invalidMessage ?? "CNPJ invalido.";
+            const message = publicaCnpjErrorMessage ?? invalidMessage ?? t(i18n, "components.inputs.cnpj.invalid");
             if (lastPublicaFoundRef.current === false) {
               setInternalError(message);
               props.onValidation?.(message);
@@ -111,7 +113,7 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
             lastPublicaFoundRef.current = Boolean(data);
             onPublicaCnpjResult?.(data);
             if (!data) {
-              const message = publicaCnpjErrorMessage ?? invalidMessage ?? "CNPJ invalido.";
+              const message = publicaCnpjErrorMessage ?? invalidMessage ?? t(i18n, "components.inputs.cnpj.invalid");
               setInternalError(message);
               props.onValidation?.(message);
               return;
@@ -125,6 +127,7 @@ export function SgInputCNPJ(props: SgInputCNPJProps) {
       props.onValidation?.(null);
     },
     [
+      i18n,
       required,
       requiredMessage,
       lengthMessage,

@@ -4,6 +4,7 @@ import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskCpfCnpj } from "../masks";
 import { isValidCnpj, isValidCpf } from "../validators";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputCPFCNPJProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
   inputProps: React.InputHTMLAttributes<HTMLInputElement>;
@@ -26,6 +27,7 @@ function onlyAlnumUpper(value: string) {
 }
 
 export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
+  const i18n = useComponentsI18n();
   const { required, requiredMessage, lengthMessage, invalidMessage, validateOnBlur, error, validation, ...rest } = props;
   const [internalError, setInternalError] = React.useState<string | null>(null);
 
@@ -38,7 +40,7 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
         return;
       }
       if (!raw && required) {
-        const message = requiredMessage ?? "Campo obrigatorio ";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -55,13 +57,13 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
       if (!isCnpj) {
         const digits = onlyDigits(value);
         if (digits.length !== 11) {
-          const message = lengthMessage ?? "CPF deve ter 11 digitos.";
+          const message = lengthMessage ?? t(i18n, "components.inputs.cpf.length");
           setInternalError(message);
           props.onValidation?.(message);
           return;
         }
         if (!isValidCpf(value)) {
-          const message = invalidMessage ?? "CPF invalido.";
+          const message = invalidMessage ?? t(i18n, "components.inputs.cpf.invalid");
           setInternalError(message);
           props.onValidation?.(message);
           return;
@@ -71,13 +73,13 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
         return;
       }
       if (raw.length !== 14) {
-        const message = lengthMessage ?? "CNPJ deve ter 14 digitos.";
+        const message = lengthMessage ?? t(i18n, "components.inputs.cnpj.length");
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (!isValidCnpj(value)) {
-        const message = invalidMessage ?? "CNPJ invalido.";
+        const message = invalidMessage ?? t(i18n, "components.inputs.cnpj.invalid");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -85,7 +87,7 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [required, requiredMessage, lengthMessage, invalidMessage, validation, props]
+    [i18n, required, requiredMessage, lengthMessage, invalidMessage, validation, props]
   );
 
   const inputProps = {

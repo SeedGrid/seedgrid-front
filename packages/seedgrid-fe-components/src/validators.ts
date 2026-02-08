@@ -1,4 +1,5 @@
 import blockedEmailDomainsConfig from "./blocked-email-domains.json";
+import { resolveComponentsI18n, t, type SgComponentsI18n, type SgComponentsI18nInput } from "./i18n";
 
 type BlockedEmailDomainsConfig = {
   blockedEmailDomains?: string[];
@@ -70,11 +71,11 @@ export function isValidCnpj(value: string) {
   const raw = onlyAlnumUpper(value);
   if (raw.length !== 14) return false;
 
-  // opcional: eu manteria só para CNPJ numérico.
-  // Para alfanumérico, isso pode bloquear casos "ok" (embora improváveis).
+  // opcional: eu manteria so para CNPJ numerico.
+  // Para alfanumerico, isso pode bloquear casos "ok" (embora improvaveis).
   // if (/^([0-9A-Z])\1+$/.test(raw)) return false;
 
-  if (/[A-Z]/.test(raw.slice(12))) return false; // DV precisa ser numérico
+  if (/[A-Z]/.test(raw.slice(12))) return false; // DV precisa ser numerico
 
   const toValue = (char: string) => {
     if (char >= "0" && char <= "9") return char.charCodeAt(0) - 48;
@@ -98,7 +99,6 @@ export function isValidCnpj(value: string) {
     return mod < 2 ? 0 : 11 - mod;
   };
 
-
   const base12 = raw.slice(0, 12);
 
   const d1 = calc(base12, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
@@ -109,7 +109,6 @@ export function isValidCnpj(value: string) {
 
   return d1 === Number(raw.charAt(12)) && d2 === Number(raw.charAt(13));
 }
-
 
 export function isValidEmail(value: string) {
   return /.+@.+\..+/.test(value.trim());
@@ -163,8 +162,14 @@ export type PasswordPolicy = {
   maxHistory?: number;
 };
 
-export function validatePassword(value: string, policy: PasswordPolicy = {}) {
-  if (!value || !value.trim()) return "Senha não pode ser vazia";
+export function validatePassword(
+  value: string,
+  policy: PasswordPolicy = {},
+  i18n?: SgComponentsI18nInput | SgComponentsI18n
+) {
+  const resolvedI18n = resolveComponentsI18n(i18n);
+
+  if (!value || !value.trim()) return t(resolvedI18n, "components.validators.password.empty");
 
   const minSize = Math.max(1, policy.minSize ?? 8);
   const upper = policy.upper ?? true;
@@ -174,17 +179,25 @@ export function validatePassword(value: string, policy: PasswordPolicy = {}) {
   const noRepeat = policy.noRepeat ?? true;
 
   const problems: string[] = [];
-  if (value.length < minSize) problems.push(`mínimo de ${minSize} caracteres`);
-  if (upper && !/[A-Z]/.test(value)) problems.push("deve conter letra maiúscula");
-  if (lower && !/[a-z]/.test(value)) problems.push("deve conter letra minúscula");
-  if (number && !/\d/.test(value)) problems.push("deve conter número");
-  if (special && !/[^A-Za-z0-9]/.test(value)) problems.push("deve conter caractere especial");
-  if (noRepeat && hasSequentialRun(value, 3)) problems.push("não pode conter sequências (ex.: abc, 123)");
+  if (value.length < minSize) {
+    problems.push(t(resolvedI18n, "components.validators.password.minSize", { min: minSize }));
+  }
+  if (upper && !/[A-Z]/.test(value)) problems.push(t(resolvedI18n, "components.validators.password.upper"));
+  if (lower && !/[a-z]/.test(value)) problems.push(t(resolvedI18n, "components.validators.password.lower"));
+  if (number && !/\d/.test(value)) problems.push(t(resolvedI18n, "components.validators.password.number"));
+  if (special && !/[^A-Za-z0-9]/.test(value)) {
+    problems.push(t(resolvedI18n, "components.validators.password.special"));
+  }
+  if (noRepeat && hasSequentialRun(value, 3)) {
+    problems.push(t(resolvedI18n, "components.validators.password.sequence"));
+  }
   if (noRepeat && hasRepeatedSequence(value)) {
-    problems.push("não pode conter caracteres repetidos em série (ex.: aaa, 1111)");
+    problems.push(t(resolvedI18n, "components.validators.password.repeated"));
   }
 
-  if (problems.length) return `Senha inválida: ${problems.join("; ")}`;
+  if (problems.length) {
+    return t(resolvedI18n, "components.validators.password.invalid", { reasons: problems.join("; ") });
+  }
   return null;
 }
 
@@ -212,22 +225,27 @@ function calculateAge(birthDate: Date, today: Date) {
   return age;
 }
 
-export function validateBirthDate(value: string, policy: BirthDatePolicy) {
+export function validateBirthDate(
+  value: string,
+  policy: BirthDatePolicy,
+  i18n?: SgComponentsI18nInput | SgComponentsI18n
+) {
+  const resolvedI18n = resolveComponentsI18n(i18n);
   const minAge = policy.minAge;
   const maxAge = policy.maxAge;
   const hasMin = typeof minAge === "number" && minAge >= 0;
   const hasMax = typeof maxAge === "number" && maxAge >= 0;
 
   if (!hasMin && !hasMax) {
-    return "Configuração inválida: informe minAge e/ou maxAge.";
+    return t(resolvedI18n, "components.validators.birthdate.configMissing");
   }
   if (hasMin && hasMax && (minAge as number) > (maxAge as number)) {
-    return "Configuração inválida: minAge deve ser <= maxAge.";
+    return t(resolvedI18n, "components.validators.birthdate.configRange");
   }
   if (!value) return null;
 
   const birth = new Date(value);
-  if (Number.isNaN(birth.getTime())) return "Data inválida.";
+  if (Number.isNaN(birth.getTime())) return t(resolvedI18n, "components.validators.birthdate.invalidDate");
 
   const today = new Date();
   const age = calculateAge(birth, today);
@@ -235,10 +253,14 @@ export function validateBirthDate(value: string, policy: BirthDatePolicy) {
   if (ok) return null;
 
   if (hasMin && hasMax) {
-    return `A idade deve estar entre ${minAge} e ${maxAge} anos.`;
+    const min = minAge ?? 0;
+    const max = maxAge ?? 0;
+    return t(resolvedI18n, "components.validators.birthdate.ageBetween", { min, max });
   }
   if (hasMin) {
-    return `A idade deve ser de pelo menos ${minAge} anos.`;
+    const min = minAge ?? 0;
+    return t(resolvedI18n, "components.validators.birthdate.ageMin", { min });
   }
-  return `A idade deve ser de no máximo ${maxAge} anos.`;
+  const max = maxAge ?? 0;
+  return t(resolvedI18n, "components.validators.birthdate.ageMax", { max });
 }

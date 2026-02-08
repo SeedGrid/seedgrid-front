@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputDateProps = Omit<SgInputTextProps, "type"> & {
   minDate?: string | Date;
@@ -30,6 +31,7 @@ function parseDateValue(value: string) {
 }
 
 export function SgInputDate(props: SgInputDateProps) {
+  const i18n = useComponentsI18n();
   const {
     minDate,
     maxDate,
@@ -59,7 +61,7 @@ export function SgInputDate(props: SgInputDateProps) {
         return;
       }
       if (!value && required) {
-        const message = requiredMessage ?? "Campo obrigatório.";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         onValidation?.(message);
         return;
@@ -72,7 +74,7 @@ export function SgInputDate(props: SgInputDateProps) {
       }
       const parsed = parseDateValue(value);
       if (!parsed) {
-        const message = "Data inválida.";
+        const message = t(i18n, "components.inputs.date.invalid");
         setInternalError(message);
         onValidation?.(message);
         return;
@@ -84,10 +86,10 @@ export function SgInputDate(props: SgInputDateProps) {
         const maxLabel = formatDateDisplay(maxDateValue);
         const message =
           minLabel && maxLabel
-            ? `Data deve estar entre ${minLabel} e ${maxLabel}.`
+            ? t(i18n, "components.inputs.date.range", { min: minLabel, max: maxLabel })
             : minLabel
-              ? `Data deve ser a partir de ${minLabel}.`
-              : `Data deve ser até ${maxLabel}.`;
+              ? t(i18n, "components.inputs.date.min", { min: minLabel })
+              : t(i18n, "components.inputs.date.max", { max: maxLabel });
         setInternalError(message);
         onValidation?.(message);
         return;
@@ -95,7 +97,7 @@ export function SgInputDate(props: SgInputDateProps) {
       setInternalError(null);
       onValidation?.(null);
     },
-    [maxDateValue, minDateValue, onValidation, required, requiredMessage, validation]
+    [i18n, maxDateValue, minDateValue, onValidation, required, requiredMessage, validation]
   );
 
   const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {

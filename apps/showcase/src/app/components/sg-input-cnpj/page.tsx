@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputCNPJ } from "@seedgrid/fe-components";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -39,6 +40,7 @@ function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: strin
 }
 
 export default function SgInputCNPJPage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
@@ -52,9 +54,17 @@ export default function SgInputCNPJPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputCNPJ</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cnpj.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de CNPJ com mascara e validacao de tamanho/digitos.
+          {t(i18n, "showcase.component.cnpj.subtitle")}
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t(i18n, "showcase.component.cnpj.i18nNote").split("components.*").map((part, idx, arr) => (
+            <span key={idx}>
+              {part}
+              {idx < arr.length - 1 ? <code className="rounded bg-muted px-1">components.*</code> : null}
+            </span>
+          ))}
         </p>
       </div>
 
@@ -93,6 +103,33 @@ export default function SgInputCNPJPage() {
   hintText="AB.12C.345/0001-40"
   inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
 />`} />
+      </Section>
+
+      <Section title="Exemplos validos (alfanumerico)" description="Lista de CNPJs alfanumericos validos.">
+        <CodeBlock
+          wrapRHF={false}
+          code={`// Filial 0001
+9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
+LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)
+GK.1EK.OFE/0001-58  (raw: GK1EKOFE000158)
+QF.18A.388/0001-00  (raw: QF18A388000100)
+KF.TG0.Z4P/0001-90  (raw: KFTG0Z4P000190)
+9P.UO0.1W2/0001-07  (raw: 9PUO01W2000107)
+GK.IPC.PIK/0001-52  (raw: GKIPCPIK000152)
+11.TYE.JIE/0001-68  (raw: 11TYEJIE000168)
+J1.KBD.U64/0001-09  (raw: J1KBDU64000109)
+L2.WTW.2N8/0001-06  (raw: L2WTW2N8000106)
+J0.KBM.EUL/0001-05  (raw: J0KBMEUL000105)
+ZQ.V25.1CK/0001-33  (raw: ZQV251CK000133)
+
+// Filial 0002
+B4.TMM.Q8D/0002-24  (raw: B4TMMQ8D000224)
+79.B4O.GMG/0002-50  (raw: 79B4OGMG000250)
+DN.FP6.V2Z/0002-05  (raw: DNFP6V2Z000205)
+RY.JCA.S6R/0002-68  (raw: RYJCAS6R000268)
+IW.UJ6.3BG/0002-46  (raw: IWUJ63BG000246)
+OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
+        />
       </Section>
 
       <Section title="Validacao Publica CNPJ" description="Consulta publica.cnpj.ws para verificar se o CNPJ existe.">
@@ -134,34 +171,6 @@ export default function SgInputCNPJPage() {
           Se a API estiver fora do ar, o componente nao bloqueia o usuario.
         </p>
       </Section>
-
-      <Section title="Exemplos validos (alfanumerico)" description="Lista de CNPJs alfanumericos validos.">
-        <CodeBlock
-          wrapRHF={false}
-          code={`// Filial 0001
-9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
-LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)
-GK.1EK.OFE/0001-58  (raw: GK1EKOFE000158)
-QF.18A.388/0001-00  (raw: QF18A388000100)
-KF.TG0.Z4P/0001-90  (raw: KFTG0Z4P000190)
-9P.UO0.1W2/0001-07  (raw: 9PUO01W2000107)
-GK.IPC.PIK/0001-52  (raw: GKIPCPIK000152)
-11.TYE.JIE/0001-68  (raw: 11TYEJIE000168)
-J1.KBD.U64/0001-09  (raw: J1KBDU64000109)
-L2.WTW.2N8/0001-06  (raw: L2WTW2N8000106)
-J0.KBM.EUL/0001-05  (raw: J0KBMEUL000105)
-ZQ.V25.1CK/0001-33  (raw: ZQV251CK000133)
-
-// Filial 0002
-B4.TMM.Q8D/0002-24  (raw: B4TMMQ8D000224)
-79.B4O.GMG/0002-50  (raw: 79B4OGMG000250)
-DN.FP6.V2Z/0002-05  (raw: DNFP6V2Z000205)
-RY.JCA.S6R/0002-68  (raw: RYJCAS6R000268)
-IW.UJ6.3BG/0002-46  (raw: IWUJ63BG000246)
-OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
-        />
-      </Section>
-
       <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
         <div className="w-80">
           <SgInputCNPJ

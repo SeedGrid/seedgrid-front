@@ -1,0 +1,283 @@
+"use client";
+
+import React from "react";
+import { SgInputCPFCNPJ } from "@seedgrid/fe-components";
+import { t, useShowcaseI18n } from "../../../i18n";
+
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-lg border border-border p-6">
+      <h2 className="text-lg font-semibold">{props.title}</h2>
+      {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
+      <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
+    </section>
+  );
+}
+
+function buildRhfCode(code: string, baseName = "doc", defaultValues?: string) {
+  const matches = code.match(/<SgInputCPFCNPJ\b/g) ?? [];
+  const count = Math.max(matches.length, 1);
+  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
+  let cursor = 0;
+  const withControl = code.replace(/<SgInputCPFCNPJ\b/g, () => {
+    const name = names[cursor] ?? baseName;
+    cursor += 1;
+    return `<SgInputCPFCNPJ\n  name="${name}"\n  control={control}`;
+  });
+  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
+  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputCPFCNPJ } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+}
+
+function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
+  const content = props.wrapRHF === false
+    ? props.code
+    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
+  return (
+    <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
+      {content}
+    </pre>
+  );
+}
+
+export default function SgInputCpfCnpjPage() {
+  const i18n = useShowcaseI18n();
+  const [basicValue, setBasicValue] = React.useState("");
+  const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
+  const [eventLog, setEventLog] = React.useState<string[]>([]);
+
+  const log = (msg: string) => {
+    setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
+  };
+
+  return (
+    <div className="max-w-4xl space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cpfcnpj.title")}</h1>
+        <p className="mt-2 text-muted-foreground">
+          {t(i18n, "showcase.component.cpfcnpj.subtitle")}
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t(i18n, "showcase.component.cpfcnpj.i18nNote").split("components.*").map((part, idx, arr) => (
+            <span key={idx}>
+              {part}
+              {idx < arr.length - 1 ? <code className="rounded bg-muted px-1">components.*</code> : null}
+            </span>
+          ))}
+        </p>
+      </div>
+
+      <Section title="Basico" description="CPF/CNPJ com label e hint.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-basic"
+            label="Documento"
+            hintText="CPF ou CNPJ"
+            inputProps={{}}
+            onChange={(v) => setBasicValue(v)}
+          />
+          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="doc"
+  label="Documento"
+  hintText="CPF ou CNPJ"
+  inputProps={{}}
+  onChange={(value) => console.log(value)}
+/>`} />
+      </Section>
+
+      <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-required"
+            label="Documento obrigatorio"
+            hintText="Obrigatorio"
+            required
+            inputProps={{}}
+          />
+        </div>
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-required-custom"
+            label="Mensagem customizada"
+            hintText="Obrigatorio"
+            required
+            requiredMessage="Informe o CPF/CNPJ."
+            inputProps={{}}
+          />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="doc"
+  label="Documento obrigatorio"
+  hintText="Obrigatorio"
+  required
+  requiredMessage="Informe o CPF/CNPJ."
+  inputProps={{}}
+/>`} />
+      </Section>
+
+      <Section title="Mensagem invalida" description="Personaliza mensagem de documento invalido.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-invalid"
+            label="Documento"
+            hintText="CPF ou CNPJ"
+            invalidMessage="Documento invalido."
+            inputProps={{}}
+          />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="doc"
+  label="Documento"
+  hintText="CPF ou CNPJ"
+  invalidMessage="Documento invalido."
+  inputProps={{}}
+/>`} />
+      </Section>
+
+      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem ou null.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-validation"
+            label="Documento"
+            hintText="CPF ou CNPJ"
+            validation={(v) => (v.startsWith("00") ? "Documento nao pode iniciar com 00." : null)}
+            onValidation={(msg) => setValidationMsg(msg)}
+            inputProps={{}}
+          />
+          <p className="mt-2 text-xs text-muted-foreground">
+            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+          </p>
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="doc"
+  label="Documento"
+  hintText="CPF ou CNPJ"
+  validation={(v) => (v.startsWith("00") ? "Documento nao pode iniciar com 00." : null)}
+  onValidation={(msg) => console.log(msg)}
+  inputProps={{}}
+/>`} />
+      </Section>
+
+      <Section title="Exemplo CNPJ alfanumerico" description="Aceita letras (A-Z) no corpo do CNPJ.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-alnum"
+            label="CNPJ alfanumerico"
+            hintText="AB.12C.345/0001-40"
+            inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
+          />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="doc"
+  label="CNPJ alfanumerico"
+  hintText="AB.12C.345/0001-40"
+  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
+/>`} />
+      </Section>
+
+      <Section title="Exemplos validos (alfanumerico)" description="Lista de CNPJs alfanumericos validos.">
+        <CodeBlock
+          wrapRHF={false}
+          code={`// Filial 0001
+9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
+LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)
+GK.1EK.OFE/0001-58  (raw: GK1EKOFE000158)
+QF.18A.388/0001-00  (raw: QF18A388000100)
+KF.TG0.Z4P/0001-90  (raw: KFTG0Z4P000190)
+9P.UO0.1W2/0001-07  (raw: 9PUO01W2000107)
+GK.IPC.PIK/0001-52  (raw: GKIPCPIK000152)
+11.TYE.JIE/0001-68  (raw: 11TYEJIE000168)
+J1.KBD.U64/0001-09  (raw: J1KBDU64000109)
+L2.WTW.2N8/0001-06  (raw: L2WTW2N8000106)
+J0.KBM.EUL/0001-05  (raw: J0KBMEUL000105)
+ZQ.V25.1CK/0001-33  (raw: ZQV251CK000133)
+
+// Filial 0002
+B4.TMM.Q8D/0002-24  (raw: B4TMMQ8D000224)
+79.B4O.GMG/0002-50  (raw: 79B4OGMG000250)
+DN.FP6.V2Z/0002-05  (raw: DNFP6V2Z000205)
+RY.JCA.S6R/0002-68  (raw: RYJCAS6R000268)
+IW.UJ6.3BG/0002-46  (raw: IWUJ63BG000246)
+OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
+        />
+      </Section>
+
+      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+        <div className="w-80">
+          <SgInputCPFCNPJ id="demo-noborder" label="Sem borda" hintText="Documento" withBorder={false} inputProps={{}} />
+        </div>
+        <div className="w-80">
+          <SgInputCPFCNPJ id="demo-filled" label="Preenchido" hintText="Documento" filled inputProps={{}} />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="Sem borda" hintText="Documento" withBorder={false} inputProps={{}} />
+<SgInputCPFCNPJ id="b" label="Preenchido" hintText="Documento" filled inputProps={{}} />`} />
+      </Section>
+
+      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+        <div className="w-80">
+          <SgInputCPFCNPJ id="demo-noclear" label="Sem limpar" hintText="Documento" clearButton={false} inputProps={{}} />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ id="x" label="Sem limpar" hintText="Documento" clearButton={false} inputProps={{}} />`} />
+      </Section>
+
+      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+        <div className="flex gap-4">
+          <SgInputCPFCNPJ id="demo-w200" label="200px" hintText="Documento" width={200} inputProps={{}} />
+          <SgInputCPFCNPJ id="demo-w300" label="Arredondado" hintText="Documento" width={300} borderRadius={20} inputProps={{}} />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="200px" hintText="Documento" width={200} inputProps={{}} />
+<SgInputCPFCNPJ id="b" label="Arredondado" hintText="Documento" width={300} borderRadius={20} inputProps={{}} />`} />
+      </Section>
+
+      <Section title="Desabilitado" description="enabled=false desabilita.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-disabled"
+            label="Desabilitado"
+            hintText="Documento"
+            enabled={false}
+            inputProps={{ defaultValue: "00.000.000/0000-00" }}
+          />
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="Desabilitado" hintText="Documento" enabled={false} inputProps={{}} />`} />
+      </Section>
+
+      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+        <div className="w-80">
+          <SgInputCPFCNPJ
+            id="demo-events"
+            label="Digite e observe o log"
+            hintText="Documento"
+            required
+            inputProps={{}}
+            onChange={(v) => log(`onChange: "${v}"`)}
+            onEnter={() => log("onEnter (focus)")}
+            onExit={() => log("onExit (blur)")}
+            onClear={() => log("onClear")}
+            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+          />
+          <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
+            {eventLog.length === 0 ? (
+              <span className="text-muted-foreground">Interaja com o input...</span>
+            ) : (
+              eventLog.map((entry, i) => <div key={i}>{entry}</div>)
+            )}
+          </div>
+        </div>
+        <CodeBlock code={`<SgInputCPFCNPJ
+  id="eventos"
+  label="Com eventos"
+  hintText="Documento"
+  required
+  inputProps={{}}
+  onChange={(v) => console.log("onChange:", v)}
+  onEnter={() => console.log("focus")}
+  onExit={() => console.log("blur")}
+  onClear={() => console.log("cleared")}
+  onValidation={(msg) => console.log("validation:", msg)}
+/>`} />
+      </Section>
+    </div>
+  );
+}

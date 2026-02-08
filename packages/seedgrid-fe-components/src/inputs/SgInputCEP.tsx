@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskCep } from "../masks";
+import { t, useComponentsI18n } from "../i18n";
 
 export type ViaCepResponse = {
   cep?: string;
@@ -45,6 +46,7 @@ const defaultViaCepFetch = async (cep: string) => {
 };
 
 export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
+  const i18n = useComponentsI18n();
   const {
     required,
     requiredMessage,
@@ -76,7 +78,7 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
         return;
       }
       if (!digits && required) {
-        const message = requiredMessage ?? "Campo obrigatorio ";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -90,14 +92,14 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
         }
       }
       if (digits.length !== 8) {
-        const message = lengthMessage ?? "CEP deve ter 8 digitos.";
+        const message = lengthMessage ?? t(i18n, "components.inputs.cep.length");
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (validateWithViaCep) {
         if (lastValidatedCepRef.current === digits) {
-          const message = viaCepErrorMessage ?? invalidMessage ?? "CEP invalido.";
+          const message = viaCepErrorMessage ?? invalidMessage ?? t(i18n, "components.inputs.cep.invalid");
           if (lastViaCepErroRef.current) {
             setInternalError(message);
             props.onValidation?.(message);
@@ -114,7 +116,7 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
           lastViaCepErroRef.current = Boolean(data?.erro);
           onViaCepResult?.(data);
           if (data?.erro) {
-            const message = viaCepErrorMessage ?? invalidMessage ?? "CEP invalido.";
+            const message = viaCepErrorMessage ?? invalidMessage ?? t(i18n, "components.inputs.cep.invalid");
             setInternalError(message);
             props.onValidation?.(message);
             return;
@@ -127,6 +129,7 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
       props.onValidation?.(null);
     },
     [
+      i18n,
       invalidMessage,
       lengthMessage,
       onViaCepError,
@@ -167,10 +170,10 @@ export function SgInputCEP(props: Readonly<SgInputCEPProps>) {
       onClear={() => {
         setInternalError(null);
         props.onValidation?.(null);
-      onClear?.();
-      lastValidatedCepRef.current = null;
-      lastViaCepErroRef.current = null;
-    }}
+        onClear?.();
+        lastValidatedCepRef.current = null;
+        lastViaCepErroRef.current = null;
+      }}
       inputProps={mergedInputProps}
     />
   );

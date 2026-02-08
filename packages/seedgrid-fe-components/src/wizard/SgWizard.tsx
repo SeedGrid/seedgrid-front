@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import React from "react";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgWizardPageProps = {
   title?: string;
@@ -30,13 +31,8 @@ export type SgWizardProps = {
   className?: string;
 };
 
-const DEFAULT_LABELS: SgWizardLabels = {
-  next: "Próximo",
-  previous: "Anterior",
-  finish: "Finalizar"
-};
-
 export function SgWizard(props: SgWizardProps) {
+  const i18n = useComponentsI18n();
   const pages = React.Children.toArray(props.children).filter(
     (child) => React.isValidElement(child) && child.type === SgWizardPage
   ) as Array<React.ReactElement<SgWizardPageProps>>;
@@ -53,7 +49,12 @@ export function SgWizard(props: SgWizardProps) {
     props.onStepChange?.(step);
   }, [props, step]);
 
-  const labels = { ...DEFAULT_LABELS, ...(props.labels ?? {}) };
+  const labels: SgWizardLabels = {
+    next: t(i18n, "components.wizard.next"),
+    previous: t(i18n, "components.wizard.previous"),
+    finish: t(i18n, "components.wizard.finish"),
+    ...(props.labels ?? {})
+  };
   const isFirst = step <= 0;
   const isLast = step >= pages.length - 1;
 
@@ -162,7 +163,6 @@ export function SgWizard(props: SgWizardProps) {
     </div>
   );
 }
-
 
 
 

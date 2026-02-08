@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
 import type { RhfFieldProps } from "../rhf";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputTextAreaProps = {
   id: string;
@@ -82,6 +83,7 @@ function mergeTextareaPropsWithField(
 }
 
 function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
+  const i18n = useComponentsI18n();
   const textareaProps = props.textareaProps ?? {};
   const labelText = props.labelText ?? props.label ?? "";
   const placeholder = props.hintText ?? labelText;
@@ -127,7 +129,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
     (value: string) => {
       const required = props.required ?? false;
       if (!value && required) {
-        const message = props.requiredMessage ?? "Campo de preenchimento obrigatorio.";
+        const message = props.requiredMessage ?? t(i18n, "components.inputs.textarea.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -135,7 +137,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
       if (props.minLength && value.length < props.minLength) {
         const message =
           props.minLengthMessage ??
-          `Texto tem de ter no minimo ${props.minLength} letra(s).`;
+          t(i18n, "components.inputs.textarea.minLength", { min: props.minLength });
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -143,13 +145,13 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
       if (props.minNumberOfWords && wordCount(value) < props.minNumberOfWords) {
         const message =
           props.minNumberOfWordsMessage ??
-          `Texto tem de ter no minimo ${props.minNumberOfWords} palavra(s).`;
+          t(i18n, "components.inputs.textarea.minWords", { min: props.minNumberOfWords });
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (props.minLines && lineCount(value) < props.minLines) {
-        const message = props.minLinesMessage ?? `Texto tem de ter no minimo ${props.minLines} linha(s)`;
+        const message = props.minLinesMessage ?? t(i18n, "components.inputs.textarea.minLines", { min: props.minLines });
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -163,7 +165,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [props]
+    [i18n, props]
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -285,7 +287,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
             type="button"
             onClick={handleClear}
             className="absolute right-2 top-3 rounded px-1 text-xs text-foreground/60 hover:text-foreground"
-            aria-label="Limpar"
+            aria-label={t(i18n, "components.actions.clear")}
           >
  <X size={16} /> 
           </button>

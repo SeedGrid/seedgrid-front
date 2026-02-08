@@ -42,3 +42,20 @@ export type { SgGroupBoxProps } from "./layout/SgGroupBox";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels } from "./wizard/SgWizard";
 export { componentsManifest } from "./manifest";
+export {
+  SgComponentsI18nProvider,
+  setComponentsI18n,
+  getComponentsI18n,
+  resolveComponentsI18n,
+  useComponentsI18n,
+  t as tComponents,
+  formatMessage as formatComponentsMessage,
+  componentsMessagesPtBr
+} from "./i18n";
+export type {
+  SgComponentsI18n,
+  SgComponentsI18nInput,
+  SgComponentsLocale,
+  SgComponentsMessages,
+  SgComponentsMessagesByNamespace
+} from "./i18n";

@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskPhone } from "../masks";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputPhoneProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
@@ -21,6 +22,7 @@ function onlyDigits(value: string) {
 }
 
 export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
+  const i18n = useComponentsI18n();
   const {
     required,
     requiredMessage,
@@ -45,7 +47,7 @@ export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
         return;
       }
       if (!digits && required) {
-        const message = requiredMessage ?? "Campo obrigatório ";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -59,7 +61,7 @@ export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
         }
       }
       if (digits.length !== 10 && digits.length !== 11) {
-        const message = lengthMessage ?? invalidMessage ?? "Telefone inválido.";
+        const message = lengthMessage ?? invalidMessage ?? t(i18n, "components.inputs.phone.invalid");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -67,7 +69,7 @@ export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [required, requiredMessage, lengthMessage, invalidMessage, validation, props]
+    [i18n, required, requiredMessage, lengthMessage, invalidMessage, validation, props]
   );
 
   const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {

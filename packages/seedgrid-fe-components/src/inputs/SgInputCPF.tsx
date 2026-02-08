@@ -4,6 +4,7 @@ import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { maskCpf } from "../masks";
 import { isValidCpf } from "../validators";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputCPFProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
   inputProps: React.InputHTMLAttributes<HTMLInputElement>;
@@ -22,6 +23,7 @@ function onlyDigits(value: string) {
 }
 
 export function SgInputCPF(props: SgInputCPFProps) {
+  const i18n = useComponentsI18n();
   const { required, requiredMessage, lengthMessage, invalidMessage, validateOnBlur, error, validation, ...rest } = props;
   const [internalError, setInternalError] = React.useState<string | null>(null);
 
@@ -34,7 +36,7 @@ export function SgInputCPF(props: SgInputCPFProps) {
         return;
       }
       if (!digits && required) {
-        const message = requiredMessage ?? "Campo obrigatório ";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -48,13 +50,13 @@ export function SgInputCPF(props: SgInputCPFProps) {
         }
       }
       if (digits.length !== 11) {
-        const message = lengthMessage ?? "CPF deve ter 11 dígitos.";
+        const message = lengthMessage ?? t(i18n, "components.inputs.cpf.length");
         setInternalError(message);
         props.onValidation?.(message);
         return;
       }
       if (!isValidCpf(value)) {
-        const message = invalidMessage ?? "CPF inválido.";
+        const message = invalidMessage ?? t(i18n, "components.inputs.cpf.invalid");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -62,7 +64,7 @@ export function SgInputCPF(props: SgInputCPFProps) {
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [required, requiredMessage, lengthMessage, invalidMessage, validation, props]
+    [i18n, required, requiredMessage, lengthMessage, invalidMessage, validation, props]
   );
 
   const inputProps = {

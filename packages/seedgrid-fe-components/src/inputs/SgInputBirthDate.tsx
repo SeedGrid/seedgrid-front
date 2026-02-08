@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgInputDate, type SgInputDateProps } from "./SgInputDate";
 import { validateBirthDate, type BirthDatePolicy } from "../validators";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputBirthDateProps = Omit<SgInputDateProps, "maxDate" | "minDate"> &
   BirthDatePolicy & {
@@ -16,10 +17,24 @@ export type SgInputBirthDateProps = Omit<SgInputDateProps, "maxDate" | "minDate"
   };
 
 export function SgInputBirthDate(props: SgInputBirthDateProps) {
+  const i18n = useComponentsI18n();
   const today = new Date();
   const todayStr = today.toISOString().slice(0, 10);
 
-  const { minAge, maxAge, onValidation, inputProps, minDate, maxDate, alwaysFloat, required, requiredMessage, validateOnBlur, error, ...rest } = props;
+  const {
+    minAge,
+    maxAge,
+    onValidation,
+    inputProps,
+    minDate,
+    maxDate,
+    alwaysFloat,
+    required,
+    requiredMessage,
+    validateOnBlur,
+    error,
+    ...rest
+  } = props;
 
   const derivedMaxDate = maxAge !== undefined && maxAge >= 0
     ? new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate()).toISOString().slice(0, 10)
@@ -39,16 +54,16 @@ export function SgInputBirthDate(props: SgInputBirthDateProps) {
         return;
       }
       if (!value && required) {
-        const message = requiredMessage ?? "Informe a data de nascimento.";
+        const message = requiredMessage ?? t(i18n, "components.inputs.birthdate.required");
         setInternalError(message);
         onValidation?.(message);
         return;
       }
-      const message = validateBirthDate(value, { minAge, maxAge });
+      const message = validateBirthDate(value, { minAge, maxAge }, i18n);
       setInternalError(message);
       onValidation?.(message);
     },
-    [maxAge, minAge, onValidation, required, requiredMessage]
+    [i18n, maxAge, minAge, onValidation, required, requiredMessage]
   );
 
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {

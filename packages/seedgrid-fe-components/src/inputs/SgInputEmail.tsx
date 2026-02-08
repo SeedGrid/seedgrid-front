@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { isBlockedEmailDomain, isValidEmail } from "../validators";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputEmailProps = Omit<SgInputTextProps, "type" | "error"> & {
   error?: string;
@@ -18,6 +19,7 @@ export type SgInputEmailProps = Omit<SgInputTextProps, "type" | "error"> & {
 };
 
 export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
+  const i18n = useComponentsI18n();
   const {
     required,
     requiredMessage,
@@ -44,7 +46,7 @@ export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
         return;
       }
       if (!value && required) {
-        const message = requiredMessage ?? "Campo obrigatório ";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         onValidation?.(message);
         return;
@@ -56,13 +58,13 @@ export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
         return;
       }
       if (!isValidEmail(value)) {
-        const message = invalidMessage ?? "Email inválido.";
+        const message = invalidMessage ?? t(i18n, "components.inputs.email.invalid");
         setInternalError(message);
         onValidation?.(message);
         return;
       }
       if ((blockFakeMail ?? true) && isBlockedEmailDomain(value, blockedEmailDomains)) {
-        const message = "Email temporário inválido";
+        const message = t(i18n, "components.inputs.email.tempInvalid");
         setInternalError(message);
         onValidation?.(message);
         return;
@@ -71,7 +73,16 @@ export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
       setInternalError(message);
       onValidation?.(message);
     },
-    [blockedEmailDomains, blockFakeMail, invalidMessage, onValidation, required, requiredMessage, validation]
+    [
+      blockedEmailDomains,
+      blockFakeMail,
+      i18n,
+      invalidMessage,
+      onValidation,
+      required,
+      requiredMessage,
+      validation
+    ]
   );
 
   const mergedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {

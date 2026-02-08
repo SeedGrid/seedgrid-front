@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { buildCommonPasswordSet } from "../commons/common-passwords";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputPasswordProps = Omit<
   SgInputTextProps,
@@ -32,6 +33,7 @@ export type SgInputPasswordProps = Omit<
 };
 
 export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
+  const i18n = useComponentsI18n();
   const {
     inputProps,
     onValidation,
@@ -46,7 +48,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     createNewPasswordButton = false,
     showStrengthBar = true,
     commonPasswordCheck = true,
-    commonPasswordMessage = "Senha muito comum. Escolha uma mais forte.",
+    commonPasswordMessage,
     commonPasswordList,
     onChange,
     upperRequired = true,
@@ -59,6 +61,8 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
     minSize = 8,
     ...rest
   } = props;
+  const resolvedCommonPasswordMessage =
+    commonPasswordMessage ?? t(i18n, "components.password.common");
   const [internalError, setInternalError] = React.useState<string | null>(null);
   const [isHidden, setIsHidden] = React.useState(hidePassword ?? true);
   const [hasInteracted, setHasInteracted] = React.useState(false);
@@ -85,25 +89,34 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
   const getUnmetRequirements = React.useCallback(
     (value: string) => {
       const unmet: string[] = [];
-      if (value.length < minSize) unmet.push(`Minimo ${minSize} caracteres.`);
-      if (upperRequired && !/[A-Z]/.test(value)) unmet.push("Pelo menos 1 letra maiuscula.");
-      if (lowerRequired && !/[a-z]/.test(value)) unmet.push("Pelo menos 1 letra minuscula.");
-      if (numberRequired && !/[0-9]/.test(value)) unmet.push("Pelo menos 1 numero.");
+      if (value.length < minSize) {
+        unmet.push(t(i18n, "components.password.minSize", { min: minSize }));
+      }
+      if (upperRequired && !/[A-Z]/.test(value)) {
+        unmet.push(t(i18n, "components.password.upper"));
+      }
+      if (lowerRequired && !/[a-z]/.test(value)) {
+        unmet.push(t(i18n, "components.password.lower"));
+      }
+      if (numberRequired && !/[0-9]/.test(value)) {
+        unmet.push(t(i18n, "components.password.number"));
+      }
       if (specialCharacterRequired && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value)) {
-        unmet.push("Pelo menos 1 caractere especial.");
+        unmet.push(t(i18n, "components.password.special"));
       }
       if (prohibitsRepeatedCharactersInSequence && /(.)\1/.test(value)) {
-        unmet.push("Nao repetir caracteres em sequencia.");
+        unmet.push(t(i18n, "components.password.noRepeat"));
       }
       if (prohibitsSequentialAscCharacters && hasSequentialCharacters(value, 3, "asc")) {
-        unmet.push("Nao usar sequencias crescentes (ex: 1234, abcd).");
+        unmet.push(t(i18n, "components.password.noSeqAsc"));
       }
       if (prohibitsSequentialDescCharacters && hasSequentialCharacters(value, 3, "desc")) {
-        unmet.push("Nao usar sequencias decrescentes (ex: 4321, dcba).");
+        unmet.push(t(i18n, "components.password.noSeqDesc"));
       }
       return unmet;
     },
     [
+      i18n,
       lowerRequired,
       minSize,
       numberRequired,
@@ -219,7 +232,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         return;
       }
       if (!value && required) {
-        const message = requiredMessage ?? "Campo obrigatório";
+        const message = requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         onValidation?.(message);
         setUnmetRequirements([]);
@@ -228,7 +241,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       const unmet = getUnmetRequirements(value);
       const isCommon = commonPasswordCheck ? isCommonPassword(value) : false;
       if (isCommon) {
-        unmet.push(commonPasswordMessage);
+        unmet.push(resolvedCommonPasswordMessage);
       }
       const customMessage = validation?.(value) ?? null;
       const combined = customMessage ? [...unmet, customMessage] : unmet;
@@ -237,7 +250,17 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       setInternalError(message);
       onValidation?.(message);
     },
-    [commonPasswordCheck, commonPasswordMessage, getUnmetRequirements, isCommonPassword, onValidation, required, requiredMessage, validation]
+    [
+      commonPasswordCheck,
+      getUnmetRequirements,
+      i18n,
+      isCommonPassword,
+      onValidation,
+      required,
+      requiredMessage,
+      resolvedCommonPasswordMessage,
+      validation
+    ]
   );
 
   const mergedInputProps: (React.InputHTMLAttributes<HTMLInputElement> & {
@@ -288,7 +311,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
       type="button"
       onClick={() => setIsHidden((prev) => !prev)}
       className="rounded p-1 text-foreground/60 hover:text-foreground"
-      aria-label={isHidden ? "Mostrar senha" : "Ocultar senha"}
+      aria-label={isHidden ? t(i18n, "components.password.show") : t(i18n, "components.password.hide")}
     >
       {isHidden ? (
         <svg
@@ -336,8 +359,8 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         applyValue(next);
       }}
       className="rounded p-1 text-foreground/60 hover:text-foreground"
-      aria-label="Gerar senha"
-      title="Gerar senha"
+      aria-label={t(i18n, "components.password.generate")}
+      title={t(i18n, "components.password.generate")}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -394,7 +417,7 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
         {(() => {
           const unique = Array.from(
             new Set(
-              unmetRequirements.filter((req) => req !== commonPasswordMessage && req !== internalError)
+              unmetRequirements.filter((req) => req !== resolvedCommonPasswordMessage && req !== internalError)
             )
           );
           return unique.length > 0 ? (

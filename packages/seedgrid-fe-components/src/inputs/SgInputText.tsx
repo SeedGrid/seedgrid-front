@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
 import type { RhfFieldProps } from "../rhf";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputTextProps = {
   id: string;
@@ -103,6 +104,7 @@ function mergeInputPropsWithField(
 }
 
 function SgInputTextBase(props: SgInputTextBaseProps) {
+  const i18n = useComponentsI18n();
   const inputProps = props.inputProps ?? {};
   const prefixText = props.prefixText ?? "";
   const suffixText = props.suffixText ?? "";
@@ -198,7 +200,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     (value: string) => {
       const required = props.required ?? false;
       if (!value && required) {
-        const message = props.requiredMessage ?? "Campo obrigatorio.";
+        const message = props.requiredMessage ?? t(i18n, "components.inputs.required");
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -206,7 +208,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       if (props.minLength && value.length < props.minLength) {
         const message =
           props.minLengthMessage ??
-          `Campo tem de ter no minimo ${props.minLength} letra(s).`;
+          t(i18n, "components.inputs.minLength", { min: props.minLength });
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -214,7 +216,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       if (props.minNumberOfWords && wordCount(value) < props.minNumberOfWords) {
         const message =
           props.minNumberOfWordsMessage ??
-          `Campo tem de ter no minimo ${props.minNumberOfWords} palavra(s).`;
+          t(i18n, "components.inputs.minWords", { min: props.minNumberOfWords });
         setInternalError(message);
         props.onValidation?.(message);
         return;
@@ -228,7 +230,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       setInternalError(null);
       props.onValidation?.(null);
     },
-    [props]
+    [i18n, props]
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,7 +385,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
                 type="button"
                 onClick={handleClear}
                 className="rounded px-1 text-xs text-foreground/60 hover:text-foreground"
-                aria-label="Limpar"
+                aria-label={t(i18n, "components.actions.clear")}
               >
  <X size={16} /> 
               </button>
