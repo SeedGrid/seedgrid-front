@@ -23,6 +23,7 @@ export type SgInputTextProps = {
     ref?: React.Ref<HTMLInputElement>;
   });
   maxLength?: number;
+  maxLengthMessage?: string;
   minLength?: number;
   minLengthMessage?: string;
   minNumberOfWords?: number;
@@ -201,6 +202,14 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       const required = props.required ?? false;
       if (!value && required) {
         const message = props.requiredMessage ?? t(i18n, "components.inputs.required");
+        setInternalError(message);
+        props.onValidation?.(message);
+        return;
+      }
+      if (props.maxLength && value.length > props.maxLength) {
+        const message =
+          props.maxLengthMessage ??
+          t(i18n, "components.inputs.maxLength", { max: props.maxLength });
         setInternalError(message);
         props.onValidation?.(message);
         return;

@@ -17,6 +17,7 @@ export type SgInputTextAreaProps = {
   labelClassName?: string;
   textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
   maxLength?: number;
+  maxLengthMessage?: string;
   maxLines?: number;
   minLines?: number;
   minLinesMessage?: string;
@@ -130,6 +131,14 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
       const required = props.required ?? false;
       if (!value && required) {
         const message = props.requiredMessage ?? t(i18n, "components.inputs.textarea.required");
+        setInternalError(message);
+        props.onValidation?.(message);
+        return;
+      }
+      if (props.maxLength && value.length > props.maxLength) {
+        const message =
+          props.maxLengthMessage ??
+          t(i18n, "components.inputs.textarea.maxLength", { max: props.maxLength });
         setInternalError(message);
         props.onValidation?.(message);
         return;
