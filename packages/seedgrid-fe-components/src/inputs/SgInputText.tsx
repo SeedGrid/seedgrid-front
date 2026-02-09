@@ -131,12 +131,15 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     },
     [prefixText, suffixText]
   );
-  const resolvedInputProps: React.InputHTMLAttributes<HTMLInputElement> = {
-    ...inputProps
-  };
-  if (inputProps.value !== undefined) {
-    resolvedInputProps.value = stripAffixes(inputProps.value);
-  }
+  const resolvedInputProps: React.InputHTMLAttributes<HTMLInputElement> = React.useMemo(() => {
+    const next: React.InputHTMLAttributes<HTMLInputElement> = {
+      ...inputProps
+    };
+    if (inputProps.value !== undefined) {
+      next.value = stripAffixes(inputProps.value);
+    }
+    return next;
+  }, [inputProps, stripAffixes]);
   const labelText = props.labelText ?? props.label ?? "";
   const placeholder = props.placeholder ?? props.hintText ?? labelText;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
@@ -158,8 +161,9 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
   React.useEffect(() => {
     const next = (inputRef.current?.value ?? "").length > 0;
     if (next !== isFilled) setIsFilled(next);
-    setValueLength((inputRef.current?.value ?? "").length);
-  });
+    const nextLength = (inputRef.current?.value ?? "").length;
+    setValueLength((prev) => (prev === nextLength ? prev : nextLength));
+  }, [isFilled]);
 
   React.useEffect(() => {
     if (inputProps.value === undefined) return;
@@ -248,7 +252,9 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     setIsFilled(rawValue.length > 0);
     setValueLength(rawValue.length);
     setHasInteracted(true);
-    runValidation(rawValue);
+    if (props.validateOnBlur === false) {
+      runValidation(rawValue);
+    }
     props.onChange?.(buildFullValue(rawValue));
   };
 
