@@ -388,7 +388,12 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
           ].join(" ")}
           style={prefixPaddingStyle ? { left: prefixPaddingStyle } : undefined}
         >
-          {labelText}
+          <span>{labelText}</span>
+          {props.required ? (
+            <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="true">
+              *
+            </span>
+          ) : null}
         </label>
         {hasSuffix ? (
           <span

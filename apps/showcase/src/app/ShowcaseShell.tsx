@@ -29,7 +29,8 @@ const COMPONENTS = [
   { slug: "sg-input-phone", label: "SgInputPhone" },
   { slug: "sg-autocomplete", label: "SgAutocomplete" },
   { slug: "sg-group-box", label: "SgGroupBox" },
-  { slug: "sg-wizard", label: "SgWizard" }
+  { slug: "sg-wizard", label: "SgWizard" },
+  { slug: "sg-benchmark", label: "Benchmark" }
 ];
 
 const LOCALES: Array<{ value: ShowcaseLocale; label: string }> = [
