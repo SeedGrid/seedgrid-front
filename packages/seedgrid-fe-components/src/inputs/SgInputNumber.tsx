@@ -433,7 +433,8 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
 
   const isDisabled = props.enabled === false || props.readOnly || inputProps.readOnly;
   const canShowClear = (props.clearButton ?? true) && !isDisabled;
-  const hasSuffix = canShowClear || (props.iconButtons?.length ?? 0) > 0;
+  const iconButtonsCount = props.iconButtons?.length ?? 0;
+  const hasSuffix = canShowClear || iconButtonsCount > 0;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
   const baseClass =
@@ -466,9 +467,13 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
   const prefixPaddingStyle = props.prefixText
     ? `calc(${prefixWidth}px + 0.75rem${props.prefixIcon ? " + 0.75rem" : ""})`
     : undefined;
+  const iconButtonsPadding = iconButtonsCount > 0 ? `${iconButtonsCount * 1.5}rem` : "0rem";
+  const baseRightPadding = canShowClear ? "2rem" : "0.75rem";
   const suffixPaddingStyle = props.suffixText
-    ? `calc(${suffixWidth}px + ${canShowClear ? "2rem" : "0.75rem"})`
-    : undefined;
+    ? `calc(${suffixWidth}px + ${baseRightPadding} + ${iconButtonsPadding})`
+    : hasSuffix
+      ? `calc(${baseRightPadding} + ${iconButtonsPadding})`
+      : undefined;
   const clearRightStyle = props.suffixText && suffixWidth
     ? `${suffixWidth}px`
     : undefined;

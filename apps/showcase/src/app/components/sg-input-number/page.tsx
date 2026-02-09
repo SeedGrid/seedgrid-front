@@ -92,6 +92,7 @@ export default function SgInputNumberPage() {
   const bothValue = watch("both");
   const iconBtnValue = watch("iconbtns");
   const [eventLog, setEventLog] = React.useState<string[]>([]);
+  const [standaloneSaveResult, setStandaloneSaveResult] = React.useState<string | null>(null);
   const [iconBtnLog, setIconBtnLog] = React.useState<string[]>([]);
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const standaloneARef = React.useRef<HTMLInputElement | null>(null);
@@ -516,11 +517,14 @@ export default function SgInputNumberPage() {
                 b: standaloneBRef.current?.value ?? "",
                 c: standaloneCRef.current?.value ?? ""
               };
-              setEventLog((prev) => [`[salvar] ${JSON.stringify(payload)}`, ...prev].slice(0, 10));
+              setStandaloneSaveResult(JSON.stringify(payload));
             }}
           >
             Salvar
           </button>
+          <p className="text-xs text-muted-foreground">
+            Resultado: {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
+          </p>
         </div>
         <CodeBlock code={`import React from "react";
 import { SgInputNumber } from "@seedgrid/fe-components";
