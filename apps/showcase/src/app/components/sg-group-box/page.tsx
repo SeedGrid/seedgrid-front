@@ -1,9 +1,17 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
-import { SgGroupBox, SgInputCEP, SgInputEmail, SgInputPassword, SgInputPhone, SgInputText } from "@seedgrid/fe-components";
+import {
+  SgGroupBox,
+  SgInputCEP,
+  SgInputEmail,
+  SgInputPassword,
+  SgInputPhone,
+  SgInputText
+} from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -16,17 +24,18 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={ props.code } />;
+  return <CodeBlockBase code={props.code} />;
 }
 
 export default function SgGroupBoxPage() {
+  const i18n = useShowcaseI18n();
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      nome: "",
+      name: "",
       email: "",
-      telefone: "",
+      phone: "",
       cep: "",
-      senha: ""
+      password: ""
     }
   });
   const values = watch();
@@ -34,45 +43,57 @@ export default function SgGroupBoxPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgGroupBox</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.groupBox.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Container com legend (fieldset) para agrupar campos.
+          {t(i18n, "showcase.component.groupBox.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="Uso simples do GroupBox.">
+      <Section
+        title={t(i18n, "showcase.component.groupBox.sections.basic.title")}
+        description={t(i18n, "showcase.component.groupBox.sections.basic.description")}
+      >
         <div className="w-full">
-          <SgGroupBox title="Dados pessoais">
+          <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.personalData")}>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded border border-border bg-foreground/5 p-3 text-sm">Campo 1</div>
-              <div className="rounded border border-border bg-foreground/5 p-3 text-sm">Campo 2</div>
+              <div className="rounded border border-border bg-foreground/5 p-3 text-sm">
+                {t(i18n, "showcase.component.groupBox.labels.field1")}
+              </div>
+              <div className="rounded border border-border bg-foreground/5 p-3 text-sm">
+                {t(i18n, "showcase.component.groupBox.labels.field2")}
+              </div>
             </div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox title="Dados pessoais">
+        <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.personalData")}">
   <div className="grid gap-3 sm:grid-cols-2">
-    <div>Campo 1</div>
-    <div>Campo 2</div>
+    <div>${t(i18n, "showcase.component.groupBox.labels.field1")}</div>
+    <div>${t(i18n, "showcase.component.groupBox.labels.field2")}</div>
   </div>
 </SgGroupBox>`} />
       </Section>
 
-      <Section title="Formulario" description="Exemplo com inputs reais dentro do GroupBox.">
+      <Section
+        title={t(i18n, "showcase.component.groupBox.sections.form.title")}
+        description={t(i18n, "showcase.component.groupBox.sections.form.description")}
+      >
         <div className="w-full">
           <form onSubmit={handleSubmit((data) => console.log(data))}>
-            <SgGroupBox title="Cadastro">
+            <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.formTitle")}>
               <div className="grid gap-4 sm:grid-cols-2">
-                <SgInputText id="nome" name="nome" control={control} label="Nome completo" required />
-                <SgInputEmail id="email" name="email" control={control} label="Email" required />
-                <SgInputPhone id="telefone" name="telefone" control={control} label="Telefone" required />
-                <SgInputCEP id="cep" name="cep" control={control} label="CEP" required />
+                <SgInputText id="name" name="name" control={control} label={t(i18n, "showcase.component.groupBox.labels.fullName")} required />
+                <SgInputEmail id="email" name="email" control={control} label={t(i18n, "showcase.component.groupBox.labels.email")} required />
+                <SgInputPhone id="phone" name="phone" control={control} label={t(i18n, "showcase.component.groupBox.labels.phone")} required />
+                <SgInputCEP id="cep" name="cep" control={control} label={t(i18n, "showcase.component.groupBox.labels.cep")} required />
                 <div className="sm:col-span-2">
-                  <SgInputPassword id="senha" name="senha" control={control} label="Senha" required />
+                  <SgInputPassword id="password" name="password" control={control} label={t(i18n, "showcase.component.groupBox.labels.password")} required />
                 </div>
               </div>
             </SgGroupBox>
           </form>
-          <p className="mt-3 text-xs text-muted-foreground">Valores: {JSON.stringify(values)}</p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            {t(i18n, "showcase.component.groupBox.labels.values")}: {JSON.stringify(values)}
+          </p>
         </div>
         <CodeBlock
           code={`import React from "react";
@@ -89,11 +110,11 @@ import {
 export default function Example() {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
-      nome: "",
+      name: "",
       email: "",
-      telefone: "",
+      phone: "",
       cep: "",
-      senha: ""
+      password: ""
     }
   });
   const values = watch();
@@ -102,50 +123,56 @@ export default function Example() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <SgGroupBox title="Cadastro">
+      <SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.formTitle")}">
         <div className="grid gap-4 sm:grid-cols-2">
-          <SgInputText id="nome" name="nome" control={control} label="Nome completo" required />
-          <SgInputEmail id="email" name="email" control={control} label="Email" required />
-          <SgInputPhone id="telefone" name="telefone" control={control} label="Telefone" required />
-          <SgInputCEP id="cep" name="cep" control={control} label="CEP" required />
+          <SgInputText id="name" name="name" control={control} label="${t(i18n, "showcase.component.groupBox.labels.fullName")}" required />
+          <SgInputEmail id="email" name="email" control={control} label="${t(i18n, "showcase.component.groupBox.labels.email")}" required />
+          <SgInputPhone id="phone" name="phone" control={control} label="${t(i18n, "showcase.component.groupBox.labels.phone")}" required />
+          <SgInputCEP id="cep" name="cep" control={control} label="${t(i18n, "showcase.component.groupBox.labels.cep")}" required />
           <div className="sm:col-span-2">
-            <SgInputPassword id="senha" name="senha" control={control} label="Senha" required />
+            <SgInputPassword id="password" name="password" control={control} label="${t(i18n, "showcase.component.groupBox.labels.password")}" required />
           </div>
         </div>
       </SgGroupBox>
-      <p>Valores: {JSON.stringify(values)}</p>
+      <p>${t(i18n, "showcase.component.groupBox.labels.values")}: {JSON.stringify(values)}</p>
     </form>
   );
 }`}
         />
       </Section>
 
-      <Section title="Tamanho" description="Largura e altura customizaveis.">
+      <Section
+        title={t(i18n, "showcase.component.groupBox.sections.size.title")}
+        description={t(i18n, "showcase.component.groupBox.sections.size.description")}
+      >
         <div className="w-full flex flex-wrap gap-4">
-          <SgGroupBox title="Largura 320px" width={320}>
-            <div className="rounded border border-border bg-foreground/5 p-3 text-sm">Conteudo</div>
+          <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.width320")} width={320}>
+            <div className="rounded border border-border bg-foreground/5 p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
-          <SgGroupBox title="Altura 180px" height={180}>
-            <div className="rounded border border-border bg-foreground/5 p-3 text-sm">Conteudo</div>
+          <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.height180")} height={180}>
+            <div className="rounded border border-border bg-foreground/5 p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox title="Largura 320px" width={320}>
-  <div>Conteudo</div>
+        <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.width320")}" width={320}>
+  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
 </SgGroupBox>
 
-<SgGroupBox title="Altura 180px" height={180}>
-  <div>Conteudo</div>
+<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.height180")}" height={180}>
+  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
 </SgGroupBox>`} />
       </Section>
 
-      <Section title="Classe customizada" description="Use className para ajustar layout externo.">
+      <Section
+        title={t(i18n, "showcase.component.groupBox.sections.className.title")}
+        description={t(i18n, "showcase.component.groupBox.sections.className.description")}
+      >
         <div className="w-full">
-          <SgGroupBox title="Com className" className="bg-foreground/5 p-2 rounded-xl">
-            <div className="rounded border border-border bg-white p-3 text-sm">Conteudo</div>
+          <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.classNameTitle")} className="bg-foreground/5 p-2 rounded-xl">
+            <div className="rounded border border-border bg-white p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox title="Com className" className="bg-foreground/5 p-2 rounded-xl">
-  <div>Conteudo</div>
+        <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.classNameTitle")}" className="bg-foreground/5 p-2 rounded-xl">
+  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
 </SgGroupBox>`} />
       </Section>
     </div>

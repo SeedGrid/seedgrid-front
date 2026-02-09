@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputTextArea } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -29,37 +30,26 @@ function indentCode(source: string, spaces: number) {
 }
 
 function wrapFullExample(body: string) {
+  const i18n = getShowcaseI18n();
   const imports = [
     `import React from "react";`,
     `import { useForm } from "react-hook-form";`,
     `import { SgInputTextArea } from "@seedgrid/fe-components";`
   ].join("\n");
 
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
 
   const bodyIndented = indentCode(body.trim(), 6);
 
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
 }
 
-
 export default function SgInputTextAreaPage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
-  const [controlledValue, setControlledValue] = React.useState("Texto inicial\nem multiplas linhas");
+  const [controlledValue, setControlledValue] = React.useState(
+    t(i18n, "showcase.component.inputTextArea.defaults.controlled")
+  );
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
 
@@ -67,242 +57,199 @@ export default function SgInputTextAreaPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
+  React.useEffect(() => {
+    setControlledValue(t(i18n, "showcase.component.inputTextArea.defaults.controlled"));
+  }, [i18n.locale]);
+
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputTextArea</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputTextArea.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Textarea multi-linha com floating label, contagem de caracteres/palavras/linhas e validacao integrada.
-          Segue a mesma API do SgInputText adaptada para textarea.
+          {t(i18n, "showcase.component.inputTextArea.subtitle")}
         </p>
       </div>
 
-      {/* ── Basico ── */}
-      <Section title="Basico" description="Textarea com floating label e botao limpar (padrao).">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.basic.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-basic"
-            label="Descricao"
+            label={t(i18n, "showcase.component.inputTextArea.labels.description")}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
+          </p>
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="descricao"
-  label="Descricao"
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="descricao"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.description")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
-      {/* ── Required ── */}
-      <Section title="Obrigatorio" description="Valida ao perder o foco (validateOnBlur=true por padrao).">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.required.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.required.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-required"
-            label="Campo obrigatorio"
+            label={t(i18n, "showcase.component.inputTextArea.labels.requiredField")}
             required
           />
         </div>
         <div className="w-96">
           <SgInputTextArea
             id="demo-required-custom"
-            label="Mensagem customizada"
+            label={t(i18n, "showcase.component.inputTextArea.labels.customMessage")}
             required
-            requiredMessage="Preencha este campo!"
+            requiredMessage={t(i18n, "showcase.component.inputTextArea.messages.requiredCustom")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="campo"
-  label="Campo obrigatorio"
-  required
-  requiredMessage="Preencha este campo!"
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="campo"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.requiredField")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputTextArea.messages.requiredCustom")}"\n/>`} />
       </Section>
 
-      {/* ── Controlled ── */}
-      <Section title="Controlado" description="Para controlar o valor de fora (setar, limpar, preencher via API), use textareaProps.value + textareaProps.onChange. O estado vive no pai.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.controlled.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.controlled.description")}
+      >
         <div className="w-96 space-y-3">
           <SgInputTextArea
             id="demo-controlled"
-            label="Observacoes"
+            label={t(i18n, "showcase.component.inputTextArea.labels.notes")}
             textareaProps={{
               value: controlledValue,
               onChange: (e) => setControlledValue(e.target.value)
             }}
           />
           <p className="text-xs text-muted-foreground">
-            Estado atual: <code className="rounded bg-muted px-1">&quot;{controlledValue}&quot;</code>
+            {t(i18n, "showcase.common.labels.currentState")}: {" "}
+            <code className="rounded bg-muted px-1">&quot;{controlledValue}&quot;</code>
           </p>
           <div className="flex flex-wrap gap-2">
             <button
               className="rounded border border-primary bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20"
-              onClick={() => setControlledValue("Texto preenchido via API.\nSegunda linha.")}
+              onClick={() => setControlledValue(t(i18n, "showcase.component.inputTextArea.values.apiSample"))}
             >
-              Simular preenchimento via API
+              {t(i18n, "showcase.component.inputTextArea.actions.setApi")}
             </button>
             <button
               className="rounded border px-3 py-1.5 text-sm hover:bg-muted"
-              onClick={() => setControlledValue("Outro valor qualquer")}
+              onClick={() => setControlledValue(t(i18n, "showcase.component.inputTextArea.values.otherSample"))}
             >
-              Setar outro valor
+              {t(i18n, "showcase.component.inputTextArea.actions.setOther")}
             </button>
             <button
               className="rounded border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
               onClick={() => setControlledValue("")}
             >
-              Limpar campo
+              {t(i18n, "showcase.component.inputTextArea.actions.clear")}
             </button>
           </div>
         </div>
         <div className="w-full">
-          <p className="mb-2 text-sm font-medium">Como funciona:</p>
+          <p className="mb-2 text-sm font-medium">{t(i18n, "showcase.component.inputTextArea.labels.howItWorks")}</p>
           <ul className="mb-3 list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li><code className="rounded bg-muted px-1">textareaProps.value</code> vincula o textarea ao seu estado</li>
-            <li><code className="rounded bg-muted px-1">textareaProps.onChange</code> atualiza o estado quando o usuario digita</li>
-            <li>Para setar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;novo texto&quot;)</code></li>
-            <li>Para limpar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;&quot;)</code></li>
+            <li>{t(i18n, "showcase.component.inputTextArea.bullets.controlled.1")}</li>
+            <li>{t(i18n, "showcase.component.inputTextArea.bullets.controlled.2")}</li>
+            <li>{t(i18n, "showcase.component.inputTextArea.bullets.controlled.3")}</li>
+            <li>{t(i18n, "showcase.component.inputTextArea.bullets.controlled.4")}</li>
           </ul>
           <CodeBlock
-            code={`import React from "react";
-import { useForm } from "react-hook-form";
-import { SgInputTextArea } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const { control, handleSubmit, setValue, watch } = useForm({
-    defaultValues: { obs: "" }
-  });
-
-  const onSubmit = (data) => console.log(data);
-  const value = watch("obs");
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <SgInputTextArea
-        id="obs"
-        name="obs"
-        control={control}
-        label="Observacoes"
-      />
-
-      <button type="button" onClick={() => setValue("obs", "Texto via API.\\nSegunda linha.")}>
-        Simular preenchimento via API
-      </button>
-
-      <button type="button" onClick={() => setValue("obs", "")}>
-        Limpar campo
-      </button>
-
-      <p>Valor atual: "{value}"</p>
-    </form>
-  );
-}`}
+            code={`import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputTextArea } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit, setValue, watch } = useForm({\n    defaultValues: { obs: "" }\n  });\n\n  const onSubmit = (data) => console.log(data);\n  const value = watch("obs");\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n      <SgInputTextArea\n        id="obs"\n        name="obs"\n        control={control}\n        label="${t(i18n, "showcase.component.inputTextArea.labels.notes")}"\n      />\n\n      <button type="button" onClick={() => setValue("obs", "${t(i18n, "showcase.component.inputTextArea.values.apiSample").replace(/\n/g, "\\n")}")}>\n        ${t(i18n, "showcase.component.inputTextArea.actions.setApi")}\n      </button>\n\n      <button type="button" onClick={() => setValue("obs", "")}>\n        ${t(i18n, "showcase.component.inputTextArea.actions.clear")}\n      </button>\n\n      <p>${t(i18n, "showcase.common.labels.currentState")}: "{value}"</p>\n    </form>\n  );\n}`}
           />
         </div>
       </Section>
 
-      {/* ── MaxLength + Counter ── */}
-      <Section title="Contador de caracteres" description="Usa maxLength e showCharCounter para limitar e exibir contagem.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.counter.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.counter.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-counter"
-            label="Maximo 100 caracteres"
+            label={t(i18n, "showcase.component.inputTextArea.labels.max100")}
             maxLength={100}
             showCharCounter
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="counter"
-  label="Maximo 100 caracteres"
-  maxLength={100}
-  showCharCounter
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="counter"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.max100")}"\n  maxLength={100}\n  showCharCounter\n/>`} />
       </Section>
 
-      {/* ── MinLength ── */}
-      <Section title="Tamanho minimo" description="Valida que o texto tem um tamanho minimo ao perder foco.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.minLength.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.minLength.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-minlength"
-            label="Minimo 10 caracteres"
+            label={t(i18n, "showcase.component.inputTextArea.labels.min10")}
             minLength={10}
             showCharCounter
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="min"
-  label="Minimo 10 caracteres"
-  minLength={10}
-  showCharCounter
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="min"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min10")}"\n  minLength={10}\n  showCharCounter\n/>`} />
       </Section>
 
-      {/* ── MinNumberOfWords ── */}
-      <Section title="Minimo de palavras" description="Valida quantidade minima de palavras.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.minWords.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.minWords.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-words"
-            label="Minimo 5 palavras"
+            label={t(i18n, "showcase.component.inputTextArea.labels.min5Words")}
             minNumberOfWords={5}
-            minNumberOfWordsMessage="Digite pelo menos 5 palavras."
+            minNumberOfWordsMessage={t(i18n, "showcase.component.inputTextArea.messages.min5Words")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="words"
-  label="Minimo 5 palavras"
-  minNumberOfWords={5}
-  minNumberOfWordsMessage="Digite pelo menos 5 palavras."
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="words"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min5Words")}"\n  minNumberOfWords={5}\n  minNumberOfWordsMessage="${t(i18n, "showcase.component.inputTextArea.messages.min5Words")}"\n/>`} />
       </Section>
 
-      {/* ── MinLines ── */}
-      <Section title="Minimo de linhas" description="Valida que o texto tem um numero minimo de linhas (quebras de linha). Exclusivo do TextArea.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.minLines.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.minLines.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-minlines"
-            label="Minimo 3 linhas"
+            label={t(i18n, "showcase.component.inputTextArea.labels.min3Lines")}
             minLines={3}
-            minLinesMessage="Escreva pelo menos 3 linhas."
+            minLinesMessage={t(i18n, "showcase.component.inputTextArea.messages.min3Lines")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="linhas"
-  label="Minimo 3 linhas"
-  minLines={3}
-  minLinesMessage="Escreva pelo menos 3 linhas."
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="linhas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min3Lines")}"\n  minLines={3}\n  minLinesMessage="${t(i18n, "showcase.component.inputTextArea.messages.min3Lines")}"\n/>`} />
       </Section>
 
-      {/* ── Custom Validation ── */}
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem de erro ou null.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.validation.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.validation.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-validation"
-            label="Sem numeros"
+            label={t(i18n, "showcase.component.inputTextArea.labels.noNumbers")}
             validation={(v) =>
-              /\d/.test(v) ? "Numeros nao sao permitidos." : null
+              /\d/.test(v) ? t(i18n, "showcase.component.inputTextArea.messages.noNumbers") : null
             }
             onValidation={(msg) => setValidationMsg(msg)}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}: {" "}
+            {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={String.raw`<SgInputTextArea
-  id="sem-numeros"
-  label="Sem numeros"
-  validation={(v) =>
-    /\d/.test(v) ? "Numeros nao sao permitidos." : null
-  }
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={String.raw`<SgInputTextArea\n  id="sem-numeros"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.noNumbers")}"\n  validation={(v) =>\n    /\\d/.test(v) ? "${t(i18n, "showcase.component.inputTextArea.messages.noNumbers")}" : null\n  }\n  onValidation={(msg) => console.log(msg)}\n/>`} />
       </Section>
 
-      {/* ── Height + MaxLines ── */}
-      <Section title="Altura e linhas visiveis" description="height controla a altura do container. maxLines define o atributo rows do textarea.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.sizeLines.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.sizeLines.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-height-small"
-            label="Altura 100px, 2 rows"
+            label={t(i18n, "showcase.component.inputTextArea.labels.heightSmall")}
             height={100}
             maxLines={2}
           />
@@ -310,194 +257,177 @@ export default function Example() {
         <div className="w-96">
           <SgInputTextArea
             id="demo-height-large"
-            label="Altura 250px, 8 rows"
+            label={t(i18n, "showcase.component.inputTextArea.labels.heightLarge")}
             height={250}
             maxLines={8}
           />
         </div>
-        <CodeBlock code={`// Compacto
-<SgInputTextArea
-  id="a"
-  label="Compacto"
-  height={100}
-  maxLines={2}
-/>
-
-// Expansivo
-<SgInputTextArea
-  id="b"
-  label="Expansivo"
-  height={250}
-  maxLines={8}
-/>`} />
+        <CodeBlock code={`// ${t(i18n, "showcase.component.inputTextArea.labels.compact")}\n<SgInputTextArea\n  id="a"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.compact")}"\n  height={100}\n  maxLines={2}\n/>\n\n// ${t(i18n, "showcase.component.inputTextArea.labels.expanded")}\n<SgInputTextArea\n  id="b"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.expanded")}"\n  height={250}\n  maxLines={8}\n/>`} />
       </Section>
 
-      {/* ── Prefix Icon ── */}
-      <Section title="Icone prefixo" description="Icone posicionado no canto superior esquerdo do textarea.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.prefixIcon.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.prefixIcon.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-prefix"
-            label="Notas"
+            label={t(i18n, "showcase.component.inputTextArea.labels.notes")}
             prefixIcon={
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>
             }
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="notas"
-  label="Notas"
-  prefixIcon={<PencilIcon />}
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="notas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.notes")}"\n  prefixIcon={<PencilIcon />}\n/>`} />
       </Section>
 
-      {/* ── Sem borda / Filled ── */}
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-96">
-          <SgInputTextArea id="demo-noborder" label="Sem borda" withBorder={false} />
+          <SgInputTextArea id="demo-noborder" label={t(i18n, "showcase.common.labels.noBorder")} withBorder={false} />
         </div>
         <div className="w-96">
-          <SgInputTextArea id="demo-filled" label="Preenchido" filled />
+          <SgInputTextArea id="demo-filled" label={t(i18n, "showcase.common.labels.filled")} filled />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="Sem borda" withBorder={false} />
-<SgInputTextArea id="b" label="Preenchido" filled />`} />
+        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" withBorder={false} />\n<SgInputTextArea id="b" label="${t(i18n, "showcase.common.labels.filled")}" filled />`} />
       </Section>
 
-      {/* ── Sem clear button ── */}
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do textarea.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-96">
-          <SgInputTextArea id="demo-noclear" label="Sem limpar" clearButton={false} />
+          <SgInputTextArea id="demo-noclear" label={t(i18n, "showcase.common.labels.noClear")} clearButton={false} />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="x" label="Sem limpar" clearButton={false} />`} />
+        <CodeBlock code={`<SgInputTextArea id="x" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} />`} />
       </Section>
 
-      {/* ── Width / Border Radius ── */}
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputTextArea id="demo-w250" label="250px" width={250} />
-          <SgInputTextArea id="demo-w350" label="350px arredondado" width={350} borderRadius={16} />
+          <SgInputTextArea id="demo-w250" label={t(i18n, "showcase.component.inputTextArea.labels.width250")} width={250} />
+          <SgInputTextArea id="demo-w350" label={t(i18n, "showcase.component.inputTextArea.labels.width350Rounded")} width={350} borderRadius={16} />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="250px" width={250} />
-<SgInputTextArea id="b" label="Arredondado" width={350} borderRadius={16} />`} />
+        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.component.inputTextArea.labels.width250")}" width={250} />\n<SgInputTextArea id="b" label="${t(i18n, "showcase.component.inputTextArea.labels.width350Rounded")}" width={350} borderRadius={16} />`} />
       </Section>
 
-      {/* ── Disabled / ReadOnly ── */}
-      <Section title="Desabilitado e somente leitura" description="enabled=false desabilita, readOnly impede edicao via textareaProps.">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.disabledReadonly.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.disabledReadonly.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-disabled"
-            label="Desabilitado"
+            label={t(i18n, "showcase.common.labels.disabled")}
             enabled={false}
-            textareaProps={{ defaultValue: "Nao editavel" }}
+            textareaProps={{ defaultValue: t(i18n, "showcase.common.labels.notEditable") }}
           />
         </div>
         <div className="w-96">
           <SgInputTextArea
             id="demo-readonly"
-            label="Somente leitura"
-            textareaProps={{ readOnly: true, defaultValue: "Apenas leitura" }}
+            label={t(i18n, "showcase.component.inputTextArea.labels.readonly")}
+            textareaProps={{ readOnly: true, defaultValue: t(i18n, "showcase.component.inputTextArea.defaults.readonly") }}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="Desabilitado" enabled={false} />
-<SgInputTextArea
-  id="b"
-  label="Somente leitura"
-  textareaProps={{ readOnly: true }}
-/>`} />
+        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.common.labels.disabled")}" enabled={false} />\n<SgInputTextArea\n  id="b"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.readonly")}"\n  textareaProps={{ readOnly: true }}\n/>`} />
       </Section>
 
-      {/* ── Erro externo ── */}
-      <Section title="Erro externo" description="Prop error exibe mensagem de erro vinda do pai (server-side, etc).">
+      <Section
+        title={t(i18n, "showcase.component.inputTextArea.sections.externalError.title")}
+        description={t(i18n, "showcase.component.inputTextArea.sections.externalError.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-error"
-            label="Com erro externo"
-            error="Descricao muito curta."
+            label={t(i18n, "showcase.component.inputTextArea.labels.externalError")}
+            error={t(i18n, "showcase.component.inputTextArea.messages.externalError")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="desc"
-  label="Com erro externo"
-  error="Descricao muito curta."
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="desc"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.externalError")}"\n  error="${t(i18n, "showcase.component.inputTextArea.messages.externalError")}"\n/>`} />
       </Section>
 
-      {/* ── Callbacks / Events ── */}
-      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.common.sections.events.title")}
+        description={t(i18n, "showcase.common.sections.events.description")}
+      >
         <div className="w-96">
           <SgInputTextArea
             id="demo-events"
-            label="Digite e observe o log"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
             required
             onChange={(v) => log(`onChange: "${v.replace(/\n/g, "\\n")}"`)}
-            onEnter={() => log("onEnter (focus)")}
-            onExit={() => log("onExit (blur)")}
-            onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onEnter={() => log(t(i18n, "showcase.component.inputTextArea.logs.onEnter"))}
+            onExit={() => log(t(i18n, "showcase.component.inputTextArea.logs.onExit"))}
+            onClear={() => log(t(i18n, "showcase.component.inputTextArea.logs.onClear"))}
+            onValidation={(msg) =>
+              log(
+                `${t(i18n, "showcase.common.labels.onValidation")}: ${
+                  msg ?? t(i18n, "showcase.common.labels.valid")
+                }`
+              )
+            }
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o textarea...</span>
+              <span className="text-muted-foreground">
+                {t(i18n, "showcase.component.inputTextArea.labels.interactHint")}
+              </span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputTextArea
-  id="eventos"
-  label="Com eventos"
-  required
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={`<SgInputTextArea\n  id="eventos"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.withEvents")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onEnter")}")} \n  onExit={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onExit")}")} \n  onClear={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onClear")}")} \n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
 
-      {/* ── Props Reference ── */}
       <section className="rounded-lg border border-border p-6">
-        <h2 className="text-lg font-semibold">Referencia de Props</h2>
+        <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputTextArea.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrao</th>
-                <th className="pb-2 font-semibold">Descricao</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputTextArea.props.headers.prop")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputTextArea.props.headers.type")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputTextArea.props.headers.default")}</th>
+                <th className="pb-2 font-semibold">{t(i18n, "showcase.component.inputTextArea.props.headers.description")}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Obrigatorio. ID do textarea e vinculo com label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do floating label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Alias para label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Placeholder alternativo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Mensagem de erro externa (sobrescreve validacao interna).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">textareaProps</td><td className="py-2 pr-4">TextareaHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas repassadas ao textarea.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">maxLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limite maximo de caracteres.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">maxLines</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">4</td><td className="py-2">Numero de linhas visiveis (atributo rows).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Valida tamanho minimo no blur.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minLines</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Valida quantidade minima de linhas.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minLinesMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem de erro para minLines.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minNumberOfWords</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Valida quantidade minima de palavras.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Icone no canto superior esquerdo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao X para limpar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">&quot;100%&quot;</td><td className="py-2">Largura do container.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">height</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">&quot;150px&quot;</td><td className="py-2">Altura do container.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Border radius customizado.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Fundo preenchido (bg-muted).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe borda ao redor.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">false desabilita o textarea.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Campo obrigatorio (valida no blur).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem quando vazio.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">showCharCounter</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe contador de caracteres.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value: string) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">Funcao de validacao customizada.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validateOnBlur</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Valida ao perder o foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg: string | null) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback com resultado da validacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado com o valor string a cada mudanca.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado quando o textarea recebe foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onExit</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado quando o textarea perde foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onClear</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado ao clicar no botao limpar.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.id")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.label")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.labelText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.hintText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.error")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">textareaProps</td><td className="py-2 pr-4">TextareaHTMLAttributes</td><td className="py-2 pr-4">{`{}`}</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.textareaProps")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">maxLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.maxLength")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">maxLines</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">4</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.maxLines")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.minLength")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minLines</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.minLines")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minLinesMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.minLinesMessage")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minNumberOfWords</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.minNumberOfWords")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.prefixIcon")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.clearButton")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"100%"</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.width")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">height</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"150px"</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.height")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.borderRadius")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.filled")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.withBorder")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.enabled")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.required")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.requiredMessage")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">showCharCounter</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.showCharCounter")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value: string) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.validation")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validateOnBlur</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.validateOnBlur")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg: string | null) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.onValidation")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.onChange")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.onEnter")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onExit</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.onExit")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onClear</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.onClear")}</td></tr>
             </tbody>
           </table>
         </div>

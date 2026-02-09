@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputBirthDate } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -29,6 +30,7 @@ function indentCode(source: string, spaces: number) {
 }
 
 function wrapFullExample(body: string) {
+  const i18n = getShowcaseI18n();
   const imports = [
     `import React from "react";`,
     `import { useForm } from "react-hook-form";`,
@@ -58,68 +60,80 @@ ${bodyIndented}
 
 
 export default function SgInputBirthDatePage() {
+  const i18n = useShowcaseI18n();
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
 
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputBirthDate</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputBirthDate.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de data de nascimento com politica de idade minima/maxima.
+          {t(i18n, "showcase.component.inputBirthDate.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="Data de nascimento com idade minima.">
+      <Section
+        title={t(i18n, "showcase.component.inputBirthDate.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputBirthDate.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputBirthDate
             id="demo-basic"
-            label="Data de nascimento"
+            label={t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}
             minAge={18}
             onValidation={(msg) => setValidationMsg(msg)}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}: {validationMsg === null
+              ? t(i18n, "showcase.common.labels.valid")
+              : `"${validationMsg}"`}
           </p>
         </div>
         <CodeBlock code={`<SgInputBirthDate
   id="nascimento"
-  label="Data de nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
   minAge={18}
   onValidation={(msg) => console.log(msg)}
 />`} />
       </Section>
 
-      <Section title="Obrigatorio" description="Valida campo vazio.">
+      <Section
+        title={t(i18n, "showcase.component.inputBirthDate.sections.required.title")}
+        description={t(i18n, "showcase.component.inputBirthDate.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputBirthDate
             id="demo-required"
-            label="Data de nascimento"
+            label={t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}
             minAge={18}
             required
-            requiredMessage="Informe a data de nascimento."
+            requiredMessage={t(i18n, "showcase.component.inputBirthDate.messages.required")}
           />
         </div>
         <CodeBlock code={`<SgInputBirthDate
   id="nascimento"
-  label="Data de nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
   minAge={18}
   required
-  requiredMessage="Informe a data de nascimento."
+  requiredMessage="${t(i18n, "showcase.component.inputBirthDate.messages.required")}"
 />`} />
       </Section>
 
-      <Section title="Faixa customizada" description="minAge e maxAge configuraveis.">
+      <Section
+        title={t(i18n, "showcase.component.inputBirthDate.sections.range.title")}
+        description={t(i18n, "showcase.component.inputBirthDate.sections.range.description")}
+      >
         <div className="w-80">
           <SgInputBirthDate
             id="demo-range"
-            label="Data de nascimento"
+            label={t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}
             minAge={12}
             maxAge={80}
           />
         </div>
         <CodeBlock code={`<SgInputBirthDate
   id="nascimento"
-  label="Data de nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
   minAge={12}
   maxAge={80}
 />`} />

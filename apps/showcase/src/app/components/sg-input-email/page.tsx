@@ -3,6 +3,7 @@
 import React from "react";
 import { DEFAULT_BLOCKED_EMAIL_DOMAINS, SgInputEmail } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -58,6 +59,7 @@ ${bodyIndented}
 
 
 export default function SgInputEmailPage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
@@ -69,124 +71,154 @@ export default function SgInputEmailPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputEmail</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputEmail.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de email com validação integrada, customização de mensagens e suporte a ícones extras.
+          {t(i18n, "showcase.component.inputEmail.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="Email com label e hint.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-basic"
-            label="Email"
-            hintText="exemplo@dominio.com"
+            label={t(i18n, "showcase.component.inputEmail.labels.email")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.emailHint")}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
+          </p>
         </div>
         <CodeBlock code={`<SgInputEmail
   id="email"
-  label="Email"
-  hintText="exemplo@dominio.com"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
   onChange={(value) => console.log(value)}
 />`} />
       </Section>
 
-      <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.required.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-required"
-            label="Email obrigatorio"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.inputEmail.labels.required")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.requiredHint")}
             required
           />
         </div>
         <div className="w-80">
           <SgInputEmail
             id="demo-required-custom"
-            label="Mensagem customizada"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.inputEmail.labels.customMessage")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.requiredHint")}
             required
-            requiredMessage="Informe o email."
+            requiredMessage={t(i18n, "showcase.component.inputEmail.messages.required")}
           />
         </div>
         <CodeBlock code={`<SgInputEmail
   id="email"
-  label="Email obrigatorio"
-  hintText="Obrigatorio"
+  label="${t(i18n, "showcase.component.inputEmail.labels.required")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.requiredHint")}"
   required
-  requiredMessage="Informe o email."
+  requiredMessage="${t(i18n, "showcase.component.inputEmail.messages.required")}"
 />`} />
       </Section>
 
-      <Section title="Mensagem invalida" description="Personaliza mensagem de email inválido.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.invalid.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.invalid.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-invalid"
-            label="Email"
-            hintText="exemplo@dominio.com"
-            invalidMessage="Email invalido."
+            label={t(i18n, "showcase.component.inputEmail.labels.email")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.emailHint")}
+            invalidMessage={t(i18n, "showcase.component.inputEmail.messages.invalid")}
           />
         </div>
         <CodeBlock code={`<SgInputEmail
   id="email"
-  label="Email"
-  hintText="exemplo@dominio.com"
-  invalidMessage="Email invalido."
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
+  invalidMessage="${t(i18n, "showcase.component.inputEmail.messages.invalid")}"
 />`} />
       </Section>
 
-      <Section title="Bloqueio de email temporario" description="blockFakeMail=true (padrao) bloqueia dominios descartaveis.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.blocked.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.blocked.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-blocked"
-            label="Email"
-            hintText="exemplo@dominio.com"
+            label={t(i18n, "showcase.component.inputEmail.labels.email")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.emailHint")}
           />
         </div>
         <div className="w-80">
           <SgInputEmail
             id="demo-blocked-off"
-            label="Sem bloqueio"
-            hintText="exemplo@dominio.com"
+            label={t(i18n, "showcase.component.inputEmail.labels.noBlock")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.emailHint")}
             blockFakeMail={false}
           />
         </div>
         <CodeBlock code={`<SgInputEmail
   id="email"
-  label="Email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
   blockFakeMail={false}
 />`} />
       </Section>
 
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem ou null.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.validation.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.validation.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-validation"
-            label="Somente dominio .com"
-            hintText="seu@dominio.com"
-            validation={(v) => (v.endsWith(".com") ? null : "Use dominio .com.")}
+            label={t(i18n, "showcase.component.inputEmail.labels.onlyCom")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.domainHint")}
+            validation={(v) =>
+              v.endsWith(".com") ? null : t(i18n, "showcase.component.inputEmail.messages.onlyCom")
+            }
             onValidation={(msg) => setValidationMsg(msg)}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}:{" "}
+            {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
         <CodeBlock code={`<SgInputEmail
   id="email"
-  label="Somente dominio .com"
-  hintText="seu@dominio.com"
-  validation={(v) => (v.endsWith(".com") ? null : "Use dominio .com.")}
+  label="${t(i18n, "showcase.component.inputEmail.labels.onlyCom")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.domainHint")}"
+  validation={(v) => (v.endsWith(".com") ? null : "${t(i18n, "showcase.component.inputEmail.messages.onlyCom")}")}
   onValidation={(msg) => console.log(msg)}
 />`} />
       </Section>
 
-      <Section title="Lista bloqueada padrao" description="Dominios bloqueados por default.">
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.blockedList.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.blockedList.description")}
+      >
+        <div className="w-full overflow-x-auto rounded border border-border bg-foreground/5 p-3 font-mono text-xs">
+          {DEFAULT_BLOCKED_EMAIL_DOMAINS.join(", ")}
+        </div>
       </Section>
 
-      <Section title="Config JSON" description="A aplicacao host pode carregar um JSON e adicionar dominios em runtime.">
-// 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
+      <Section
+        title={t(i18n, "showcase.component.inputEmail.sections.json.title")}
+        description={t(i18n, "showcase.component.inputEmail.sections.json.description")}
+      >
+        <CodeBlock
+          code={`// 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
 // {
 //   "blockedEmailDomains": ["exemplo.com", "teste.com"]
 // }
@@ -196,55 +228,99 @@ fetch("/seedgrid-blocked-email-domains.json")
   .then((res) => res.json())
   .then((data) => {
     window.__seedgridBlockedEmailDomains = data.blockedEmailDomains ?? [];
-  });`} />
+  });`}
+        />
       </Section>
 
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-80">
-          <SgInputEmail id="demo-noborder" label="Sem borda" hintText="Email" withBorder={false} />
+          <SgInputEmail
+            id="demo-noborder"
+            label={t(i18n, "showcase.common.labels.noBorder")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
+            withBorder={false}
+          />
         </div>
         <div className="w-80">
-          <SgInputEmail id="demo-filled" label="Preenchido" hintText="Email" filled />
+          <SgInputEmail
+            id="demo-filled"
+            label={t(i18n, "showcase.common.labels.filled")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
+            filled
+          />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="Sem borda" hintText="Email" withBorder={false} />
-<SgInputEmail id="b" label="Preenchido" hintText="Email" filled />`} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" withBorder={false} />
+<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" filled />`} />
       </Section>
 
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-80">
-          <SgInputEmail id="demo-noclear" label="Sem limpar" hintText="Email" clearButton={false} />
+          <SgInputEmail
+            id="demo-noclear"
+            label={t(i18n, "showcase.common.labels.noClear")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
+            clearButton={false}
+          />
         </div>
-        <CodeBlock code={`<SgInputEmail id="x" label="Sem limpar" hintText="Email" clearButton={false} />`} />
+        <CodeBlock
+          code={`<SgInputEmail id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" clearButton={false} />`}
+        />
       </Section>
 
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputEmail id="demo-w200" label="200px" hintText="Email" width={200} />
-          <SgInputEmail id="demo-w300" label="Arredondado" hintText="Email" width={300} borderRadius={20} />
+          <SgInputEmail
+            id="demo-w200"
+            label={t(i18n, "showcase.common.labels.width200")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
+            width={200}
+          />
+          <SgInputEmail
+            id="demo-w300"
+            label={t(i18n, "showcase.common.labels.width300Rounded")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
+            width={300}
+            borderRadius={20}
+          />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="200px" hintText="Email" width={200} />
-<SgInputEmail id="b" label="Arredondado" hintText="Email" width={300} borderRadius={20} />`} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={200} />
+<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={300} borderRadius={20} />`} />
       </Section>
 
-      <Section title="Desabilitado" description="enabled=false desabilita.">
+      <Section
+        title={t(i18n, "showcase.common.sections.disabled.title")}
+        description={t(i18n, "showcase.common.sections.disabled.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-disabled"
-            label="Desabilitado"
-            hintText="Email"
+            label={t(i18n, "showcase.common.labels.disabled")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
             enabled={false}
-            inputProps={{ defaultValue: "Nao editavel" }}
+            inputProps={{ defaultValue: t(i18n, "showcase.common.labels.notEditable") }}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="Desabilitado" hintText="Email" enabled={false} />`} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" enabled={false} />`} />
       </Section>
 
-      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.common.sections.events.title")}
+        description={t(i18n, "showcase.common.sections.events.description")}
+      >
         <div className="w-80">
           <SgInputEmail
             id="demo-events"
-            label="Digite e observe o log"
-            hintText="Email"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
+            hintText={t(i18n, "showcase.component.inputEmail.labels.email")}
             required
             onChange={(v) => log(`onChange: "${v}"`)}
             onEnter={() => log("onEnter (focus)")}
@@ -254,7 +330,9 @@ fetch("/seedgrid-blocked-email-domains.json")
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o input...</span>
+              <span className="text-muted-foreground">
+                {t(i18n, "showcase.common.labels.interactHint")}
+              </span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
@@ -262,8 +340,8 @@ fetch("/seedgrid-blocked-email-domains.json")
         </div>
         <CodeBlock code={`<SgInputEmail
   id="eventos"
-  label="Com eventos"
-  hintText="Email"
+  label="${t(i18n, "showcase.common.labels.typeAndLog")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}"
   required
   onChange={(v) => console.log("onChange:", v)}
   onEnter={() => console.log("focus")}
@@ -275,3 +353,6 @@ fetch("/seedgrid-blocked-email-domains.json")
     </div>
   );
 }
+
+
+

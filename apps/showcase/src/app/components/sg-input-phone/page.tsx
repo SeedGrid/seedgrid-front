@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgInputPhone } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -35,29 +36,15 @@ function wrapFullExample(body: string) {
     `import { SgInputPhone } from "@seedgrid/fe-components";`
   ].join("\n");
 
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
 
   const bodyIndented = indentCode(body.trim(), 6);
 
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
 }
 
-
 export default function SgInputPhonePage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
@@ -69,168 +56,191 @@ export default function SgInputPhonePage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputPhone</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputPhone.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de telefone com mascara brasileira e validacao de tamanho.
+          {t(i18n, "showcase.component.inputPhone.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="Telefone com label e hint.">
+      <Section
+        title={t(i18n, "showcase.component.inputPhone.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputPhone.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-basic"
-            label="Telefone"
-            hintText="(00) 00000-0000"
+            label={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phoneHint")}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: `"${basicValue}"` })}
+          </p>
         </div>
-        <CodeBlock code={`<SgInputPhone
-  id="telefone"
-  label="Telefone"
-  hintText="(00) 00000-0000"
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
-      <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
+      <Section
+        title={t(i18n, "showcase.component.inputPhone.sections.required.title")}
+        description={t(i18n, "showcase.component.inputPhone.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-required"
-            label="Telefone obrigatorio"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.inputPhone.labels.required")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.requiredHint")}
             required
           />
         </div>
         <div className="w-80">
           <SgInputPhone
             id="demo-required-custom"
-            label="Mensagem customizada"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.inputPhone.labels.customMessage")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.requiredHint")}
             required
-            requiredMessage="Informe o telefone."
+            requiredMessage={t(i18n, "showcase.component.inputPhone.messages.required")}
           />
         </div>
-        <CodeBlock code={`<SgInputPhone
-  id="telefone"
-  label="Telefone obrigatorio"
-  hintText="Obrigatorio"
-  required
-  requiredMessage="Informe o telefone."
-/>`} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.required")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputPhone.messages.required")}"\n/>`} />
       </Section>
 
-      <Section title="Mensagem invalida" description="Personaliza mensagem de telefone invalido.">
+      <Section
+        title={t(i18n, "showcase.component.inputPhone.sections.invalid.title")}
+        description={t(i18n, "showcase.component.inputPhone.sections.invalid.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-invalid"
-            label="Telefone"
-            hintText="(00) 00000-0000"
-            invalidMessage="Telefone invalido."
+            label={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phoneHint")}
+            invalidMessage={t(i18n, "showcase.component.inputPhone.messages.invalid")}
           />
         </div>
-        <CodeBlock code={`<SgInputPhone
-  id="telefone"
-  label="Telefone"
-  hintText="(00) 00000-0000"
-  invalidMessage="Telefone invalido."
-/>`} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  invalidMessage="${t(i18n, "showcase.component.inputPhone.messages.invalid")}"\n/>`} />
       </Section>
 
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem ou null.">
+      <Section
+        title={t(i18n, "showcase.component.inputPhone.sections.validation.title")}
+        description={t(i18n, "showcase.component.inputPhone.sections.validation.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-validation"
-            label="Telefone"
-            hintText="(00) 00000-0000"
-            validation={(v) => (v.startsWith("(00)") ? "DDD invalido." : null)}
+            label={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phoneHint")}
+            validation={(v) => (v.startsWith("(00)") ? t(i18n, "showcase.component.inputPhone.messages.dddInvalid") : null)}
             onValidation={(msg) => setValidationMsg(msg)}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}: {validationMsg === null
+              ? t(i18n, "showcase.common.labels.valid")
+              : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputPhone
-  id="telefone"
-  label="Telefone"
-  hintText="(00) 00000-0000"
-  validation={(v) => (v.startsWith("(00)") ? "DDD invalido." : null)}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  validation={(v) => (v.startsWith("(00)") ? "${t(i18n, "showcase.component.inputPhone.messages.dddInvalid")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n/>`} />
       </Section>
 
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-80">
-          <SgInputPhone id="demo-noborder" label="Sem borda" hintText="Telefone" withBorder={false} />
+          <SgInputPhone
+            id="demo-noborder"
+            label={t(i18n, "showcase.common.labels.noBorder")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            withBorder={false}
+          />
         </div>
         <div className="w-80">
-          <SgInputPhone id="demo-filled" label="Preenchido" hintText="Telefone" filled />
+          <SgInputPhone
+            id="demo-filled"
+            label={t(i18n, "showcase.common.labels.filled")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            filled
+          />
         </div>
-        <CodeBlock code={`<SgInputPhone id="a" label="Sem borda" hintText="Telefone" withBorder={false} />
-<SgInputPhone id="b" label="Preenchido" hintText="Telefone" filled />`} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" withBorder={false} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" filled />`} />
       </Section>
 
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-80">
-          <SgInputPhone id="demo-noclear" label="Sem limpar" hintText="Telefone" clearButton={false} />
+          <SgInputPhone
+            id="demo-noclear"
+            label={t(i18n, "showcase.common.labels.noClear")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            clearButton={false}
+          />
         </div>
-        <CodeBlock code={`<SgInputPhone id="x" label="Sem limpar" hintText="Telefone" clearButton={false} />`} />
+        <CodeBlock code={`<SgInputPhone id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" clearButton={false} />`} />
       </Section>
 
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputPhone id="demo-w200" label="200px" hintText="Telefone" width={200} />
-          <SgInputPhone id="demo-w300" label="Arredondado" hintText="Telefone" width={300} borderRadius={20} />
+          <SgInputPhone
+            id="demo-w200"
+            label={t(i18n, "showcase.common.labels.width200")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            width={200}
+          />
+          <SgInputPhone
+            id="demo-w300"
+            label={t(i18n, "showcase.common.labels.width300Rounded")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
+            width={300}
+            borderRadius={20}
+          />
         </div>
-        <CodeBlock code={`<SgInputPhone id="a" label="200px" hintText="Telefone" width={200} />
-<SgInputPhone id="b" label="Arredondado" hintText="Telefone" width={300} borderRadius={20} />`} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={200} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={300} borderRadius={20} />`} />
       </Section>
 
-      <Section title="Desabilitado" description="enabled=false desabilita.">
+      <Section
+        title={t(i18n, "showcase.common.sections.disabled.title")}
+        description={t(i18n, "showcase.common.sections.disabled.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-disabled"
-            label="Desabilitado"
-            hintText="Telefone"
+            label={t(i18n, "showcase.common.labels.disabled")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
             enabled={false}
             inputProps={{ defaultValue: "(11) 99999-0000" }}
           />
         </div>
-        <CodeBlock code={`<SgInputPhone id="a" label="Desabilitado" hintText="Telefone" enabled={false} />`} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" enabled={false} />`} />
       </Section>
 
-      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.common.sections.events.title")}
+        description={t(i18n, "showcase.common.sections.events.description")}
+      >
         <div className="w-80">
           <SgInputPhone
             id="demo-events"
-            label="Digite e observe o log"
-            hintText="Telefone"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
+            hintText={t(i18n, "showcase.component.inputPhone.labels.phone")}
             required
             onChange={(v) => log(`onChange: "${v}"`)}
-            onEnter={() => log("onEnter (focus)")}
-            onExit={() => log("onExit (blur)")}
-            onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onEnter={() => log(t(i18n, "showcase.component.inputPhone.logs.onEnter"))}
+            onExit={() => log(t(i18n, "showcase.component.inputPhone.logs.onExit"))}
+            onClear={() => log(t(i18n, "showcase.component.inputPhone.logs.onClear"))}
+            onValidation={(msg) => log(`onValidation: ${msg ?? t(i18n, "showcase.common.labels.valid")}`)}
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o input...</span>
+              <span className="text-muted-foreground">{t(i18n, "showcase.common.labels.interactHint")}</span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputPhone
-  id="eventos"
-  label="Com eventos"
-  hintText="Telefone"
-  required
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={`<SgInputPhone\n  id="eventos"\n  label="${t(i18n, "showcase.component.inputPhone.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
     </div>
   );

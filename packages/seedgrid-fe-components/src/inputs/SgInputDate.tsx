@@ -16,9 +16,10 @@ function toDateValue(value?: string | Date) {
   return value.toISOString().slice(0, 10);
 }
 
-function formatDateDisplay(value?: string | Date) {
+function formatDateDisplay(value: string | Date | undefined, locale: string) {
   const iso = toDateValue(value);
   if (!iso) return "";
+  if (locale === "en-US") return iso;
   const [year, month, day] = iso.split("-");
   if (!year || !month || !day) return iso;
   return `${day}/${month}/${year}`;
@@ -82,8 +83,8 @@ export function SgInputDate(props: SgInputDateProps) {
       const min = minDateValue ? parseDateValue(minDateValue) : null;
       const max = maxDateValue ? parseDateValue(maxDateValue) : null;
       if (min && parsed < min || max && parsed > max) {
-        const minLabel = formatDateDisplay(minDateValue);
-        const maxLabel = formatDateDisplay(maxDateValue);
+        const minLabel = formatDateDisplay(minDateValue, i18n.locale);
+        const maxLabel = formatDateDisplay(maxDateValue, i18n.locale);
         const message =
           minLabel && maxLabel
             ? t(i18n, "components.inputs.date.range", { min: minLabel, max: maxLabel })

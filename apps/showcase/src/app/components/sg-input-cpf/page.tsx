@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgInputCPF } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -35,29 +36,15 @@ function wrapFullExample(body: string) {
     `import { SgInputCPF } from "@seedgrid/fe-components";`
   ].join("\n");
 
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
 
   const bodyIndented = indentCode(body.trim(), 6);
 
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
 }
 
-
 export default function SgInputCPFPage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
@@ -69,38 +56,40 @@ export default function SgInputCPFPage() {
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputCPF</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cpf.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de CPF com mascara e validacao de tamanho/digitos.
+          {t(i18n, "showcase.component.cpf.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="CPF com label e hint.">
+      <Section
+        title={t(i18n, "showcase.component.cpf.sections.basic.title")}
+        description={t(i18n, "showcase.component.cpf.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-basic"
-            label="CPF"
-            hintText="000.000.000-00"
+            label={t(i18n, "showcase.component.cpf.labels.cpf")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpfHint")}
             inputProps={{}}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: `\"${basicValue}\"` })}
+          </p>
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="cpf"
-  label="CPF"
-  hintText="000.000.000-00"
-  inputProps={{}}
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
-      <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
+      <Section
+        title={t(i18n, "showcase.component.cpf.sections.required.title")}
+        description={t(i18n, "showcase.component.cpf.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-required"
-            label="CPF obrigatorio"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.cpf.labels.required")}
+            hintText={t(i18n, "showcase.component.cpf.labels.requiredHint")}
             required
             inputProps={{}}
           />
@@ -108,159 +97,177 @@ export default function SgInputCPFPage() {
         <div className="w-80">
           <SgInputCPF
             id="demo-required-custom"
-            label="Mensagem customizada"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.cpf.labels.customMessage")}
+            hintText={t(i18n, "showcase.component.cpf.labels.requiredHint")}
             required
-            requiredMessage="Informe o CPF."
+            requiredMessage={t(i18n, "showcase.component.cpf.messages.required")}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="cpf"
-  label="CPF obrigatorio"
-  hintText="Obrigatorio"
-  required
-  requiredMessage="Informe o CPF."
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cpf.messages.required")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Mensagem de tamanho" description="Personaliza mensagem quando CPF nao tem 11 digitos.">
+      <Section
+        title={t(i18n, "showcase.component.cpf.sections.length.title")}
+        description={t(i18n, "showcase.component.cpf.sections.length.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-length"
-            label="CPF"
-            hintText="000.000.000-00"
-            lengthMessage="CPF deve ter 11 digitos."
+            label={t(i18n, "showcase.component.cpf.labels.cpf")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpfHint")}
+            lengthMessage={t(i18n, "showcase.component.cpf.messages.length")}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="cpf"
-  label="CPF"
-  hintText="000.000.000-00"
-  lengthMessage="CPF deve ter 11 digitos."
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  lengthMessage="${t(i18n, "showcase.component.cpf.messages.length")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Mensagem invalida" description="Personaliza mensagem de CPF invalido.">
+      <Section
+        title={t(i18n, "showcase.component.cpf.sections.invalid.title")}
+        description={t(i18n, "showcase.component.cpf.sections.invalid.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-invalid"
-            label="CPF"
-            hintText="000.000.000-00"
-            invalidMessage="CPF invalido."
+            label={t(i18n, "showcase.component.cpf.labels.cpf")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpfHint")}
+            invalidMessage={t(i18n, "showcase.component.cpf.messages.invalid")}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="cpf"
-  label="CPF"
-  hintText="000.000.000-00"
-  invalidMessage="CPF invalido."
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  invalidMessage="${t(i18n, "showcase.component.cpf.messages.invalid")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem ou null.">
+      <Section
+        title={t(i18n, "showcase.component.cpf.sections.validation.title")}
+        description={t(i18n, "showcase.component.cpf.sections.validation.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-validation"
-            label="CPF"
-            hintText="000.000.000-00"
-            validation={(v) => (v.startsWith("123") ? "CPF nao pode iniciar com 123." : null)}
+            label={t(i18n, "showcase.component.cpf.labels.cpf")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpfHint")}
+            validation={(v) => (v.startsWith("123") ? t(i18n, "showcase.component.cpf.messages.cannotStart") : null)}
             onValidation={(msg) => setValidationMsg(msg)}
             inputProps={{}}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}: {validationMsg === null
+              ? t(i18n, "showcase.common.labels.valid")
+              : `\"${validationMsg}\"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="cpf"
-  label="CPF"
-  hintText="000.000.000-00"
-  validation={(v) => (v.startsWith("123") ? "CPF nao pode iniciar com 123." : null)}
-  onValidation={(msg) => console.log(msg)}
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  validation={(v) => (v.startsWith("123") ? "${t(i18n, "showcase.component.cpf.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-80">
-          <SgInputCPF id="demo-noborder" label="Sem borda" hintText="CPF" withBorder={false} inputProps={{}} />
+          <SgInputCPF
+            id="demo-noborder"
+            label={t(i18n, "showcase.common.labels.noBorder")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
+            withBorder={false}
+            inputProps={{}}
+          />
         </div>
         <div className="w-80">
-          <SgInputCPF id="demo-filled" label="Preenchido" hintText="CPF" filled inputProps={{}} />
+          <SgInputCPF
+            id="demo-filled"
+            label={t(i18n, "showcase.common.labels.filled")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
+            filled
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPF id="a" label="Sem borda" hintText="CPF" withBorder={false} inputProps={{}} />
-<SgInputCPF id="b" label="Preenchido" hintText="CPF" filled inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" withBorder={false} inputProps={{}} />\n<SgInputCPF id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" filled inputProps={{}} />`} />
       </Section>
 
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-80">
-          <SgInputCPF id="demo-noclear" label="Sem limpar" hintText="CPF" clearButton={false} inputProps={{}} />
+          <SgInputCPF
+            id="demo-noclear"
+            label={t(i18n, "showcase.common.labels.noClear")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
+            clearButton={false}
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPF id="x" label="Sem limpar" hintText="CPF" clearButton={false} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPF id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" clearButton={false} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputCPF id="demo-w200" label="200px" hintText="CPF" width={200} inputProps={{}} />
-          <SgInputCPF id="demo-w300" label="Arredondado" hintText="CPF" width={300} borderRadius={20} inputProps={{}} />
+          <SgInputCPF
+            id="demo-w200"
+            label={t(i18n, "showcase.common.labels.width200")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
+            width={200}
+            inputProps={{}}
+          />
+          <SgInputCPF
+            id="demo-w300"
+            label={t(i18n, "showcase.common.labels.width300Rounded")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
+            width={300}
+            borderRadius={20}
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPF id="a" label="200px" hintText="CPF" width={200} inputProps={{}} />
-<SgInputCPF id="b" label="Arredondado" hintText="CPF" width={300} borderRadius={20} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={200} inputProps={{}} />\n<SgInputCPF id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={300} borderRadius={20} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Desabilitado" description="enabled=false desabilita.">
+      <Section
+        title={t(i18n, "showcase.common.sections.disabled.title")}
+        description={t(i18n, "showcase.common.sections.disabled.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-disabled"
-            label="Desabilitado"
-            hintText="CPF"
+            label={t(i18n, "showcase.common.labels.disabled")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
             enabled={false}
             inputProps={{ defaultValue: "000.000.000-00" }}
           />
         </div>
-        <CodeBlock code={`<SgInputCPF id="a" label="Desabilitado" hintText="CPF" enabled={false} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" enabled={false} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.common.sections.events.title")}
+        description={t(i18n, "showcase.common.sections.events.description")}
+      >
         <div className="w-80">
           <SgInputCPF
             id="demo-events"
-            label="Digite e observe o log"
-            hintText="CPF"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
+            hintText={t(i18n, "showcase.component.cpf.labels.cpf")}
             required
             inputProps={{}}
-            onChange={(v) => log(`onChange: "${v}"`)}
-            onEnter={() => log("onEnter (focus)")}
-            onExit={() => log("onExit (blur)")}
-            onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onChange={(v) => log(`onChange: \"${v}\"`)}
+            onEnter={() => log(t(i18n, "showcase.component.cpf.logs.onEnter"))}
+            onExit={() => log(t(i18n, "showcase.component.cpf.logs.onExit"))}
+            onClear={() => log(t(i18n, "showcase.component.cpf.logs.onClear"))}
+            onValidation={(msg) => log(`onValidation: ${msg ?? t(i18n, "showcase.common.labels.valid")}`)}
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o input...</span>
+              <span className="text-muted-foreground">{t(i18n, "showcase.common.labels.interactHint")}</span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputCPF
-  id="eventos"
-  label="Com eventos"
-  hintText="CPF"
-  required
-  inputProps={{}}
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={`<SgInputCPF\n  id="eventos"\n  label="${t(i18n, "showcase.component.cpf.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
     </div>
   );

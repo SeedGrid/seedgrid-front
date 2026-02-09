@@ -3,6 +3,7 @@
 import React from "react";
 import { SgInputDate } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -29,92 +30,77 @@ function indentCode(source: string, spaces: number) {
 }
 
 function wrapFullExample(body: string) {
+  const i18n = getShowcaseI18n();
   const imports = [
     `import React from "react";`,
     `import { useForm } from "react-hook-form";`,
     `import { SgInputDate } from "@seedgrid/fe-components";`
   ].join("\n");
 
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
 
   const bodyIndented = indentCode(body.trim(), 6);
 
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
 }
 
-
 export default function SgInputDatePage() {
+  const i18n = useShowcaseI18n();
   const [basicValue, setBasicValue] = React.useState("");
 
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputDate</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputDate.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Input de data com suporte a min/max e label sempre flutuando.
+          {t(i18n, "showcase.component.inputDate.subtitle")}
         </p>
       </div>
 
-      <Section title="Basico" description="Date input com label e hint.">
+      <Section
+        title={t(i18n, "showcase.component.inputDate.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputDate.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputDate
             id="demo-basic"
-            label="Data"
-            hintText="Selecione a data"
+            label={t(i18n, "showcase.component.inputDate.labels.date")}
+            hintText={t(i18n, "showcase.component.inputDate.labels.dateHint")}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
+          </p>
         </div>
-        <CodeBlock code={`<SgInputDate
-  id="data"
-  label="Data"
-  hintText="Selecione a data"
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={`<SgInputDate\n  id="data"\n  label="${t(i18n, "showcase.component.inputDate.labels.date")}"\n  hintText="${t(i18n, "showcase.component.inputDate.labels.dateHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
-      <Section title="Com min/max" description="Restringe intervalo de datas.">
+      <Section
+        title={t(i18n, "showcase.component.inputDate.sections.range.title")}
+        description={t(i18n, "showcase.component.inputDate.sections.range.description")}
+      >
         <div className="w-80">
           <SgInputDate
             id="demo-range"
-            label="Periodo"
+            label={t(i18n, "showcase.component.inputDate.labels.period")}
             minDate="2020-01-01"
             maxDate="2030-12-31"
           />
         </div>
-        <CodeBlock code={`<SgInputDate
-  id="periodo"
-  label="Periodo"
-  minDate="2020-01-01"
-  maxDate="2030-12-31"
-/>`} />
+        <CodeBlock code={`<SgInputDate\n  id="periodo"\n  label="${t(i18n, "showcase.component.inputDate.labels.period")}"\n  minDate="2020-01-01"\n  maxDate="2030-12-31"\n/>`} />
       </Section>
 
-      <Section title="Label fixo" description="Label sempre acima da borda.">
+      <Section
+        title={t(i18n, "showcase.component.inputDate.sections.fixed.title")}
+        description={t(i18n, "showcase.component.inputDate.sections.fixed.description")}
+      >
         <div className="w-80">
           <SgInputDate
             id="demo-float"
-            label="Data do evento"
+            label={t(i18n, "showcase.component.inputDate.labels.eventDate")}
           />
         </div>
-        <CodeBlock code={`<SgInputDate
-  id="evento"
-  label="Data do evento"
-/>`} />
+        <CodeBlock code={`<SgInputDate\n  id="evento"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>`} />
       </Section>
     </div>
   );

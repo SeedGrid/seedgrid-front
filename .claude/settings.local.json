@@ -12,7 +12,8 @@
       "Bash(do node -e \"console.log\\(require\\(''$f''\\).version\\)\")",
       "Bash(done)",
       "Bash(pnpm build:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx next build)"
     ]
   }
 }

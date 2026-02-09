@@ -22,8 +22,10 @@ export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
 export { SgAutocomplete } from "./inputs/SgAutocomplete";
 export type { SgAutocompleteItem, SgAutocompleteProps } from "./inputs/SgAutocomplete";
-export { SgButton } from "./commons/SgButton";
-export type { SgButtonProps, SgButtonCustomColors } from "./commons/SgButton";
+export { SgButton } from "./buttons/SgButton";
+export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
+export { SgSplitButton } from "./buttons/SgSplitButton";
+export type { SgSplitButtonProps, SgSplitButtonItem } from "./buttons/SgSplitButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
 export { toast } from "sonner";
@@ -54,7 +56,10 @@ export {
   useComponentsI18n,
   t as tComponents,
   formatMessage as formatComponentsMessage,
-  componentsMessagesPtBr
+  componentsMessagesPtBr,
+  componentsMessagesPtPt,
+  componentsMessagesEnUs,
+  componentsMessagesEs
 } from "./i18n";
 export type {
   SgComponentsI18n,

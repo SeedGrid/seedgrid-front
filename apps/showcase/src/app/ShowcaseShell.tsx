@@ -38,6 +38,7 @@ const COMPONENTS = [
   { slug: "sg-input-phone", label: "SgInputPhone" },
   { slug: "sg-autocomplete", label: "SgAutocomplete" },
   { slug: "sg-button", label: "SgButton" },
+  { slug: "sg-split-button", label: "SgSplitButton" },
   { slug: "sg-group-box", label: "SgGroupBox" },
   { slug: "sg-wizard", label: "SgWizard" },
   { slug: "sg-benchmark", label: "Benchmark" }

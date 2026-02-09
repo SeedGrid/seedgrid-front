@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgInputCPFCNPJ } from "@seedgrid/fe-components";
@@ -36,27 +36,12 @@ function wrapFullExample(body: string) {
     `import { SgInputCPFCNPJ } from "@seedgrid/fe-components";`
   ].join("\n");
 
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
 
   const bodyIndented = indentCode(body.trim(), 6);
 
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
 }
-
 
 export default function SgInputCpfCnpjPage() {
   const i18n = useShowcaseI18n();
@@ -85,32 +70,34 @@ export default function SgInputCpfCnpjPage() {
         </p>
       </div>
 
-      <Section title="Basico" description="CPF/CNPJ com label e hint.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.basic.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.basic.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-basic"
-            label="Documento"
-            hintText="CPF ou CNPJ"
+            label={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}
             inputProps={{}}
             onChange={(v) => setBasicValue(v)}
           />
-          <p className="mt-2 text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: `\"${basicValue}\"` })}
+          </p>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="doc"
-  label="Documento"
-  hintText="CPF ou CNPJ"
-  inputProps={{}}
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
-      <Section title="Obrigatorio" description="Valida se esta vazio e mostra mensagem customizada.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.required.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-required"
-            label="Documento obrigatorio"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.cpfcnpj.labels.required")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.requiredHint")}
             required
             inputProps={{}}
           />
@@ -118,84 +105,73 @@ export default function SgInputCpfCnpjPage() {
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-required-custom"
-            label="Mensagem customizada"
-            hintText="Obrigatorio"
+            label={t(i18n, "showcase.component.cpfcnpj.labels.customMessage")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.requiredHint")}
             required
-            requiredMessage="Informe o CPF/CNPJ."
+            requiredMessage={t(i18n, "showcase.component.cpfcnpj.messages.required")}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="doc"
-  label="Documento obrigatorio"
-  hintText="Obrigatorio"
-  required
-  requiredMessage="Informe o CPF/CNPJ."
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cpfcnpj.messages.required")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Mensagem invalida" description="Personaliza mensagem de documento invalido.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.invalid.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.invalid.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-invalid"
-            label="Documento"
-            hintText="CPF ou CNPJ"
-            invalidMessage="Documento invalido."
+            label={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}
+            invalidMessage={t(i18n, "showcase.component.cpfcnpj.messages.invalid")}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="doc"
-  label="Documento"
-  hintText="CPF ou CNPJ"
-  invalidMessage="Documento invalido."
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  invalidMessage="${t(i18n, "showcase.component.cpfcnpj.messages.invalid")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem ou null.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.validation.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.validation.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-validation"
-            label="Documento"
-            hintText="CPF ou CNPJ"
-            validation={(v) => (v.startsWith("00") ? "Documento nao pode iniciar com 00." : null)}
+            label={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}
+            validation={(v) => (v.startsWith("00") ? t(i18n, "showcase.component.cpfcnpj.messages.cannotStart") : null)}
             onValidation={(msg) => setValidationMsg(msg)}
             inputProps={{}}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}: {validationMsg === null
+              ? t(i18n, "showcase.common.labels.valid")
+              : `\"${validationMsg}\"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="doc"
-  label="Documento"
-  hintText="CPF ou CNPJ"
-  validation={(v) => (v.startsWith("00") ? "Documento nao pode iniciar com 00." : null)}
-  onValidation={(msg) => console.log(msg)}
-  inputProps={{}}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  validation={(v) => (v.startsWith("00") ? "${t(i18n, "showcase.component.cpfcnpj.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>`} />
       </Section>
 
-      <Section title="Exemplo CNPJ alfanumerico" description="Aceita letras (A-Z) no corpo do CNPJ.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.alnum.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.alnum.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-alnum"
-            label="CNPJ alfanumerico"
-            hintText="AB.12C.345/0001-40"
+            label={t(i18n, "showcase.component.cpfcnpj.labels.alnum")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.alnumHint")}
             inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="doc"
-  label="CNPJ alfanumerico"
-  hintText="AB.12C.345/0001-40"
-  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.alnum")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.alnumHint")}"\n  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}\n/>`} />
       </Section>
 
-      <Section title="Exemplos validos (alfanumerico)" description="Lista de CNPJs alfanumericos validos.">
+      <Section
+        title={t(i18n, "showcase.component.cpfcnpj.sections.alnumList.title")}
+        description={t(i18n, "showcase.component.cpfcnpj.sections.alnumList.description")}
+      >
         <CodeBlock
           code={`// Filial 0001
 9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
@@ -221,80 +197,113 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
         />
       </Section>
 
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-80">
-          <SgInputCPFCNPJ id="demo-noborder" label="Sem borda" hintText="Documento" withBorder={false} inputProps={{}} />
+          <SgInputCPFCNPJ
+            id="demo-noborder"
+            label={t(i18n, "showcase.common.labels.noBorder")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            withBorder={false}
+            inputProps={{}}
+          />
         </div>
         <div className="w-80">
-          <SgInputCPFCNPJ id="demo-filled" label="Preenchido" hintText="Documento" filled inputProps={{}} />
+          <SgInputCPFCNPJ
+            id="demo-filled"
+            label={t(i18n, "showcase.common.labels.filled")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            filled
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="Sem borda" hintText="Documento" withBorder={false} inputProps={{}} />
-<SgInputCPFCNPJ id="b" label="Preenchido" hintText="Documento" filled inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" withBorder={false} inputProps={{}} />\n<SgInputCPFCNPJ id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" filled inputProps={{}} />`} />
       </Section>
 
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-80">
-          <SgInputCPFCNPJ id="demo-noclear" label="Sem limpar" hintText="Documento" clearButton={false} inputProps={{}} />
+          <SgInputCPFCNPJ
+            id="demo-noclear"
+            label={t(i18n, "showcase.common.labels.noClear")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            clearButton={false}
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="x" label="Sem limpar" hintText="Documento" clearButton={false} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPFCNPJ id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" clearButton={false} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputCPFCNPJ id="demo-w200" label="200px" hintText="Documento" width={200} inputProps={{}} />
-          <SgInputCPFCNPJ id="demo-w300" label="Arredondado" hintText="Documento" width={300} borderRadius={20} inputProps={{}} />
+          <SgInputCPFCNPJ
+            id="demo-w200"
+            label={t(i18n, "showcase.common.labels.width200")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            width={200}
+            inputProps={{}}
+          />
+          <SgInputCPFCNPJ
+            id="demo-w300"
+            label={t(i18n, "showcase.common.labels.width300Rounded")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
+            width={300}
+            borderRadius={20}
+            inputProps={{}}
+          />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="200px" hintText="Documento" width={200} inputProps={{}} />
-<SgInputCPFCNPJ id="b" label="Arredondado" hintText="Documento" width={300} borderRadius={20} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" width={200} inputProps={{}} />\n<SgInputCPFCNPJ id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" width={300} borderRadius={20} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Desabilitado" description="enabled=false desabilita.">
+      <Section
+        title={t(i18n, "showcase.common.sections.disabled.title")}
+        description={t(i18n, "showcase.common.sections.disabled.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-disabled"
-            label="Desabilitado"
-            hintText="Documento"
+            label={t(i18n, "showcase.common.labels.disabled")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
             enabled={false}
             inputProps={{ defaultValue: "00.000.000/0000-00" }}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="Desabilitado" hintText="Documento" enabled={false} inputProps={{}} />`} />
+        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" enabled={false} inputProps={{}} />`} />
       </Section>
 
-      <Section title="Eventos" description="onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.common.sections.events.title")}
+        description={t(i18n, "showcase.common.sections.events.description")}
+      >
         <div className="w-80">
           <SgInputCPFCNPJ
             id="demo-events"
-            label="Digite e observe o log"
-            hintText="Documento"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
+            hintText={t(i18n, "showcase.component.cpfcnpj.labels.document")}
             required
             inputProps={{}}
-            onChange={(v) => log(`onChange: "${v}"`)}
-            onEnter={() => log("onEnter (focus)")}
-            onExit={() => log("onExit (blur)")}
-            onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onChange={(v) => log(`onChange: \"${v}\"`)}
+            onEnter={() => log(t(i18n, "showcase.component.cpfcnpj.logs.onEnter"))}
+            onExit={() => log(t(i18n, "showcase.component.cpfcnpj.logs.onExit"))}
+            onClear={() => log(t(i18n, "showcase.component.cpfcnpj.logs.onClear"))}
+            onValidation={(msg) => log(`onValidation: ${msg ?? t(i18n, "showcase.common.labels.valid")}`)}
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o input...</span>
+              <span className="text-muted-foreground">{t(i18n, "showcase.common.labels.interactHint")}</span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ
-  id="eventos"
-  label="Com eventos"
-  hintText="Documento"
-  required
-  inputProps={{}}
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={`<SgInputCPFCNPJ\n  id="eventos"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
     </div>
   );

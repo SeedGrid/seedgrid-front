@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { SgInputText } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -23,6 +24,7 @@ function CodeBlock(props: { code: string }) {
 }
 
 export default function SgInputTextPage() {
+  const i18n = useShowcaseI18n();
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
 
@@ -31,8 +33,8 @@ export default function SgInputTextPage() {
   };
 
   const [iconBtnLog, setIconBtnLog] = React.useState<string[]>([]);
-  const { register, control, handleSubmit, watch, setValue } = useForm<FieldValues>({
-    defaultValues: {
+  const defaultValues = React.useMemo(
+    () => ({
       nome: "",
       required: "",
       requiredCustom: "",
@@ -40,21 +42,25 @@ export default function SgInputTextPage() {
       minlength: "",
       words: "",
       validation: "",
-      controlled: "Texto inicial",
-      suffix: "usuario@gmail.com",
-      prefix: "www.test.com.br",
-      both: "www.app.seedgrid.com.br",
+      controlled: t(i18n, "showcase.component.inputText.defaults.controlled"),
+      suffix: t(i18n, "showcase.component.inputText.defaults.suffix"),
+      prefix: t(i18n, "showcase.component.inputText.defaults.prefix"),
+      both: t(i18n, "showcase.component.inputText.defaults.both"),
       iconbtns: "",
       noborder: "",
       filled: "",
       noclear: "",
       w200: "",
       w300: "",
-      disabled: "Nao editavel",
-      readonly: "Apenas leitura",
+      disabled: t(i18n, "showcase.component.inputText.defaults.disabled"),
+      readonly: t(i18n, "showcase.component.inputText.defaults.readonly"),
       error: "",
       events: ""
-    } as FieldValues
+    }),
+    [i18n.locale]
+  );
+  const { register, control, handleSubmit, watch, setValue, reset } = useForm<FieldValues>({
+    defaultValues: defaultValues as FieldValues
   });
   const basicValue = watch("nome");
   const controlledValue = watch("controlled");
@@ -67,34 +73,34 @@ export default function SgInputTextPage() {
   const standaloneCpfRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleBasicSubmit = (data: FieldValues) => {
-    setEventLog((prev) => [`[submit] ${JSON.stringify(data)}`, ...prev].slice(0, 10));
+    setEventLog((prev) => [`[${t(i18n, "showcase.component.inputText.logs.submit")}] ${JSON.stringify(data)}`, ...prev].slice(0, 10));
   };
 
   React.useEffect(() => {
-    if (standaloneNomeRef.current) standaloneNomeRef.current.value = "Maria da Silva";
-    if (standaloneEmailRef.current) standaloneEmailRef.current.value = "maria@exemplo.com";
+    reset(defaultValues as FieldValues);
+    if (standaloneNomeRef.current) standaloneNomeRef.current.value = t(i18n, "showcase.component.inputText.defaults.name");
+    if (standaloneEmailRef.current) standaloneEmailRef.current.value = t(i18n, "showcase.component.inputText.defaults.email");
     if (standaloneCpfRef.current) standaloneCpfRef.current.value = "12345678909";
-  }, []);
+  }, [defaultValues, i18n.locale, reset]);
 
   return (
     <div className="max-w-4xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">SgInputText</h1>
+        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputText.title")}</h1>
         <p className="mt-2 text-muted-foreground">
-          Componente base de input de texto. Todos os outros inputs especializados (CPF, Email, Senha, etc.)
-          sao construidos em cima dele via composicao.
+          {t(i18n, "showcase.component.inputText.subtitle")}
         </p>
       </div>
 
       {/* ── Basico ── */}
       <Section
-        title="Basico (RHF)"
-        description="Exemplo integrado com React Hook Form usando register (uncontrolled)."
+        title={t(i18n, "showcase.component.inputText.sections.basic.title")}
+        description={t(i18n, "showcase.component.inputText.sections.basic.description")}
       >
         <form onSubmit={handleSubmit(handleBasicSubmit)} className="w-80 space-y-2">
           <SgInputText
             id="demo-basic"
-            label="Nome completo"
+            label={t(i18n, "showcase.component.inputText.labels.fullName")}
             name="nome"
             register={register}
           />
@@ -102,30 +108,35 @@ export default function SgInputTextPage() {
             type="submit"
             className="rounded border border-border px-3 py-1.5 text-xs hover:bg-black/5"
           >
-            Enviar
+            {t(i18n, "showcase.component.inputText.actions.submit")}
           </button>
-          <p className="text-xs text-muted-foreground">Valor: &quot;{basicValue}&quot;</p>
+          <p className="text-xs text-muted-foreground">
+            {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
+          </p>
         </form>
         <CodeBlock code={`<SgInputText
   id="demo-basic"
-  label="Nome completo"
+  label="${t(i18n, "showcase.component.inputText.labels.fullName")}"
   name="nome"
   register={register}
 />
 
 <button type="submit">
-  Enviar
+  ${t(i18n, "showcase.component.inputText.actions.submit")}
 </button>
 
-<p>Valor: "{watch("nome")}"</p>`} />
+<p>${t(i18n, "showcase.common.labels.currentValue", { value: watch("nome") })}</p>`} />
       </Section>
 
       {/* ── Required ── */}
-      <Section title="Obrigatorio" description="Valida ao perder o foco (validateOnBlur=true por padrao).">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.required.title")}
+        description={t(i18n, "showcase.component.inputText.sections.required.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-required"
-            label="Campo obrigatorio"
+            label={t(i18n, "showcase.component.inputText.labels.requiredField")}
             required
             name="required"
             register={register}
@@ -134,16 +145,16 @@ export default function SgInputTextPage() {
         <div className="w-80">
           <SgInputText
             id="demo-required-custom"
-            label="Mensagem customizada"
+            label={t(i18n, "showcase.component.inputText.labels.customMessage")}
             required
-            requiredMessage="Preencha este campo!"
+            requiredMessage={t(i18n, "showcase.component.inputText.messages.requiredCustom")}
             name="requiredCustom"
             register={register}
           />
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-required"
-  label="Campo obrigatorio"
+  label="${t(i18n, "showcase.component.inputText.labels.requiredField")}"
   required
   name="required"
   register={register}
@@ -151,85 +162,92 @@ export default function SgInputTextPage() {
 
 <SgInputText
   id="demo-required-custom"
-  label="Mensagem customizada"
+  label="${t(i18n, "showcase.component.inputText.labels.customMessage")}"
   required
-  requiredMessage="Preencha este campo!"
+  requiredMessage="${t(i18n, "showcase.component.inputText.messages.requiredCustom")}"
   name="requiredCustom"
   register={register}
 />`} />
       </Section>
 
       {/* ── Controlled ── */}
-      <Section title="Controlado (caso necessario)" description="Este exemplo precisa ser controlled porque usa watch (valor em tempo real no render) e setValue externos. Caso contrario, prefira register (uncontrolled).">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.controlled.title")}
+        description={t(i18n, "showcase.component.inputText.sections.controlled.description")}
+      >
         <div className="w-96 space-y-3">
           <SgInputText
             id="demo-controlled"
-            label="Nome do cliente"
+            label={t(i18n, "showcase.component.inputText.labels.customerName")}
             name="controlled"
             control={control}
           />
           <p className="text-xs text-muted-foreground">
-            Estado atual: <code className="rounded bg-muted px-1">&quot;{controlledValue}&quot;</code>
+            {t(i18n, "showcase.common.labels.currentState")}:{" "}
+            <code className="rounded bg-muted px-1">&quot;{controlledValue}&quot;</code>
           </p>
           <div className="flex flex-wrap gap-2">
             <button
               className="rounded border border-primary bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20"
-              onClick={() => setValue("controlled", "Maria da Silva")}
+              onClick={() => setValue("controlled", t(i18n, "showcase.component.inputText.values.apiSample"))}
             >
-              Simular preenchimento via API
+              {t(i18n, "showcase.component.inputText.actions.setApi")}
             </button>
             <button
               className="rounded border px-3 py-1.5 text-sm hover:bg-muted"
-              onClick={() => setValue("controlled", "Outro valor qualquer")}
+              onClick={() => setValue("controlled", t(i18n, "showcase.component.inputText.values.otherSample"))}
             >
-              Setar outro valor
+              {t(i18n, "showcase.component.inputText.actions.setOther")}
             </button>
             <button
               className="rounded border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
               onClick={() => setValue("controlled", "")}
             >
-              Limpar campo
+              {t(i18n, "showcase.component.inputText.actions.clear")}
             </button>
           </div>
         </div>
         <div className="w-full">
-          <p className="mb-2 text-sm font-medium">Como funciona:</p>
+          <p className="mb-2 text-sm font-medium">{t(i18n, "showcase.component.inputText.labels.howItWorks")}</p>
           <ul className="mb-3 list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li><code className="rounded bg-muted px-1">control</code> conecta o input ao estado do RHF</li>
-            <li><code className="rounded bg-muted px-1">setValue</code> atualiza o estado quando voce precisa mudar por fora</li>
-            <li>Para setar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;novo texto&quot;)</code></li>
-            <li>Para limpar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;&quot;)</code></li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.controlled.1")}</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.controlled.2")}</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.controlled.3")}</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.controlled.4")}</li>
           </ul>
           <CodeBlock code={`// Controlled porque usamos watch (valor em tempo real) + setValue externo
 <SgInputText
   id="demo-controlled"
-  label="Nome do cliente"
+  label="${t(i18n, "showcase.component.inputText.labels.customerName")}"
   name="controlled"
   control={control}
 />
 
-<button type="button" onClick={() => setValue("controlled", "Maria da Silva")}>
-  Simular preenchimento via API
+<button type="button" onClick={() => setValue("controlled", "${t(i18n, "showcase.component.inputText.values.apiSample")}")}>
+  ${t(i18n, "showcase.component.inputText.actions.setApi")}
 </button>
 
-<button type="button" onClick={() => setValue("controlled", "Outro valor qualquer")}>
-  Setar outro valor
+<button type="button" onClick={() => setValue("controlled", "${t(i18n, "showcase.component.inputText.values.otherSample")}")}>
+  ${t(i18n, "showcase.component.inputText.actions.setOther")}
 </button>
 
 <button type="button" onClick={() => setValue("controlled", "")}>
-  Limpar campo
+  ${t(i18n, "showcase.component.inputText.actions.clear")}
 </button>
 
-<p>Estado atual: "{controlledValue}"</p>`} />
+<p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>`} />
         </div>
       </Section>
 
       {/* ── MaxLength + Counter ── */}
-      <Section title="Contador de caracteres" description="Usa maxLength e showCharCounter para limitar e exibir contagem.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.counter.title")}
+        description={t(i18n, "showcase.component.inputText.sections.counter.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-counter"
-            label="Maximo 20 caracteres"
+            label={t(i18n, "showcase.component.inputText.labels.max20")}
             maxLength={20}
             showCharCounter
             name="counter"
@@ -238,7 +256,7 @@ export default function SgInputTextPage() {
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-counter"
-  label="Maximo 20 caracteres"
+  label="${t(i18n, "showcase.component.inputText.labels.max20")}"
   maxLength={20}
   showCharCounter
   name="counter"
@@ -247,11 +265,14 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* ── MinLength ── */}
-      <Section title="Tamanho minimo" description="Valida que o texto tem um tamanho minimo ao perder foco.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.minLength.title")}
+        description={t(i18n, "showcase.component.inputText.sections.minLength.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-minlength"
-            label="Minimo 5 caracteres"
+            label={t(i18n, "showcase.component.inputText.labels.min5")}
             minLength={5}
             showCharCounter
             name="minlength"
@@ -260,7 +281,7 @@ export default function SgInputTextPage() {
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-minlength"
-  label="Minimo 5 caracteres"
+  label="${t(i18n, "showcase.component.inputText.labels.min5")}"
   minLength={5}
   showCharCounter
   name="minlength"
@@ -269,50 +290,59 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* ── MinNumberOfWords ── */}
-      <Section title="Minimo de palavras" description="Valida quantidade minima de palavras.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.minWords.title")}
+        description={t(i18n, "showcase.component.inputText.sections.minWords.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-words"
-            label="Minimo 3 palavras"
+            label={t(i18n, "showcase.component.inputText.labels.min3Words")}
             minNumberOfWords={3}
-            minNumberOfWordsMessage="Digite pelo menos 3 palavras."
+            minNumberOfWordsMessage={t(i18n, "showcase.component.inputText.messages.min3Words")}
             name="words"
             register={register}
           />
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-words"
-  label="Minimo 3 palavras"
+  label="${t(i18n, "showcase.component.inputText.labels.min3Words")}"
   minNumberOfWords={3}
-  minNumberOfWordsMessage="Digite pelo menos 3 palavras."
+  minNumberOfWordsMessage="${t(i18n, "showcase.component.inputText.messages.min3Words")}"
   name="words"
   register={register}
 />`} />
       </Section>
 
       {/* ── Custom Validation ── */}
-      <Section title="Validacao customizada" description="Funcao de validacao retorna mensagem de erro ou null.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.validation.title")}
+        description={t(i18n, "showcase.component.inputText.sections.validation.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-validation"
-            label="Apenas letras"
+            label={t(i18n, "showcase.component.inputText.labels.onlyLetters")}
             validation={(v) =>
-              /[^a-zA-ZÀ-ú\s]/.test(v) ? "Apenas letras sao permitidas." : null
+              /[^a-zA-ZÀ-ú\s]/.test(v)
+                ? t(i18n, "showcase.component.inputText.messages.onlyLetters")
+                : null
             }
             onValidation={(msg) => setValidationMsg(msg)}
             name="validation"
             register={register}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            onValidation: {validationMsg === null ? "valido" : `"${validationMsg}"`}
+            {t(i18n, "showcase.common.labels.onValidation")}:{" "}
+            {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
         <CodeBlock code={String.raw`<SgInputText
   id="demo-validation"
-  label="Apenas letras"
+  label="${t(i18n, "showcase.component.inputText.labels.onlyLetters")}"
   validation={(v) =>
     /[^a-zA-ZÀ-ú\s]/.test(v)
-      ? "Apenas letras sao permitidas."
+      ? "${t(i18n, "showcase.component.inputText.messages.onlyLetters")}"
       : null
   }
   onValidation={(msg) => console.log(msg)}
@@ -322,11 +352,14 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* ── Prefix Icon ── */}
-      <Section title="Icone prefixo" description="Icone posicionado a esquerda do input.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.prefixIcon.title")}
+        description={t(i18n, "showcase.component.inputText.sections.prefixIcon.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-prefix"
-            label="Buscar"
+            label={t(i18n, "showcase.component.inputText.labels.search")}
             prefixIcon={
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             }
@@ -336,7 +369,7 @@ export default function SgInputTextPage() {
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-prefix"
-  label="Buscar"
+  label="${t(i18n, "showcase.component.inputText.labels.search")}"
   prefixIcon={
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
   }
@@ -347,28 +380,36 @@ export default function SgInputTextPage() {
 
       {/* ── Icon Buttons ── */}
       {/* â”€â”€ Prefixo / Sufixo â”€â”€ */}
-      <Section title="Prefixo e sufixo" description="Prefixo/sufixo sao apenas visuais. O valor retornado ja vem concatenado.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.prefixSuffix.title")}
+        description={t(i18n, "showcase.component.inputText.sections.prefixSuffix.description")}
+      >
         <div className="w-80 space-y-2">
           <SgInputText
             id="demo-suffix"
-            label="Email"
+            label={t(i18n, "showcase.component.inputText.labels.email")}
             suffixText="@gmail.com"
             name="suffix"
             control={control}
-            onChange={(value) => log(`valor completo: ${value}`)}
+            onChange={(value) =>
+              log(`${t(i18n, "showcase.component.inputText.labels.fullValue")}: ${value}`)
+            }
           />
           <p className="text-xs text-muted-foreground">
-            Valor completo: <code className="rounded bg-muted px-1">{suffixRaw}</code>
+            {t(i18n, "showcase.component.inputText.labels.fullValue")}:{" "}
+            <code className="rounded bg-muted px-1">{suffixRaw}</code>
           </p>
         </div>
         <div className="w-80 space-y-2">
           <SgInputText
             id="demo-prefix-text"
-            label="Website"
+            label={t(i18n, "showcase.component.inputText.labels.website")}
             prefixText="www."
             name="prefix"
             control={control}
-            onChange={(value) => log(`valor completo: ${value}`)}
+            onChange={(value) =>
+              log(`${t(i18n, "showcase.component.inputText.labels.fullValue")}: ${value}`)
+            }
           />
           <div className="flex gap-2">
             <button
@@ -376,52 +417,53 @@ export default function SgInputTextPage() {
               className="rounded border px-2 py-1 text-xs hover:bg-muted"
               onClick={() => setValue("prefix", "www.test.com.br")}
             >
-              Setar valor externo (www.test.com.br)
+              {t(i18n, "showcase.component.inputText.actions.setExternalValue")}
             </button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Valor completo: <code className="rounded bg-muted px-1">{prefixRaw}</code>
+            {t(i18n, "showcase.component.inputText.labels.fullValue")}:{" "}
+            <code className="rounded bg-muted px-1">{prefixRaw}</code>
           </p>
         </div>
         <div className="w-96 space-y-2">
           <SgInputText
             id="demo-both"
-            label="Dominio"
+            label={t(i18n, "showcase.component.inputText.labels.domain")}
             prefixText="www."
             suffixText=".seedgrid.com.br"
             name="both"
             control={control}
           />
           <p className="text-xs text-muted-foreground">
-            Valor completo:{" "}
+            {t(i18n, "showcase.component.inputText.labels.fullValue")}:{" "}
             <code className="rounded bg-muted px-1">{bothRaw}</code>
           </p>
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-suffix"
-  label="Email"
+  label="${t(i18n, "showcase.component.inputText.labels.email")}"
   suffixText="@gmail.com"
   name="suffix"
   control={control}
-  onChange={(value) => log(\`valor completo: \${value}\`)}
+  onChange={(value) => log(\`${t(i18n, "showcase.component.inputText.labels.fullValue")}: \${value}\`)}
 />
 
 <SgInputText
   id="demo-prefix-text"
-  label="Website"
+  label="${t(i18n, "showcase.component.inputText.labels.website")}"
   prefixText="www."
   name="prefix"
   control={control}
-  onChange={(value) => log(\`valor completo: \${value}\`)}
+  onChange={(value) => log(\`${t(i18n, "showcase.component.inputText.labels.fullValue")}: \${value}\`)}
 />
 
 <button type="button" onClick={() => setValue("prefix", "www.test.com.br")}>
-  Setar valor externo (www.test.com.br)
+  ${t(i18n, "showcase.component.inputText.actions.setExternalValue")}
 </button>
 
 <SgInputText
   id="demo-both"
-  label="Dominio"
+  label="${t(i18n, "showcase.component.inputText.labels.domain")}"
   prefixText="www."
   suffixText=".seedgrid.com.br"
   name="both"
@@ -430,11 +472,14 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* â”€â”€ Icon Buttons â”€â”€ */}
-      <Section title="Botoes de icone" description="iconButtons recebe um array de ReactNode. Cada elemento e um botao com onClick que voce controla.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.iconButtons.title")}
+        description={t(i18n, "showcase.component.inputText.sections.iconButtons.description")}
+      >
         <div className="w-96 space-y-3">
           <SgInputText
             id="demo-iconbtns"
-            label="Texto para copiar"
+            label={t(i18n, "showcase.component.inputText.labels.copyText")}
             name="iconbtns"
             register={register}
             iconButtons={[
@@ -442,10 +487,13 @@ export default function SgInputTextPage() {
                 key="copy"
                 type="button"
                 className="text-foreground/60 hover:text-primary"
-                title="Copiar valor"
+                title={t(i18n, "showcase.component.inputText.actions.copy")}
                 onClick={() => {
                   navigator.clipboard.writeText(iconBtnValue);
-                  setIconBtnLog((prev) => [`Copiado: "${iconBtnValue}"`, ...prev].slice(0, 5));
+                  setIconBtnLog((prev) => [
+                    `${t(i18n, "showcase.component.inputText.labels.copied")}: "${iconBtnValue}"`,
+                    ...prev
+                  ].slice(0, 5));
                 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
@@ -454,9 +502,12 @@ export default function SgInputTextPage() {
                 key="alert"
                 type="button"
                 className="text-foreground/60 hover:text-primary"
-                title="Exibir alerta"
+                title={t(i18n, "showcase.component.inputText.actions.showAlert")}
                 onClick={() => {
-                  setIconBtnLog((prev) => [`Alerta disparado!`, ...prev].slice(0, 5));
+                  setIconBtnLog((prev) => [
+                    t(i18n, "showcase.component.inputText.labels.alertTriggered"),
+                    ...prev
+                  ].slice(0, 5));
                 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -465,22 +516,24 @@ export default function SgInputTextPage() {
           />
           <div className="h-24 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {iconBtnLog.length === 0 ? (
-              <span className="text-muted-foreground">Digite algo e clique nos icones...</span>
+              <span className="text-muted-foreground">
+                {t(i18n, "showcase.component.inputText.labels.iconButtonsHint")}
+              </span>
             ) : (
               iconBtnLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
           </div>
         </div>
         <div className="w-full">
-          <p className="mb-2 text-sm font-medium">Como funciona:</p>
+          <p className="mb-2 text-sm font-medium">{t(i18n, "showcase.component.inputText.labels.howItWorks")}</p>
           <ul className="mb-3 list-disc pl-5 text-sm text-muted-foreground space-y-1">
-            <li>Cada item do array e um <code className="rounded bg-muted px-1">&lt;button&gt;</code> normal com <code className="rounded bg-muted px-1">onClick</code></li>
-            <li>Voce controla a acao: copiar, abrir modal, chamar API, etc.</li>
-            <li>O componente apenas renderiza os botoes no suffix, ao lado do X de limpar</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.iconButtons.1")}</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.iconButtons.2")}</li>
+            <li>{t(i18n, "showcase.component.inputText.bullets.iconButtons.3")}</li>
           </ul>
           <CodeBlock code={`<SgInputText
   id="demo-iconbtns"
-  label="Texto para copiar"
+  label="${t(i18n, "showcase.component.inputText.labels.copyText")}"
   name="iconbtns"
   register={register}
   iconButtons={[
@@ -488,10 +541,10 @@ export default function SgInputTextPage() {
       key="copy"
       type="button"
       className="text-foreground/60 hover:text-primary"
-      title="Copiar valor"
+      title="${t(i18n, "showcase.component.inputText.actions.copy")}"
       onClick={() => {
         navigator.clipboard.writeText(iconBtnValue);
-        setIconBtnLog((prev) => [\`Copiado: "\${iconBtnValue}"\`, ...prev].slice(0, 5));
+        setIconBtnLog((prev) => [\`${t(i18n, "showcase.component.inputText.labels.copied")}: "\${iconBtnValue}"\`, ...prev].slice(0, 5));
       }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
@@ -500,9 +553,9 @@ export default function SgInputTextPage() {
       key="alert"
       type="button"
       className="text-foreground/60 hover:text-primary"
-      title="Exibir alerta"
+      title="${t(i18n, "showcase.component.inputText.actions.showAlert")}"
       onClick={() => {
-        setIconBtnLog((prev) => [\`Alerta disparado!\`, ...prev].slice(0, 5));
+        setIconBtnLog((prev) => [\`${t(i18n, "showcase.component.inputText.labels.alertTriggered")}\`, ...prev].slice(0, 5));
       }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -513,41 +566,84 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* ── Sem borda / Filled ── */}
-      <Section title="Variacoes visuais" description="Sem borda (withBorder=false) e preenchido (filled=true).">
+      <Section
+        title={t(i18n, "showcase.common.sections.visual.title")}
+        description={t(i18n, "showcase.common.sections.visual.description")}
+      >
         <div className="w-80">
-          <SgInputText id="demo-noborder" label="Sem borda" withBorder={false} name="noborder" register={register} />
+          <SgInputText
+            id="demo-noborder"
+            label={t(i18n, "showcase.common.labels.noBorder")}
+            withBorder={false}
+            name="noborder"
+            register={register}
+          />
         </div>
         <div className="w-80">
-          <SgInputText id="demo-filled" label="Preenchido" filled name="filled" register={register} />
+          <SgInputText
+            id="demo-filled"
+            label={t(i18n, "showcase.common.labels.filled")}
+            filled
+            name="filled"
+            register={register}
+          />
         </div>
-        <CodeBlock code={`<SgInputText id="demo-noborder" label="Sem borda" withBorder={false} name="noborder" register={register} />
-<SgInputText id="demo-filled" label="Preenchido" filled name="filled" register={register} />`} />
+        <CodeBlock code={`<SgInputText id="demo-noborder" label="${t(i18n, "showcase.common.labels.noBorder")}" withBorder={false} name="noborder" register={register} />
+<SgInputText id="demo-filled" label="${t(i18n, "showcase.common.labels.filled")}" filled name="filled" register={register} />`} />
       </Section>
 
       {/* ── Sem clear button ── */}
-      <Section title="Sem botao limpar" description="clearButton=false remove o X do input.">
+      <Section
+        title={t(i18n, "showcase.common.sections.noClear.title")}
+        description={t(i18n, "showcase.common.sections.noClear.description")}
+      >
         <div className="w-80">
-          <SgInputText id="demo-noclear" label="Sem limpar" clearButton={false} name="noclear" register={register} />
+          <SgInputText
+            id="demo-noclear"
+            label={t(i18n, "showcase.common.labels.noClear")}
+            clearButton={false}
+            name="noclear"
+            register={register}
+          />
         </div>
-        <CodeBlock code={`<SgInputText id="demo-noclear" label="Sem limpar" clearButton={false} name="noclear" register={register} />`} />
+        <CodeBlock code={`<SgInputText id="demo-noclear" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} name="noclear" register={register} />`} />
       </Section>
 
       {/* ── Width / Border Radius ── */}
-      <Section title="Largura e borda" description="width e borderRadius customizaveis.">
+      <Section
+        title={t(i18n, "showcase.common.sections.sizeBorder.title")}
+        description={t(i18n, "showcase.common.sections.sizeBorder.description")}
+      >
         <div className="flex gap-4">
-          <SgInputText id="demo-w200" label="200px" width={200} name="w200" register={register} />
-          <SgInputText id="demo-w300" label="300px arredondado" width={300} borderRadius={20} name="w300" register={register} />
+          <SgInputText
+            id="demo-w200"
+            label={t(i18n, "showcase.common.labels.width200")}
+            width={200}
+            name="w200"
+            register={register}
+          />
+          <SgInputText
+            id="demo-w300"
+            label={t(i18n, "showcase.common.labels.width300Rounded")}
+            width={300}
+            borderRadius={20}
+            name="w300"
+            register={register}
+          />
         </div>
-        <CodeBlock code={`<SgInputText id="demo-w200" label="200px" width={200} name="w200" register={register} />
-<SgInputText id="demo-w300" label="300px arredondado" width={300} borderRadius={20} name="w300" register={register} />`} />
+        <CodeBlock code={`<SgInputText id="demo-w200" label="${t(i18n, "showcase.common.labels.width200")}" width={200} name="w200" register={register} />
+<SgInputText id="demo-w300" label="${t(i18n, "showcase.common.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
       {/* ── Disabled / ReadOnly ── */}
-      <Section title="Desabilitado e somente leitura" description="enabled=false desabilita, readOnly=true impede edicao.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.disabledReadonly.title")}
+        description={t(i18n, "showcase.component.inputText.sections.disabledReadonly.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-disabled"
-            label="Desabilitado"
+            label={t(i18n, "showcase.common.labels.disabled")}
             enabled={false}
             name="disabled"
             register={register}
@@ -556,7 +652,7 @@ export default function SgInputTextPage() {
         <div className="w-80">
           <SgInputText
             id="demo-readonly"
-            label="Somente leitura"
+            label={t(i18n, "showcase.component.inputText.labels.readonly")}
             readOnly
             name="readonly"
             register={register}
@@ -564,7 +660,7 @@ export default function SgInputTextPage() {
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-disabled"
-  label="Desabilitado"
+  label="${t(i18n, "showcase.common.labels.disabled")}"
   enabled={false}
   name="disabled"
   register={register}
@@ -572,7 +668,7 @@ export default function SgInputTextPage() {
 
 <SgInputText
   id="demo-readonly"
-  label="Somente leitura"
+  label="${t(i18n, "showcase.component.inputText.labels.readonly")}"
   readOnly
   name="readonly"
   register={register}
@@ -580,41 +676,47 @@ export default function SgInputTextPage() {
       </Section>
 
       {/* ── Erro externo ── */}
-      <Section title="Erro externo" description="Prop error exibe mensagem de erro vinda do pai (server-side, etc).">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.externalError.title")}
+        description={t(i18n, "showcase.component.inputText.sections.externalError.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-error"
-            label="Com erro externo"
-            error="Este email ja esta cadastrado."
+            label={t(i18n, "showcase.component.inputText.labels.externalError")}
+            error={t(i18n, "showcase.component.inputText.messages.externalError")}
             name="error"
             register={register}
           />
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-error"
-  label="Com erro externo"
-  error="Este email ja esta cadastrado."
+  label="${t(i18n, "showcase.component.inputText.labels.externalError")}"
+  error="${t(i18n, "showcase.component.inputText.messages.externalError")}"
   name="error"
   register={register}
 />`} />
       </Section>
 
       {/* ?? Standalone Form ?? */}
-      <Section title="Standalone (form completo)" description="Exemplo 100% standalone com default no load e botao salvar.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.standalone.title")}
+        description={t(i18n, "showcase.component.inputText.sections.standalone.description")}
+      >
         <div className="w-96 space-y-3">
           <SgInputText
             id="standalone-nome"
-            label="Nome"
+            label={t(i18n, "showcase.component.inputText.labels.name")}
             inputProps={{ ref: standaloneNomeRef }}
           />
           <SgInputText
             id="standalone-email"
-            label="E-mail"
+            label={t(i18n, "showcase.component.inputText.labels.emailLabel")}
             inputProps={{ ref: standaloneEmailRef }}
           />
           <SgInputText
             id="standalone-cpf"
-            label="CPF"
+            label={t(i18n, "showcase.component.inputText.labels.cpf")}
             inputProps={{ ref: standaloneCpfRef }}
           />
           <button
@@ -626,10 +728,10 @@ export default function SgInputTextPage() {
                 email: standaloneEmailRef.current?.value ?? "",
                 cpf: standaloneCpfRef.current?.value ?? ""
               };
-              setEventLog((prev) => [`[salvar] ${JSON.stringify(payload)}`, ...prev].slice(0, 10));
+              setEventLog((prev) => [`[${t(i18n, "showcase.component.inputText.logs.save")}] ${JSON.stringify(payload)}`, ...prev].slice(0, 10));
             }}
           >
-            Salvar
+            {t(i18n, "showcase.component.inputText.actions.save")}
           </button>
         </div>
         <CodeBlock code={`import React from "react";
@@ -641,8 +743,8 @@ export default function Example() {
   const cpfRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
-    if (nomeRef.current) nomeRef.current.value = "Maria da Silva";
-    if (emailRef.current) emailRef.current.value = "maria@exemplo.com";
+    if (nomeRef.current) nomeRef.current.value = "${t(i18n, "showcase.component.inputText.defaults.name")}";
+    if (emailRef.current) emailRef.current.value = "${t(i18n, "showcase.component.inputText.defaults.email")}";
     if (cpfRef.current) cpfRef.current.value = "12345678909";
   }, []);
 
@@ -657,31 +759,42 @@ export default function Example() {
 
   return (
     <div className="space-y-3">
-      <SgInputText id="nome" label="Nome" inputProps={{ ref: nomeRef }} />
-      <SgInputText id="email" label="E-mail" inputProps={{ ref: emailRef }} />
-      <SgInputText id="cpf" label="CPF" inputProps={{ ref: cpfRef }} />
-      <button type="button" onClick={handleSave}>Salvar</button>
+      <SgInputText id="nome" label="${t(i18n, "showcase.component.inputText.labels.name")}" inputProps={{ ref: nomeRef }} />
+      <SgInputText id="email" label="${t(i18n, "showcase.component.inputText.labels.emailLabel")}" inputProps={{ ref: emailRef }} />
+      <SgInputText id="cpf" label="${t(i18n, "showcase.component.inputText.labels.cpf")}" inputProps={{ ref: cpfRef }} />
+      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputText.actions.save")}</button>
     </div>
   );
 }`} />
       </Section>
 
       {/* ── Callbacks / Events ── */}
-      <Section title="Eventos (standalone)" description="Unico exemplo sem RHF: onEnter, onExit, onChange, onClear, onValidation.">
+      <Section
+        title={t(i18n, "showcase.component.inputText.sections.events.title")}
+        description={t(i18n, "showcase.component.inputText.sections.events.description")}
+      >
         <div className="w-80">
           <SgInputText
             id="demo-events"
-            label="Digite e observe o log"
+            label={t(i18n, "showcase.common.labels.typeAndLog")}
             required
             onChange={(v) => log(`onChange: "${v}"`)}
-            onEnter={() => log("onEnter (focus)")}
-            onExit={() => log("onExit (blur)")}
-            onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onEnter={() => log(t(i18n, "showcase.component.inputText.logs.onEnter"))}
+            onExit={() => log(t(i18n, "showcase.component.inputText.logs.onExit"))}
+            onClear={() => log(t(i18n, "showcase.component.inputText.logs.onClear"))}
+            onValidation={(msg) =>
+              log(
+                `${t(i18n, "showcase.common.labels.onValidation")}: ${
+                  msg ?? t(i18n, "showcase.common.labels.valid")
+                }`
+              )
+            }
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (
-              <span className="text-muted-foreground">Interaja com o input...</span>
+              <span className="text-muted-foreground">
+                {t(i18n, "showcase.common.labels.interactHint")}
+              </span>
             ) : (
               eventLog.map((entry, i) => <div key={i}>{entry}</div>)
             )}
@@ -689,62 +802,62 @@ export default function Example() {
         </div>
         <CodeBlock code={`<SgInputText
   id="demo-events"
-  label="Digite e observe o log"
+  label="${t(i18n, "showcase.common.labels.typeAndLog")}"
   required
   onChange={(v) => log(\`onChange: "\${v}"\`)}
-  onEnter={() => log("onEnter (focus)")}
-  onExit={() => log("onExit (blur)")}
-  onClear={() => log("onClear")}
-  onValidation={(msg) => log(\`onValidation: \${msg ?? "valido"}\`)}
+  onEnter={() => log("${t(i18n, "showcase.component.inputText.logs.onEnter")}")} 
+  onExit={() => log("${t(i18n, "showcase.component.inputText.logs.onExit")}")} 
+  onClear={() => log("${t(i18n, "showcase.component.inputText.logs.onClear")}")} 
+  onValidation={(msg) => log(\`${t(i18n, "showcase.common.labels.onValidation")}: \${msg ?? "${t(i18n, "showcase.common.labels.valid")}" }\`)}
 />`} />
       </Section>
 
       {/* ── Props Reference ── */}
       <section className="rounded-lg border border-border p-6">
-        <h2 className="text-lg font-semibold">Referencia de Props</h2>
+        <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputText.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrao</th>
-                <th className="pb-2 font-semibold">Descricao</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputText.props.headers.prop")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputText.props.headers.type")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputText.props.headers.default")}</th>
+                <th className="pb-2 font-semibold">{t(i18n, "showcase.component.inputText.props.headers.description")}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Obrigatorio. ID do input e vinculo com label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do floating label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Alias para label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Placeholder alternativo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">prefixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto fixo antes do valor (visual + concatenado no valor).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">suffixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto fixo depois do valor (visual + concatenado no valor).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Mensagem de erro externa (sobrescreve validacao interna).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">type</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">&quot;text&quot;</td><td className="py-2">Tipo HTML do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">placeholder</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">labelText</td><td className="py-2">Placeholder do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas repassadas ao input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">maxLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limite maximo de caracteres.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Valida tamanho minimo no blur.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minNumberOfWords</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Valida quantidade minima de palavras.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Icone a esquerda do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">iconButtons</td><td className="py-2 pr-4">ReactNode[]</td><td className="py-2 pr-4">-</td><td className="py-2">Botoes extras no suffix.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao X para limpar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">&quot;100%&quot;</td><td className="py-2">Largura do container.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Border radius customizado.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Fundo preenchido (bg-muted).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe borda ao redor.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">false desabilita o input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Somente leitura.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Campo obrigatorio (valida no blur).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">&quot;Campo obrigatorio.&quot;</td><td className="py-2">Mensagem quando vazio.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">showCharCounter</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe contador de caracteres.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value: string) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">Funcao de validacao customizada.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validateOnBlur</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Valida ao perder o foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg: string | null) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback com resultado da validacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado com o valor string a cada mudanca.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado quando o input recebe foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onExit</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado quando o input perde foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onClear</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Chamado ao clicar no botao limpar.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.id")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.label")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.labelText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.hintText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prefixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.prefixText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">suffixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.suffixText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.error")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">type</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">&quot;text&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.type")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">placeholder</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">labelText</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.placeholder")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.inputProps")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">maxLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.maxLength")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.minLength")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minNumberOfWords</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.minNumberOfWords")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.prefixIcon")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">iconButtons</td><td className="py-2 pr-4">ReactNode[]</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.iconButtons")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.clearButton")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">&quot;100%&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.width")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.borderRadius")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.filled")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.withBorder")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.enabled")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.readOnly")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.required")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"{t(i18n, "showcase.component.inputText.defaults.requiredMessage")}"</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.requiredMessage")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">showCharCounter</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.showCharCounter")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value: string) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.validation")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validateOnBlur</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.validateOnBlur")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg: string | null) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.onValidation")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.onChange")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.onEnter")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onExit</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.onExit")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onClear</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputText.props.rows.onClear")}</td></tr>
             </tbody>
           </table>
         </div>
@@ -762,6 +875,7 @@ function indentCode(source: string, spaces: number) {
 }
 
 function wrapFullExample(body: string) {
+  const i18n = getShowcaseI18n();
   const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       nome: "",
@@ -771,10 +885,10 @@ function wrapFullExample(body: string) {
       minlength: "",
       words: "",
       validation: "",
-      controlled: "Texto inicial",
-      suffix: "usuario@gmail.com",
-      prefix: "www.test.com.br",
-      both: "www.app.seedgrid.com.br",
+      controlled: "${t(i18n, "showcase.component.inputText.defaults.controlled")}",
+      suffix: "${t(i18n, "showcase.component.inputText.defaults.suffix")}",
+      prefix: "${t(i18n, "showcase.component.inputText.defaults.prefix")}",
+      both: "${t(i18n, "showcase.component.inputText.defaults.both")}",
       iconbtns: ""
     }
   });
