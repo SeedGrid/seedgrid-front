@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { t, useShowcaseI18n } from "../i18n";
+import CodeBlockBase from "./components/CodeBlockBase";
 
 const COMPONENTS = [
   {
@@ -78,7 +79,7 @@ export default function HomePage() {
             control: <code className="rounded bg-muted px-1">control</code>
           })}
         </p>
-        <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { useForm } from "react-hook-form";
+        <CodeBlockBase code={`import { useForm } from "react-hook-form";
 import { SgInputText, SgInputEmail } from "@seedgrid/fe-components";
 
 const { control, handleSubmit } = useForm({
@@ -102,7 +103,7 @@ const { control, handleSubmit } = useForm({
     label="Email"
     required
   />
-</form>`}</pre>
+</form>`} />
       </section>
 
       <section className="mt-8 rounded-lg border border-border bg-foreground/5 p-5">
@@ -115,7 +116,7 @@ const { control, handleSubmit } = useForm({
         <p className="mt-2 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p2")}
         </p>
-        <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
+        <CodeBlockBase code={`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
 
 const messagesEn = {
   "components.inputs.required": "Required field.",
@@ -132,11 +133,11 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}`}</pre>
+}`} />
         <p className="mt-3 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p3")}
         </p>
-        <pre className="mt-3 rounded-md bg-white/70 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">{`import { setComponentsI18n } from "@seedgrid/fe-components";
+        <CodeBlockBase code={`import { setComponentsI18n } from "@seedgrid/fe-components";
 
 setComponentsI18n({
   locale: "en-US",
@@ -144,7 +145,7 @@ setComponentsI18n({
     "components.inputs.required": "Required field.",
     "components.password.common": "Password is too common."
   }
-});`}</pre>
+});`} />
       </section>
 
       {COMPONENTS.map((group) => (
@@ -169,10 +170,8 @@ setComponentsI18n({
 
       <section className="mt-12 rounded-lg bg-muted/50 p-6">
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.home.install.title")}</h2>
-        <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto">
-{`import { SgInputText } from "@seedgrid/fe-components";
-import type { SgInputTextProps } from "@seedgrid/fe-components";`}
-        </pre>
+        <CodeBlockBase code={`import { SgInputText } from "@seedgrid/fe-components";
+import type { SgInputTextProps } from "@seedgrid/fe-components";`} />
       </section>
     </div>
   );

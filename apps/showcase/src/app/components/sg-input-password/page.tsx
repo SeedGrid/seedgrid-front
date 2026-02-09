@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputPassword } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -31,11 +32,7 @@ function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: strin
   const content = props.wrapRHF === false
     ? props.code
     : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
-  return (
-    <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
-      {content}
-    </pre>
-  );
+  return <CodeBlockBase code={ content } />;
 }
 
 export default function SgInputPasswordPage() {

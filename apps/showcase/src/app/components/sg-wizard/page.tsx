@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputEmail, SgInputPhone, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -14,11 +15,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return (
-    <pre className="mt-3 rounded-md bg-foreground/5 p-4 text-sm font-mono overflow-x-auto whitespace-pre-wrap">
-      {props.code}
-    </pre>
-  );
+  return <CodeBlockBase code={ props.code } />;
 }
 
 export default function SgWizardPageDemo() {
