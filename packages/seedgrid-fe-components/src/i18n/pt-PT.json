@@ -54,5 +54,7 @@
   "components.validators.birthdate.ageMin": "A idade deve ser de pelo menos {min} anos.",
   "components.validators.birthdate.ageMax": "A idade deve ser de no máximo {max} anos.",
   "components.autocomplete.empty": "Nenhum registo encontrado.",
-  "components.autocomplete.loading": "A carregar..."
+  "components.autocomplete.loading": "A carregar...",
+  "components.inputs.number.min": "O valor deve ser no m?nimo {min}.",
+  "components.inputs.number.max": "O valor deve ser no m?ximo {max}."
 }

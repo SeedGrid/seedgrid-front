@@ -1,5 +1,7 @@
 ﻿export { SgInputText } from "./inputs/SgInputText";
 export type { SgInputTextProps } from "./inputs/SgInputText";
+export { SgInputNumber } from "./inputs/SgInputNumber";
+export type { SgInputNumberProps } from "./inputs/SgInputNumber";
 export { SgInputTextArea } from "./inputs/SgInputTextArea";
 export type { SgInputTextAreaProps } from "./inputs/SgInputTextArea";
 export { SgInputSelect } from "./inputs/SgInputSelect";
@@ -20,6 +22,8 @@ export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
 export { SgAutocomplete } from "./inputs/SgAutocomplete";
 export type { SgAutocompleteItem, SgAutocompleteProps } from "./inputs/SgAutocomplete";
+export { SgButton } from "./commons/SgButton";
+export type { SgButtonProps, SgButtonCustomColors } from "./commons/SgButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
 export { toast } from "sonner";

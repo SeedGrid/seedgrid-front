@@ -15,17 +15,17 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={wrapFullExample(props.code)} />;
+  const trimmed = props.code.trimStart();
+  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
   const pad = " ".repeat(spaces);
   return source
-    .split("
-")
+    .split("\n")
     .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("
-");
+    .join("\n");
 }
 
 function wrapFullExample(body: string) {
@@ -33,8 +33,7 @@ function wrapFullExample(body: string) {
     `import React from "react";`,
     `import { useForm } from "react-hook-form";`,
     `import { SgInputPhone } from "@seedgrid/fe-components";`
-  ].join("
-");
+  ].join("\n");
 
   const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
     defaultValues: { }
