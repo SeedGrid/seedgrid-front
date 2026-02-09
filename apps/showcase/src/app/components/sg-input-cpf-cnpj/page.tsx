@@ -15,26 +15,49 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function buildRhfCode(code: string, baseName = "doc", defaultValues?: string) {
-  const matches = code.match(/<SgInputCPFCNPJ\b/g) ?? [];
-  const count = Math.max(matches.length, 1);
-  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
-  let cursor = 0;
-  const withControl = code.replace(/<SgInputCPFCNPJ\b/g, () => {
-    const name = names[cursor] ?? baseName;
-    cursor += 1;
-    return `<SgInputCPFCNPJ\n  name="${name}"\n  control={control}`;
-  });
-  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
-  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputCPFCNPJ } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+function CodeBlock(props: { code: string }) {
+  return <CodeBlockBase code={wrapFullExample(props.code)} />;
 }
 
-function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
-  const content = props.wrapRHF === false
-    ? props.code
-    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
-  return <CodeBlockBase code={ content } />;
+function indentCode(source: string, spaces: number) {
+  const pad = " ".repeat(spaces);
+  return source
+    .split("
+")
+    .map((line) => (line.length ? `${pad}${line}` : line))
+    .join("
+");
 }
+
+function wrapFullExample(body: string) {
+  const imports = [
+    `import React from "react";`,
+    `import { useForm } from "react-hook-form";`,
+    `import { SgInputCPFCNPJ } from "@seedgrid/fe-components";`
+  ].join("
+");
+
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
+    defaultValues: { }
+  });
+
+  const log = (msg: string) => console.log(msg);`;
+
+  const bodyIndented = indentCode(body.trim(), 6);
+
+  return `${imports}
+
+export default function Example() {
+  ${indentCode(setup, 2)}
+
+  return (
+    <form onSubmit={handleSubmit((data) => console.log(data))}>
+${bodyIndented}
+    </form>
+  );
+}`;
+}
+
 
 export default function SgInputCpfCnpjPage() {
   const i18n = useShowcaseI18n();
@@ -54,7 +77,8 @@ export default function SgInputCpfCnpjPage() {
           {t(i18n, "showcase.component.cpfcnpj.subtitle")}
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          {t(i18n, "showcase.component.cpfcnpj.i18nNote").split("components.*").map((part, idx, arr) => (
+          {t(i18n, "showcase.component.cpfcnpj.i18nNote").split("
+").map((part, idx, arr) => (
             <span key={idx}>
               {part}
               {idx < arr.length - 1 ? <code className="rounded bg-muted px-1">components.*</code> : null}
@@ -175,7 +199,6 @@ export default function SgInputCpfCnpjPage() {
 
       <Section title="Exemplos validos (alfanumerico)" description="Lista de CNPJs alfanumericos validos.">
         <CodeBlock
-          wrapRHF={false}
           code={`// Filial 0001
 9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
 LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)

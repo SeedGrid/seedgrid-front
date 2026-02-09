@@ -82,7 +82,7 @@ export default function HomePage() {
         <CodeBlockBase code={`import { useForm } from "react-hook-form";
 import { SgInputText, SgInputEmail } from "@seedgrid/fe-components";
 
-const { control, handleSubmit } = useForm({
+const { register, handleSubmit } = useForm({
   defaultValues: { nome: "", email: "" }
 });
 
@@ -90,7 +90,7 @@ const { control, handleSubmit } = useForm({
   <SgInputText
     id="nome"
     name="nome"
-    control={control}
+    register={register}
     label="Nome"
     required
     requiredMessage="Informe o nome."
@@ -99,7 +99,7 @@ const { control, handleSubmit } = useForm({
   <SgInputEmail
     id="email"
     name="email"
-    control={control}
+    register={register}
     label="Email"
     required
   />

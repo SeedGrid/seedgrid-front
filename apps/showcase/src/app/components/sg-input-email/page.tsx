@@ -14,26 +14,49 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function buildRhfCode(code: string, baseName = "email", defaultValues?: string) {
-  const matches = code.match(/<SgInputEmail\b/g) ?? [];
-  const count = Math.max(matches.length, 1);
-  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
-  let cursor = 0;
-  const withControl = code.replace(/<SgInputEmail\b/g, () => {
-    const name = names[cursor] ?? baseName;
-    cursor += 1;
-    return `<SgInputEmail\n  name="${name}"\n  control={control}`;
-  });
-  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
-  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputEmail } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+function CodeBlock(props: { code: string }) {
+  return <CodeBlockBase code={wrapFullExample(props.code)} />;
 }
 
-function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
-  const content = props.wrapRHF === false
-    ? props.code
-    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
-  return <CodeBlockBase code={ content } />;
+function indentCode(source: string, spaces: number) {
+  const pad = " ".repeat(spaces);
+  return source
+    .split("
+")
+    .map((line) => (line.length ? `${pad}${line}` : line))
+    .join("
+");
 }
+
+function wrapFullExample(body: string) {
+  const imports = [
+    `import React from "react";`,
+    `import { useForm } from "react-hook-form";`,
+    `import { DEFAULT_BLOCKED_EMAIL_DOMAINS } from "@seedgrid/fe-components";`
+  ].join("
+");
+
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
+    defaultValues: { }
+  });
+
+  const log = (msg: string) => console.log(msg);`;
+
+  const bodyIndented = indentCode(body.trim(), 6);
+
+  return `${imports}
+
+export default function Example() {
+  ${indentCode(setup, 2)}
+
+  return (
+    <form onSubmit={handleSubmit((data) => console.log(data))}>
+${bodyIndented}
+    </form>
+  );
+}`;
+}
+
 
 export default function SgInputEmailPage() {
   const [basicValue, setBasicValue] = React.useState("");
@@ -161,11 +184,9 @@ export default function SgInputEmailPage() {
       </Section>
 
       <Section title="Lista bloqueada padrao" description="Dominios bloqueados por default.">
-        <CodeBlock wrapRHF={false} code={JSON.stringify({ blockedEmailDomains: DEFAULT_BLOCKED_EMAIL_DOMAINS }, null, 2)} />
       </Section>
 
       <Section title="Config JSON" description="A aplicacao host pode carregar um JSON e adicionar dominios em runtime.">
-        <CodeBlock wrapRHF={false} code={`// Exemplo (app host)
 // 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
 // {
 //   "blockedEmailDomains": ["exemplo.com", "teste.com"]

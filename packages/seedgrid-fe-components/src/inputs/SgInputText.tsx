@@ -3,7 +3,13 @@
 import React from "react";
 import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
-import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import type {
+  ControllerFieldState,
+  ControllerRenderProps,
+  FieldValues,
+  RegisterOptions,
+  UseFormRegister
+} from "react-hook-form";
 import type { RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
@@ -48,6 +54,8 @@ export type SgInputTextProps = {
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;
+  register?: UseFormRegister<FieldValues>;
+  rules?: RegisterOptions<FieldValues>;
 } & RhfFieldProps;
 
 type SgInputTextBaseProps = Omit<SgInputTextProps, keyof RhfFieldProps>;
@@ -55,6 +63,19 @@ type SgInputTextBaseProps = Omit<SgInputTextProps, keyof RhfFieldProps>;
 function ErrorText(props: { message?: string }) {
   if (!props.message) return null;
   return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
+}
+
+function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+  return (node: T | null) => {
+    for (const ref of refs) {
+      if (!ref) continue;
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (typeof ref === "object" && "current" in ref) {
+        (ref as { current: T | null }).current = node;
+      }
+    }
+  };
 }
 
 function mergeInputPropsWithField(
@@ -429,7 +450,28 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
 }
 
 export function SgInputText(props: SgInputTextProps) {
-  const { control, name, ...rest } = props;
+  const { control, name, register, rules, ...rest } = props;
+  if (name && register) {
+    const reg = register(name, rules);
+    return (
+      <SgInputTextBase
+        {...rest}
+        inputProps={{
+          ...rest.inputProps,
+          name,
+          onChange: (event) => {
+            reg.onChange(event);
+            rest.inputProps?.onChange?.(event);
+          },
+          onBlur: (event) => {
+            reg.onBlur(event);
+            rest.inputProps?.onBlur?.(event);
+          },
+          ref: mergeRefs(reg.ref, (rest.inputProps as { ref?: React.Ref<HTMLInputElement> })?.ref)
+        }}
+      />
+    );
+  }
   if (control && name) {
     const prefixText = rest.prefixText ?? "";
     const suffixText = rest.suffixText ?? "";

@@ -52,5 +52,7 @@
   "components.validators.birthdate.invalidDate": "Fecha inválida.",
   "components.validators.birthdate.ageBetween": "La edad debe estar entre {min} y {max} años.",
   "components.validators.birthdate.ageMin": "La edad debe ser al menos {min} años.",
-  "components.validators.birthdate.ageMax": "La edad debe ser como máximo {max} años."
+  "components.validators.birthdate.ageMax": "La edad debe ser como máximo {max} años.",
+  "components.autocomplete.empty": "No se encontraron registros.",
+  "components.autocomplete.loading": "Cargando..."
 }

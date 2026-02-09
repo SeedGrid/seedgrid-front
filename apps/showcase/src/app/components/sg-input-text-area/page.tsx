@@ -14,26 +14,49 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function buildRhfCode(code: string, baseName = "campo", defaultValues?: string) {
-  const matches = code.match(/<SgInputTextArea\b/g) ?? [];
-  const count = Math.max(matches.length, 1);
-  const names = Array.from({ length: count }, (_, index) => `${baseName}${count > 1 ? index + 1 : ""}`);
-  let cursor = 0;
-  const withControl = code.replace(/<SgInputTextArea\b/g, () => {
-    const name = names[cursor] ?? baseName;
-    cursor += 1;
-    return `<SgInputTextArea\n  name="${name}"\n  control={control}`;
-  });
-  const defaults = defaultValues ?? `{ ${names.map((name) => `${name}: ""`).join(", ")} }`;
-  return `import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputTextArea } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit } = useForm({\n    defaultValues: ${defaults}\n  });\n\n  const onSubmit = (data) => console.log(data);\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n${withControl.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}\n    </form>\n  );\n}`;
+function CodeBlock(props: { code: string }) {
+  return <CodeBlockBase code={wrapFullExample(props.code)} />;
 }
 
-function CodeBlock(props: { code: string; wrapRHF?: boolean; rhfBaseName?: string; rhfDefaultValues?: string }) {
-  const content = props.wrapRHF === false
-    ? props.code
-    : buildRhfCode(props.code, props.rhfBaseName, props.rhfDefaultValues);
-  return <CodeBlockBase code={ content } />;
+function indentCode(source: string, spaces: number) {
+  const pad = " ".repeat(spaces);
+  return source
+    .split("
+")
+    .map((line) => (line.length ? `${pad}${line}` : line))
+    .join("
+");
 }
+
+function wrapFullExample(body: string) {
+  const imports = [
+    `import React from "react";`,
+    `import { useForm } from "react-hook-form";`,
+    `import { SgInputTextArea } from "@seedgrid/fe-components";`
+  ].join("
+");
+
+  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
+    defaultValues: { }
+  });
+
+  const log = (msg: string) => console.log(msg);`;
+
+  const bodyIndented = indentCode(body.trim(), 6);
+
+  return `${imports}
+
+export default function Example() {
+  ${indentCode(setup, 2)}
+
+  return (
+    <form onSubmit={handleSubmit((data) => console.log(data))}>
+${bodyIndented}
+    </form>
+  );
+}`;
+}
+
 
 export default function SgInputTextAreaPage() {
   const [basicValue, setBasicValue] = React.useState("");
@@ -141,7 +164,6 @@ export default function SgInputTextAreaPage() {
             <li>Para limpar de fora: basta chamar <code className="rounded bg-muted px-1">setValue(&quot;&quot;)</code></li>
           </ul>
           <CodeBlock
-            wrapRHF={false}
             code={`import React from "react";
 import { useForm } from "react-hook-form";
 import { SgInputTextArea } from "@seedgrid/fe-components";

@@ -6,6 +6,7 @@ import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
 import type { RhfFieldProps } from "../rhf";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgAutocompleteItem = {
   id: string | number;
@@ -97,8 +98,8 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
     allowCustomValue = false,
     grouped,
     groupped,
-    placeholderEmpty = "No records found.",
-    loadingText = "Loading...",
+    placeholderEmpty: placeholderEmptyProp,
+    loadingText: loadingTextProp,
     onSelect,
     onSearch,
     onOpenChange,
@@ -115,6 +116,9 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
     ...rest
   } = props;
 
+  const i18n = useComponentsI18n();
+  const placeholderEmpty = placeholderEmptyProp ?? t(i18n, "components.autocomplete.empty");
+  const loadingText = loadingTextProp ?? t(i18n, "components.autocomplete.loading");
   const effectiveGrouped = grouped ?? groupped ?? false;
   const [inputValue, setInputValue] = React.useState(value ?? "");
   const [items, setItems] = React.useState<SgAutocompleteItem[]>([]);
