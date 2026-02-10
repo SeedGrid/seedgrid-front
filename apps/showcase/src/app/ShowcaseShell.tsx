@@ -21,6 +21,7 @@ import {
   showcaseMessagesPtPt,
   type ShowcaseLocale
 } from "../i18n";
+import { ThemeEditor } from "./ThemeEditor";
 
 const COMPONENTS = [
   { slug: "sg-input-text", label: "SgInputText" },
@@ -34,7 +35,7 @@ const COMPONENTS = [
   { slug: "sg-input-cpf", label: "SgInputCPF" },
   { slug: "sg-input-cnpj", label: "SgInputCNPJ" },
   { slug: "sg-input-cpf-cnpj", label: "SgInputCPFCNPJ" },
-  { slug: "sg-input-cep", label: "SgInputCEP" },
+  { slug: "sg-input-postal-code", label: "SgInputPostalCode" },
   { slug: "sg-input-phone", label: "SgInputPhone" },
   { slug: "sg-autocomplete", label: "SgAutocomplete" },
   { slug: "sg-button", label: "SgButton" },
@@ -175,6 +176,7 @@ export default function ShowcaseShell(props: {
           </aside>
           <main className="flex-1 p-8 overflow-y-auto">{props.children}</main>
           <SgToaster />
+          <ThemeEditor />
         </div>
       </SgComponentsI18nProvider>
     </ShowcaseI18nProvider>

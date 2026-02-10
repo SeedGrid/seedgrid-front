@@ -90,9 +90,16 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             />
           ))}
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" onClick={fn} items={items} />
-<SgSplitButton label="Success" severity="success" onClick={fn} items={items} />
-<SgSplitButton label="Danger" severity="danger" onClick={fn} items={items} />`} />
+        <CodeBlock code={`import { SgSplitButton } from "@seedgrid/fe-components";
+
+const items = [
+  { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+  { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+];
+
+<SgSplitButton label="Primary" severity="primary" onClick={() => {}} items={items} />
+<SgSplitButton label="Success" severity="success" onClick={() => {}} items={items} />
+<SgSplitButton label="Danger" severity="danger" onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Outlined ── */}
@@ -109,8 +116,8 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             />
           ))}
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="outline" onClick={fn} items={items} />
-<SgSplitButton label="Success" severity="success" appearance="outline" onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="outline" onClick={() => {}} items={items} />
+<SgSplitButton label="Success" severity="success" appearance="outline" onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Ghost ── */}
@@ -127,8 +134,8 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             />
           ))}
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="ghost" onClick={fn} items={items} />
-<SgSplitButton label="Danger" severity="danger" appearance="ghost" onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="ghost" onClick={() => {}} items={items} />
+<SgSplitButton label="Danger" severity="danger" appearance="ghost" onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Raised ── */}
@@ -145,7 +152,7 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             />
           ))}
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" raised onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" raised onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Sizes ── */}
@@ -173,9 +180,9 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Small" size="sm" onClick={fn} items={items} />
-<SgSplitButton label="Medium" size="md" onClick={fn} items={items} />
-<SgSplitButton label="Large" size="lg" onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Small" size="sm" onClick={() => {}} items={items} />
+<SgSplitButton label="Medium" size="md" onClick={() => {}} items={items} />
+<SgSplitButton label="Large" size="lg" onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── With Icons ── */}
@@ -235,10 +242,10 @@ import { SgSplitButton } from "@seedgrid/fe-components";
   severity="secondary"
   onClick={() => console.log("File")}
   items={[
-    { label: "Copy", icon: <Copy />, onClick: () => {} },
-    { label: "Print", icon: <Printer />, onClick: () => {} },
-    { separator: true, label: "Export as PDF", icon: <FileText />, onClick: () => {} },
-    { label: "Share via email", icon: <Mail />, onClick: () => {} },
+    { label: "Copy", icon: <Copy className="size-4" />, onClick: () => {} },
+    { label: "Print", icon: <Printer className="size-4" />, onClick: () => {} },
+    { separator: true, label: "Export as PDF", icon: <FileText className="size-4" />, onClick: () => {} },
+    { label: "Share via email", icon: <Mail className="size-4" />, onClick: () => {} },
   ]}
 />`} />
       </Section>
@@ -262,7 +269,7 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Save" leftIcon={<Save />} disabled onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Save" leftIcon={<Save className="size-4" />} disabled onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Loading ── */}
@@ -283,7 +290,7 @@ import { SgSplitButton } from "@seedgrid/fe-components";
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Saving..." leftIcon={<Save />} loading onClick={fn} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Saving..." leftIcon={<Save className="size-4" />} loading onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Disabled Items ── */}
@@ -305,9 +312,9 @@ import { SgSplitButton } from "@seedgrid/fe-components";
   severity="primary"
   onClick={() => {}}
   items={[
-    { label: "Update", icon: <RefreshCw />, onClick: () => {} },
-    { label: "Delete", icon: <Trash2 />, onClick: () => {}, disabled: true },
-    { label: "Homepage", icon: <Home />, onClick: () => {} },
+    { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+    { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {}, disabled: true },
+    { label: "Homepage", icon: <Home className="size-4" />, onClick: () => {} },
   ]}
 />`} />
       </Section>

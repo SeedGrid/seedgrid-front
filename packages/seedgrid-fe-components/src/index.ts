@@ -12,8 +12,8 @@ export { SgInputCNPJ } from "./inputs/SgInputCNPJ";
 export type { SgInputCNPJProps } from "./inputs/SgInputCNPJ";
 export { SgInputCPFCNPJ } from "./inputs/SgInputCPFCNPJ";
 export type { SgInputCPFCNPJProps } from "./inputs/SgInputCPFCNPJ";
-export { SgInputCEP } from "./inputs/SgInputCEP";
-export type { SgInputCEPProps, ViaCepResponse } from "./inputs/SgInputCEP";
+export { SgInputPostalCode } from "./inputs/SgInputPostalCode";
+export type { SgInputPostalCodeProps, PostalCodeCountry, ViaCepResponse } from "./inputs/SgInputPostalCode";
 export { SgInputPhone } from "./inputs/SgInputPhone";
 export type { SgInputPhoneProps } from "./inputs/SgInputPhone";
 export { SgInputEmail } from "./inputs/SgInputEmail";
@@ -29,7 +29,21 @@ export type { SgSplitButtonProps, SgSplitButtonItem } from "./buttons/SgSplitBut
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
 export { toast } from "sonner";
-export { onlyDigits, maskCpf, maskCnpj, maskCpfCnpj, maskCep, maskPhone } from "./masks";
+export {
+  onlyDigits,
+  maskCpf,
+  maskCnpj,
+  maskCpfCnpj,
+  maskCep,
+  maskPostalCodeBR,
+  maskPostalCodePT,
+  maskPostalCodeUS,
+  maskPostalCodeES,
+  maskPostalCodeUY,
+  maskPostalCodeAR,
+  maskPostalCodePY,
+  maskPhone
+} from "./masks";
 export {
   isValidCpf,
   isValidCnpj,
@@ -46,7 +60,7 @@ export type { PasswordPolicy, BirthDatePolicy } from "./validators";
 export { SgGroupBox } from "./layout/SgGroupBox";
 export type { SgGroupBoxProps } from "./layout/SgGroupBox";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
-export type { SgWizardProps, SgWizardPageProps, SgWizardLabels } from "./wizard/SgWizard";
+export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
 export { componentsManifest } from "./manifest";
 export {
   SgComponentsI18nProvider,

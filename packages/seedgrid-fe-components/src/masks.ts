@@ -39,10 +39,52 @@ export function maskCpfCnpj(value: string) {
 }
 
 export function maskCep(value: string) {
+  return maskPostalCodeBR(value);
+}
+
+// BR: 00000-000 (8 digits)
+export function maskPostalCodeBR(value: string) {
   const digits = onlyDigits(value).slice(0, 8);
   const part1 = digits.slice(0, 5);
   const part2 = digits.slice(5, 8);
   return part2 ? `${part1}-${part2}` : part1;
+}
+
+// PT: 0000-000 (7 digits)
+export function maskPostalCodePT(value: string) {
+  const digits = onlyDigits(value).slice(0, 7);
+  const part1 = digits.slice(0, 4);
+  const part2 = digits.slice(4, 7);
+  return part2 ? `${part1}-${part2}` : part1;
+}
+
+// US: 00000 or 00000-0000 (5 or 9 digits)
+export function maskPostalCodeUS(value: string) {
+  const digits = onlyDigits(value).slice(0, 9);
+  const part1 = digits.slice(0, 5);
+  const part2 = digits.slice(5, 9);
+  return part2 ? `${part1}-${part2}` : part1;
+}
+
+// ES: 00000 (5 digits)
+export function maskPostalCodeES(value: string) {
+  return onlyDigits(value).slice(0, 5);
+}
+
+// UY: 00000 (5 digits)
+export function maskPostalCodeUY(value: string) {
+  return onlyDigits(value).slice(0, 5);
+}
+
+// AR: A0000AAA (1 letter + 4 digits + 3 letters) or legacy 0000 (4 digits)
+export function maskPostalCodeAR(value: string) {
+  const clean = value.replaceAll(/[^0-9A-Za-z]/g, "").toUpperCase().slice(0, 8);
+  return clean;
+}
+
+// PY: 000000 (6 digits)
+export function maskPostalCodePY(value: string) {
+  return onlyDigits(value).slice(0, 6);
 }
 
 export function maskPhone(value: string) {

@@ -1,0 +1,47 @@
+
+> showcase@ build C:\empreendedorismo\seedgrid\front\apps\showcase
+> next build
+
+   ▲ Next.js 15.0.7
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/22) ...
+   Generating static pages (5/22) 
+   Generating static pages (10/22) 
+   Generating static pages (16/22) 
+ ✓ Generating static pages (22/22)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    2.36 kB         147 kB
+├ ○ /_not-found                          896 B           101 kB
+├ ○ /components/sg-autocomplete          2.42 kB         179 kB
+├ ○ /components/sg-benchmark             2.19 kB         143 kB
+├ ○ /components/sg-button                3.17 kB         144 kB
+├ ○ /components/sg-group-box             1.88 kB         178 kB
+├ ○ /components/sg-input-birth-date      1.47 kB         178 kB
+├ ○ /components/sg-input-cnpj            3.25 kB         180 kB
+├ ○ /components/sg-input-cpf             2.34 kB         179 kB
+├ ○ /components/sg-input-cpf-cnpj        2.99 kB         180 kB
+├ ○ /components/sg-input-date            1.46 kB         178 kB
+├ ○ /components/sg-input-email           2.61 kB         179 kB
+├ ○ /components/sg-input-number          4.62 kB         181 kB
+├ ○ /components/sg-input-password        2.65 kB         179 kB
+├ ○ /components/sg-input-phone           2.29 kB         179 kB
+├ ○ /components/sg-input-postal-code     4.72 kB         181 kB
+├ ○ /components/sg-input-text            6.3 kB          183 kB
+├ ○ /components/sg-input-text-area       4.34 kB         181 kB
+├ ○ /components/sg-split-button          3.28 kB         144 kB
+└ ○ /components/sg-wizard                3.31 kB         180 kB
++ First Load JS shared by all            100 kB
+  ├ chunks/59-ec05119638edead4.js        45.6 kB
+  ├ chunks/abf6a57f-0644ee3f20ea10d8.js  52.5 kB
+  └ other shared chunks (total)          1.9 kB
+
+
+○  (Static)  prerendered as static content
+

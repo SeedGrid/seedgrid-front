@@ -1,4 +1,5 @@
 
-> @seedgrid/fe-theme@0.2.0 build C:\empreendedorismo\seedgrid\front\packages\seedgrid-fe-theme
+> @seedgrid/fe-theme@0.3.0 build C:\empreendedorismo\seedgrid\front\packages\seedgrid-fe-theme
 > tsc -p tsconfig.json && node ./scripts/copy-i18n.mjs
 
+copied i18n: C:\empreendedorismo\seedgrid\front\packages\seedgrid-fe-theme\dist\i18n\pt-BR.json

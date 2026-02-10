@@ -50,60 +50,60 @@ const PRESET: Record<
   Required<Pick<SgButtonCustomColors, "bg" | "fg" | "border" | "hoverBg" | "ring">>
 > = {
   primary: {
-    bg: "#1d4ed8",
-    fg: "#ffffff",
-    border: "#1d4ed8",
-    hoverBg: "#1e40af",
-    ring: "rgba(29,78,216,.35)"
+    bg: "var(--sg-btn-primary-bg, hsl(var(--primary)))",
+    fg: "var(--sg-btn-primary-fg, hsl(var(--primary-foreground)))",
+    border: "var(--sg-btn-primary-border, hsl(var(--primary)))",
+    hoverBg: "var(--sg-btn-primary-hover-bg, hsl(var(--primary)))",
+    ring: "var(--sg-btn-primary-ring, hsl(var(--primary)/0.35))"
   },
   secondary: {
-    bg: "#64748b",
-    fg: "#ffffff",
-    border: "#64748b",
-    hoverBg: "#475569",
-    ring: "rgba(100,116,139,.35)"
+    bg: "var(--sg-btn-secondary-bg, hsl(var(--secondary)))",
+    fg: "var(--sg-btn-secondary-fg, hsl(var(--secondary-foreground)))",
+    border: "var(--sg-btn-secondary-border, hsl(var(--secondary)))",
+    hoverBg: "var(--sg-btn-secondary-hover-bg, hsl(var(--secondary)))",
+    ring: "var(--sg-btn-secondary-ring, hsl(var(--secondary)/0.35))"
   },
   success: {
-    bg: "#65a30d",
-    fg: "#ffffff",
-    border: "#65a30d",
-    hoverBg: "#4d7c0f",
-    ring: "rgba(101,163,13,.35)"
+    bg: "var(--sg-btn-success-bg, hsl(var(--tertiary, var(--accent))))",
+    fg: "var(--sg-btn-success-fg, hsl(var(--tertiary-foreground, var(--accent-foreground, 0 0% 100%))))",
+    border: "var(--sg-btn-success-border, hsl(var(--tertiary, var(--accent))))",
+    hoverBg: "var(--sg-btn-success-hover-bg, hsl(var(--tertiary, var(--accent))))",
+    ring: "var(--sg-btn-success-ring, hsl(var(--tertiary, var(--accent))/0.35))"
   },
   info: {
-    bg: "#0284c7",
-    fg: "#ffffff",
-    border: "#0284c7",
-    hoverBg: "#0369a1",
-    ring: "rgba(2,132,199,.35)"
+    bg: "var(--sg-btn-info-bg, hsl(var(--secondary, var(--primary))))",
+    fg: "var(--sg-btn-info-fg, hsl(var(--secondary-foreground, var(--primary-foreground))))",
+    border: "var(--sg-btn-info-border, hsl(var(--secondary, var(--primary))))",
+    hoverBg: "var(--sg-btn-info-hover-bg, hsl(var(--secondary, var(--primary))))",
+    ring: "var(--sg-btn-info-ring, hsl(var(--secondary, var(--primary))/0.35))"
   },
   warning: {
-    bg: "#f59e0b",
-    fg: "#111827",
-    border: "#f59e0b",
-    hoverBg: "#d97706",
-    ring: "rgba(245,158,11,.35)"
+    bg: "var(--sg-btn-warning-bg, hsl(var(--secondary, var(--accent))))",
+    fg: "var(--sg-btn-warning-fg, hsl(var(--secondary-foreground, var(--accent-foreground, 0 0% 100%))))",
+    border: "var(--sg-btn-warning-border, hsl(var(--secondary, var(--accent))))",
+    hoverBg: "var(--sg-btn-warning-hover-bg, hsl(var(--secondary, var(--accent))))",
+    ring: "var(--sg-btn-warning-ring, hsl(var(--secondary, var(--accent))/0.35))"
   },
   help: {
-    bg: "#9333ea",
-    fg: "#ffffff",
-    border: "#9333ea",
-    hoverBg: "#7e22ce",
-    ring: "rgba(147,51,234,.35)"
+    bg: "var(--sg-btn-help-bg, hsl(var(--secondary, var(--primary))))",
+    fg: "var(--sg-btn-help-fg, hsl(var(--secondary-foreground, var(--primary-foreground))))",
+    border: "var(--sg-btn-help-border, hsl(var(--secondary, var(--primary))))",
+    hoverBg: "var(--sg-btn-help-hover-bg, hsl(var(--secondary, var(--primary))))",
+    ring: "var(--sg-btn-help-ring, hsl(var(--secondary, var(--primary))/0.35))"
   },
   danger: {
-    bg: "#dc2626",
-    fg: "#ffffff",
-    border: "#dc2626",
-    hoverBg: "#b91c1c",
-    ring: "rgba(220,38,38,.35)"
+    bg: "var(--sg-btn-danger-bg, hsl(var(--destructive)))",
+    fg: "var(--sg-btn-danger-fg, hsl(var(--destructive-foreground)))",
+    border: "var(--sg-btn-danger-border, hsl(var(--destructive)))",
+    hoverBg: "var(--sg-btn-danger-hover-bg, hsl(var(--destructive)))",
+    ring: "var(--sg-btn-danger-ring, hsl(var(--destructive)/0.35))"
   },
   plain: {
-    bg: "#e5e7eb",
-    fg: "#111827",
-    border: "#d1d5db",
-    hoverBg: "#d1d5db",
-    ring: "rgba(17,24,39,.20)"
+    bg: "var(--sg-btn-plain-bg, hsl(var(--muted)))",
+    fg: "var(--sg-btn-plain-fg, hsl(var(--muted-foreground)))",
+    border: "var(--sg-btn-plain-border, hsl(var(--muted)))",
+    hoverBg: "var(--sg-btn-plain-hover-bg, hsl(var(--muted)))",
+    ring: "var(--sg-btn-plain-ring, hsl(var(--muted)/0.35))"
   }
 };
 
@@ -116,10 +116,12 @@ const SIZE: Record<
   lg: { h: "h-12", px: "px-5", text: "text-base", gap: "gap-2.5", icon: "size-5", radius: "rounded-xl" }
 };
 
-function buildVars(severity: Severity, custom?: SgButtonCustomColors): React.CSSProperties {
+export function resolveButtonColors(
+  severity: Severity,
+  custom?: SgButtonCustomColors
+): Required<SgButtonCustomColors> {
   const base = PRESET[severity];
-
-  const merged: Required<SgButtonCustomColors> = {
+  return {
     bg: custom?.bg ?? base.bg,
     fg: custom?.fg ?? base.fg,
     border: custom?.border ?? base.border,
@@ -129,7 +131,10 @@ function buildVars(severity: Severity, custom?: SgButtonCustomColors): React.CSS
     activeBg: custom?.activeBg ?? (custom?.hoverBg ?? base.hoverBg),
     ring: custom?.ring ?? base.ring
   };
+}
 
+function buildVars(severity: Severity, custom?: SgButtonCustomColors): React.CSSProperties {
+  const merged = resolveButtonColors(severity, custom);
   return {
     ["--sg-btn-bg" as any]: merged.bg,
     ["--sg-btn-fg" as any]: merged.fg,

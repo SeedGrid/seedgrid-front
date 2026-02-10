@@ -1,10 +1,11 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgWizardPageProps = {
   title?: string;
+  icon?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 };
@@ -19,6 +20,8 @@ export type SgWizardLabels = {
   finish: string;
 };
 
+export type SgWizardStepper = "numbered" | "icons" | "none";
+
 export type SgWizardProps = {
   children: React.ReactNode;
   onFinish: () => void | Promise<void>;
@@ -28,14 +31,94 @@ export type SgWizardProps = {
   validateStep?: (index: number) => boolean | Promise<boolean>;
   initialStep?: number;
   labels?: Partial<SgWizardLabels>;
+  stepper?: SgWizardStepper;
   className?: string;
 };
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function StepperBar({
+  pages,
+  currentStep,
+  mode
+}: {
+  pages: Array<React.ReactElement<SgWizardPageProps>>;
+  currentStep: number;
+  mode: "numbered" | "icons";
+}) {
+  return (
+    <nav aria-label="Progress" className="mb-8">
+      <ol className="flex items-center">
+        {pages.map((page, i) => {
+          const isCompleted = i < currentStep;
+          const isCurrent = i === currentStep;
+          const title = page.props.title ?? `Step ${i + 1}`;
+          const icon = page.props.icon;
+          const isLast = i === pages.length - 1;
+
+          return (
+            <li key={i} className={`flex items-center ${isLast ? "" : "flex-1"}`}>
+              <div className="flex flex-col items-center">
+                {/* Circle */}
+                <div
+                  className={`flex items-center justify-center rounded-full border-2 transition-colors duration-200 ${
+                    isCompleted
+                      ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-white"
+                      : isCurrent
+                        ? "border-[hsl(var(--primary))] bg-white text-[hsl(var(--primary))]"
+                        : "border-gray-300 bg-white text-gray-400"
+                  }`}
+                  style={{ width: 40, height: 40 }}
+                >
+                  {isCompleted ? (
+                    <CheckIcon className="size-5" />
+                  ) : mode === "icons" && icon ? (
+                    <span className="flex items-center justify-center size-5">{icon}</span>
+                  ) : (
+                    <span className="text-sm font-semibold">{i + 1}</span>
+                  )}
+                </div>
+                {/* Label */}
+                <span
+                  className={`mt-2 text-xs font-medium text-center max-w-[80px] leading-tight ${
+                    isCompleted || isCurrent ? "text-[hsl(var(--primary))]" : "text-gray-400"
+                  }`}
+                >
+                  {title}
+                </span>
+              </div>
+
+              {/* Connector line */}
+              {!isLast ? (
+                <div className="flex-1 mx-2 self-start" style={{ marginTop: 19 }}>
+                  <div
+                    className={`h-0.5 w-full transition-colors duration-200 ${
+                      isCompleted ? "bg-[hsl(var(--primary))]" : "bg-gray-200"
+                    }`}
+                  />
+                </div>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
 
 export function SgWizard(props: SgWizardProps) {
   const i18n = useComponentsI18n();
   const pages = React.Children.toArray(props.children).filter(
     (child) => React.isValidElement(child) && child.type === SgWizardPage
   ) as Array<React.ReactElement<SgWizardPageProps>>;
+
+  const stepper = props.stepper ?? "none";
 
   const [step, setStep] = React.useState(() => {
     const idx = props.initialStep ?? 0;
@@ -125,6 +208,9 @@ export function SgWizard(props: SgWizardProps) {
 
   return (
     <div className={props.className}>
+      {stepper !== "none" ? (
+        <StepperBar pages={pages} currentStep={step} mode={stepper} />
+      ) : null}
       <div ref={pageRef}>{pages[step]}</div>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -163,6 +249,3 @@ export function SgWizard(props: SgWizardProps) {
     </div>
   );
 }
-
-
-

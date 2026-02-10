@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { SgButton } from "./SgButton";
+import { SgButton, resolveButtonColors } from "./SgButton";
 import type { SgButtonCustomColors } from "./SgButton";
 
 type Severity =
@@ -39,17 +39,6 @@ export type SgSplitButtonProps = {
   items: SgSplitButtonItem[];
   customColors?: SgButtonCustomColors;
   className?: string;
-};
-
-const SEVERITY_COLORS: Record<Severity, { bg: string; hoverBg: string; border: string; fg: string }> = {
-  primary:   { bg: "#1d4ed8", hoverBg: "#1e40af", border: "#1d4ed8", fg: "#ffffff" },
-  secondary: { bg: "#64748b", hoverBg: "#475569", border: "#64748b", fg: "#ffffff" },
-  success:   { bg: "#65a30d", hoverBg: "#4d7c0f", border: "#65a30d", fg: "#ffffff" },
-  info:      { bg: "#0284c7", hoverBg: "#0369a1", border: "#0284c7", fg: "#ffffff" },
-  warning:   { bg: "#f59e0b", hoverBg: "#d97706", border: "#f59e0b", fg: "#111827" },
-  help:      { bg: "#9333ea", hoverBg: "#7e22ce", border: "#9333ea", fg: "#ffffff" },
-  danger:    { bg: "#dc2626", hoverBg: "#b91c1c", border: "#dc2626", fg: "#ffffff" },
-  plain:     { bg: "#e5e7eb", hoverBg: "#d1d5db", border: "#d1d5db", fg: "#111827" }
 };
 
 function ChevronDown({ className }: { className?: string }) {
@@ -121,11 +110,18 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
       setOpen(false);
     };
 
-    const colors = SEVERITY_COLORS[severity];
+    const colors = resolveButtonColors(severity, customColors);
     const menuBg = appearance === "solid" ? colors.bg : "#ffffff";
     const menuFg = appearance === "solid" ? colors.fg : colors.bg;
-    const menuHoverBg = appearance === "solid" ? colors.hoverBg : `${colors.bg}18`;
-    const menuBorder = appearance === "outline" ? colors.border : appearance === "solid" ? colors.hoverBg : "transparent";
+    const menuHoverBg = appearance === "solid"
+      ? colors.hoverBg
+      : `color-mix(in_srgb, ${colors.bg} 12%, transparent)`;
+    const menuBorder =
+      appearance === "outline"
+        ? colors.border
+        : appearance === "solid"
+          ? colors.hoverBg
+          : "transparent";
 
     const dividerBorderClass =
       appearance === "solid"

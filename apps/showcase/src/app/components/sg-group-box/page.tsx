@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import {
   SgGroupBox,
-  SgInputCEP,
+  SgInputPostalCode,
   SgInputEmail,
   SgInputPassword,
   SgInputPhone,
@@ -84,7 +84,7 @@ export default function SgGroupBoxPage() {
                 <SgInputText id="name" name="name" control={control} label={t(i18n, "showcase.component.groupBox.labels.fullName")} required />
                 <SgInputEmail id="email" name="email" control={control} label={t(i18n, "showcase.component.groupBox.labels.email")} required />
                 <SgInputPhone id="phone" name="phone" control={control} label={t(i18n, "showcase.component.groupBox.labels.phone")} required />
-                <SgInputCEP id="cep" name="cep" control={control} label={t(i18n, "showcase.component.groupBox.labels.cep")} required />
+                <SgInputPostalCode id="cep" name="cep" control={control} label={t(i18n, "showcase.component.groupBox.labels.cep")} required />
                 <div className="sm:col-span-2">
                   <SgInputPassword id="password" name="password" control={control} label={t(i18n, "showcase.component.groupBox.labels.password")} required />
                 </div>
@@ -100,7 +100,7 @@ export default function SgGroupBoxPage() {
 import { useForm } from "react-hook-form";
 import {
   SgGroupBox,
-  SgInputCEP,
+  SgInputPostalCode,
   SgInputEmail,
   SgInputPassword,
   SgInputPhone,
@@ -128,7 +128,7 @@ export default function Example() {
           <SgInputText id="name" name="name" control={control} label="${t(i18n, "showcase.component.groupBox.labels.fullName")}" required />
           <SgInputEmail id="email" name="email" control={control} label="${t(i18n, "showcase.component.groupBox.labels.email")}" required />
           <SgInputPhone id="phone" name="phone" control={control} label="${t(i18n, "showcase.component.groupBox.labels.phone")}" required />
-          <SgInputCEP id="cep" name="cep" control={control} label="${t(i18n, "showcase.component.groupBox.labels.cep")}" required />
+          <SgInputPostalCode id="cep" name="cep" control={control} label="${t(i18n, "showcase.component.groupBox.labels.cep")}" required />
           <div className="sm:col-span-2">
             <SgInputPassword id="password" name="password" control={control} label="${t(i18n, "showcase.component.groupBox.labels.password")}" required />
           </div>

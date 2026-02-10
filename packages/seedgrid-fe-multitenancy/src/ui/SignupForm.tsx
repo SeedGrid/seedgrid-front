@@ -10,7 +10,7 @@ import {
   SgInputEmail,
   SgInputPassword,
   SgInputBirthDate,
-  SgInputCEP,
+  SgInputPostalCode,
   SgInputPhone,
   SgGroupBox,
   isValidCnpj
@@ -97,7 +97,7 @@ type SignupLabels = {
 const DEFAULT_LABELS: SignupLabels = {
   title: "Crie sua conta em minutos",
   subtitle: "Preencha os dados abaixo para configurar sua conta e criar o acesso inicial ao {appName}.",
-  disclaimer: "Ao continuar, você confirma que as informações fornecidas são verdadeiras.",
+  disclaimer: "Ao continuar, vocï¿½ confirma que as informaï¿½ï¿½es fornecidas sï¿½o verdadeiras.",
   submit: "Criar conta"
 };
 
@@ -226,7 +226,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
           <section className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-foreground">Dados da empresa</h2>
-              <p className="text-sm text-foreground/60">Use o domínio e as informações fiscais oficiais.</p>
+              <p className="text-sm text-foreground/60">Use o domï¿½nio e as informaï¿½ï¿½es fiscais oficiais.</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-12">
@@ -241,8 +241,8 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                       error={errors.cnpj?.message}
                       required
                       requiredMessage="Informe o CNPJ."
-                      lengthMessage="CNPJ deve ter 14 dígitos."
-                      invalidMessage="CNPJ inválido."
+                      lengthMessage="CNPJ deve ter 14 dï¿½gitos."
+                      invalidMessage="CNPJ invï¿½lido."
                       inputProps={{
                         ...cnpjRegister,
                         onBlur: async (event) => {
@@ -259,9 +259,9 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
               <div className="sm:col-span-8">
                 <SgInputText
                   id="corporateName"
-                  label="Razão social"
+                  label="Razï¿½o social"
                   error={errors.corporateName?.message}
-                  inputProps={register("corporateName", { required: "Informe a razão social." })}
+                  inputProps={register("corporateName", { required: "Informe a razï¿½o social." })}
                 />
               </div>
 
@@ -277,33 +277,34 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
               <div className="sm:col-span-4">
                 <SgInputText
                   id="subdomain"
-                  label="Subdomínio"
+                  label="Subdomï¿½nio"
                   error={errors.subdomain?.message}
                   inputProps={register("subdomain", {
-                    required: "Informe o subdomínio.",
+                    required: "Informe o subdomï¿½nio.",
                     pattern: {
                       value: /^[a-z0-9-]{3,}$/i,
-                      message: "Use apenas letras, números e hífen."
+                      message: "Use apenas letras, nï¿½meros e hï¿½fen."
                     }
                   })}
                 />
               </div>
             </div>
 
-            <SgGroupBox title="Endereço">
+            <SgGroupBox title="Endereï¿½o">
               <div className="grid gap-4 sm:grid-cols-12">
                 {(() => {
                   const cepRegister = register("address.postalCode");
 
                   return (
                     <div className="space-y-1 sm:col-span-2">
-                      <SgInputCEP
+                      <SgInputPostalCode
                         id="address-postal"
                         label="CEP"
+                        country="BR"
                         error={errors.address?.postalCode?.message}
                         required
                         requiredMessage="Informe o CEP."
-                        lengthMessage="CEP deve ter 8 dígitos."
+                        lengthMessage="CEP deve ter 8 d\u00edgitos."
                         inputProps={{
                           ...cepRegister,
                           onBlur: async (event) => {
@@ -312,7 +313,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                           }
                         }}
                       />
-                      <p className="text-xs text-foreground/50">Ao digitar o CEP, buscamos o endereço.</p>
+                      <p className="text-xs text-foreground/50">Ao digitar o CEP, buscamos o endereï¿½o.</p>
                     </div>
                   );
                 })()}
@@ -329,9 +330,9 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                 <div className="sm:col-span-3">
                   <SgInputText
                     id="address-number"
-                    label="Número"
+                    label="Nï¿½mero"
                     error={errors.address?.number?.message}
-                    inputProps={register("address.number", { required: "Informe o número." })}
+                    inputProps={register("address.number", { required: "Informe o nï¿½mero." })}
                   />
                 </div>
 
@@ -380,7 +381,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                   error={errors.address?.phone?.message}
                   required
                   requiredMessage="Informe o telefone."
-                  lengthMessage="Telefone inválido."
+                  lengthMessage="Telefone invï¿½lido."
                   inputProps={register("address.phone")}
                 />
                 </div>
@@ -388,7 +389,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
             </SgGroupBox>
           </section>
 
-          <SgGroupBox title="Responsável legal" className="mt-6">
+          <SgGroupBox title="Responsï¿½vel legal" className="mt-6">
             <div className="grid gap-4 sm:grid-cols-12">
               <div className="sm:col-span-3">
                 <SgInputCPF
@@ -397,8 +398,8 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                   error={errors.legalRepresentative?.cpf?.message}
                   required
                   requiredMessage="Informe o CPF."
-                  lengthMessage="CPF deve ter 11 dígitos."
-                  invalidMessage="CPF inválido."
+                  lengthMessage="CPF deve ter 11 dï¿½gitos."
+                  invalidMessage="CPF invï¿½lido."
                   inputProps={register("legalRepresentative.cpf")}
                 />
               </div>
@@ -448,7 +449,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                   error={errors.legalRepresentative?.phone?.message}
                   required
                   requiredMessage="Informe o telefone."
-                  lengthMessage="Telefone inválido."
+                  lengthMessage="Telefone invï¿½lido."
                   inputProps={register("legalRepresentative.phone")}
                 />
               </div>
@@ -460,7 +461,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                   error={errors.legalRepresentative?.whatsapp?.message}
                   required
                   requiredMessage="Informe o WhatsApp."
-                  lengthMessage="WhatsApp inválido."
+                  lengthMessage="WhatsApp invï¿½lido."
                   inputProps={register("legalRepresentative.whatsapp")}
                 />
               </div>
@@ -475,7 +476,7 @@ export function MultitenancySignupForm(props: { appName?: string; labels?: Parti
                 error={errors.rootEmail?.message}
                 required
                 requiredMessage="Informe o email."
-                invalidMessage="Email inválido."
+                invalidMessage="Email invï¿½lido."
                 inputProps={register("rootEmail")}
               />
 

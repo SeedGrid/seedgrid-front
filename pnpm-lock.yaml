@@ -59,6 +59,9 @@ importers:
       '@seedgrid/fe-components':
         specifier: workspace:*
         version: link:../../packages/seedgrid-fe-components
+      '@seedgrid/fe-theme':
+        specifier: workspace:*
+        version: link:../../packages/seedgrid-fe-theme
       next:
         specifier: 15.0.7
         version: 15.0.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
