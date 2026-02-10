@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../i18n";
 
 /* ── helpers ── */
 
@@ -51,6 +52,8 @@ export type SgFloatActionButtonProps = {
   activeIcon?: React.ReactNode;
   position?: FABPosition;
   offset?: { x?: number; y?: number };
+  enableDragDrop?: boolean;
+  dragId?: string;
   severity?: FABSeverity;
   // Backwards compatibility
   variant?: FABSeverity;
@@ -290,9 +293,11 @@ function slideInit(pos: FABPosition): string {
 /* ── component ── */
 
 export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
+  const i18n = useComponentsI18n();
   const {
     hint, hintDelay = 300, icon, activeIcon,
     position = "right-bottom", offset,
+    enableDragDrop = false, dragId,
     severity = "primary", variant, color,
     size = "md", shape = "circle", elevation = "md",
     disabled = false, loading = false,
@@ -312,8 +317,22 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
   const [hintShow, setHintShow] = React.useState(false);
+  const [dragPos, setDragPos] = React.useState<{ x: number; y: number } | null>(null);
+  const dragPosRef = React.useRef<{ x: number; y: number } | null>(null);
+  const hasStoredPosRef = React.useRef(false);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const MENU_WIDTH = 180;
+  const MENU_HEIGHT = 96;
+  const [menuDir, setMenuDir] = React.useState<{ h: "left" | "right"; v: "up" | "down" }>({
+    h: "left",
+    v: "up"
+  });
+  const dragStart = React.useRef<{ x: number; y: number; left: number; top: number } | null>(null);
+  const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const hintTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isAbsolute = absolute === true;
 
   React.useEffect(() => { const t = setTimeout(() => setMounted(true), 20); return () => clearTimeout(t); }, []);
 
@@ -339,6 +358,39 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   }, [autoHideOnScroll, hideDirection]);
 
   React.useEffect(() => {
+    if (!enableDragDrop || !dragId) return;
+    try {
+      const stored = localStorage.getItem(`sg-fab-pos:${dragId}`);
+      if (!stored) return;
+      const parsed = JSON.parse(stored) as { x?: number; y?: number } | null;
+      if (!parsed || !Number.isFinite(parsed.x) || !Number.isFinite(parsed.y)) {
+        localStorage.removeItem(`sg-fab-pos:${dragId}`);
+        return;
+      }
+      const wh = BTN_WH[size];
+      let maxX = Math.max(0, window.innerWidth - wh);
+      let maxY = Math.max(0, window.innerHeight - wh);
+      if (isAbsolute && containerRef.current) {
+        const parent = containerRef.current.offsetParent as HTMLElement | null;
+        if (parent) {
+          const rect = parent.getBoundingClientRect();
+          maxX = Math.max(0, rect.width - wh);
+          maxY = Math.max(0, rect.height - wh);
+        }
+      }
+      const clamped = {
+        x: Math.min(Math.max(parsed.x, 0), maxX),
+        y: Math.min(Math.max(parsed.y, 0), maxY)
+      };
+      dragPosRef.current = clamped;
+      setDragPos(clamped);
+      hasStoredPosRef.current = true;
+    } catch {
+      // ignore
+    }
+  }, [enableDragDrop, dragId, size, isAbsolute]);
+
+  React.useEffect(() => {
     if (!open) return;
     const onMd = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
@@ -348,6 +400,17 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     document.addEventListener("keydown", onKey);
     return () => { document.removeEventListener("mousedown", onMd); document.removeEventListener("keydown", onKey); };
   }, [open]);
+
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const onMd = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("mousedown", onMd);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onMd); document.removeEventListener("keydown", onKey); };
+  }, [menuOpen]);
 
   const onEnter = React.useCallback(() => {
     setHovered(true);
@@ -362,10 +425,120 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
 
   const handleClick = React.useCallback(() => {
     if (disabled || loading) return;
+    if (enableDragDrop && dragMoved.current) {
+      dragMoved.current = false;
+      return;
+    }
+    if (menuOpen) {
+      setMenuOpen(false);
+      return;
+    }
     setClicked(true);
     if (actions && actions.length > 0) setOpen((p) => !p);
     else onClick?.();
-  }, [disabled, loading, actions, onClick]);
+  }, [disabled, loading, actions, onClick, enableDragDrop, menuOpen]);
+
+  const handlePointerDown = React.useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return;
+    if (!enableDragDrop || disabled || loading) return;
+    if (!containerRef.current) return;
+    event.preventDefault();
+    const rect = containerRef.current.getBoundingClientRect();
+    const parent = isAbsolute
+      ? ((containerRef.current.offsetParent as HTMLElement | null)?.getBoundingClientRect() ?? {
+        left: 0,
+        top: 0
+      })
+      : { left: 0, top: 0 };
+    dragStart.current = {
+      x: event.clientX,
+      y: event.clientY,
+      left: rect.left - parent.left,
+      top: rect.top - parent.top
+    };
+    dragMoved.current = false;
+    setIsDragging(true);
+    const handleMove = (moveEvent: PointerEvent) => {
+      if (!dragStart.current) return;
+      const dx = moveEvent.clientX - dragStart.current.x;
+      const dy = moveEvent.clientY - dragStart.current.y;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        dragMoved.current = true;
+        if (actions && actions.length > 0) setOpen(true);
+      }
+      const nextPos = {
+        x: dragStart.current.left + dx,
+        y: dragStart.current.top + dy
+      };
+      dragPosRef.current = nextPos;
+      setDragPos(nextPos);
+      hasStoredPosRef.current = true;
+    };
+
+    const handleUp = () => {
+      setIsDragging(false);
+      dragStart.current = null;
+      if (enableDragDrop && dragId && dragPosRef.current) {
+        try {
+          localStorage.setItem(`sg-fab-pos:${dragId}`, JSON.stringify(dragPosRef.current));
+        } catch {
+          // ignore
+        }
+      }
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleUp);
+    };
+
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleUp);
+  }, [enableDragDrop, disabled, loading, actions, dragId, isAbsolute]);
+
+  const handleContextMenu = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!enableDragDrop || !dragId) return;
+    if (!hasStoredPosRef.current) return;
+    event.preventDefault();
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const menuWidth = MENU_WIDTH;
+    const menuHeight = MENU_HEIGHT;
+    const parent = isAbsolute
+      ? ((containerRef.current.offsetParent as HTMLElement | null)?.getBoundingClientRect() ?? {
+        left: 0,
+        top: 0,
+        right: window.innerWidth,
+        bottom: window.innerHeight
+      })
+      : { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
+    const relLeft = rect.left - parent.left;
+    const relTop = rect.top - parent.top;
+    const spaceRight = parent.right - rect.right;
+    const spaceLeft = rect.left - parent.left;
+    const spaceBottom = parent.bottom - rect.bottom;
+    const spaceTop = rect.top - parent.top;
+    const h = spaceRight >= menuWidth || spaceRight >= spaceLeft ? "right" : "left";
+    const v = spaceBottom >= menuHeight || spaceBottom >= spaceTop ? "down" : "up";
+    setMenuDir({ h, v });
+    setMenuOpen(true);
+  }, [enableDragDrop, dragId, i18n, isAbsolute]);
+
+  const handleResetConfirm = React.useCallback((confirmed: boolean) => {
+    if (!confirmed || !dragId) {
+      setMenuOpen(false);
+      return;
+    }
+    try {
+      localStorage.removeItem(`sg-fab-pos:${dragId}`);
+    } catch {
+      // ignore
+    }
+    dragPosRef.current = null;
+    setDragPos(null);
+    setOpen(false);
+    setMenuOpen(false);
+    hasStoredPosRef.current = false;
+  }, [dragId]);
 
   /* colors */
   const resolvedSeverity = severity ?? variant ?? "primary";
@@ -382,6 +555,12 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
 
   /* container position */
   const posStyle: React.CSSProperties = { position: absolute ? "absolute" : "fixed", ...POS_CSS[position], zIndex };
+  if (enableDragDrop && dragPos) {
+    posStyle.left = dragPos.x;
+    posStyle.top = dragPos.y;
+    delete posStyle.right;
+    delete posStyle.bottom;
+  }
   if (offset?.x) {
     if (posStyle.right !== undefined) posStyle.right = (typeof posStyle.right === "number" ? posStyle.right : 0) - offset.x;
     else if (posStyle.left !== undefined) posStyle.left = (typeof posStyle.left === "number" ? posStyle.left : 0) + offset.x;
@@ -392,7 +571,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   }
 
   const txParts: string[] = [];
-  const ctx = CENTER_TX[position];
+  const ctx = enableDragDrop && dragPos ? undefined : CENTER_TX[position];
   if (ctx) txParts.push(ctx);
   if (hidden) txParts.push(hideDirection === "down" ? "translateY(100px)" : "translateY(-100px)");
 
@@ -435,6 +614,10 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
         ...style,
       }}
       className={cn("inline-flex items-center justify-center", className)}
+      onContextMenu={(event) => {
+        if (!enableDragDrop || !dragId) return;
+        handleContextMenu(event as unknown as React.MouseEvent<HTMLButtonElement>);
+      }}
     >
       {animation === "pulse" && (
         <style>{`@keyframes sg-fab-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}`}</style>
@@ -501,6 +684,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
           "focus-visible:outline-none focus-visible:ring-4",
           "disabled:opacity-60 disabled:cursor-not-allowed",
           "transition-[filter] duration-150",
+          enableDragDrop ? (isDragging ? "cursor-grabbing" : "cursor-pointer") : "",
           SHAPE_CLS[shape],
           ELEV_CLS[elevation],
         )}
@@ -511,6 +695,8 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
           ...anim,
         }}
         onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onContextMenu={handleContextMenu}
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         aria-label={hint ?? (open ? "Close" : "Open")}
@@ -541,6 +727,38 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
           </span>
         ) : null}
       </button>
+
+      {menuOpen ? (
+        <div
+          className="absolute z-20 min-w-[180px] rounded-md border border-border bg-white shadow-lg"
+          style={{
+            left: menuDir.h === "right" ? wh + 8 : -(MENU_WIDTH + 8),
+            top:
+              menuDir.v === "down"
+                ? 0
+                : -(MENU_HEIGHT - wh)
+          }}
+        >
+          <div className="rounded-t-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground">
+            {t(i18n, "components.fab.resetPosition")}
+          </div>
+          <div className="border-t border-border" />
+          <button
+            type="button"
+            className="w-full px-3 py-2 text-left text-sm hover:bg-muted"
+            onClick={() => handleResetConfirm(true)}
+          >
+            {t(i18n, "components.fab.yes")}
+          </button>
+          <button
+            type="button"
+            className="w-full px-3 py-2 text-left text-sm hover:bg-muted"
+            onClick={() => handleResetConfirm(false)}
+          >
+            {t(i18n, "components.fab.no")}
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

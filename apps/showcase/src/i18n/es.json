@@ -802,6 +802,8 @@
   "showcase.component.fab.sections.animations.description": "Diferentes tipos de animacion al montar: scale, fade, rotate, slide y pulse.",
   "showcase.component.fab.sections.disabled.title": "Loading y Deshabilitado",
   "showcase.component.fab.sections.disabled.description": "Estados loading y disabled.",
+  "showcase.component.fab.sections.dragDrop.title": "Arrastrar y soltar",
+  "showcase.component.fab.sections.dragDrop.description": "Arrastra el FAB para reposicionarlo. La posici\u00f3n se guarda en localStorage.",
   "showcase.component.fab.sections.customColor.title": "Color Personalizado",
   "showcase.component.fab.sections.customColor.description": "Use la prop color para definir un color personalizado (hex, rgb, hsl o variable CSS).",
   "showcase.component.fab.labels.newUser": "Nuevo usuario",

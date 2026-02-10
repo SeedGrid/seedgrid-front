@@ -802,6 +802,8 @@
   "showcase.component.fab.sections.animations.description": "Different mount animation types: scale, fade, rotate, slide and pulse.",
   "showcase.component.fab.sections.disabled.title": "Loading & Disabled",
   "showcase.component.fab.sections.disabled.description": "Loading and disabled states.",
+  "showcase.component.fab.sections.dragDrop.title": "Drag & Drop",
+  "showcase.component.fab.sections.dragDrop.description": "Drag the FAB to reposition it. The position is saved in localStorage.",
   "showcase.component.fab.sections.customColor.title": "Custom Color",
   "showcase.component.fab.sections.customColor.description": "Use the color prop to set a custom color (hex, rgb, hsl or CSS variable).",
   "showcase.component.fab.labels.newUser": "New user",

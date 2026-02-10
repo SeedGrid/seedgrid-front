@@ -68,5 +68,9 @@
   "components.autocomplete.empty": "No records found.",
   "components.autocomplete.loading": "Loading...",
   "components.inputs.number.min": "Value must be at least {min}.",
-  "components.inputs.number.max": "Value must be at most {max}."
+  "components.inputs.number.max": "Value must be at most {max}.",
+  "components.fab.resetConfirm": "Reset the button position?",
+  "components.fab.resetPosition": "Reset position",
+  "components.fab.yes": "Yes",
+  "components.fab.no": "No"
 }

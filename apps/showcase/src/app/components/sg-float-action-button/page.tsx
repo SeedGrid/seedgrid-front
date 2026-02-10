@@ -500,6 +500,35 @@ export default function SgFloatActionButtonPage() {
         <CodeBlock code={`<SgFloatActionButton disabled />
 <SgFloatActionButton loading />`} />
       </Section>
+
+      {/* ── Drag & Drop ── */}
+      <Section
+        title={t(i18n, "showcase.component.fab.sections.dragDrop.title")}
+        description={t(i18n, "showcase.component.fab.sections.dragDrop.description")}
+      >
+        <DemoBox height="h-64" className="flex items-center justify-center">
+          <SgFloatActionButton
+            enableDragDrop
+            dragId="showcase-fab-drag"
+            actions={actions}
+            type="linear"
+            direction="up"
+            severity="info"
+            absolute
+            position="right-bottom"
+          />
+        </DemoBox>
+        <CodeBlock code={`<SgFloatActionButton
+  enableDragDrop
+  dragId="showcase-fab-drag"
+  actions={actions}
+  type="linear"
+  direction="up"
+  severity="info"
+  absolute
+  position="right-bottom"
+/>`} />
+      </Section>
     </div>
   );
 }

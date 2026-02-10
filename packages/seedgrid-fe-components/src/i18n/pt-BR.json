@@ -67,6 +67,10 @@
   "components.validators.birthdate.ageMax": "A idade deve ser de no máximo {max} anos.",
   "components.autocomplete.empty": "Nenhum registro encontrado.",
   "components.autocomplete.loading": "Carregando...",
-  "components.inputs.number.min": "Valor deve ser no m?nimo {min}.",
-  "components.inputs.number.max": "Valor deve ser no m?ximo {max}."
+  "components.inputs.number.min": "Valor deve ser no m\u00ednimo {min}.",
+  "components.inputs.number.max": "Valor deve ser no m\u00e1ximo {max}.",
+  "components.fab.resetConfirm": "Resetar posi\u00e7\u00e3o do bot\u00e3o?",
+  "components.fab.resetPosition": "Resetar posi\u00e7\u00e3o",
+  "components.fab.yes": "Sim",
+  "components.fab.no": "N\u00e3o"
 }
