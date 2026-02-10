@@ -45,7 +45,7 @@ const SettingsIcon = () => (
 /* ── demo container for absolute positioning ── */
 function DemoBox(props: { children: React.ReactNode; className?: string; height?: string }) {
   return (
-    <div className={`relative w-full rounded-md border border-dashed border-border bg-muted/20 ${props.height ?? "h-48"} ${props.className ?? ""}`}>
+    <div className={`relative w-full rounded-md border border-dashed border-border bg-muted/20 pt-10 ${props.height ?? "h-48"} ${props.className ?? ""}`}>
       {props.children}
     </div>
   );
@@ -208,11 +208,11 @@ export default function SgFloatActionButtonPage() {
             <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;down&quot;</p>
             <SgFloatActionButton absolute position="center-top" actions={actions} type="linear" direction="down" />
           </DemoBox>
-          <DemoBox height="h-24" className="flex items-center justify-end">
+          <DemoBox height="h-24" className="flex items-center justify-end pt-14">
             <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;left&quot;</p>
             <SgFloatActionButton absolute position="right-center" actions={actionsNoLabel} type="linear" direction="left" />
           </DemoBox>
-          <DemoBox height="h-24" className="flex items-center justify-start">
+          <DemoBox height="h-24" className="flex items-center justify-start pt-14">
             <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;right&quot;</p>
             <SgFloatActionButton absolute position="left-center" actions={actionsNoLabel} type="linear" direction="right" />
           </DemoBox>
@@ -437,11 +437,13 @@ export default function SgFloatActionButtonPage() {
         description={t(i18n, "showcase.component.fab.sections.animations.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
-          {(["scale", "fade", "rotate", "slide", "pulse", "none"] as const).map((anim) => (
+          {(["scale", "fade", "rotate", "slide", "pulse", "none"] as const).map((anim) => {
+            const animationOn = anim === "fade" || anim === "slide" ? "mount" : "hover";
+            return (
             <div key={anim} className="flex flex-col items-center gap-2">
               <SgFloatActionButton
                 animation={anim}
-                animationOn="hover"
+                animationOn={animationOn}
                 icon={<HeartIcon />}
                 severity="danger"
                 size="sm"
@@ -450,10 +452,11 @@ export default function SgFloatActionButtonPage() {
               />
               <span className="text-xs text-muted-foreground">{anim}</span>
             </div>
-          ))}
+          )})}
         </div>
-        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="mount" severity="danger" />
+        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="hover" severity="danger" />
 <SgFloatActionButton animation="fade" animationOn="mount" severity="danger" />
+<SgFloatActionButton animation="slide" animationOn="mount" severity="danger" />
 <SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
 <SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
       </Section>

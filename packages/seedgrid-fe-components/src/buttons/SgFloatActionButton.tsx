@@ -570,10 +570,16 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     else if (posStyle.top !== undefined) posStyle.top = (typeof posStyle.top === "number" ? posStyle.top : 0) + offset.y;
   }
 
+  const inlinePosition =
+    !absolute && (style?.position === "relative" || style?.position === "static");
+  const useFloating = !inlinePosition;
+
   const txParts: string[] = [];
-  const ctx = enableDragDrop && dragPos ? undefined : CENTER_TX[position];
+  const ctx = useFloating && !(enableDragDrop && dragPos) ? CENTER_TX[position] : undefined;
   if (ctx) txParts.push(ctx);
-  if (hidden) txParts.push(hideDirection === "down" ? "translateY(100px)" : "translateY(-100px)");
+  if (useFloating && hidden) {
+    txParts.push(hideDirection === "down" ? "translateY(100px)" : "translateY(-100px)");
+  }
 
   /* button animation */
   const anim: React.CSSProperties = { transition: `transform ${animationDuration}ms ease, opacity ${animationDuration}ms ease` };
@@ -602,15 +608,14 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const actPos = computeItemPositions((actions ?? []).length, type, dir, size, radius);
 
   const isOff = disabled || loading;
-
   return (
     <div
       ref={containerRef}
       style={{
-        ...posStyle,
+        ...(inlinePosition ? { position: style?.position as React.CSSProperties["position"] } : posStyle),
         transform: txParts.length > 0 ? txParts.join(" ") : undefined,
         transition: "transform 300ms ease, opacity 300ms ease",
-        opacity: hidden ? 0 : 1,
+        opacity: useFloating && hidden ? 0 : 1,
         ...style,
       }}
       className={cn("inline-flex items-center justify-center", className)}

@@ -9,7 +9,9 @@ import {
   componentsMessagesPtBr,
   componentsMessagesPtPt,
   componentsMessagesEnUs,
-  componentsMessagesEs
+  componentsMessagesEs,
+  SgAutocomplete,
+  type SgAutocompleteItem
 } from "@seedgrid/fe-components";
 import {
   ShowcaseI18nProvider,
@@ -22,33 +24,34 @@ import {
   type ShowcaseLocale
 } from "../i18n";
 import { ThemeEditor } from "./ThemeEditor";
+import { useRouter } from "next/navigation";
 
 const COMPONENTS = [
-  { slug: "sg-input-text", label: "SgInputText" },
-  { slug: "sg-input-number", label: "SgInputNumber" },
-  { slug: "sg-currency-edit", label: "SgCurrencyEdit" },
-  { slug: "sg-input-text-area", label: "SgInputTextArea" },
-  { slug: "sg-input-password", label: "SgInputPassword" },
-  { slug: "sg-input-select", label: "SgInputSelect" },
-  { slug: "sg-input-date", label: "SgInputDate" },
-  { slug: "sg-input-birth-date", label: "SgInputBirthDate" },
-  { slug: "sg-input-email", label: "SgInputEmail" },
-  { slug: "sg-input-cpf", label: "SgInputCPF" },
-  { slug: "sg-input-cnpj", label: "SgInputCNPJ" },
-  { slug: "sg-input-cpf-cnpj", label: "SgInputCPFCNPJ" },
-  { slug: "sg-input-postal-code", label: "SgInputPostalCode" },
-  { slug: "sg-input-phone", label: "SgInputPhone" },
-  { slug: "sg-autocomplete", label: "SgAutocomplete" },
-  { slug: "sg-button", label: "SgButton" },
-  { slug: "sg-split-button", label: "SgSplitButton" },
-  { slug: "sg-float-action-button", label: "SgFloatActionButton" },
-  { slug: "sg-group-box", label: "SgGroupBox" },
-  { slug: "sg-wizard", label: "SgWizard" },
-  { slug: "sg-benchmark", label: "Benchmark" }
+  { group: "Inputs", slug: "sg-input-text", label: "SgInputText" },
+  { group: "Inputs", slug: "sg-input-number", label: "SgInputNumber" },
+  { group: "Inputs", slug: "sg-currency-edit", label: "SgCurrencyEdit" },
+  { group: "Inputs", slug: "sg-input-text-area", label: "SgInputTextArea" },
+  { group: "Inputs", slug: "sg-input-password", label: "SgInputPassword" },
+  { group: "Inputs", slug: "sg-input-select", label: "SgInputSelect" },
+  { group: "Inputs", slug: "sg-input-date", label: "SgInputDate" },
+  { group: "Inputs", slug: "sg-input-birth-date", label: "SgInputBirthDate" },
+  { group: "Inputs", slug: "sg-input-email", label: "SgInputEmail" },
+  { group: "Inputs", slug: "sg-input-cpf", label: "SgInputCPF" },
+  { group: "Inputs", slug: "sg-input-cnpj", label: "SgInputCNPJ" },
+  { group: "Inputs", slug: "sg-input-cpf-cnpj", label: "SgInputCPFCNPJ" },
+  { group: "Inputs", slug: "sg-input-postal-code", label: "SgInputPostalCode" },
+  { group: "Inputs", slug: "sg-input-phone", label: "SgInputPhone" },
+  { group: "Inputs", slug: "sg-autocomplete", label: "SgAutocomplete" },
+  { group: "Buttons", slug: "sg-button", label: "SgButton" },
+  { group: "Buttons", slug: "sg-split-button", label: "SgSplitButton" },
+  { group: "Buttons", slug: "sg-float-action-button", label: "SgFloatActionButton" },
+  { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
+  { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
+  { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];
 
 const THEME_ITEMS = [
-  { slug: "theme", label: "🎨 Theme System", isTheme: true }
+  { slug: "theme", label: "Theme System", isTheme: true }
 ];
 
 const LOCALES: Array<{ value: ShowcaseLocale; label: string }> = [
@@ -102,6 +105,7 @@ export default function ShowcaseShell(props: {
   initialLocale?: ShowcaseLocale;
   initialMessages?: Record<string, string>;
 }) {
+  const router = useRouter();
   const [locale, setLocale] = React.useState<ShowcaseLocale>(props.initialLocale ?? "pt-BR");
   const [messages, setMessages] = React.useState<Record<string, string>>(
     props.initialMessages ?? showcaseMessagesPtBr
@@ -151,7 +155,7 @@ export default function ShowcaseShell(props: {
         messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr}
       >
         <div className="flex min-h-screen">
-          <aside className="w-64 shrink-0 border-r border-border bg-muted/30 p-4 overflow-y-auto">
+          <aside className="w-72 shrink-0 border-r border-border bg-muted/30 p-4 overflow-y-auto overflow-x-hidden sticky top-0 h-screen">
             <Link href="/" className="block mb-6">
               <span className="text-lg font-bold text-primary">{t({ locale, messages }, "showcase.app.brand")}</span>
               <span className="block text-xs text-muted-foreground">
@@ -168,6 +172,47 @@ export default function ShowcaseShell(props: {
                 }}
               />
             </div>
+            <div className="mb-4">
+              <SgAutocomplete<SgAutocompleteItem>
+                id="nav-search"
+                label={t({ locale, messages }, "showcase.nav.search.label")}
+                placeholder={t({ locale, messages }, "showcase.nav.search.placeholder")}
+                openOnFocus={false}
+                showDropDownButton
+                minLengthForSearch={1}
+                grouped
+                clearOnSelect
+                source={(query) => {
+                  const q = (query ?? "").toLowerCase();
+                  const items: SgAutocompleteItem[] = [
+                    ...THEME_ITEMS.map((item) => ({
+                      id: item.slug,
+                      label: item.label,
+                      value: item.slug,
+                      group: "Theme",
+                      data: { slug: item.slug, path: `/${item.slug}` }
+                    })),
+                    ...COMPONENTS.map((item) => ({
+                      id: item.slug,
+                      label: item.label,
+                      value: item.slug,
+                      group: item.group,
+                      data: { slug: item.slug, path: `/components/${item.slug}` }
+                    }))
+                  ];
+                  if (!q) return items;
+                  return items.filter((item) =>
+                    item.label.toLowerCase().includes(q) ||
+                    item.value?.toLowerCase().includes(q) ||
+                    item.group?.toLowerCase().includes(q)
+                  );
+                }}
+                onSelect={(item) => {
+                  const path = (item.data as { path?: string } | undefined)?.path;
+                  if (path) router.push(path);
+                }}
+              />
+            </div>
             <nav className="flex flex-col gap-0.5">
               {THEME_ITEMS.map((c) => (
                 <Link
@@ -179,15 +224,26 @@ export default function ShowcaseShell(props: {
                 </Link>
               ))}
               <div className="border-t border-border my-2" />
-              {COMPONENTS.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/components/${c.slug}`}
-                  className="rounded-md px-3 py-2 text-sm hover:bg-primary/10 transition-colors"
-                >
-                  {c.label}
-                </Link>
-              ))}
+              {(["Inputs", "Buttons", "Layout", "Wizard", "Utils"] as const).map((group) => {
+                const items = COMPONENTS.filter((c) => c.group === group);
+                if (items.length === 0) return null;
+                return (
+                  <div key={group} className="mb-2 flex flex-col gap-0.5">
+                    <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {group}
+                    </div>
+                    {items.map((c) => (
+                      <Link
+                        key={c.slug}
+                        href={`/components/${c.slug}`}
+                        className="rounded-md px-3 py-2 text-sm hover:bg-primary/10 transition-colors"
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })}
             </nav>
           </aside>
           <main className="flex-1 p-8 overflow-y-auto">{props.children}</main>
