@@ -40,6 +40,8 @@ const COMPONENTS = [
   { slug: "sg-autocomplete", label: "SgAutocomplete" },
   { slug: "sg-button", label: "SgButton" },
   { slug: "sg-split-button", label: "SgSplitButton" },
+  { slug: "sg-speed-dial", label: "SgSpeedDial" },
+  { slug: "sg-float-action-button", label: "SgFloatActionButton" },
   { slug: "sg-group-box", label: "SgGroupBox" },
   { slug: "sg-wizard", label: "SgWizard" },
   { slug: "sg-benchmark", label: "Benchmark" }

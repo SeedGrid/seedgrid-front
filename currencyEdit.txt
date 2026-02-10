@@ -1,0 +1,2035 @@
+"use client";
+import React from "react";
+import { X } from "lucide-react";
+import { Controller } from "react-hook-form";
+import type {
+ControllerFieldState,
+ControllerRenderProps,
+FieldValues,
+RegisterOptions,
+UseFormRegister
+} from "react-hook-form";
+import type { RhfFieldProps } from "../rhf";
+import { t, useComponentsI18n } from "../i18n";
+export type SgInputNumberProps = {
+id: string;
+label?: string;
+labelText?: string;
+hintText?: string;
+prefixText?: string;
+suffixText?: string;
+decimals?: number; // default 2
+allowNegative?: boolean; // default true
+emptyValue?: "null" | "zero"; // default "zero"
+error?: string;
+type?: React.HTMLInputTypeAttribute;
+placeholder?: string;
+className?: string;
+labelClassName?: string;
+inputProps?: 
+(React.InputHTMLAttributes<HTMLInputElement> & {
+ref?: React.Ref<HTMLInputElement>;
+});
+maxValue?: number;
+minValue?: number;
+minValueMessage?: string;
+maxValueMessage?: string;
+prefixIcon?: React.ReactNode;
+width?: number | string;
+clearButton?: boolean;
+filled?: boolean;
+enabled?: boolean;
+textInputType?: 
+React.InputHTMLAttributes<HTMLInputElement>
+["inputMode"];
+onEnter?: () => void;
+onExit?: () => void;
+onChange?: (value: string) => void;
+onClear?: () => void;
+withBorder?: boolean;
+borderRadius?: number | string;
+required?: boolean;
+requiredMessage?: string;
+iconButtons?: React.ReactNode[];
+readOnly?: boolean;
+validation?: (value: string) => string | null;
+validateOnBlur?: boolean;
+onValidation?: (message: string | null) => void;
+register?: UseFormRegister<FieldValues>;
+rules?: RegisterOptions<FieldValues>;
+} & RhfFieldProps;
+type SgInputNumberBaseProps = 
+Omit<SgInputNumberProps, keyof RhfFieldProps> & {
+externalValue?: string | number;
+onExternalChange?: (value: string) => void;
+};
+type NumberState = {
+negative: boolean;
+intDigits: string;
+decDigits: string;
+hasDecimal: boolean;
+};
+function ErrorText(props: { message?: string }) {
+if (!props.message) return null;
+return <p data-sg-error className="text-xs text-red
+600">{props.message}</p>;
+}
+function mergeRefs<T>(...refs: Array<React.Ref<T> | 
+undefined>) {
+return (node: T | null) => {
+for (const ref of refs) {
+if (!ref) continue;
+if (typeof ref === "function") {
+ref(node);
+} else if (typeof ref === "object" && "current" in ref) {
+(ref as { current: T | null }).current = node;
+}
+}
+};
+}
+function getSeparators(locale: string) {
+try {
+const parts = new 
+Intl.NumberFormat(locale).formatToParts(1000.1);
+const group = parts.find((p) => p.type === 
+"group")?.value ?? ",";
+const decimal = parts.find((p) => p.type === 
+"decimal")?.value ?? ".";
+return { group, decimal };
+} catch {
+return { group: ",", decimal: "." };
+}
+}
+function normalizeState(
+raw: string,
+decimals: number,
+allowNegative: boolean,
+decimalSep: string
+): NumberState {
+let text = raw ?? "";
+const isNegative = allowNegative && text.includes("-");
+text = text.replace(/[^0-9.,]/g, "");
+const lastDot = text.lastIndexOf(".");
+const lastComma = text.lastIndexOf(",");
+const decimalIndex = Math.max(lastDot, lastComma);
+let intPart = "";
+let decPart = "";
+let hasDecimal = false;
+if (decimalIndex >= 0) {
+hasDecimal = true;
+intPart = text.slice(0, decimalIndex).replace(/[^0-9]/g, 
+"");
+decPart = text.slice(decimalIndex + 1).replace(/[^0-9]/g, 
+"");
+} else {
+intPart = text.replace(/[^0-9]/g, "");
+}
+if (!intPart) intPart = "0";
+if (decimals > 0) {
+decPart = decPart.slice(0, decimals);
+} else {
+decPart = "";
+hasDecimal = false;
+}
+return {
+negative: isNegative,
+intDigits: intPart,
+decDigits: decPart,
+hasDecimal
+};
+}
+function formatWithGroup(intDigits: string, group: string) {
+const clean = intDigits.replace(/^0+(?!$)/, "");
+return clean.replace(/\B(?=(\d{3})+(?!\d))/g, group);
+}
+function stateToDisplay(state: NumberState | null, decimals: 
+number, decimalSep: string, group: string) {
+if (!state) return "";
+const intPart = formatWithGroup(state.intDigits, group);
+if (decimals <= 0) return ${state.negative ? "-" : 
+""}${intPart} ;
+const decPart = state.decDigits.padEnd(decimals, "0");
+return ${state.negative ? "-" : 
+""}${intPart}${decimalSep}${decPart} ;
+}
+function stateToValue(state: NumberState | null, decimals: 
+number): string {
+if (!state) return "";
+const intPart = state.intDigits.replace(/^0+(?!$)/, "");
+if (decimals <= 0) return ${state.negative ? "-" : 
+""}${intPart || "0"} ;
+const decPart = state.decDigits.padEnd(decimals, "0");
+return ${state.negative ? "-" : ""}${intPart || 
+"0"}.${decPart} ;
+}
+function stateToNumber(state: NumberState | null, 
+decimals: number): number | null {
+if (!state) return null;
+const value = stateToValue(state, decimals);
+const num = Number(value);
+if (Number.isNaN(num)) return null;
+return num;
+}
+function setCaretToEnd(input: HTMLInputElement | null) {
+if (!input) return;
+const length = input.value.length;
+try {
+input.setSelectionRange(length, length);
+} catch {
+// ignore
+}
+}
+function SgInputNumberBase(props: 
+SgInputNumberBaseProps) {
+const i18n = useComponentsI18n();
+const decimals = props.decimals ?? 2;
+const allowNegative = props.allowNegative ?? true;
+const emptyValue = props.emptyValue ?? "zero";
+const { decimal: decimalSep, group: groupSep } = 
+getSeparators(i18n.locale);
+const inputProps = props.inputProps ?? {};
+const {
+value: _ignoredValue,
+defaultValue: _ignoredDefault,
+onChange: inputOnChange,
+...restInputProps
+} = inputProps as 
+React.InputHTMLAttributes<HTMLInputElement>;
+const labelText = props.labelText ?? props.label ?? "";
+const placeholder = props.placeholder ?? props.hintText 
+?? labelText;
+const inputRef = React.useRef<HTMLInputElement | null>
+(null);
+const prefixRef = React.useRef<HTMLSpanElement | null>
+(null);
+const suffixRef = React.useRef<HTMLSpanElement | null>
+(null);
+const [prefixWidth, setPrefixWidth] = React.useState(0);
+const [suffixWidth, setSuffixWidth] = React.useState(0);
+const [internalError, setInternalError] = 
+React.useState<string | null>(null);
+const [hasInteracted, setHasInteracted] = 
+React.useState(false);
+const initialState = React.useMemo<NumberState | null>
+(() => {
+const raw = props.externalValue ?? inputProps.value ?? 
+inputProps.defaultValue ?? "";
+if ((raw === "" || raw == null) && emptyValue === 
+"null") return null;
+return normalizeState(String(raw), decimals, 
+allowNegative, decimalSep);
+}, [props.externalValue, inputProps.value, 
+inputProps.defaultValue, emptyValue, decimals, 
+allowNegative, decimalSep]);
+const [state, setState] = React.useState<NumberState | 
+null>(initialState);
+const stateRef = React.useRef<NumberState | null>
+(initialState);
+const lastEmittedRef = React.useRef<string | null>(null);
+React.useEffect(() => {
+const raw = props.externalValue ?? inputProps.value;
+if (raw === undefined) return;
+if (inputRef.current) {
+const isFocused = typeof document !== "undefined" 
+&& document.activeElement === inputRef.current;
+if (isFocused && lastEmittedRef.current === String(raw 
+?? "")) {
+return;
+}
+}
+if ((raw === "" || raw == null) && emptyValue === 
+"null") {
+stateRef.current = null;
+setState(null);
+return;
+}
+const next = normalizeState(String(raw), decimals, 
+allowNegative, decimalSep);
+stateRef.current = next;
+setState(next);
+}, [props.externalValue, inputProps.value, emptyValue, 
+decimals, allowNegative, decimalSep]);
+// Locale change only affects formatting. State is locale
+agnostic (digits + flags).
+React.useLayoutEffect(() => {
+if (prefixRef.current) {
+const next = prefixRef.current.offsetWidth;
+if (next !== prefixWidth) setPrefixWidth(next);
+} else if (prefixWidth !== 0) {
+setPrefixWidth(0);
+}
+if (suffixRef.current) {
+const next = suffixRef.current.offsetWidth;
+if (next !== suffixWidth) setSuffixWidth(next);
+} else if (suffixWidth !== 0) {
+setSuffixWidth(0);
+}
+}, [props.prefixText, props.suffixText, prefixWidth, 
+suffixWidth]);
+const displayValue = stateToDisplay(state, decimals, 
+decimalSep, groupSep);
+const isFilled = displayValue.length > 0;
+const runValidation = React.useCallback(
+(valueState: NumberState | null) => {
+const required = props.required ?? false;
+const numberValue = stateToNumber(valueState, 
+decimals);
+const isZeroValue =
+valueState != null &&
+valueState.negative === false &&
+valueState.intDigits.replace(/^0+(?!$)/, "0") === "0" 
+&&
+(decimals <= 0 || valueState.decDigits.replace(/0/g, "") 
+=== "");
+if (!valueState || numberValue === null || (emptyValue 
+=== "zero" && isZeroValue)) {
+if (required) {
+const message = props.requiredMessage ?? t(i18n, 
+"components.inputs.required");
+setInternalError(message);
+props.onValidation?.(message);
+return;
+}
+setInternalError(null);
+props.onValidation?.(null);
+return;
+}
+if (props.minValue !== undefined && numberValue < 
+props.minValue) {
+const message =
+props.minValueMessage ?? t(i18n, 
+"components.inputs.number.min", { min: props.minValue });
+setInternalError(message);
+props.onValidation?.(message);
+return;
+}
+if (props.maxValue !== undefined && numberValue > 
+props.maxValue) {
+const message =
+props.maxValueMessage ?? t(i18n, 
+"components.inputs.number.max", { max: props.maxValue 
+});
+setInternalError(message);
+props.onValidation?.(message);
+return;
+}
+if (props.validation) {
+const message = 
+props.validation(stateToValue(valueState, decimals));
+setInternalError(message);
+props.onValidation?.(message ?? null);
+}
+return;
+setInternalError(null);
+props.onValidation?.(null);
+},
+[props, i18n, decimals]
+);
+const commitState = React.useCallback(
+(next: NumberState | null) => {
+stateRef.current = next;
+setState(next);
+setHasInteracted(true);
+const value = stateToValue(next, decimals);
+lastEmittedRef.current = value;
+props.onExternalChange?.(value);
+props.onChange?.(value);
+if (inputOnChange) {
+inputOnChange({
+target: { value },
+currentTarget: { value }
+} as React.ChangeEvent<HTMLInputElement>);
+}
+if (props.validateOnBlur === false) {
+runValidation(next);
+}
+},
+[decimals, props, runValidation, inputOnChange]
+);
+const handleKeyDown = (event: 
+React.KeyboardEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || 
+inputProps.readOnly) return;
+if (event.ctrlKey || event.metaKey || event.altKey) return;
+const key = event.key;
+if (key === "Tab" || key === "ArrowLeft" || key === 
+"ArrowRight" || key === "Home" || key === "End") {
+return;
+}
+event.preventDefault();
+if (key === "Backspace" || key === "Delete") {
+const current = stateRef.current;
+if (!current) {
+if (emptyValue === "zero") {
+commitState({ negative: false, intDigits: "0", 
+decDigits: "", hasDecimal: false });
+}
+return;
+}
+if (current.hasDecimal && current.decDigits.length > 0) 
+{
+commitState({ ...current, decDigits: 
+current.decDigits.slice(0, -1) });
+return;
+}
+if (current.hasDecimal && current.decDigits.length 
+=== 0) {
+commitState({ ...current, hasDecimal: false });
+return;
+}
+const nextInt = current.intDigits.slice(0, -1);
+if (!nextInt) {
+if (emptyValue === "null") {
+commitState(null);
+} else {
+commitState({ ...current, intDigits: "0" });
+}
+return;
+}
+commitState({ ...current, intDigits: nextInt });
+return;
+}
+if ((key === "-" || key === "_") && allowNegative) {
+const base = stateRef.current ?? { negative: false, 
+intDigits: "0", decDigits: "", hasDecimal: false };
+const next = base;
+commitState({ ...next, negative: !next.negative });
+return;
+}
+const isDecimalKey = key === decimalSep || key === 
+"." || key === ",";
+if (isDecimalKey) {
+if (decimals <= 0) return;
+const next =
+stateRef.current ?? { negative: false, intDigits: "0", 
+decDigits: "", hasDecimal: false };
+const decDigits = next.decDigits.length >= decimals ? 
+"" : next.decDigits;
+commitState({ ...next, hasDecimal: true, decDigits });
+return;
+}
+if (/\d/.test(key)) {
+const next =
+stateRef.current ?? { negative: false, intDigits: "0", 
+decDigits: "", hasDecimal: false };
+if (next.hasDecimal && decimals > 0 && 
+next.decDigits.length < decimals) {
+commitState({ ...next, decDigits: 
+${next.decDigits}${key} });
+return;
+}
+const intDigits = next.intDigits === "0" ? key : 
+${next.intDigits}${key} ;
+commitState({ ...next, intDigits });
+return;
+}
+};
+const handleChange = (event: 
+React.ChangeEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || 
+inputProps.readOnly) return;
+const parsed = 
+normalizeState(event.currentTarget.value, decimals, 
+allowNegative, decimalSep);
+commitState(parsed);
+};
+const handlePaste = (event: 
+React.ClipboardEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || 
+inputProps.readOnly) return;
+const text = event.clipboardData.getData("text");
+if (!text) return;
+event.preventDefault();
+const parsed = normalizeState(text, decimals, 
+allowNegative, decimalSep);
+commitState(parsed);
+};
+const handleBlur = (event: 
+React.FocusEvent<HTMLInputElement>) => {
+if ((props.validateOnBlur ?? true) || hasInteracted) {
+runValidation(state);
+}
+inputProps.onBlur?.(event);
+props.onExit?.();
+};
+const handleFocus = () => {
+props.onEnter?.();
+};
+const handleClear = () => {
+if (!inputRef.current) return;
+const next = emptyValue === "null"
+? null
+: { negative: false, intDigits: "0", decDigits: "", 
+hasDecimal: false };
+commitState(next);
+if (inputRef.current) {
+inputRef.current.value = stateToDisplay(next, decimals, 
+decimalSep, groupSep);
+setCaretToEnd(inputRef.current);
+}
+props.onClear?.();
+};
+React.useEffect(() => {
+if (!inputRef.current) return;
+inputRef.current.value = displayValue;
+setCaretToEnd(inputRef.current);
+}, [displayValue]);
+const isDisabled = props.enabled === false || 
+props.readOnly || inputProps.readOnly;
+const canShowClear = (props.clearButton ?? true) && 
+!isDisabled;
+const iconButtonsCount = props.iconButtons?.length ?? 
+0;
+const hasSuffix = canShowClear || iconButtonsCount > 0;
+const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
+const paddingRight = hasSuffix ? "pr-10" : "pr-3";
+const baseClass =
+"peer h-11 w-full rounded-md text-sm placeholder
+transparent focus:outline-none text-right";
+const hasError = Boolean(props.error ?? internalError);
+const borderClass = (props.withBorder ?? true) || hasError
+? hasError
+? "border border-[hsl(var(--destructive))] shadow-sm 
+focus:border-[hsl(var(--destructive))] focus:ring-2 
+focus:ring-[hsl(var(--destructive)/0.25)]"
+: "border border-border shadow-sm focus:border
+[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(-
+primary)/0.25)]"
+: "border border-transparent";
+const bgClass = props.filled ? "bg-muted/40" : "bg
+white";
+const finalClass = [
+baseClass,
+borderClass,
+bgClass,
+paddingLeft,
+paddingRight,
+"py-2",
+"leading-[1.2]"
+].join(" ");
+let resolvedBorderRadius: string | undefined;
+if (props.borderRadius !== undefined) {
+resolvedBorderRadius =
+typeof props.borderRadius === "number"
+? ${props.borderRadius}px
+: props.borderRadius;
+}
+const prefixPaddingStyle = props.prefixText
+? calc(${prefixWidth}px + 0.75rem${props.prefixIcon 
+? " + 0.75rem" : ""})
+: undefined;
+const iconButtonsPadding = iconButtonsCount > 0 ? 
+${iconButtonsCount * 1.5}rem : "0rem";
+const baseRightPadding = canShowClear ? "2rem" : 
+"0.75rem";
+const suffixPaddingStyle = props.suffixText
+? calc(${suffixWidth}px + ${baseRightPadding} + 
+${iconButtonsPadding})
+: hasSuffix
+? calc(${baseRightPadding} + 
+${iconButtonsPadding})
+: undefined;
+const clearRightStyle = props.suffixText && suffixWidth
+? ${suffixWidth}px
+: undefined;
+return (
+<div style={{ width: props.width ?? "100%" }}>
+<div className="relative">
+{props.prefixText ? (
+<span
+ref={prefixRef}
+className="pointer-events-none absolute left-0 
+top-0 z-10 flex h-11 items-center rounded-l-md border 
+border-border bg-muted/40 px-3 text-xs leading-none 
+text-foreground/70"
+>
+{props.prefixText}
+</span>
+) : null}
+{props.prefixIcon ? (
+<span className="pointer-events-none absolute 
+left-3 top-1/2 z-10 -translate-y-1/2 text-foreground/60">
+{props.prefixIcon}
+</span>
+) : null}
+<input
+id={props.id}
+type={props.type ?? "text"}
+placeholder={placeholder}
+className={props.className ?? finalClass}
+style={{
+borderRadius: resolvedBorderRadius,
+paddingLeft: prefixPaddingStyle,
+paddingRight: suffixPaddingStyle,
+...(props.prefixText ? { borderTopLeftRadius: 0, 
+borderBottomLeftRadius: 0, borderLeftWidth: 0 } : {}),
+...(props.suffixText ? { borderTopRightRadius: 0, 
+borderBottomRightRadius: 0, borderRightWidth: 0 } : {}),
+...(inputProps.style ?? {})
+}}
+inputMode={props.textInputType ?? "decimal"}
+readOnly={props.readOnly}
+disabled={props.enabled === false}
+{...restInputProps}
+ref={mergeRefs(inputRef, (inputProps as { ref?: 
+React.Ref<HTMLInputElement> })?.ref)}
+onKeyDown={handleKeyDown}
+onChange={handleChange}
+onPaste={handlePaste}
+onBlur={handleBlur}
+onFocus={handleFocus}
+/>
+{props.suffixText ? (
+<span
+ref={suffixRef}
+className="pointer-events-none absolute right-0 
+top-0 z-10 flex h-11 items-center rounded-r-md border 
+border-border bg-muted/40 px-3 text-xs leading-none 
+text-foreground/70"
+>
+{props.suffixText}
+</span>
+) : null}
+<label
+htmlFor={props.id}
+className={[
+"absolute bg-white px-1 transition-all",
+isFilled
+? "-top-2 left-3 text-xs"
+: 
+top-3 text-sm ${props.prefixIcon ? "left-10" 
+: "left-3"} ,
+hasError
+? "text-[hsl(var(--destructive))]"
+: isFilled
+? "text-[hsl(var(--primary))]"
+: "text-foreground/60",
+hasError
+? "peer-focus:-top-2 peer-focus:left-3 peer
+focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
+: "peer-focus:-top-2 peer-focus:left-3 peer
+focus:text-xs peer-focus:text-[hsl(var(--primary))]",
+props.labelClassName ?? ""
+].join(" ")}
+style={prefixPaddingStyle ? { left: prefixPaddingStyle 
+} : undefined}
+>
+<span>{labelText}</span>
+{props.required ? (
+<span className="ml-1 text-[hsl(var(-
+destructive))]" aria-hidden="true">
+*
+</span>
+) : null}
+</label>
+{hasSuffix ? (
+<span
+className="absolute right-2 top-1/2 flex 
+translate-y-1/2 items-center gap-1"
+style={clearRightStyle ? { right: clearRightStyle } : 
+undefined}
+>
+{canShowClear ? (
+<button
+type="button"
+onClick={handleClear}
+className="rounded px-1 text-xs text
+foreground/60 hover:text-foreground"
+aria-label={t(i18n, "components.actions.clear")}
+>
+<X size={16} />
+</button>
+) : null}
+{props.iconButtons?.map((node, index) => (
+<span key={index}>{node}</span>
+))}
+</span>
+) : null}
+</div>
+<div className="mt-1 flex items-center justify
+between gap-2">
+<ErrorText message={props.error ?? internalError ?? 
+undefined} />
+</div>
+</div>
+);
+}
+export function SgInputNumber(props: 
+SgInputNumberProps) {
+const { control, name, register, rules, ...rest } = props;
+if (name && register) {
+const reg = register(name, rules);
+return (
+<SgInputNumberBase
+{...rest}
+onExternalChange={(value) => {
+reg.onChange({ target: { name, value } });
+}}
+inputProps={{
+...rest.inputProps,
+name,
+ref: mergeRefs(reg.ref, (rest.inputProps as { ref?: 
+React.Ref<HTMLInputElement> })?.ref),
+onBlur: (event) => {
+reg.onBlur(event);
+rest.inputProps?.onBlur?.(event);
+}
+}}
+/>
+);
+}
+if (control && name) {
+return (
+<Controller
+name={name}
+control={control}
+render={({
+field,
+fieldState
+}: {
+field: ControllerRenderProps<FieldValues, string>;
+fieldState: ControllerFieldState;
+}) => (
+<SgInputNumberBase
+{...rest}
+externalValue={field.value}
+onExternalChange={(value) => 
+field.onChange(value)}
+error={rest.error ?? fieldState.error?.message}
+inputProps={{
+...rest.inputProps,
+onBlur: (event) => {
+field.onBlur();
+rest.inputProps?.onBlur?.(event);
+}
+}}
+/>
+)}
+/>
+);
+}
+return <SgInputNumberBase {...rest} />;
+}
+com base nesse componente quais propriedades 
+mudariam para ser um currencyedit "internacional" onde a 
+moeda poderia ser "setada"
+Pra virar um CurrencyEdit internacional (moeda “setável”), a maior parte do teu
+componente fica igual. O que muda mesmo são as props (e alguns defaults) para incluir
+currency + formatação por Intl.NumberFormat (símbolo, posição, separadores e casas).
+Abaixo vai o que eu mudaria nas propriedades (e como eu organizaria), mantendo tua
+pegada de prefixText/suffixText , RHF e validação.
+1) Props novas (ou renomeadas)
+✅
+currency (nova)
+Define a moeda ISO 4217.
+ts
+currency?: string; // ex: "BRL", "USD", "EUR" (default: "BRL" ou do locale)
+✅
+locale (nova, opcional)
+Você hoje usa i18n.locale . Eu deixaria uma prop pra sobrescrever.
+ts
+locale?: string; // ex: "pt-BR", "en-US", "de-DE"
+✅
+currencyDisplay (nova)
+Como mostrar a moeda.
+ts
+Copiar código
+Copiar código
+currencyDisplay?: "symbol" | "narrowSymbol" | "code" | "name"; // default "symbol Copiar código
+
+✅
+currencySign (nova)
+Pra lidar com valores negativos conforme locale.
+ts
+currencySign?: "standard" | "accounting"; // default "standard"
+✅
+useGrouping (nova)
+Liga/desliga separador de milhar.
+ts
+useGrouping?: boolean; // default true
+Copiar código
+Copiar código
+✅
+minFractionDigits / maxFractionDigits (substitui teu decimals )
+
+Em moeda, casas decimais variam por currency (JPY=0, KWD=3, etc). Então “decimals fixo”
+vira exceção.
+ts
+minFractionDigits?: number; // default: padrão da moeda no Intl
+maxFractionDigits?: number; // default: padrão da moeda no Intl
+Copiar código
+Se você quiser manter compatibilidade, dá pra aceitar decimals e mapear internamente
+para min/maxFractionDigits .
+✅
+valueAs (nova) — formato do valor emitido
+Hoje você sempre emite string "123.45" . Em CurrencyEdit, isso vira uma escolha
+importante:
+ts
+valueAs?: "string" | "number" | "minor"; 
+// "string" => "123.45"
+// "number" => 123.45
+// "minor"  => 12345 (centavos, minor units)
+✅
+minorUnit (nova, opcional)
+Copiar código
+Se valueAs="minor" , quantas casas são minor units? (default: inferir via Intl)
+ts
+minorUnit?: number; // ex: 2 pra BRL/USD, 0 pra JPY, 3 pra KWD Copiar código
+✅
+showCurrencySymbol / currencySymbolPlacement (novas)
+Você hoje tem prefixText / suffixText . Em moeda internacional, o símbolo pode ser
+prefixo ou sufixo dependendo do locale.
+Sugestão: manter prefixText/suffixText como override manual, mas adicionar um
+modo automático:
+ts
+showCurrencySymbol?: boolean; // default true
+currencySymbolPlacement?: "auto" | "prefix" | "suffix"; // default "auto" Copiar código
+Quando "auto" , você usa Intl.NumberFormat(locale, { style: "currency", currency
+}).formatToParts(1) pra descobrir se o símbolo vem antes ou depois.
+✅
+currencySymbolOverride (opcional)
+Para casos tipo “R$” custom, ou quando você quer “US$” etc.
+ts
+currencySymbolOverride?: string; // ex: "R$" Copiar código
+2) Props que mudam de significado / defaults
+decimals?: number
+➡
+vira legado ou passa a ser só atalho pra min/maxFractionDigits .
+Antes: default 2
+Agora: default = “casas padrão da moeda no locale”
+prefixText / suffixText
+➡
+ continuam, mas:
+em CurrencyEdit elas viram “override manual”.
+por padrão, quem preenche isso é o símbolo detectado.
+textInputType
+Em moeda, o melhor default é continuar "decimal" .
+3) Props que eu adicionaria para “comportamento de moeda”
+✅
+allowCurrencyKeyboardShortcuts
+Ex: digitar , ou . sempre abre decimais, independente do locale.
+ts
+acceptAltDecimalSeparators?: boolean; // default true
+(você já faz isso, mas agora vira parte “oficial” do currency)
+✅
+clampOnBlur
+Se passou do min/max, ajusta automático ao sair do campo.
+ts
+Copiar código
+Copiar código
+clampOnBlur?: boolean; // default false
+✅
+roundingMode (opcional, avançado)
+Em alguns países/regras contábeis, arredondamento pode variar. Isso é “nice to have”:
+ts
+roundingMode?: "halfExpand" | "halfEven" | "trunc"; // default "halfExpand" Copiar código
+4) Props que eu manteria iguais (não precisam mudar)
+allowNegative , minValue , maxValue , required , validation , validateOnBlur ,
+clearButton , filled , enabled , readOnly , onEnter , onExit , onClear ,
+iconButtons , withBorder , borderRadius , width , error etc.
+Só ajustaria a validação pra entender valueAs (string/number/minor), mas isso é interno.
+5) Como ficaria o tipo final (só a parte de props)
+Exemplo de “novo” SgInputCurrencyProps :
+ts
+"decimals"
+export type SgInputCurrencyProps = Omit<SgInputNumberProps,
+  | 
+  | 
+  | 
+  | 
+"prefixText"
+"suffixText"
+"onChange"
+> & {
+currency?: string;                 
+locale?: string;                   
+// "BRL" | "USD" | ...
+// "pt-BR" | ...
+currencyDisplay?: "symbol" | "narrowSymbol" | "code" | "name";
+currencySign?: "standard" | "accounting";
+useGrouping?: boolean;
+minFractionDigits?: number;
+maxFractionDigits?: number;
+showCurrencySymbol?: boolean;
+currencySymbolPlacement?: "auto" | "prefix" | "suffix";
+currencySymbolOverride?: string;
+valueAs?: "string" | "number" | "minor";
+minorUnit?: number;
+// emite no formato escolhido (string/number/minor)
+onChange?: (value: string | number | null) => void;
+acceptAltDecimalSeparators?: boolean;
+clampOnBlur?: boolean;
+};
+Copiar código
+Se você quiser, eu já te devolvo o componente inteiro refatorado como SgInputCurrency
+(copiar/colar), reaproveitando teu SgInputNumberBase e trocando só:
+separadores + fraction digits via Intl.NumberFormat
+detecção do símbolo/posição via formatToParts
+valueAs (string/number/minor) no commitState
+Só me diga qual formato você quer persistir no RHF por padrão:
+"string" ( "123.45" )
+"number" ( 123.45 )
+"minor" (centavos: 12345 )
+tem como ter uma tabela com todas as moedas do mundo 
+ou isso é besteira ?
+Dá pra ter sim — mas depende do que você chama de “tabela completa” e do objetivo.
+O que é “besteira” (na maioria dos casos)
+Uma tabela gigante “todas as moedas do mundo” no bundle do front (com nome,
+símbolo, país, etc.) costuma ser overkill:
+pesa mais do que precisa,
+vira manutenção (moedas mudam, países mudam, símbolos variam),
+e ainda assim você não resolve o principal: formatação correta por locale (isso o
+Intl.NumberFormat já faz).
+O que faz sentido de verdade (prático)
+Você normalmente precisa de 3 coisas:
+1. Lista de códigos ISO 4217 (ex: BRL , USD , EUR )
+2. Casas decimais padrão por moeda (minor units: 0/2/3)
+3. Nome amigável / símbolo (pra dropdown)
+Hoje dá pra fazer assim:
+✅
+ Opção A — “tabela mínima” (recomendada)
+Você mantém uma lista pequena com:
+code (ISO)
+minorUnit (0/2/3)
+E para UI você deriva o resto com Intl :
+símbolo e posição: formatToParts
+nome: Intl.DisplayNames (quando disponível)
+Isso te dá um CurrencyEdit internacional sem depender de “mega tabela”.
+✅
+ Opção B — lista dinâmica do próprio runtime
+Em runtimes modernos, você consegue obter os códigos suportados por Intl :
+ts
+const currencies = Intl.supportedValuesOf?.("currency") ?? []; Copiar código
+Isso já te dá “quase todas” as moedas suportadas pelo ambiente do usuário.
+Observações importantes:
+Nem todo browser antigo tem supportedValuesOf .
+Essa lista é “o que o runtime suporta”, não uma lista oficial ISO.
+✅
+ Opção C — tabela completa (backend / build time)
+Se você realmente quer um dropdown “bonitinho” com país, nome, símbolo fixo etc., aí o
+melhor é:
+manter no backend (ou gerar no build),
+e não depender do front pra ser “fonte oficial”.
+Minha recomendação para teu SgInputCurrency
+No componente: aceite apenas currency: "BRL" | "USD" | ... e formate com
+Intl.NumberFormat .
+Para um dropdown: use Intl.supportedValuesOf("currency") quando existir, com
+fallback para uma lista ISO reduzida que você controla.
+Para minorUnit: você pode ter um map bem pequeno só para exceções (JPY=0,
+CLP=0, KWD=3 etc.) e default 2.
+Se quiser, eu te mando um snippet pronto:
+getSupportedCurrencies(locale)
+getCurrencyMeta(code, locale) (nome + símbolo + placement)
+fallback consistente quando o browser não suporta supportedValuesOf .
+entao .. mas se eu coloco como BRL .. o simbolo deveria 
+ser R$ se eu coloco USD o simbolo US$ .. é desse map que 
+me refiro .. pelo menos as 10 mais usadas no mundo 
+Perfeito — isso não é besteira nenhuma 
+ 
+ 
+Pra UX e consistência visual, faz todo sentido ter um map explícito (mesmo que
+pequeno) garantindo:
+BRL → R$
+USD → US$
+EUR → €
+etc.
+O ponto é: não confiar só no Intl pra exibir o símbolo curto correto, porque:
+Intl às vezes retorna $ em vez de US$
+alguns locais mostram código ( USD ) em vez de símbolo
+o “narrowSymbol” varia demais entre browsers
+Então sim: um map controlado para as moedas mais usadas é a melhor solução.
+ 
+ 
+ Estratégia ideal (híbrida, limpa)
+1. Map fixo para as moedas mais usadas (UX garantida)
+2. Intl como fallback para qualquer outra moeda
+3. O CurrencyEdit usa:
+símbolo do map → se existir
+senão → Intl.NumberFormat(...).formatToParts()
+🌍
+ Top 10 moedas mais usadas (map recomendado)
+Esse é um map prático, estável e suficiente pra 99% dos SaaS:
+ts
+export type CurrencyMeta = {
+code: string;
+symbol: string;
+symbolNarrow?: string;
+minorUnit: number;
+};
+export const COMMON_CURRENCIES: Record<string, CurrencyMeta> = {
+BRL: { code: "BRL", symbol: "R$", symbolNarrow: "R$", minorUnit: 2 },
+USD: { code: "USD", symbol: "US$", symbolNarrow: "$", minorUnit: 2 },
+EUR: { code: "EUR", symbol: "€", minorUnit: 2 },
+GBP: { code: "GBP", symbol: "£", minorUnit: 2 },
+JPY: { code: "JPY", symbol: "¥", minorUnit: 0 },
+CNY: { code: "CNY", symbol: "¥", minorUnit: 2 },
+CHF: { code: "CHF", symbol: "CHF", minorUnit: 2 },
+CAD: { code: "CAD", symbol: "CA$", symbolNarrow: "$", minorUnit: 2 },
+AUD: { code: "AUD", symbol: "A$", symbolNarrow: "$", minorUnit: 2 },
+MXN: { code: "MXN", symbol: "MX$", symbolNarrow: "$", minorUnit: 2 }
+};
+💡
+Por que isso é bom:
+Evita $ ambíguo
+Evita USD feio na UI
+Resolve JPY = 0 decimais
+Resolve R$ corretamente
+Copiar código
+ 
+ 
+ Fallback via Intl (para qualquer outra moeda)
+ts
+function resolveCurrencySymbol(
+currency: string,
+locale: string
+): { symbol: string; minorUnit: number } {
+const common = COMMON_CURRENCIES[currency];
+if (common) {
+return { symbol: common.symbol, minorUnit: common.minorUnit };
+  }
+try {
+const nf = new Intl.NumberFormat(locale, {
+style: "currency",
+      currency
+    });
+const parts = nf.formatToParts(1);
+const symbol = parts.find(p => p.type === "currency")?.value ?? currency;
+const minorUnit = nf.resolvedOptions().maximumFractionDigits;
+return { symbol, minorUnit };
+  } 
+  }
+}
+catch {
+return { symbol: currency, minorUnit: 2 }; Copiar código
+ChatGPT 5.2
+🧩
+ Como isso encaixa no teu SgInputCurrency
+Fluxo limpo:
+1. 
+2. 
+currency="USD"
+resolveCurrencySymbol("USD", locale)
+3. Injeta:
+prefixText="US$" (ou sufixo se locale pedir)
+min/maxFractionDigits
+4. Mantém teu engine de digitação intacto
+ 
+ 
+ Decisão arquitetural (opinião sincera)
+✔
+Top 10 moedas hardcoded → correto
+✔
+ Fallback com Intl → robusto
+❌
+ “Tabela com todas as moedas do mundo no front” → desnecessário
+Isso casa muito bem com a filosofia do SeedGrid / SG Components:
+leve
+previsível
+UX consistente
+extensível depois
+Se quiser, no próximo passo eu:
+transformo isso num currency.ts pronto pra tua lib
+ou já te entrego o SgInputCurrency completo usando teu SgInputNumberBase sem
+duplicar lógica
+Pensou por 27s
+Aí sim. Vou te entregar:
+1. 
+faz isso sim e monta varios exemplos de como isso 
+poderia funcionar .. para setar valor externamente, 
+capturar valor externamente .. limpar ... 
+exemplo usando o RHF, controlled e standalone 
+currency.ts (map Top 10 + resolver via Intl fallback)
+2. 
+SgInputCurrency.tsx (com RHF register , RHF Controller , controlled e
+standalone)
+3. Exemplos prontos: RHF register, RHF Controller, controlled (state externo), standalone
+(sem RHF), setar valor externamente, capturar valor, limpar
+Obs. importante: eu reaproveitei tua base de “engine” de digitação (NumberState +
+caret no fim + parse/format). A diferença é que:
+decimals vem da moeda (minorUnit) por padrão
+prefix/suffix é “auto” baseado no símbolo fixo (Top 10) com fallback
+Intl.formatToParts
+o valor emitido pode ser "string" | "number" | "minor" (centavos)
+1) currency.ts (map + resolver)
+ts
+// currency.ts
+export type CurrencySymbolPlacement = "prefix" | "suffix";
+export type CurrencyMeta = {
+code: string;
+symbol: string;           
+symbolNarrow?: string;    
+minorUnit: number;        
+};
+// "R$", "US$", "€", ...
+// "$" quando você quiser estreito
+// 0, 2, 3...
+export const COMMON_CURRENCIES: Record<string, CurrencyMeta> = {
+BRL: { code: "BRL", symbol: "R$", symbolNarrow: "R$", minorUnit: 2 },
+USD: { code: "USD", symbol: "US$", symbolNarrow: "$", minorUnit: 2 },
+EUR: { code: "EUR", symbol: "€", minorUnit: 2 },
+GBP: { code: "GBP", symbol: "£", minorUnit: 2 },
+JPY: { code: "JPY", symbol: "¥", minorUnit: 0 },
+CNY: { code: "CNY", symbol: "¥", minorUnit: 2 },
+CHF: { code: "CHF", symbol: "CHF", minorUnit: 2 },
+CAD: { code: "CAD", symbol: "CA$", symbolNarrow: "$", minorUnit: 2 },
+AUD: { code: "AUD", symbol: "A$", symbolNarrow: "$", minorUnit: 2 },
+MXN: { code: "MXN", symbol: "MX$", symbolNarrow: "$", minorUnit: 2 }
+};
+export function getSeparators(locale: string) {
+try {
+const parts = new Intl.NumberFormat(locale).formatToParts(1000.1);
+const group = parts.find((p) => p.type === "group")?.value ?? ",";
+const decimal = parts.find((p) => p.type === "decimal")?.value ?? ".";
+return { group, decimal };
+  } 
+  }
+catch {
+return { group: ",", decimal: "." };
+}
+export function detectCurrencyPlacement(locale: string, currency: string): Curren
+try {
+const parts = new Intl.NumberFormat(locale, { style: "currency", currency }).
+const idxCurrency = parts.findIndex((p) => p.type === "currency");
+const idxInteger = parts.findIndex((p) => p.type === "integer");
+if (idxCurrency >= 0 && idxInteger >= 0) return idxCurrency < idxInteger ? "p
+return "prefix";
+  } 
+  }
+}
+catch {
+return "prefix";
+export function resolveCurrencyMeta(opts: {
+  locale: string;
+  currency: string;
+  currencyDisplay?: "symbol" | "narrowSymbol" | "code" | "name";
+  currencySymbolOverride?: string;
+  currencySymbolPlacement?: "auto" | CurrencySymbolPlacement;
+  minFractionDigits?: number;
+  maxFractionDigits?: number;
+  useGrouping?: boolean;
+}) {
+const {
+    locale,
+    currency,
+    currencyDisplay = "symbol",
+    currencySymbolOverride,
+    currencySymbolPlacement = "auto",
+    minFractionDigits,
+    maxFractionDigits
+  } = opts;
+const common = COMMON_CURRENCIES[currency];
+const fallbackSymbol = currencyDisplay === "narrowSymbol"
+    ? (common?.symbolNarrow ?? common?.symbol ?? currency)
+    : (common?.symbol ?? currency);
+let symbol = currencySymbolOverride ?? fallbackSymbol;
+let minorUnit = common?.minorUnit ?? 2;
+let placement: CurrencySymbolPlacement =
+    currencySymbolPlacement === "auto" ? detectCurrencyPlacement(locale, currency
+try {
+const nf = new Intl.NumberFormat(locale, {
+style: "currency",
+      currency,
+      currencyDisplay,
+useGrouping: opts.useGrouping ?? true,
+minimumFractionDigits: minFractionDigits,
+maximumFractionDigits: maxFractionDigits
+    });
+const ro = nf.resolvedOptions();
+// se o usuário não forçou digits, usa do runtime
+if (minFractionDigits == null && maxFractionDigits == null) {
+      minorUnit = ro.maximumFractionDigits;
+    }
+// se não tem override e não está no map, tenta pegar símbolo via Intl
+if (!currencySymbolOverride && !common) {
+const parts = nf.formatToParts(1);
+const intlSymbol = parts.find((p) => p.type === "currency")?.value;
+if (intlSymbol) symbol = intlSymbol;
+      placement = currencySymbolPlacement === "auto" ? detectCurrencyPlacement(lo
+    }
+  } 
+  }
+catch {
+// mantém fallback
+const { group, decimal } = getSeparators(locale);
+return {
+symbol,
+    minorUnit,
+    placement,
+groupSep: group,
+decimalSep: decimal
+  };
+}
+Copiar código
+2) SgInputCurrency.tsx (com RHF / controlled / standalone)
+tsx
+"use client";
+import React from "react";
+import { X } from "lucide-react";
+import { Controller } from "react-hook-form";
+import type {
+ControllerFieldState,
+ControllerRenderProps,
+FieldValues,
+RegisterOptions,
+UseFormRegister
+} from "react-hook-form";
+import type { RhfFieldProps } from "../rhf";
+import { t, useComponentsI18n } from "../i18n";
+import { resolveCurrencyMeta } from "./currency";
+Copiar código
+export type SgInputCurrencyValueAs = "string" | "number" | "minor";
+export type CurrencySymbolPlacement = "auto" | "prefix" | "suffix";
+export type SgInputCurrencyProps = {
+id: string;
+// label
+label?: string;
+labelText?: string;
+hintText?: string;
+// currency
+currency?: string; // default "BRL"
+locale?: string; // default i18n.locale
+currencyDisplay?: "symbol" | "narrowSymbol" | "code" | "name";
+currencySign?: "standard" | "accounting"; // (hoje não usado no engine, mas deix
+currencySymbolOverride?: string;
+currencySymbolPlacement?: CurrencySymbolPlacement; // default "auto"
+showCurrencySymbol?: boolean; // default true
+useGrouping?: boolean; // default true
+// decimals
+minFractionDigits?: number;
+maxFractionDigits?: number;
+// value shape
+valueAs?: SgInputCurrencyValueAs; // default "string"
+minorUnit?: number; // override minorUnit
+allowNegative?: boolean; // default true
+emptyValue?: "null" | "zero"; // default "zero"
+required?: boolean;
+requiredMessage?: string;
+minValue?: number;
+maxValue?: number;
+minValueMessage?: string;
+maxValueMessage?: string;
+error?: string;
+placeholder?: string;
+className?: string;
+labelClassName?: string;
+inputProps?: (React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<H
+prefixIcon?: React.ReactNode;
+width?: number | string;
+clearButton?: boolean;
+filled?: boolean;
+enabled?: boolean;
+textInputType?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"]; // def
+onEnter?: () => void;
+onExit?: () => void;
+// emite valor no formato escolhido
+onChange?: (value: string | number | null) => void;
+onClear?: () => void;
+withBorder?: boolean;
+borderRadius?: number | string;
+iconButtons?: React.ReactNode[];
+readOnly?: boolean;
+validation?: (value: string) => string | null; // recebe "123.45" (string canon
+validateOnBlur?: boolean;
+onValidation?: (message: string | null) => void;
+// RHF
+register?: UseFormRegister<FieldValues>;
+rules?: RegisterOptions<FieldValues>;
+} & RhfFieldProps;
+type SgInputCurrencyBaseProps = Omit<SgInputCurrencyProps, keyof RhfFieldProps> & 
+externalValue?: unknown;
+onExternalChange?: (value: unknown) => void;
+};
+type NumberState = {
+negative: boolean;
+intDigits: string;
+decDigits: string;
+hasDecimal: boolean;
+};
+function ErrorText(props: { message?: string }) {
+if (!props.message) return null;
+return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
+}
+function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+return (node: T | null) => {
+for (const ref of refs) {
+if (!ref) continue;
+if (typeof ref === "function") ref(node);
+else if (typeof ref === "object" && "current" in ref) (ref as { current: T 
+    }
+  };
+}
+// --- engine (igual ao teu, com pequenos ajustes) --
+function normalizeState(raw: string, decimals: number, allowNegative: boolean): N
+let text = raw ?? "";
+const isNegative = allowNegative && text.includes("-");
+// deixa só dígitos e separadores comuns
+  text = text.replace(/[^0-9.,]/g, "");
+const lastDot = text.lastIndexOf(".");
+const lastComma = text.lastIndexOf(",");
+const decimalIndex = Math.max(lastDot, lastComma);
+let intPart = "";
+let decPart = "";
+let hasDecimal = false;
+if (decimalIndex >= 0) {
+    hasDecimal = true;
+    intPart = text.slice(0, decimalIndex).replace(/[^0-9]/g, "");
+    decPart = text.slice(decimalIndex + 1).replace(/[^0-9]/g, "");
+  } 
+  }
+else {
+    intPart = text.replace(/[^0-9]/g, "");
+if (!intPart) intPart = "0";
+if (decimals > 0) {
+    decPart = decPart.slice(0, decimals);
+  } 
+  }
+else {
+    decPart = "";
+    hasDecimal = false;
+return { negative: isNegative, intDigits: intPart, decDigits: decPart, hasDecim
+}
+function formatWithGroup(intDigits: string, group: string) {
+const clean = intDigits.replace(/^0+(?!$)/, "");
+return clean.replace(/\B(?=(\d{3})+(?!\d))/g, group);
+}
+function stateToDisplay(state: NumberState | null, decimals: number, decimalSep: 
+if (!state) return "";
+const intPart = formatWithGroup(state.intDigits, group);
+if (decimals <= 0) return `${state.negative ? "-" : ""}${intPart}`;
+const decPart = state.decDigits.padEnd(decimals, "0");
+return `${state.negative ? "-" : ""}${intPart}${decimalSep}${decPart}`;
+}
+// canonical: "123.45"
+function stateToCanonical(state: NumberState | null, decimals: number): string {
+if (!state) return "";
+const intPart = state.intDigits.replace(/^0+(?!$)/, "");
+if (decimals <= 0) return `${state.negative ? "-" : ""}${intPart || "0"}`;
+const decPart = state.decDigits.padEnd(decimals, "0");
+}
+return `${state.negative ? "-" : ""}${intPart || "0"}.${decPart}`;
+function canonicalToNumber(canonical: string): number | null {
+if (!canonical) return null;
+const num = Number(canonical);
+return Number.isNaN(num) ? null : num;
+}
+function canonicalToMinor(canonical: string, minorUnit: number): number | null {
+if (!canonical) return null;
+// canonical always uses "."
+const negative = canonical.startsWith("-");
+const abs = negative ? canonical.slice(1) : canonical;
+const [intPartRaw, decRaw = ""] = abs.split(".");
+const intPart = (intPartRaw || "0").replace(/\D/g, "");
+const decPart = (decRaw || "").replace(/\D/g, "").padEnd(minorUnit, "0").slice(
+const minorStr = `${intPart}${decPart}`.replace(/^0+(?!$)/, "0");
+const minorNum = Number(minorStr);
+if (Number.isNaN(minorNum)) return null;
+return negative ? -minorNum : minorNum;
+}
+function setCaretToEnd(input: HTMLInputElement | null) {
+if (!input) return;
+const length = input.value.length;
+try {
+    input.setSelectionRange(length, length);
+  } 
+  }
+}
+catch {
+// ignore
+function adaptIncomingToCanonical(value: unknown, valueAs: SgInputCurrencyValueAs
+if (value == null || value === "") return "";
+if (typeof value === "string") {
+// aceita "123.45", "123,45", "R$ 123,45" etc
+const normalized = normalizeState(value, decimals, true);
+return stateToCanonical(normalized, decimals);
+  }
+if (typeof value === "number") {
+if (!Number.isFinite(value)) return "";
+if (valueAs === "minor") {
+// number é centavos
+const sign = value < 0 ? "-" : "";
+const abs = Math.abs(value);
+const intPart = Math.floor(abs / Math.pow(10, decimals));
+const decPart = Math.floor(abs % Math.pow(10, decimals)).toString().padStar
+return decimals > 0 ? `${sign}${intPart}.${decPart}` : `${sign}${intPart}`;
+    }
+// number em unidade
+return decimals > 0 ? value.toFixed(decimals) : String(Math.trunc(value));
+  }
+return String(value);
+}
+function emitValue(canonical: string, valueAs: SgInputCurrencyValueAs, minorUnit: 
+if (!canonical) return null;
+if (valueAs === "string") return canonical;
+if (valueAs === "number") return canonicalToNumber(canonical);
+return canonicalToMinor(canonical, minorUnit);
+}
+function SgInputCurrencyBase(props: SgInputCurrencyBaseProps) {
+const i18n = useComponentsI18n();
+const currency = props.currency ?? "BRL";
+const locale = props.locale ?? i18n.locale;
+const allowNegative = props.allowNegative ?? true;
+const emptyValue = props.emptyValue ?? "zero";
+const showCurrencySymbol = props.showCurrencySymbol ?? true;
+const useGrouping = props.useGrouping ?? true;
+const valueAs = props.valueAs ?? "string";
+const meta = React.useMemo(() => {
+return resolveCurrencyMeta({
+      locale,
+      currency,
+currencyDisplay: props.currencyDisplay ?? "symbol",
+currencySymbolOverride: props.currencySymbolOverride,
+currencySymbolPlacement: props.currencySymbolPlacement ?? "auto",
+minFractionDigits: props.minFractionDigits,
+maxFractionDigits: props.maxFractionDigits,
+      useGrouping
+    });
+  }, [
+    locale,
+    currency,
+    props.currencyDisplay,
+    props.currencySymbolOverride,
+    props.currencySymbolPlacement,
+    props.minFractionDigits,
+    props.maxFractionDigits,
+    useGrouping
+  ]);
+const decimals = props.minorUnit ?? meta.minorUnit;
+const decimalSep = meta.decimalSep;
+const groupSep = useGrouping ? meta.groupSep : ""; // se não agrupar, não aplic
+const inputProps = props.inputProps ?? {};
+const {
+value: _ignoredValue,
+defaultValue: _ignoredDefault,
+onChange: inputOnChange,
+    ...restInputProps
+  } = inputProps as React.InputHTMLAttributes<HTMLInputElement>;
+const labelText = props.labelText ?? props.label ?? "";
+const placeholder = props.placeholder ?? props.hintText ?? labelText;
+const inputRef = React.useRef<HTMLInputElement | null>(null);
+const prefixRef = React.useRef<HTMLSpanElement | null>(null);
+const suffixRef = React.useRef<HTMLSpanElement | null>(null);
+const [prefixWidth, setPrefixWidth] = React.useState(0);
+const [suffixWidth, setSuffixWidth] = React.useState(0);
+const [internalError, setInternalError] = React.useState<string | null>(null);
+const [hasInteracted, setHasInteracted] = React.useState(false);
+const resolvedPrefixText =
+    showCurrencySymbol && meta.placement === "prefix" ? meta.symbol : undefined;
+const resolvedSuffixText =
+    showCurrencySymbol && meta.placement === "suffix" ? meta.symbol : undefined;
+const initialState = React.useMemo<NumberState | null>(() => {
+const raw =
+      props.externalValue ?? inputProps.value ?? inputProps.defaultValue ?? "";
+const canonical = adaptIncomingToCanonical(raw, valueAs, decimals);
+if ((canonical === "" || canonical == null) && emptyValue === "null") return 
+return normalizeState(canonical, decimals, allowNegative);
+  }, [props.externalValue, inputProps.value, inputProps.defaultValue, emptyValue, 
+const [state, setState] = React.useState<NumberState | null>(initialState);
+const stateRef = React.useRef<NumberState | null>(initialState);
+const lastEmittedRef = React.useRef<string | null>(null);
+// sync external value
+React.useEffect(() => {
+const raw = props.externalValue ?? inputProps.value;
+if (raw === undefined) return;
+const canonical = adaptIncomingToCanonical(raw, valueAs, decimals);
+if (inputRef.current) {
+const isFocused = typeof document !== "undefined" && document.activeElement 
+if (isFocused && lastEmittedRef.current === canonical) return;
+    }
+if ((canonical === "" || canonical == null) && emptyValue === "null") {
+      stateRef.current = null;
+setState(null);
+return;
+    }
+const next = normalizeState(canonical, decimals, allowNegative);
+    stateRef.current = next;
+setState(next);
+  }, [props.externalValue, inputProps.value, emptyValue, decimals, allowNegative, 
+React.useLayoutEffect(() => {
+if (prefixRef.current) {
+const next = prefixRef.current.offsetWidth;
+if (next !== prefixWidth) setPrefixWidth(next);
+    } 
+else if (prefixWidth !== 0) setPrefixWidth(0);
+if (suffixRef.current) {
+const next = suffixRef.current.offsetWidth;
+if (next !== suffixWidth) setSuffixWidth(next);
+    } 
+else if (suffixWidth !== 0) setSuffixWidth(0);
+  }, [resolvedPrefixText, resolvedSuffixText, prefixWidth, suffixWidth]);
+const displayValue = stateToDisplay(state, decimals, decimalSep, groupSep || ""
+const isFilled = displayValue.length > 0;
+const runValidation = React.useCallback(
+(valueState: NumberState | null) => {
+const required = props.required ?? false;
+const canonical = stateToCanonical(valueState, decimals);
+const num = canonicalToNumber(canonical);
+const isZeroValue =
+        valueState != null &&
+        valueState.negative === false &&
+        valueState.intDigits.replace(/^0+(?!$)/, "0") === "0" &&
+        (decimals <= 0 || valueState.decDigits.replace(/0/g, "") === "");
+if (!valueState || num === null || (emptyValue === "zero" && isZeroValue)) 
+if (required) {
+const message = props.requiredMessage ?? t(i18n, "components.inputs.req
+setInternalError(message);
+          props.onValidation?.(message);
+return;
+        }
+setInternalError(null);
+        props.onValidation?.(null);
+return;
+      }
+if (props.minValue !== undefined && num < props.minValue) {
+const message = props.minValueMessage ?? t(i18n, "components.inputs.numbe
+setInternalError(message);
+        props.onValidation?.(message);
+return;
+      }
+if (props.maxValue !== undefined && num > props.maxValue) {
+const message = props.maxValueMessage ?? t(i18n, "components.inputs.numbe
+setInternalError(message);
+        props.onValidation?.(message);
+return;
+      }
+if (props.validation) {
+const message = props.validation(canonical); // canonical "123.45"
+setInternalError(message);
+        props.onValidation?.(message ?? null);
+return;
+      }
+setInternalError(null);
+      props.onValidation?.(null);
+    },
+    [props, i18n, decimals, emptyValue]
+  );
+const commitState = React.useCallback(
+(next: NumberState | null) => {
+      stateRef.current = next;
+setState(next);
+setHasInteracted(true);
+const canonical = stateToCanonical(next, decimals);
+      lastEmittedRef.current = canonical;
+const out = emitValue(canonical, valueAs, decimals);
+      props.onExternalChange?.(out);
+      props.onChange?.(out);
+if (inputOnChange) {
+inputOnChange({
+target: { value: canonical },
+currentTarget: { value: canonical }
+        } 
+      }
+as React.ChangeEvent<HTMLInputElement>);
+if (props.validateOnBlur === false) {
+runValidation(next);
+      }
+    },
+    [decimals, valueAs, props, runValidation, inputOnChange]
+  );
+const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || inputProps.readOnly) return;
+if (event.ctrlKey || event.metaKey || event.altKey) return;
+const key = event.key;
+if (key === "Tab" || key === "ArrowLeft" || key === "ArrowRight" || key === "
+    event.preventDefault();
+if (key === "Backspace" || key === "Delete") {
+const current = stateRef.current;
+if (!current) {
+if (emptyValue === "zero") commitState({ negative: false, intDigits: "0", 
+return;
+      }
+if (current.hasDecimal && current.decDigits.length > 0) {
+commitState({ ...current, decDigits: current.decDigits.slice(0, -1) });
+return;
+      }
+if (current.hasDecimal && current.decDigits.length === 0) {
+commitState({ ...current, hasDecimal: false });
+return;
+      }
+const nextInt = current.intDigits.slice(0, -1);
+if (!nextInt) {
+if (emptyValue === "null") commitState(null);
+else commitState({ ...current, intDigits: "0" });
+return;
+      }
+commitState({ ...current, intDigits: nextInt });
+return;
+    }
+if ((key === "-" || key === "_") && allowNegative) {
+const base = stateRef.current ?? { negative: false, intDigits: "0", decDigi
+commitState({ ...base, negative: !base.negative });
+return;
+    }
+const isDecimalKey = key === decimalSep || key === "." || key === ",";
+if (isDecimalKey) {
+if (decimals <= 0) return;
+const next = stateRef.current ?? { negative: false, intDigits: "0", decDigi
+const decDigits = next.decDigits.length >= decimals ? "" : next.decDigits;
+commitState({ ...next, hasDecimal: true, decDigits });
+return;
+    }
+if (/\d/.test(key)) {
+const next = stateRef.current ?? { negative: false, intDigits: "0", decDigi
+if (next.hasDecimal && decimals > 0 && next.decDigits.length < decimals) {
+commitState({ ...next, decDigits: `${next.decDigits}${key}` });
+return;
+      }
+const intDigits = next.intDigits === "0" ? key : `${next.intDigits}${key}`;
+commitState({ ...next, intDigits });
+return;
+    }
+  };
+const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || inputProps.readOnly) return;
+const parsed = normalizeState(event.currentTarget.value, decimals, allowNegat
+commitState(parsed);
+  };
+const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+if (props.readOnly || props.enabled === false || inputProps.readOnly) return;
+const text = event.clipboardData.getData("text");
+if (!text) return;
+    event.preventDefault();
+const parsed = normalizeState(text, decimals, allowNegative);
+commitState(parsed);
+  };
+const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+if ((props.validateOnBlur ?? true) || hasInteracted) runValidation(state);
+    inputProps.onBlur?.(event);
+    props.onExit?.();
+  };
+const handleFocus = () => props.onEnter?.();
+const handleClear = () => {
+if (!inputRef.current) return;
+null
+const next = emptyValue === "null"
+      ? 
+      : { 
+negative: false, intDigits: "0", decDigits: "", hasDecimal: false };
+commitState(next);
+    inputRef.current.value = stateToDisplay(next, decimals, decimalSep, groupSep 
+setCaretToEnd(inputRef.current);
+    props.onClear?.();
+  };
+React.useEffect(() => {
+if (!inputRef.current) return;
+    inputRef.current.value = displayValue;
+setCaretToEnd(inputRef.current);
+  }, [displayValue]);
+const isDisabled = props.enabled === false || props.readOnly || inputProps.readO
+const canShowClear = (props.clearButton ?? true) && !isDisabled;
+const iconButtonsCount = props.iconButtons?.length ?? 0;
+const hasSuffix = canShowClear || iconButtonsCount > 0;
+const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
+const paddingRight = hasSuffix ? "pr-10" : "pr-3";
+const baseClass =
+"peer h-11 w-full rounded-md text-sm placeholder-transparent focus:outline-no
+const hasError = Boolean(props.error ?? internalError);
+const borderClass = (props.withBorder ?? true) || hasError
+    ? hasError
+      ? 
+      : 
+    : 
+"border border-[hsl(var(--destructive))] shadow-sm focus:border-[hsl(var(
+"border border-border shadow-sm focus:border-[hsl(var(--primary))] focus:
+"border border-transparent";
+const bgClass = props.filled ? "bg-muted/40" : "bg-white";
+const finalClass = [
+    baseClass,
+    borderClass,
+    bgClass,
+    paddingLeft,
+    paddingRight,
+"py-2",
+"leading-[1.2]"
+  ].join(" ");
+let resolvedBorderRadius: string | undefined;
+if (props.borderRadius !== undefined) {
+    resolvedBorderRadius = typeof props.borderRadius === "number" ? `${props.bord
+  }
+const prefixPaddingStyle = resolvedPrefixText
+    ? 
+`calc(${prefixWidth}px + 0.75rem${props.prefixIcon ? " + 0.75rem" : ""})`
+    : 
+undefined;
+const iconButtonsPadding = iconButtonsCount > 0 ? `${iconButtonsCount * 1.5}rem
+const baseRightPadding = canShowClear ? "2rem" : "0.75rem";
+const suffixPaddingStyle = resolvedSuffixText
+    ? 
+`calc(${suffixWidth}px + ${baseRightPadding} + ${iconButtonsPadding})`
+    : hasSuffix
+      ? 
+      : 
+`calc(${baseRightPadding} + ${iconButtonsPadding})`
+undefined;
+const clearRightStyle = resolvedSuffixText && suffixWidth ? `${suffixWidth}px` 
+return (
+    <div style={{ width: props.width ?? "100%" }}>
+      <div className="relative">
+        {resolvedPrefixText ? (
+          <span
+            ref={prefixRef}
+            className="pointer-events-none absolute left-0 top-0 z-10 flex h-11 it
+          >
+            {resolvedPrefixText}
+          </span>
+        ) : null}
+        {props.prefixIcon ? (
+          <span className="pointer-events-none absolute left-3 top-1/2 z-10 -tran
+            {props.prefixIcon}
+          </span>
+        ) : null}
+        <input
+          id={props.id}
+          type="text"
+          placeholder={placeholder}
+          className={props.className ?? finalClass}
+          style={{
+            borderRadius: resolvedBorderRadius,
+            paddingLeft: prefixPaddingStyle,
+            paddingRight: suffixPaddingStyle,
+            ...(resolvedPrefixText ? { borderTopLeftRadius: 0, borderBottomLeftRa
+            ...(resolvedSuffixText ? { borderTopRightRadius: 0, borderBottomRight
+            ...(inputProps.style ?? {})
+          }}
+          inputMode={props.textInputType ?? "decimal"}
+          readOnly={props.readOnly}
+          disabled={props.enabled === false}
+          {...restInputProps}
+          ref={mergeRefs(inputRef, (inputProps as { ref?: React.Ref<HTMLInputElem
+          onKeyDown={handleKeyDown}
+          onChange={handleChange}
+          onPaste={handlePaste}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+        />
+        {resolvedSuffixText ? (
+          <span
+            ref={suffixRef}
+            className="pointer-events-none absolute right-0 top-0 z-10 flex h-11 
+          >
+            {resolvedSuffixText}
+          </span>
+        ) : null}
+        <label
+          htmlFor={props.id}
+          className={[
+            "absolute bg-white px-1 transition-all",
+            isFilled
+              ? "-top-2 left-3 text-xs"
+              : `top-3 text-sm ${props.prefixIcon ? "left-10" : "left-3"}`,
+            hasError
+              ? "text-[hsl(var(--destructive))]"
+              : isFilled
+                ? "text-[hsl(var(--primary))]"
+                : "text-foreground/60",
+            hasError
+              ? "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focu
+              : "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focu
+            props.labelClassName ?? ""
+          ].join(" ")}
+          style={prefixPaddingStyle ? { left: prefixPaddingStyle } : undefined}
+        >
+          <span>{labelText}</span>
+          {props.required ? (
+            <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="tr
+          ) : null}
+        </label>
+        {hasSuffix ? (
+          <span
+            className="absolute right-2 top-1/2 flex -translate-y-1/2 items-cente
+            style={clearRightStyle ? { right: clearRightStyle } : undefined}
+          >
+            {canShowClear ? (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="rounded px-1 text-xs text-foreground/60 hover:text-for
+                aria-label={t(i18n, "components.actions.clear")}
+              >
+                <X size={16} />
+              </button>
+            ) : null}
+            {props.iconButtons?.map((node, index) => (
+              <span key={index}>{node}</span>
+            ))}
+          </span>
+        ) : null}
+      </div>
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <ErrorText message={props.error ?? internalError ?? undefined} />
+      </div>
+    </div>
+  );
+}
+export function SgInputCurrency(props: SgInputCurrencyProps) {
+  const { control, name, register, rules, ...rest } = props;
+  // RHF register (uncontrolled do RHF)
+  if (name && register) {
+    const reg = register(name, rules);
+    return (
+      <SgInputCurrencyBase
+        {...rest}
+        onExternalChange={(value) => {
+          // value pode ser string|number|null
+          reg.onChange({ target: { name, value } });
+        }}
+        inputProps={{
+          ...rest.inputProps,
+          name,
+          ref: mergeRefs(reg.ref, (rest.inputProps as { ref?: React.Ref<HTMLInput
+          onBlur: (event) => {
+            reg.onBlur(event);
+            rest.inputProps?.onBlur?.(event);
+          }
+        }}
+      />
+    );
+  }
+  // RHF Controller (controlled do RHF)
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({
+          field,
+          fieldState
+        }: {
+          field: ControllerRenderProps<FieldValues, string>;
+          fieldState: ControllerFieldState;
+        }) => (
+          <SgInputCurrencyBase
+            {...rest}
+            externalValue={field.value}
+            onExternalChange={(value) => field.onChange(value)}
+            error={rest.error ?? fieldState.error?.message}
+            inputProps={{
+              ...rest.inputProps,
+              onBlur: (event) => {
+                field.onBlur();
+                rest.inputProps?.onBlur?.(event);
+              }
+            }}
+          />
+        )}
+      />
+    );
+  }
+  // standalone/controlled sem RHF: use externalValue/onExternalChange via inputP
+  return <SgInputCurrencyBase {...rest} />;
+}
+3) Exemplos de uso (RHF / controlled / standalone)
+A) RHF com register (armazenando como string canonical "123.45" )
+tsx
+"use client";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "./SgInputCurrency";
+type FormData = {
+price: string | null;
+};
+Copiar código
+export function ExampleRHFRegister() {
+const { register, handleSubmit, setValue, watch } = useForm<FormData>({
+defaultValues: { price: "12.30" }
+  });
+const price = watch("price");
+return (
+<form
+className="space-y-4"
+onSubmit={handleSubmit((data) => console.log("submit", data))}
+    >
+<SgInputCurrency
+id="price"
+name="price"
+register={register as any}
+labelText="Preço"
+currency="BRL"
+valueAs="string" // default
+required
+      />
+<div className="flex gap-2">
+<button
+type="button"
+className="rounded border px-3 py-2"
+onClick={() => setValue("price", "123.45")}
+        >
+          Setar 123,45
+</button>
+<button
+type="button"
+className="rounded border px-3 py-2"
+onClick={() => setValue("price", null)}
+        >
+          Setar null
+</button>
+</div>
+<div className="text-sm text-foreground/70">
+        Valor no RHF (watch): <b>{String(price)}</b>
+</div>
+<button type="submit" className="rounded bg-black px-3 py-2 text-white">
+        Submit
+</button>
+</form>
+  );
+}
+B) RHF com Controller (armazenando como number)
+tsx
+"use client";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "./SgInputCurrency";
+type FormData = {
+total: number | null;
+};
+export function ExampleRHFControllerNumber() {
+Copiar código
+const { control, handleSubmit, setValue, watch } = useForm<FormData>({
+defaultValues: { total: 99.9 }
+  });
+const total = watch("total");
+return (
+<form className="space-y-4" onSubmit={handleSubmit((data) => console.log(data
+<SgInputCurrency
+id="total"
+name="total"
+control={control as any}
+labelText="Total"
+currency="USD"
+valueAs="number"
+      />
+<div className="flex gap-2">
+<button type="button" className="rounded border px-3 py-2" onClick={() => 
+          Setar 250.75
+</button>
+<button type="button" className="rounded border px-3 py-2" onClick={() => 
+          Limpar (null)
+</button>
+</div>
+<div className="text-sm text-foreground/70">
+        Valor no RHF (watch): <b>{String(total)}</b>
+</div>
+<button type="submit" className="rounded bg-black px-3 py-2 text-white">
+        Submit
+</button>
+</form>
+  );
+}
+C) RHF com Controller (armazenando em centavos minor )
+tsx
+"use client";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "./SgInputCurrency";
+type FormData = {
+amountMinor: number | null; // centavos
+};
+export function ExampleRHFControllerMinor() {
+const { control, setValue, watch } = useForm<FormData>({
+defaultValues: { amountMinor: 12345 } // R$ 123,45
+  });
+const amountMinor = watch("amountMinor");
+return (
+Copiar código
+<div className="space-y-4">
+<SgInputCurrency
+id="amountMinor"
+name="amountMinor"
+control={control as any}
+labelText="Valor (centavos)"
+currency="BRL"
+valueAs="minor"
+      />
+<div className="flex gap-2">
+<button className="rounded border px-3 py-2" onClick={() => setValue("amo
+          Setar 999 (R$ 9,99)
+</button>
+<button className="rounded border px-3 py-2" onClick={() => setValue("amo
+          Setar 0
+</button>
+<button className="rounded border px-3 py-2" onClick={() => setValue("amo
+          Setar null
+</button>
+</div>
+<div className="text-sm text-foreground/70">
+        amountMinor (watch): <b>{String(amountMinor)}</b>
+</div>
+</div>
+  );
+}
+D) Controlled (state externo) — setar e capturar fora do RHF
+Aqui você controla total pelo estado do React.
+tsx
+"use client";
+import React from "react";
+import { SgInputCurrency } from "./SgInputCurrency";
+export function ExampleControlled() {
+Copiar código
+const [value, setValue] = React.useState<number | null>(12.34);
+return (
+<div className="space-y-4">
+<SgInputCurrency
+id="controlled"
+labelText="Controlled USD"
+currency="USD"
+valueAs="number"
+        // 
+ 
+ 
+setando externamente (entrada)
+inputProps={{ value: value ?? "" }}
+        // 
+ 
+ 
+capturando externamente (saída)
+onChange={(v) => setValue(v as number | null)}
+      />
+<div className="flex gap-2">
+<button className="rounded border px-3 py-2" onClick={() => setValue(1000
+          Setar 1000
+</button>
+<button className="rounded border px-3 py-2" onClick={() => setValue(null
+          Setar null
+</button>
+</div>
+<div className="text-sm text-foreground/70">
+        value (state): <b>{String(value)}</b>
+</div>
+</div>
+  );
+}
+Se você preferir, dá pra expor um modo “oficial” com
+externalValue / onExternalChange no componente público também (igual teu Base ).
+Mantive compatível com teu padrão atual (onde controlled pode ser via
+inputProps.value ).
+
+E) Standalone simples (sem RHF) + limpar
+tsx
+
+Copiar código
+"use client";
+import React from "react";
+import { SgInputCurrency } from "./SgInputCurrency";
+export function ExampleStandalone() {
+return (
+<div className="space-y-4">
+<SgInputCurrency
+id="standalone"
+labelText="Preço BRL"
+currency="BRL"
+onChange={(v) => console.log("changed:", v)}
+        onClear={() => console.log("cleared")}
+      />
+<p className="text-sm text-foreground/70">
+        Use o botão de limpar (X) pra testar o clear.
+</p>
+</div>
+  );
+}
+Como você vai usar no SeedGrid (padrões recomendados)
+Backend normalmente ama centavos → valueAs="minor"
+Frontend/Forms muitas vezes preferem string canonical → valueAs="string"
+Se for cálculo live no front → valueAs="number"
+Se você quiser, eu deixo isso ainda mais “SG padrão”:
+SgInputCurrency aceitando explicitamente externalValue e onExternalChange no
+props público (não só no Base), igual você fez no Number. Isso facilita controlled sem
+usar inputProps.value .

@@ -26,6 +26,13 @@ export { SgButton } from "./buttons/SgButton";
 export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
 export { SgSplitButton } from "./buttons/SgSplitButton";
 export type { SgSplitButtonProps, SgSplitButtonItem } from "./buttons/SgSplitButton";
+export { SgSpeedDial } from "./buttons/SgSpeedDial";
+export type { SgSpeedDialProps, SgSpeedDialItem, SpeedDialDirection, SpeedDialType } from "./buttons/SgSpeedDial";
+export { SgFloatActionButton } from "./buttons/SgFloatActionButton";
+export type {
+  SgFloatActionButtonProps, SgFABAction,
+  FABPosition, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger
+} from "./buttons/SgFloatActionButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
 export { toast } from "sonner";
