@@ -63,6 +63,14 @@ export function generateComponentTokens(baseVars: ThemeVars): ThemeVars {
   componentVars["--sg-btn-danger-active-bg"] = rgb("--sg-error-800");
   componentVars["--sg-btn-danger-ring"] = rgb("--sg-error-400");
 
+  // Help button (uses tertiary color for better visibility)
+  componentVars["--sg-btn-help-bg"] = rgb("--sg-tertiary-600");
+  componentVars["--sg-btn-help-fg"] = rgb("--sg-on-tertiary");
+  componentVars["--sg-btn-help-border"] = rgb("--sg-tertiary-600");
+  componentVars["--sg-btn-help-hover-bg"] = rgb("--sg-tertiary-700");
+  componentVars["--sg-btn-help-active-bg"] = rgb("--sg-tertiary-800");
+  componentVars["--sg-btn-help-ring"] = rgb("--sg-tertiary-400");
+
   // Plain/Ghost button
   componentVars["--sg-btn-plain-bg"] = "transparent";
   componentVars["--sg-btn-plain-fg"] = rgb("--sg-text");

@@ -140,7 +140,11 @@ import { SgButton } from "@seedgrid/fe-components";
           ))}
         </Row>
         <CodeBlock code={`<SgButton severity="primary" raised>Primary</SgButton>
+<SgButton severity="secondary" raised>Secondary</SgButton>
 <SgButton severity="success" raised>Success</SgButton>
+<SgButton severity="info" raised>Info</SgButton>
+<SgButton severity="warning" raised>Warning</SgButton>
+<SgButton severity="help" raised>Help</SgButton>
 <SgButton severity="danger" raised>Danger</SgButton>`} />
       </Section>
 
@@ -152,7 +156,11 @@ import { SgButton } from "@seedgrid/fe-components";
           ))}
         </Row>
         <CodeBlock code={`<SgButton severity="primary" shape="rounded">Primary</SgButton>
+<SgButton severity="secondary" shape="rounded">Secondary</SgButton>
 <SgButton severity="success" shape="rounded">Success</SgButton>
+<SgButton severity="info" shape="rounded">Info</SgButton>
+<SgButton severity="warning" shape="rounded">Warning</SgButton>
+<SgButton severity="help" shape="rounded">Help</SgButton>
 <SgButton severity="danger" shape="rounded">Danger</SgButton>`} />
       </Section>
 
@@ -164,7 +172,11 @@ import { SgButton } from "@seedgrid/fe-components";
           ))}
         </Row>
         <CodeBlock code={`<SgButton severity="primary" appearance="ghost">Primary</SgButton>
+<SgButton severity="secondary" appearance="ghost">Secondary</SgButton>
 <SgButton severity="success" appearance="ghost">Success</SgButton>
+<SgButton severity="info" appearance="ghost">Info</SgButton>
+<SgButton severity="warning" appearance="ghost">Warning</SgButton>
+<SgButton severity="help" appearance="ghost">Help</SgButton>
 <SgButton severity="danger" appearance="ghost">Danger</SgButton>
 <SgButton severity="plain" appearance="ghost">Plain</SgButton>`} />
       </Section>
@@ -177,7 +189,12 @@ import { SgButton } from "@seedgrid/fe-components";
           ))}
         </Row>
         <CodeBlock code={`<SgButton severity="primary" appearance="outline" raised>Primary</SgButton>
+<SgButton severity="secondary" appearance="outline" raised>Secondary</SgButton>
 <SgButton severity="success" appearance="outline" raised>Success</SgButton>
+<SgButton severity="info" appearance="outline" raised>Info</SgButton>
+<SgButton severity="warning" appearance="outline" raised>Warning</SgButton>
+<SgButton severity="help" appearance="outline" raised>Help</SgButton>
+<SgButton severity="danger" appearance="outline" raised>Danger</SgButton>
 <SgButton severity="plain" appearance="outline" raised>Plain</SgButton>`} />
       </Section>
 
@@ -189,7 +206,11 @@ import { SgButton } from "@seedgrid/fe-components";
           ))}
         </Row>
         <CodeBlock code={`<SgButton severity="primary" appearance="outline">Primary</SgButton>
+<SgButton severity="secondary" appearance="outline">Secondary</SgButton>
 <SgButton severity="success" appearance="outline">Success</SgButton>
+<SgButton severity="info" appearance="outline">Info</SgButton>
+<SgButton severity="warning" appearance="outline">Warning</SgButton>
+<SgButton severity="help" appearance="outline">Help</SgButton>
 <SgButton severity="danger" appearance="outline">Danger</SgButton>`} />
       </Section>
 

@@ -45,6 +45,10 @@ const COMPONENTS = [
   { slug: "sg-benchmark", label: "Benchmark" }
 ];
 
+const THEME_ITEMS = [
+  { slug: "theme", label: "🎨 Theme System", isTheme: true }
+];
+
 const LOCALES: Array<{ value: ShowcaseLocale; label: string }> = [
   { value: "pt-BR", label: "pt-BR (Portugues do Brasil)" },
   { value: "pt-PT", label: "pt-PT (Portugues de Portugal)" },
@@ -163,6 +167,16 @@ export default function ShowcaseShell(props: {
               />
             </div>
             <nav className="flex flex-col gap-0.5">
+              {THEME_ITEMS.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/${c.slug}`}
+                  className="rounded-md px-3 py-2 text-sm hover:bg-primary/10 transition-colors font-semibold"
+                >
+                  {c.label}
+                </Link>
+              ))}
+              <div className="border-t border-border my-2" />
               {COMPONENTS.map((c) => (
                 <Link
                   key={c.slug}
