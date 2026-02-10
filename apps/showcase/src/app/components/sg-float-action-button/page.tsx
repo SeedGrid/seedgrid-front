@@ -76,20 +76,25 @@ export default function SgFloatActionButtonPage() {
       >
         <DemoBox height="h-72">
           <SgFloatActionButton absolute position="left-top" size="sm" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="center-top" size="sm" variant="secondary" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="right-top" size="sm" variant="success" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="left-center" size="sm" variant="warning" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="right-center" size="sm" variant="danger" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="center-top" size="sm" severity="secondary" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="right-top" size="sm" severity="success" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="left-center" size="sm" severity="warning" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="right-center" size="sm" severity="danger" icon={<EditIcon />} onClick={() => {}} />
           <SgFloatActionButton absolute position="left-bottom" size="sm" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="center-bottom" size="sm" variant="secondary" icon={<EditIcon />} onClick={() => {}} />
-          <SgFloatActionButton absolute position="right-bottom" size="sm" variant="success" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="center-bottom" size="sm" severity="secondary" icon={<EditIcon />} onClick={() => {}} />
+          <SgFloatActionButton absolute position="right-bottom" size="sm" severity="success" icon={<EditIcon />} onClick={() => {}} />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-xs text-muted-foreground">8 positions</span>
           </div>
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton position="right-bottom" icon={<Plus />} onClick={handleClick} />
-<SgFloatActionButton position="left-top" icon={<Plus />} onClick={handleClick} />
-<SgFloatActionButton position="center-bottom" icon={<Plus />} onClick={handleClick} />`} />
+        <CodeBlock code={`<SgFloatActionButton position="left-top" size="sm" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="center-top" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="right-top" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="left-center" size="sm" severity="warning" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="right-center" size="sm" severity="danger" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="left-bottom" size="sm" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="center-bottom" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
+<SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />`} />
       </Section>
 
       {/* ── Variants ── */}
@@ -98,16 +103,21 @@ export default function SgFloatActionButtonPage() {
         description={t(i18n, "showcase.component.fab.sections.variants.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
-          {(["primary", "secondary", "success", "warning", "danger"] as const).map((v) => (
+          {(["primary", "secondary", "success", "info", "warning", "help", "danger", "plain"] as const).map((v) => (
             <div key={v} className="flex flex-col items-center gap-2">
-              <SgFloatActionButton absolute={false} variant={v} onClick={() => {}} style={{ position: "relative" }} />
+              <SgFloatActionButton absolute={false} severity={v} onClick={() => {}} style={{ position: "relative" }} />
               <span className="text-xs text-muted-foreground">{v}</span>
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton variant="primary" />
-<SgFloatActionButton variant="success" />
-<SgFloatActionButton variant="danger" />`} />
+        <CodeBlock code={`<SgFloatActionButton severity="primary" />
+<SgFloatActionButton severity="secondary" />
+<SgFloatActionButton severity="success" />
+<SgFloatActionButton severity="info" />
+<SgFloatActionButton severity="warning" />
+<SgFloatActionButton severity="help" />
+<SgFloatActionButton severity="danger" />
+<SgFloatActionButton severity="plain" />`} />
       </Section>
 
       {/* ── Shapes & Sizes ── */}
@@ -184,27 +194,27 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Actions (Speed Dial) ── */}
+      {/* ── Actions - Linear Layout ── */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.actions.title")}
         description={t(i18n, "showcase.component.fab.sections.actions.description")}
       >
         <div className="grid grid-cols-2 gap-8 w-full">
           <DemoBox height="h-72" className="flex items-end justify-center">
-            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">direction=&quot;up&quot;</p>
-            <SgFloatActionButton absolute position="center-bottom" actions={actions} direction="up" />
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;up&quot;</p>
+            <SgFloatActionButton absolute position="center-bottom" actions={actions} type="linear" direction="up" />
           </DemoBox>
           <DemoBox height="h-72" className="flex items-start justify-center">
-            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">direction=&quot;down&quot;</p>
-            <SgFloatActionButton absolute position="center-top" actions={actions} direction="down" />
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;down&quot;</p>
+            <SgFloatActionButton absolute position="center-top" actions={actions} type="linear" direction="down" />
           </DemoBox>
           <DemoBox height="h-24" className="flex items-center justify-end">
-            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">direction=&quot;left&quot;</p>
-            <SgFloatActionButton absolute position="right-center" actions={actionsNoLabel} direction="left" />
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;left&quot;</p>
+            <SgFloatActionButton absolute position="right-center" actions={actionsNoLabel} type="linear" direction="left" />
           </DemoBox>
           <DemoBox height="h-24" className="flex items-center justify-start">
-            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">direction=&quot;right&quot;</p>
-            <SgFloatActionButton absolute position="left-center" actions={actionsNoLabel} direction="right" />
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;linear&quot; direction=&quot;right&quot;</p>
+            <SgFloatActionButton absolute position="left-center" actions={actionsNoLabel} type="linear" direction="right" />
           </DemoBox>
         </div>
         <CodeBlock code={`const actions = [
@@ -213,10 +223,212 @@ export default function SgFloatActionButtonPage() {
   { icon: <FolderPlus />, label: "New folder", onClick: () => {} },
 ];
 
-<SgFloatActionButton actions={actions} direction="up" />
-<SgFloatActionButton actions={actions} direction="down" />
-<SgFloatActionButton actions={actions} direction="left" />
-<SgFloatActionButton actions={actions} direction="right" />`} />
+<SgFloatActionButton actions={actions} type="linear" direction="up" />
+<SgFloatActionButton actions={actions} type="linear" direction="down" />
+<SgFloatActionButton actions={actions} type="linear" direction="left" />
+<SgFloatActionButton actions={actions} type="linear" direction="right" />`} />
+      </Section>
+
+      {/* ── Circle Layout ── */}
+      <Section
+        title="Circle Layout"
+        description="Actions arranged in a full circle around the button"
+      >
+        <DemoBox height="h-96" className="flex items-center justify-center">
+          <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;circle&quot;</p>
+          <SgFloatActionButton
+            absolute
+            position="center-top"
+            actions={[...actions, ...actions, { icon: <EditIcon />, label: "Edit", onClick: () => {} }]}
+            type="circle"
+            radius={120}
+            severity="secondary"
+          />
+        </DemoBox>
+        <CodeBlock code={`<SgFloatActionButton
+  actions={actions}
+  type="circle"
+  radius={120}
+  severity="secondary"
+/>`} />
+      </Section>
+
+      {/* ── Semi-Circle Layout ── */}
+      <Section
+        title="Semi-Circle Layout"
+        description="Actions arranged in a semi-circle (180°) in different directions"
+      >
+        <div className="grid grid-cols-2 gap-8 w-full">
+          <DemoBox height="h-72" className="flex items-end justify-center">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;semi-circle&quot; direction=&quot;up&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="center-bottom"
+              actions={[...actions, { icon: <EditIcon />, label: "Edit", onClick: () => {} }, { icon: <StarIcon />, label: "Star", onClick: () => {} }]}
+              type="semi-circle"
+              direction="up"
+              severity="success"
+            />
+          </DemoBox>
+          <DemoBox height="h-72" className="flex items-start justify-center">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;semi-circle&quot; direction=&quot;down&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="center-top"
+              actions={[...actions, { icon: <EditIcon />, label: "Edit", onClick: () => {} }, { icon: <StarIcon />, label: "Star", onClick: () => {} }]}
+              type="semi-circle"
+              direction="down"
+              severity="warning"
+            />
+          </DemoBox>
+          <DemoBox height="h-48" className="flex items-center justify-end">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;semi-circle&quot; direction=&quot;left&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="right-center"
+              actions={actionsNoLabel}
+              type="semi-circle"
+              direction="left"
+              severity="danger"
+            />
+          </DemoBox>
+          <DemoBox height="h-48" className="flex items-center justify-start">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;semi-circle&quot; direction=&quot;right&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="left-center"
+              actions={actionsNoLabel}
+              type="semi-circle"
+              direction="right"
+            />
+          </DemoBox>
+        </div>
+        <CodeBlock code={`<SgFloatActionButton
+  actions={actions}
+  type="semi-circle"
+  direction="up"
+  severity="success"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="semi-circle"
+  direction="down"
+  severity="warning"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="semi-circle"
+  direction="left"
+  severity="danger"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="semi-circle"
+  direction="right"
+/>`} />
+      </Section>
+
+      {/* ── Quarter-Circle Layout ── */}
+      <Section
+        title="Quarter-Circle Layout"
+        description="Actions arranged in a quarter circle (90°) in different directions"
+      >
+        <div className="grid grid-cols-2 gap-8 w-full">
+          <DemoBox height="h-64" className="flex items-end justify-center">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;quarter-circle&quot; direction=&quot;up&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="center-bottom"
+              actions={actions}
+              type="quarter-circle"
+              direction="up"
+              severity="secondary"
+            />
+          </DemoBox>
+          <DemoBox height="h-64" className="flex items-start justify-center">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;quarter-circle&quot; direction=&quot;down&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="center-top"
+              actions={actions}
+              type="quarter-circle"
+              direction="down"
+              severity="success"
+            />
+          </DemoBox>
+          <DemoBox height="h-48" className="flex items-center justify-end">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;quarter-circle&quot; direction=&quot;left&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="right-center"
+              actions={actionsNoLabel}
+              type="quarter-circle"
+              direction="left"
+              severity="warning"
+            />
+          </DemoBox>
+          <DemoBox height="h-48" className="flex items-center justify-start">
+            <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">type=&quot;quarter-circle&quot; direction=&quot;right&quot;</p>
+            <SgFloatActionButton
+              absolute
+              position="left-center"
+              actions={actionsNoLabel}
+              type="quarter-circle"
+              direction="right"
+              severity="danger"
+            />
+          </DemoBox>
+        </div>
+        <CodeBlock code={`<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="up"
+  severity="secondary"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="down"
+  severity="success"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="left"
+  severity="warning"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="right"
+  severity="danger"
+/>`} />
+      </Section>
+
+      {/* ── Active Icon ── */}
+      <Section
+        title="Active Icon"
+        description="Show a different icon when the menu is open"
+      >
+        <DemoBox height="h-72" className="flex items-end justify-center">
+          <p className="absolute top-2 left-3 text-xs text-muted-foreground font-medium">activeIcon changes when open</p>
+          <SgFloatActionButton
+            absolute
+            position="center-bottom"
+            actions={actions}
+            type="semi-circle"
+            direction="up"
+            activeIcon={<SettingsIcon />}
+            severity="secondary"
+          />
+        </DemoBox>
+        <CodeBlock code={`<SgFloatActionButton
+  actions={actions}
+  activeIcon={<Settings />}
+  type="semi-circle"
+  direction="up"
+  severity="secondary"
+/>`} />
       </Section>
 
       {/* ── Animations ── */}
@@ -231,7 +443,7 @@ export default function SgFloatActionButtonPage() {
                 animation={anim}
                 animationOn="hover"
                 icon={<HeartIcon />}
-                variant="danger"
+                severity="danger"
                 size="sm"
                 onClick={() => {}}
                 style={{ position: "relative" }}
@@ -240,10 +452,10 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="mount" />
-<SgFloatActionButton animation="fade" animationOn="mount" />
-<SgFloatActionButton animation="rotate" animationOn="hover" />
-<SgFloatActionButton animation="pulse" animationOn="hover" />`} />
+        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="mount" severity="danger" />
+<SgFloatActionButton animation="fade" animationOn="mount" severity="danger" />
+<SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
+<SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
       </Section>
 
       {/* ── Custom Color ── */}

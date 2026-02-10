@@ -15,18 +15,31 @@ export type FABPosition =
   | "center-top" | "center-bottom"
   | "right-top" | "right-center" | "right-bottom";
 
-export type FABVariant = "primary" | "secondary" | "success" | "warning" | "danger";
+export type FABSeverity =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "info"
+  | "warning"
+  | "help"
+  | "danger"
+  | "plain";
+// Backwards compatibility
+export type FABVariant = FABSeverity;
 export type FABSize = "sm" | "md" | "lg";
 export type FABShape = "circle" | "rounded" | "square";
 export type FABElevation = "none" | "sm" | "md" | "lg";
 export type FABAnimation = "scale" | "slide" | "fade" | "rotate" | "pulse" | "none";
 export type FABAnimationTrigger = "mount" | "hover" | "click";
+export type FABLayoutType = "linear" | "circle" | "semi-circle" | "quarter-circle";
 
 export type SgFABAction = {
   icon: React.ReactNode;
   label?: string;
   onClick?: () => void;
-  variant?: FABVariant | "plain";
+  severity?: FABSeverity;
+  // Backwards compatibility
+  variant?: FABSeverity;
   disabled?: boolean;
 };
 
@@ -35,9 +48,12 @@ export type SgFloatActionButtonProps = {
   hintPosition?: "top" | "right" | "bottom" | "left";
   hintDelay?: number;
   icon?: React.ReactNode;
+  activeIcon?: React.ReactNode;
   position?: FABPosition;
   offset?: { x?: number; y?: number };
-  variant?: FABVariant;
+  severity?: FABSeverity;
+  // Backwards compatibility
+  variant?: FABSeverity;
   color?: string;
   size?: FABSize;
   shape?: FABShape;
@@ -50,6 +66,9 @@ export type SgFloatActionButtonProps = {
   animationOn?: FABAnimationTrigger;
   animationDuration?: number;
   direction?: "up" | "down" | "left" | "right";
+  type?: FABLayoutType;
+  radius?: number;
+  transitionDelay?: number;
   actions?: SgFABAction[];
   onClick?: () => void;
   className?: string;
@@ -92,7 +111,7 @@ const DEFAULT_DIR: Record<FABPosition, "up" | "down" | "left" | "right"> = {
   "right-top": "down", "right-center": "left", "right-bottom": "up",
 };
 
-const COLORS: Record<FABVariant | "plain", { bg: string; fg: string; ring: string }> = {
+const COLORS: Record<FABSeverity, { bg: string; fg: string; ring: string }> = {
   primary: {
     bg: "var(--sg-btn-primary-bg, hsl(var(--primary)))",
     fg: "var(--sg-btn-primary-fg, hsl(var(--primary-foreground)))",
@@ -108,10 +127,20 @@ const COLORS: Record<FABVariant | "plain", { bg: string; fg: string; ring: strin
     fg: "var(--sg-btn-success-fg, hsl(var(--tertiary-foreground, var(--accent-foreground, 0 0% 100%))))",
     ring: "var(--sg-btn-success-ring, hsl(var(--tertiary, var(--accent))/0.35))",
   },
+  info: {
+    bg: "var(--sg-btn-info-bg, hsl(var(--secondary, var(--primary))))",
+    fg: "var(--sg-btn-info-fg, hsl(var(--secondary-foreground, var(--primary-foreground))))",
+    ring: "var(--sg-btn-info-ring, hsl(var(--secondary, var(--primary))/0.35))",
+  },
   warning: {
     bg: "var(--sg-btn-warning-bg, hsl(var(--secondary, var(--accent))))",
     fg: "var(--sg-btn-warning-fg, hsl(var(--secondary-foreground, var(--accent-foreground, 0 0% 100%))))",
     ring: "var(--sg-btn-warning-ring, hsl(var(--secondary, var(--accent))/0.35))",
+  },
+  help: {
+    bg: "var(--sg-btn-help-bg, hsl(var(--secondary, var(--primary))))",
+    fg: "var(--sg-btn-help-fg, hsl(var(--secondary-foreground, var(--primary-foreground))))",
+    ring: "var(--sg-btn-help-ring, hsl(var(--secondary, var(--primary))/0.35))",
   },
   danger: {
     bg: "var(--sg-btn-danger-bg, hsl(var(--destructive)))",
@@ -154,6 +183,81 @@ const ACT_TIP_DIR: Record<string, "top" | "bottom" | "left" | "right"> = {
   up: "left", down: "right", left: "top", right: "bottom",
 };
 
+// linear spacing between main FAB and action buttons (and among actions)
+const ITEM_GAP: Record<FABSize, number> = { sm: 48, md: 60, lg: 72 };
+
+const DEFAULT_RADIUS: Record<FABSize, number> = { sm: 100, md: 120, lg: 150 };
+
+const DIRECTION_START_ANGLE: Record<string, number> = {
+  up: 270,
+  down: 90,
+  left: 180,
+  right: 0
+};
+
+/* ── positioning helpers ── */
+
+function degToRad(deg: number) {
+  return (deg * Math.PI) / 180;
+}
+
+function computeItemPositions(
+  count: number,
+  type: FABLayoutType,
+  direction: "up" | "down" | "left" | "right",
+  size: FABSize,
+  radius?: number
+): Array<{ x: number; y: number }> {
+  if (count === 0) return [];
+
+  if (type === "linear") {
+    const gap = ITEM_GAP[size];
+    return Array.from({ length: count }, (_, i) => {
+      const dist = gap * (i + 1);
+      switch (direction) {
+        case "up":
+          return { x: 0, y: -dist };
+        case "down":
+          return { x: 0, y: dist };
+        case "left":
+          return { x: -dist, y: 0 };
+        case "right":
+          return { x: dist, y: 0 };
+      }
+    });
+  }
+
+  const r = radius ?? DEFAULT_RADIUS[size];
+  const centerAngle = DIRECTION_START_ANGLE[direction] ?? 0;
+
+  let totalArc: number;
+  switch (type) {
+    case "circle":
+      totalArc = 360;
+      break;
+    case "semi-circle":
+      totalArc = 180;
+      break;
+    case "quarter-circle":
+      totalArc = 90;
+      break;
+    default:
+      totalArc = 360;
+  }
+
+  const step = type === "circle" ? totalArc / count : totalArc / Math.max(count - 1, 1);
+  const startAngle = type === "circle" ? centerAngle : centerAngle - totalArc / 2;
+
+  return Array.from({ length: count }, (_, i) => {
+    const angle = startAngle + step * i;
+    const rad = degToRad(angle);
+    return {
+      x: Math.round(r * Math.cos(rad)),
+      y: Math.round(r * Math.sin(rad))
+    };
+  });
+}
+
 /* ── icons ── */
 
 function PlusIcon({ size }: { size: number }) {
@@ -187,13 +291,14 @@ function slideInit(pos: FABPosition): string {
 
 export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const {
-    hint, hintDelay = 300, icon,
+    hint, hintDelay = 300, icon, activeIcon,
     position = "right-bottom", offset,
-    variant = "primary", color,
+    severity = "primary", variant, color,
     size = "md", shape = "circle", elevation = "md",
     disabled = false, loading = false,
     autoHideOnScroll = false, hideDirection = "down",
     animation = "scale", animationOn = "mount", animationDuration = 200,
+    type = "linear", radius, transitionDelay = 30,
     actions, onClick,
     className, style, zIndex = 50, absolute = false,
   } = props;
@@ -263,7 +368,8 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   }, [disabled, loading, actions, onClick]);
 
   /* colors */
-  const c = COLORS[variant];
+  const resolvedSeverity = severity ?? variant ?? "primary";
+  const c = COLORS[resolvedSeverity];
   const bg = color ?? c.bg;
   const fg = color ? "white" : c.fg;
   const ring = color ? `color-mix(in srgb, ${color} 35%, transparent)` : c.ring;
@@ -314,17 +420,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   }
 
   /* action positions */
-  const SPACING = 8;
-  const baseOff = wh / 2 + actWh / 2 + SPACING;
-  const actPos = (actions ?? []).map((_, i) => {
-    const d = baseOff + i * (actWh + SPACING);
-    switch (dir) {
-      case "up": return { x: 0, y: -d };
-      case "down": return { x: 0, y: d };
-      case "left": return { x: -d, y: 0 };
-      case "right": return { x: d, y: 0 };
-    }
-  });
+  const actPos = computeItemPositions((actions ?? []).length, type, dir, size, radius);
 
   const isOff = disabled || loading;
 
@@ -347,7 +443,8 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       {/* action items */}
       {actions?.map((a, i) => {
         const p = actPos[i] ?? { x: 0, y: 0 };
-        const ac = COLORS[a.variant ?? "plain"];
+        const actionSeverity = a.severity ?? a.variant ?? "plain";
+        const ac = COLORS[actionSeverity];
         return (
           <div
             key={i}
@@ -356,7 +453,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
               transform: open ? `translate(${p.x}px, ${p.y}px) scale(1)` : "translate(0,0) scale(0)",
               opacity: open ? 1 : 0,
               transition: "transform 200ms ease, opacity 200ms ease",
-              transitionDelay: open ? `${i * 40}ms` : `${((actions.length - 1 - i) * 40)}ms`,
+              transitionDelay: open ? `${i * transitionDelay}ms` : `${((actions.length - 1 - i) * transitionDelay)}ms`,
             }}
           >
             <div className="relative group">
@@ -426,7 +523,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
             className="inline-flex items-center justify-center transition-transform duration-300"
             style={{ transform: open && actions ? "rotate(45deg)" : "rotate(0deg)" }}
           >
-            {icon ?? <PlusIcon size={iconSz} />}
+            {open && activeIcon ? activeIcon : (icon ?? <PlusIcon size={iconSz} />)}
           </span>
         )}
 

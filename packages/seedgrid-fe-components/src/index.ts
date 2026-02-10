@@ -2,6 +2,8 @@
 export type { SgInputTextProps } from "./inputs/SgInputText";
 export { SgInputNumber } from "./inputs/SgInputNumber";
 export type { SgInputNumberProps } from "./inputs/SgInputNumber";
+export { SgCurrencyEdit } from "./inputs/SgCurrencyEdit";
+export type { SgCurrencyEditProps } from "./inputs/SgCurrencyEdit";
 export { SgInputTextArea } from "./inputs/SgInputTextArea";
 export type { SgInputTextAreaProps } from "./inputs/SgInputTextArea";
 export { SgInputSelect } from "./inputs/SgInputSelect";
@@ -26,12 +28,10 @@ export { SgButton } from "./buttons/SgButton";
 export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
 export { SgSplitButton } from "./buttons/SgSplitButton";
 export type { SgSplitButtonProps, SgSplitButtonItem } from "./buttons/SgSplitButton";
-export { SgSpeedDial } from "./buttons/SgSpeedDial";
-export type { SgSpeedDialProps, SgSpeedDialItem, SpeedDialDirection, SpeedDialType } from "./buttons/SgSpeedDial";
 export { SgFloatActionButton } from "./buttons/SgFloatActionButton";
 export type {
   SgFloatActionButtonProps, SgFABAction,
-  FABPosition, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger
+  FABPosition, FABSeverity, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger, FABLayoutType
 } from "./buttons/SgFloatActionButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
