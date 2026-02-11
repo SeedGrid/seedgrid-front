@@ -95,6 +95,18 @@ export { SgGroupBox } from "./layout/SgGroupBox";
 export type { SgGroupBoxProps } from "./layout/SgGroupBox";
 export { SgCard } from "./layout/SgCard";
 export type { SgCardProps, SgCardVariant, SgCardSize } from "./layout/SgCard";
+export { SgToolBar, SgToolbarIconButton } from "./layout/SgToolBar";
+export type {
+  SgToolBarProps,
+  SgToolBarOrientation,
+  SgToolBarSeverity,
+  SgToolBarSize,
+  SgToolbarIconButtonProps
+} from "./layout/SgToolBar";
+export { SgDockLayout } from "./layout/SgDockLayout";
+export type { SgDockLayoutProps, SgDockLayoutState, SgDockToolbarState, SgDockZoneId } from "./layout/SgDockLayout";
+export { SgDockZone } from "./layout/SgDockZone";
+export type { SgDockZoneProps } from "./layout/SgDockZone";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
 export {

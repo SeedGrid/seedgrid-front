@@ -31,7 +31,9 @@ const COMPONENTS = [
       { slug: "sg-card", name: "SgCard", desc: "Card com header, leading/trailing, variants e collapse" },
       { slug: "sg-badge", name: "SgBadge", desc: "Badge de status, contador e labels" },
       { slug: "sg-badge-overlay", name: "SgBadgeOverlay", desc: "Badge sobre icone/elemento" },
-      { slug: "sg-dialog", name: "SgDialog", desc: "Dialog com header, severidade e footer" }
+      { slug: "sg-dialog", name: "SgDialog", desc: "Dialog com header, severidade e footer" },
+      { slug: "sg-toolbar", name: "SgToolBar", desc: "Toolbar com botoes e drag" },
+      { slug: "sg-dock-layout", name: "SgDockLayout", desc: "Layout com dock zones e persistencia" }
     ]
   },
   {
