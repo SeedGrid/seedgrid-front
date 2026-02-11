@@ -497,19 +497,14 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   }, [enableDragDrop, dragId]);
 
   const handleResetConfirm = React.useCallback((confirmed: boolean) => {
-    console.log("[SgFAB] reset confirm", { confirmed, dragId });
     if (!confirmed || !dragId) {
-      console.log("[SgFAB] reset aborted (no confirm/dragId)");
       setMenuOpen(false);
       return;
     }
 
     try {
-      console.log("[SgFAB] removing", `sg-fab-pos:${dragId}`);
       localStorage.removeItem(`sg-fab-pos:${dragId}`);
-      console.log("[SgFAB] removed, now set state to default position");
     } catch (error) {
-      console.log("[SgFAB] reset failed", error);
       // ignore
     }
     dragPosRef.current = null;

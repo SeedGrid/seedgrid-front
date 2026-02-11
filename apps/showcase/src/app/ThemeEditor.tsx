@@ -21,21 +21,25 @@ export function ThemeEditor() {
   const { setTheme, setMode, currentMode } = useSgTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const [customColor, setCustomColor] = React.useState("#16803D");
+  const colorInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const isValidCustom = /^#[0-9a-fA-F]{6}$/.test(customColor);
 
   const handlePresetClick = (color: string) => {
     setTheme({ seed: color });
+    setIsOpen(false);
   };
 
   const handleCustomClick = () => {
     if (isValidCustom) {
       setTheme({ seed: customColor });
+      setIsOpen(false);
     }
   };
 
   const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomColor(e.target.value);
+    colorInputRef.current?.blur();
   };
 
   const handleTextChange = (fullValue: string) => {
@@ -69,7 +73,7 @@ export function ThemeEditor() {
             />
           </svg>
         )}
-        severity="help"
+        severity="primary"
         position="right-bottom"
       />
 
@@ -143,6 +147,7 @@ export function ThemeEditor() {
                   type="color"
                   value={isValidCustom ? customColor : "#000000"}
                   onChange={handleColorPickerChange}
+                  ref={colorInputRef}
                   className="w-12 h-12 rounded-[var(--sg-radius)] border border-[rgb(var(--sg-border))] cursor-pointer shrink-0"
                 />
                 <SgInputText
