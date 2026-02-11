@@ -358,6 +358,7 @@ export function SgPopup(props: Readonly<SgPopupProps>) {
                   hasSeverity ? ACTION_CLS[sev] : ACTION_DEFAULT_CLS
                 )}
                 onClick={() => {
+                  console.log("[SgPopup] action click", { label: a.label });
                   a.onClick?.();
                   if (a.closeOnClick ?? true) close();
                 }}

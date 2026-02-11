@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { t, useComponentsI18n } from "../i18n";
+import { SgPopup } from "../overlay/SgPopup";
 
 /* ── helpers ── */
 
@@ -322,15 +323,10 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const hasStoredPosRef = React.useRef(false);
   const [isDragging, setIsDragging] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const MENU_WIDTH = 180;
-  const MENU_HEIGHT = 96;
-  const [menuDir, setMenuDir] = React.useState<{ h: "left" | "right"; v: "up" | "down" }>({
-    h: "left",
-    v: "up"
-  });
   const dragStart = React.useRef<{ x: number; y: number; left: number; top: number } | null>(null);
   const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const fabBtnRef = React.useRef<HTMLButtonElement>(null);
   const hintTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const isAbsolute = absolute === true;
 
@@ -409,16 +405,6 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     return () => { document.removeEventListener("mousedown", onMd); document.removeEventListener("keydown", onKey); };
   }, [open]);
 
-  React.useEffect(() => {
-    if (!menuOpen) return;
-    const onMd = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setMenuOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
-    document.addEventListener("mousedown", onMd);
-    document.addEventListener("keydown", onKey);
-    return () => { document.removeEventListener("mousedown", onMd); document.removeEventListener("keydown", onKey); };
-  }, [menuOpen]);
 
   const onEnter = React.useCallback(() => {
     setHovered(true);
@@ -507,38 +493,23 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     if (!enableDragDrop || !dragId) return;
     if (!hasStoredPosRef.current) return;
     event.preventDefault();
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const menuWidth = MENU_WIDTH;
-    const menuHeight = MENU_HEIGHT;
-    const parent = isAbsolute
-      ? ((containerRef.current.offsetParent as HTMLElement | null)?.getBoundingClientRect() ?? {
-        left: 0,
-        top: 0,
-        right: window.innerWidth,
-        bottom: window.innerHeight
-      })
-      : { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight };
-    const relLeft = rect.left - parent.left;
-    const relTop = rect.top - parent.top;
-    const spaceRight = parent.right - rect.right;
-    const spaceLeft = rect.left - parent.left;
-    const spaceBottom = parent.bottom - rect.bottom;
-    const spaceTop = rect.top - parent.top;
-    const h = spaceRight >= menuWidth || spaceRight >= spaceLeft ? "right" : "left";
-    const v = spaceBottom >= menuHeight || spaceBottom >= spaceTop ? "down" : "up";
-    setMenuDir({ h, v });
     setMenuOpen(true);
-  }, [enableDragDrop, dragId, i18n, isAbsolute]);
+  }, [enableDragDrop, dragId]);
 
   const handleResetConfirm = React.useCallback((confirmed: boolean) => {
+    console.log("[SgFAB] reset confirm", { confirmed, dragId });
     if (!confirmed || !dragId) {
+      console.log("[SgFAB] reset aborted (no confirm/dragId)");
       setMenuOpen(false);
       return;
     }
+
     try {
+      console.log("[SgFAB] removing", `sg-fab-pos:${dragId}`);
       localStorage.removeItem(`sg-fab-pos:${dragId}`);
-    } catch {
+      console.log("[SgFAB] removed, now set state to default position");
+    } catch (error) {
+      console.log("[SgFAB] reset failed", error);
       // ignore
     }
     dragPosRef.current = null;
@@ -546,6 +517,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     setOpen(false);
     setMenuOpen(false);
     hasStoredPosRef.current = false;
+    dragMoved.current = false;
   }, [dragId]);
 
   /* colors */
@@ -690,6 +662,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
 
       {/* main FAB button */}
       <button
+        ref={fabBtnRef}
         disabled={isOff}
         className={cn(
           "relative inline-flex items-center justify-center",
@@ -741,37 +714,28 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
         ) : null}
       </button>
 
-      {menuOpen ? (
-        <div
-          className="absolute z-20 min-w-[180px] rounded-md border border-border bg-white shadow-lg"
-          style={{
-            left: menuDir.h === "right" ? wh + 8 : -(MENU_WIDTH + 8),
-            top:
-              menuDir.v === "down"
-                ? 0
-                : -(MENU_HEIGHT - wh)
-          }}
-        >
-          <div className="rounded-t-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground">
-            {t(i18n, "components.fab.resetPosition")}
-          </div>
-          <div className="border-t border-border" />
-          <button
-            type="button"
-            className="w-full px-3 py-2 text-left text-sm hover:bg-muted"
-            onClick={() => handleResetConfirm(true)}
-          >
-            {t(i18n, "components.fab.yes")}
-          </button>
-          <button
-            type="button"
-            className="w-full px-3 py-2 text-left text-sm hover:bg-muted"
-            onClick={() => handleResetConfirm(false)}
-          >
-            {t(i18n, "components.fab.no")}
-          </button>
-        </div>
-      ) : null}
+      <SgPopup
+        title={t(i18n, "components.fab.resetPosition")}
+        open={menuOpen}
+        onOpenChange={setMenuOpen}
+        anchorRef={fabBtnRef as React.RefObject<HTMLElement>}
+        placement="auto"
+        preferPlacement="left"
+        align="start"
+        offset={8}
+        actions={[
+          {
+            label: t(i18n, "components.fab.yes"),
+            closeOnClick: false,
+            onClick: () => handleResetConfirm(true)
+          },
+          {
+            label: t(i18n, "components.fab.no"),
+            closeOnClick: false,
+            onClick: () => handleResetConfirm(false)
+          }
+        ]}
+      />
     </div>
   );
 }

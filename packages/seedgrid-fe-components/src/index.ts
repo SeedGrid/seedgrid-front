@@ -35,7 +35,7 @@ export type {
 } from "./buttons/SgFloatActionButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
-export { SgPopup } from "./commons/SgPopup";
+export { SgPopup } from "./overlay/SgPopup";
 export type {
   SgPopupProps,
   SgPopupAction,
@@ -43,7 +43,7 @@ export type {
   SgPopupPreferPlacement,
   SgPopupAlign,
   SgPopupSeverity
-} from "./commons/SgPopup";
+} from "./overlay/SgPopup";
 export { toast } from "sonner";
 export {
   onlyDigits,
