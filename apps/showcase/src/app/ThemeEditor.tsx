@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useSgTheme } from "@seedgrid/fe-theme";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+import { t, useShowcaseI18n } from "../i18n";
 
 const PRESET_COLORS = [
   { name: "Verde SeedGrid", value: "#16803D" },
@@ -15,6 +17,7 @@ const PRESET_COLORS = [
 ];
 
 export function ThemeEditor() {
+  const i18n = useShowcaseI18n();
   const { setTheme, setMode, currentMode } = useSgTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const [customColor, setCustomColor] = React.useState("#16803D");
@@ -36,42 +39,34 @@ export function ThemeEditor() {
 
   return (
     <>
-      {/* Floating Button */}
-      <button
+      <SgFloatActionButton
+        enableDragDrop
+        dragId="theme-editor-fab"
+        hint={t(i18n, "showcase.themeEditor.hint")}
         onClick={() => setIsOpen(!isOpen)}
-        className="
-          fixed bottom-6 right-6 z-50
-          w-14 h-14 rounded-full
-          bg-[rgb(var(--sg-primary-600))]
-          text-[rgb(var(--sg-on-primary))]
-          shadow-lg hover:shadow-xl
-          hover:bg-[rgb(var(--sg-primary-700))]
-          transition-all duration-200
-          flex items-center justify-center
-          border-2 border-[rgb(var(--sg-border))]
-        "
-        title="Editar Tema"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"
-          />
-        </svg>
-      </button>
+        icon={(
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"
+            />
+          </svg>
+        )}
+        severity="help"
+        position="right-bottom"
+      />
 
-      {/* Modal */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-60 bg-black/50 flex items-start justify-center pt-2 sm:pt-4 px-4"
           onClick={() => setIsOpen(false)}
         >
           <div
@@ -86,7 +81,7 @@ export function ThemeEditor() {
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-[rgb(var(--sg-text))]">
-                🎨 Editor de Tema
+                {t(i18n, "showcase.themeEditor.title")}
               </h2>
               <button
                 onClick={() => setIsOpen(false)}
@@ -109,10 +104,9 @@ export function ThemeEditor() {
               </button>
             </div>
 
-            {/* Mode Toggle */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-[rgb(var(--sg-text))] mb-2">
-                Modo
+                {t(i18n, "showcase.themeEditor.mode")}
               </label>
               <button
                 onClick={toggleMode}
@@ -125,14 +119,15 @@ export function ThemeEditor() {
                   flex items-center justify-center gap-2
                 "
               >
-                {currentMode === "light" ? "🌙 Mudar para Dark" : "☀️ Mudar para Light"}
+                {currentMode === "light"
+                  ? t(i18n, "showcase.themeEditor.modeToDark")
+                  : t(i18n, "showcase.themeEditor.modeToLight")}
               </button>
             </div>
 
-            {/* Custom Color Picker */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-[rgb(var(--sg-text))] mb-2">
-                Cor Personalizada
+                {t(i18n, "showcase.themeEditor.customColor")}
               </label>
               <div className="flex gap-2">
                 <input
@@ -157,10 +152,9 @@ export function ThemeEditor() {
               </div>
             </div>
 
-            {/* Preset Colors */}
             <div>
               <label className="block text-sm font-medium text-[rgb(var(--sg-text))] mb-3">
-                Cores Predefinidas
+                {t(i18n, "showcase.themeEditor.presets")}
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {PRESET_COLORS.map((preset) => (
@@ -198,4 +192,3 @@ export function ThemeEditor() {
     </>
   );
 }
-
