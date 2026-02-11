@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSgTheme } from "@seedgrid/fe-theme";
-import { SgFloatActionButton } from "@seedgrid/fe-components";
+import { SgFloatActionButton, SgInputText } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../i18n";
 
 const PRESET_COLORS = [
@@ -22,15 +22,24 @@ export function ThemeEditor() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [customColor, setCustomColor] = React.useState("#16803D");
 
+  const isValidCustom = /^#[0-9a-fA-F]{6}$/.test(customColor);
+
   const handlePresetClick = (color: string) => {
     setTheme({ seed: color });
-    setCustomColor(color);
   };
 
-  const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const color = e.target.value;
-    setCustomColor(color);
-    setTheme({ seed: color });
+  const handleCustomClick = () => {
+    if (isValidCustom) {
+      setTheme({ seed: customColor });
+    }
+  };
+
+  const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomColor(e.target.value);
+  };
+
+  const handleTextChange = (fullValue: string) => {
+    setCustomColor(fullValue);
   };
 
   const toggleMode = () => {
@@ -129,25 +138,26 @@ export function ThemeEditor() {
               <label className="block text-sm font-medium text-[rgb(var(--sg-text))] mb-2">
                 {t(i18n, "showcase.themeEditor.customColor")}
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-start">
                 <input
                   type="color"
-                  value={customColor}
-                  onChange={handleCustomColorChange}
-                  className="w-16 h-12 rounded-[var(--sg-radius)] border border-[rgb(var(--sg-border))] cursor-pointer"
+                  value={isValidCustom ? customColor : "#000000"}
+                  onChange={handleColorPickerChange}
+                  className="w-12 h-12 rounded-[var(--sg-radius)] border border-[rgb(var(--sg-border))] cursor-pointer shrink-0"
                 />
-                <input
-                  type="text"
-                  value={customColor}
-                  onChange={handleCustomColorChange}
-                  className="
-                    flex-1 px-3 py-2 rounded-[var(--sg-radius)]
-                    bg-[rgb(var(--sg-bg))]
-                    border border-[rgb(var(--sg-border))]
-                    text-[rgb(var(--sg-text))]
-                    font-mono text-sm
-                  "
-                  placeholder="#16803D"
+                <SgInputText
+                  id="theme-custom-hex"
+                  label={t(i18n, "showcase.themeEditor.customColor")}
+                  prefixText="#"
+                  maxLength={6}
+                  clearButton={false}
+                  validateOnBlur={false}
+                  validation={(raw) =>
+                    /^[0-9a-fA-F]{6}$/.test(raw)
+                      ? null
+                      : t(i18n, "showcase.themeEditor.invalidHex")
+                  }
+                  onChange={handleTextChange}
                 />
               </div>
             </div>
@@ -157,6 +167,38 @@ export function ThemeEditor() {
                 {t(i18n, "showcase.themeEditor.presets")}
               </label>
               <div className="grid grid-cols-4 gap-2">
+                <button
+                  onClick={handleCustomClick}
+                  className={`
+                    h-12 rounded-[var(--sg-radius)]
+                    border-2
+                    transition-all
+                    relative group
+                    ${isValidCustom
+                      ? "border-[rgb(var(--sg-border))] hover:border-[rgb(var(--sg-primary-600))] hover:scale-105 cursor-pointer"
+                      : "border-dashed border-[rgb(var(--sg-border))] cursor-not-allowed opacity-50"
+                    }
+                  `}
+                  style={isValidCustom ? { backgroundColor: customColor } : undefined}
+                  disabled={!isValidCustom}
+                  title={t(i18n, "showcase.themeEditor.custom")}
+                >
+                  {!isValidCustom && (
+                    <span className="text-xs text-[rgb(var(--sg-muted))]">
+                      {t(i18n, "showcase.themeEditor.custom")}
+                    </span>
+                  )}
+                  <span className="
+                    absolute -top-8 left-1/2 -translate-x-1/2
+                    bg-[rgb(var(--sg-tooltip))]
+                    text-[rgb(var(--sg-on-tooltip))]
+                    px-2 py-1 rounded text-xs whitespace-nowrap
+                    opacity-0 group-hover:opacity-100
+                    transition-opacity pointer-events-none
+                  ">
+                    {t(i18n, "showcase.themeEditor.custom")}
+                  </span>
+                </button>
                 {PRESET_COLORS.map((preset) => (
                   <button
                     key={preset.value}

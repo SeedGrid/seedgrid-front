@@ -14,6 +14,8 @@
   "showcase.themeEditor.modeToLight": "Switch to Light",
   "showcase.themeEditor.customColor": "Custom Color",
   "showcase.themeEditor.presets": "Preset Colors",
+  "showcase.themeEditor.custom": "Custom",
+  "showcase.themeEditor.invalidHex": "Invalid hex color",
   "showcase.home.title": "SeedGrid Components",
   "showcase.home.description": "Interactive catalog of all components in {pkg}. Click any component to see interactive examples and prop docs.",
   "showcase.home.about.title": "About",
