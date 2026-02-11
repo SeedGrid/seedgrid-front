@@ -44,6 +44,13 @@ export type {
   SgPopupAlign,
   SgPopupSeverity
 } from "./overlay/SgPopup";
+export { SgDialog } from "./overlay/SgDialog";
+export type {
+  SgDialogProps,
+  SgDialogSize,
+  SgDialogSeverity,
+  SgDialogAnimation
+} from "./overlay/SgDialog";
 export { SgBadge } from "./commons/SgBadge";
 export { SgBadgeOverlay } from "./commons/SgBadgeOverlay";
 export type {

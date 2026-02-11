@@ -51,6 +51,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-badge", label: "SgBadge" },
   { group: "Layout", slug: "sg-badge-overlay", label: "SgBadgeOverlay" },
   { group: "Layout", slug: "sg-popup", label: "SgPopup" },
+  { group: "Layout", slug: "sg-dialog", label: "SgDialog" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];
