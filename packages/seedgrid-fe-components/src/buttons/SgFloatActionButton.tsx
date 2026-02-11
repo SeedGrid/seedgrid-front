@@ -363,10 +363,18 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       const stored = localStorage.getItem(`sg-fab-pos:${dragId}`);
       if (!stored) return;
       const parsed = JSON.parse(stored) as { x?: number; y?: number } | null;
-      if (!parsed || !Number.isFinite(parsed.x) || !Number.isFinite(parsed.y)) {
+      if (
+        !parsed ||
+        typeof parsed.x !== "number" ||
+        typeof parsed.y !== "number" ||
+        !Number.isFinite(parsed.x) ||
+        !Number.isFinite(parsed.y)
+      ) {
         localStorage.removeItem(`sg-fab-pos:${dragId}`);
         return;
       }
+      const px = parsed.x;
+      const py = parsed.y;
       const wh = BTN_WH[size];
       let maxX = Math.max(0, window.innerWidth - wh);
       let maxY = Math.max(0, window.innerHeight - wh);
@@ -379,8 +387,8 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
         }
       }
       const clamped = {
-        x: Math.min(Math.max(parsed.x, 0), maxX),
-        y: Math.min(Math.max(parsed.y, 0), maxY)
+        x: Math.min(Math.max(px, 0), maxX),
+        y: Math.min(Math.max(py, 0), maxY)
       };
       dragPosRef.current = clamped;
       setDragPos(clamped);

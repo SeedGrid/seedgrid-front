@@ -35,6 +35,15 @@ export type {
 } from "./buttons/SgFloatActionButton";
 export { SgToaster } from "./commons/SgToaster";
 export type { SgToasterProps } from "./commons/SgToaster";
+export { SgPopup } from "./commons/SgPopup";
+export type {
+  SgPopupProps,
+  SgPopupAction,
+  SgPopupPlacement,
+  SgPopupPreferPlacement,
+  SgPopupAlign,
+  SgPopupSeverity
+} from "./commons/SgPopup";
 export { toast } from "sonner";
 export {
   onlyDigits,
@@ -68,6 +77,26 @@ export { SgGroupBox } from "./layout/SgGroupBox";
 export type { SgGroupBoxProps } from "./layout/SgGroupBox";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
+export {
+  SgEnvironmentProvider,
+  useSgEnvironment,
+  useSgNamespaceProvider,
+  buildSgPersistenceKey,
+  createLocalStorageStrategy,
+  createApiPersistenceStrategy,
+  createCompositePersistenceStrategy,
+  useSgPersistence,
+  useSgPersistentState
+} from "./environment/SgEnvironmentProvider";
+export type {
+  NamespaceProvider,
+  PersistenceStrategy,
+  SgEnvironment,
+  SgEnvironmentValue,
+  SgPersistenceMode,
+  SgPersistenceConfig,
+  SgPersistenceRecordDTO
+} from "./environment/SgEnvironmentProvider";
 export { componentsManifest } from "./manifest";
 export {
   SgComponentsI18nProvider,
