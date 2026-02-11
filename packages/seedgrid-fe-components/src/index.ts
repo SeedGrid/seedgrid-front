@@ -75,6 +75,8 @@ export {
 export type { PasswordPolicy, BirthDatePolicy } from "./validators";
 export { SgGroupBox } from "./layout/SgGroupBox";
 export type { SgGroupBoxProps } from "./layout/SgGroupBox";
+export { SgCard } from "./layout/SgCard";
+export type { SgCardProps, SgCardVariant, SgCardSize } from "./layout/SgCard";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
 export {

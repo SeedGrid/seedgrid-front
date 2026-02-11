@@ -23,27 +23,57 @@ export function ThemeEditor() {
   const [customColor, setCustomColor] = React.useState("#16803D");
   const colorInputRef = React.useRef<HTMLInputElement | null>(null);
 
+  // Snapshot to revert on cancel
+  const snapshotThemeRef = React.useRef<Record<string, unknown> | null>(null);
+  const snapshotModeRef = React.useRef<"light" | "dark">("light");
+
   const isValidCustom = /^#[0-9a-fA-F]{6}$/.test(customColor);
+
+  const openEditor = () => {
+    try {
+      const stored = localStorage.getItem("sg:theme:config");
+      snapshotThemeRef.current = stored ? JSON.parse(stored) : { seed: "#16803D" };
+    } catch {
+      snapshotThemeRef.current = { seed: "#16803D" };
+    }
+    snapshotModeRef.current = currentMode;
+    setIsOpen(true);
+  };
+
+  const cancelEditor = () => {
+    if (snapshotThemeRef.current) {
+      setTheme(snapshotThemeRef.current);
+    }
+    setMode(snapshotModeRef.current);
+    setIsOpen(false);
+  };
+
+  const applyEditor = () => {
+    setIsOpen(false);
+  };
 
   const handlePresetClick = (color: string) => {
     setTheme({ seed: color });
-    setIsOpen(false);
   };
 
   const handleCustomClick = () => {
     if (isValidCustom) {
       setTheme({ seed: customColor });
-      setIsOpen(false);
     }
   };
 
   const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomColor(e.target.value);
+    const color = e.target.value;
+    setCustomColor(color);
+    setTheme({ seed: color });
     colorInputRef.current?.blur();
   };
 
   const handleTextChange = (fullValue: string) => {
     setCustomColor(fullValue);
+    if (/^#[0-9a-fA-F]{6}$/.test(fullValue)) {
+      setTheme({ seed: fullValue });
+    }
   };
 
   const toggleMode = () => {
@@ -56,7 +86,7 @@ export function ThemeEditor() {
         enableDragDrop
         dragId="theme-editor-fab"
         hint={t(i18n, "showcase.themeEditor.hint")}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => (isOpen ? cancelEditor() : openEditor())}
         icon={(
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +110,7 @@ export function ThemeEditor() {
       {isOpen && (
         <div
           className="fixed inset-0 z-60 bg-black/50 flex items-start justify-center pt-2 sm:pt-4 px-4"
-          onClick={() => setIsOpen(false)}
+          onClick={cancelEditor}
         >
           <div
             className="
@@ -97,7 +127,7 @@ export function ThemeEditor() {
                 {t(i18n, "showcase.themeEditor.title")}
               </h2>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={cancelEditor}
                 className="
                   text-[rgb(var(--sg-muted))]
                   hover:text-[rgb(var(--sg-text))]
@@ -233,6 +263,19 @@ export function ThemeEditor() {
                 ))}
               </div>
             </div>
+
+            <button
+              onClick={applyEditor}
+              className="
+                w-full mt-6 px-4 py-3 rounded-[var(--sg-radius)]
+                bg-[rgb(var(--sg-primary-600))]
+                text-[rgb(var(--sg-on-primary))]
+                hover:bg-[rgb(var(--sg-primary-700))]
+                transition font-medium
+              "
+            >
+              {t(i18n, "showcase.themeEditor.apply")}
+            </button>
           </div>
         </div>
       )}
