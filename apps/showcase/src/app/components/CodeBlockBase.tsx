@@ -22,6 +22,7 @@ export default function CodeBlockBase(props: { code: string }) {
     <SgCard
       title={t(i18n, "showcase.common.code.title")}
       description={t(i18n, "showcase.common.code.description")}
+      variant="elevated"
       trailing={
         <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
           {t(i18n, "showcase.common.code.badge")}
