@@ -28,7 +28,9 @@ const COMPONENTS = [
     categoryKey: "showcase.nav.layout",
     items: [
       { slug: "sg-group-box", name: "SgGroupBox", desc: "Container agrupado com legenda (fieldset/legend)" },
-      { slug: "sg-card", name: "SgCard", desc: "Card com header, leading/trailing, variants e collapse" }
+      { slug: "sg-card", name: "SgCard", desc: "Card com header, leading/trailing, variants e collapse" },
+      { slug: "sg-badge", name: "SgBadge", desc: "Badge de status, contador e labels" },
+      { slug: "sg-badge-overlay", name: "SgBadgeOverlay", desc: "Badge sobre icone/elemento" }
     ]
   },
   {

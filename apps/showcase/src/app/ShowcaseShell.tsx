@@ -48,6 +48,8 @@ const COMPONENTS = [
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },
+  { group: "Layout", slug: "sg-badge", label: "SgBadge" },
+  { group: "Layout", slug: "sg-badge-overlay", label: "SgBadgeOverlay" },
   { group: "Layout", slug: "sg-popup", label: "SgPopup" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }

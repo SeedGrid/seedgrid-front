@@ -44,6 +44,17 @@ export type {
   SgPopupAlign,
   SgPopupSeverity
 } from "./overlay/SgPopup";
+export { SgBadge } from "./commons/SgBadge";
+export { SgBadgeOverlay } from "./commons/SgBadgeOverlay";
+export type {
+  SgBadgeProps,
+  SgBadgeSeverity,
+  SgBadgeVariant,
+  SgBadgeSize,
+  SgBadgeCustomColors,
+  SgBadgePartsClassName
+} from "./commons/SgBadge";
+export type { SgBadgeOverlayProps, SgBadgeOverlayPlacement } from "./commons/SgBadgeOverlay";
 export { toast } from "sonner";
 export {
   onlyDigits,

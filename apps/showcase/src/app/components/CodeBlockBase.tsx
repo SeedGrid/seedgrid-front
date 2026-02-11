@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SgCard } from "@seedgrid/fe-components";
+import { SgBadge, SgCard } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../i18n";
 
 export default function CodeBlockBase(props: { code: string }) {
@@ -24,9 +24,13 @@ export default function CodeBlockBase(props: { code: string }) {
       description={t(i18n, "showcase.common.code.description")}
       variant="elevated"
       trailing={
-        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-          {t(i18n, "showcase.common.code.badge")}
-        </span>
+        <SgBadge
+          value={t(i18n, "showcase.common.code.badge")}
+          size="xs"
+          variant="outline"
+          severity="primary"
+          hint={t(i18n, "showcase.common.code.hint")}
+        />
       }
       collapsible
       defaultOpen={false}
