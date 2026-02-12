@@ -9,14 +9,15 @@ type Severity =
   | "info"
   | "warning"
   | "help"
-  | "danger"
-  | "plain";
+  | "danger";
 
-type Appearance = "solid" | "flat" | "outline" | "ghost" | "text";
+type Appearance = "solid" | "outline" | "ghost";
 
 type Size = "sm" | "md" | "lg";
 
-type Shape = "default" | "rounded";
+type Shape = "default" | "rounded" | "square" | "circle";
+
+type Elevation = "none" | "sm" | "md";
 
 export type SgButtonCustomColors = {
   bg?: string; // ex: "#2563eb"
@@ -34,7 +35,8 @@ export type SgButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 
   appearance?: Appearance;
   size?: Size;
   shape?: Shape;
-  raised?: boolean;
+  elevation?: Elevation;
+  iconOnly?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   loading?: boolean;
@@ -98,13 +100,6 @@ const PRESET: Record<
     hoverBg: "var(--sg-btn-danger-hover-bg, hsl(var(--destructive)))",
     ring: "var(--sg-btn-danger-ring, hsl(var(--destructive)/0.35))"
   },
-  plain: {
-    bg: "var(--sg-btn-plain-bg, hsl(var(--muted)))",
-    fg: "var(--sg-btn-plain-fg, hsl(var(--muted-foreground)))",
-    border: "var(--sg-btn-plain-border, hsl(var(--muted)))",
-    hoverBg: "var(--sg-btn-plain-hover-bg, hsl(var(--muted)))",
-    ring: "var(--sg-btn-plain-ring, hsl(var(--muted)/0.35))"
-  }
 };
 
 const SIZE: Record<
@@ -135,6 +130,7 @@ export function resolveButtonColors(
 
 function buildVars(severity: Severity, custom?: SgButtonCustomColors): React.CSSProperties {
   const merged = resolveButtonColors(severity, custom);
+  const toneKey = severity === "danger" ? "error" : severity === "help" ? "tertiary" : severity;
   return {
     ["--sg-btn-bg" as any]: merged.bg,
     ["--sg-btn-fg" as any]: merged.fg,
@@ -143,7 +139,8 @@ function buildVars(severity: Severity, custom?: SgButtonCustomColors): React.CSS
     ["--sg-btn-hover-fg" as any]: merged.hoverFg,
     ["--sg-btn-hover-border" as any]: merged.hoverBorder,
     ["--sg-btn-active-bg" as any]: merged.activeBg,
-    ["--sg-btn-ring" as any]: merged.ring
+    ["--sg-btn-ring" as any]: merged.ring,
+    ["--sg-btn-tint" as any]: `var(--sg-${toneKey}-600)`
   };
 }
 
@@ -155,26 +152,29 @@ function appearanceClass(appearance: Appearance) {
         "hover:bg-[var(--sg-btn-hover-bg)] hover:text-[var(--sg-btn-hover-fg)] hover:border-[var(--sg-btn-hover-border)]",
         "active:bg-[var(--sg-btn-active-bg)]"
       );
-    case "flat":
-      return cn(
-        "bg-[var(--sg-btn-bg)] text-[var(--sg-btn-fg)] border border-transparent",
-        "hover:bg-[var(--sg-btn-hover-bg)] hover:text-[var(--sg-btn-hover-fg)]",
-        "active:bg-[var(--sg-btn-active-bg)]"
-      );
     case "outline":
       return cn(
         "bg-transparent text-[var(--sg-btn-bg)] border border-[var(--sg-btn-border)]",
-        "hover:bg-[color-mix(in_srgb,var(--sg-btn-bg)_12%,transparent)]",
-        "active:bg-[color-mix(in_srgb,var(--sg-btn-bg)_18%,transparent)]"
+        "hover:bg-[rgb(var(--sg-btn-tint)/0.12)]",
+        "active:bg-[rgb(var(--sg-btn-tint)/0.18)]"
       );
     case "ghost":
       return cn(
         "bg-transparent text-[var(--sg-btn-bg)] border border-transparent",
-        "hover:bg-[color-mix(in_srgb,var(--sg-btn-bg)_10%,transparent)]",
-        "active:bg-[color-mix(in_srgb,var(--sg-btn-bg)_16%,transparent)]"
+        "hover:bg-[rgb(var(--sg-btn-tint)/0.10)]",
+        "active:bg-[rgb(var(--sg-btn-tint)/0.16)]"
       );
-    case "text":
-      return cn("bg-transparent text-[var(--sg-btn-bg)] border border-transparent", "hover:underline underline-offset-4");
+  }
+}
+
+function elevationClass(elevation: Elevation) {
+  switch (elevation) {
+    case "sm":
+      return "shadow-sm hover:shadow-md active:shadow-sm";
+    case "md":
+      return "shadow-md hover:shadow-lg active:shadow-md";
+    default:
+      return "";
   }
 }
 
@@ -183,9 +183,10 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
     {
       severity = "primary",
       appearance = "solid",
-      size = "md",
-      shape = "default",
-      raised = false,
+      size,
+      shape,
+      elevation = "none",
+      iconOnly,
       leftIcon,
       rightIcon,
       loading = false,
@@ -200,8 +201,11 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
     ref
   ) => {
     const isDisabled = Boolean(disabled || loading);
-    const isIconOnly = !children && (leftIcon || rightIcon);
-    const s = SIZE[size];
+    const inferredIconOnly = !children && (leftIcon || rightIcon);
+    const isIconOnly = iconOnly ?? inferredIconOnly;
+    const resolvedSize = size ?? (isIconOnly ? "sm" : "md");
+    const resolvedShape = shape ?? (isIconOnly ? "circle" : "default");
+    const s = SIZE[resolvedSize];
 
     return (
       <button
@@ -219,10 +223,10 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
           isIconOnly ? "aspect-square" : s.px,
           s.text,
           s.gap,
-          shape === "rounded" ? "rounded-full" : s.radius,
+          resolvedShape === "rounded" ? "rounded-full" : resolvedShape === "circle" ? "rounded-full" : resolvedShape === "square" ? "rounded-none" : s.radius,
           appearanceClass(appearance),
-          raised && appearance !== "text" ? "shadow-sm hover:shadow-md active:shadow-sm" : false,
-          !isDisabled && appearance !== "text" ? "active:translate-y-[0.5px]" : false,
+          elevationClass(elevation),
+          !isDisabled ? "active:translate-y-[0.5px]" : false,
           className
         )}
         {...rest}

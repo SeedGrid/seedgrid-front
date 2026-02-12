@@ -591,7 +591,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
         </SgButton>
 
         <SgButton
-          severity="info"
+          severity="secondary"
           appearance="ghost"
           size="sm"
           shape="rounded"
@@ -605,7 +605,6 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
           <SgButton
             severity="danger"
             appearance="outline"
-            raised
             size="sm"
             shape="rounded"
             onClick={clearChecked}
@@ -674,7 +673,8 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
 
                 <SgButton
                   severity="primary"
-                  raised
+                  appearance="solid"
+                  elevation="sm"
                   size="md"
                   shape="rounded"
                   disabled={!!confirmDisabled}

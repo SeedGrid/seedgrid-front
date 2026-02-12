@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { Check, X, Bookmark, Search, Users, Bell, Heart, Filter } from "lucide-react";
+import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
 import { SgButton } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
-const SEVERITIES_WITH_PLAIN = [...SEVERITIES, "plain"] as const;
 
 const ICON_MAP = [
   { severity: "primary", icon: <Bookmark className="size-4" /> },
@@ -73,7 +72,7 @@ export default function SgButtonShowcase() {
       <div>
         <h1 className="text-3xl font-bold">SgButton</h1>
         <p className="mt-2 text-muted-foreground">
-          Botao com suporte a severity, appearance, shape, raised, icons e loading.
+          Botao com suporte a severity, appearance, shape, elevation, icons e loading.
         </p>
       </div>
 
@@ -95,13 +94,13 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* ── Icons ── */}
-      <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/raised.">
+      <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
         <div className="space-y-4">
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Raised Buttons</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Elevated Buttons</div>
             <Row>
               {SEVERITIES.map((s) => (
-                <SgButton key={`raised-${s}`} severity={s} raised leftIcon={<Check className="size-4" />}>
+                <SgButton key={`raised-${s}`} severity={s} appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>
                   {capitalize(s)}
                 </SgButton>
               ))}
@@ -131,10 +130,10 @@ export default function SgButtonShowcase() {
           </div>
 
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Raised Text Buttons</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Outlined + Elevation</div>
             <Row>
               {SEVERITIES.map((s) => (
-                <SgButton key={`raised-text-${s}`} severity={s} appearance="outline" raised leftIcon={<Check className="size-4" />}>
+                <SgButton key={`raised-text-${s}`} severity={s} appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>
                   {capitalize(s)}
                 </SgButton>
               ))}
@@ -156,10 +155,10 @@ export default function SgButtonShowcase() {
         <CodeBlock code={`import { Check } from "lucide-react";
 import { SgButton } from "@seedgrid/fe-components";
 
-// Raised Buttons
-<SgButton severity="primary" raised leftIcon={<Check className="size-4" />}>Primary</SgButton>
-<SgButton severity="info" raised leftIcon={<Check className="size-4" />}>Info</SgButton>
-<SgButton severity="danger" raised leftIcon={<Check className="size-4" />}>Danger</SgButton>
+// Elevated Buttons (solid + elevation)
+<SgButton severity="primary" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="info" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Danger</SgButton>
 
 // Rounded Buttons
 <SgButton severity="secondary" shape="rounded" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
@@ -169,9 +168,9 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="secondary" appearance="ghost" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
 <SgButton severity="warning" appearance="ghost" leftIcon={<Check className="size-4" />}>Warning</SgButton>
 
-// Raised Text Buttons (outline + raised)
-<SgButton severity="primary" appearance="outline" raised leftIcon={<Check className="size-4" />}>Primary</SgButton>
-<SgButton severity="help" appearance="outline" raised leftIcon={<Check className="size-4" />}>Help</SgButton>
+// Outlined + Elevation
+<SgButton severity="primary" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="help" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Help</SgButton>
 
 // Outlined Buttons
 <SgButton severity="info" appearance="outline" leftIcon={<Check className="size-4" />}>Info</SgButton>
@@ -195,19 +194,19 @@ import { SgButton } from "@seedgrid/fe-components";
       </Section>
 
       {/* ── Raised Buttons ── */}
-      <Section title="Raised Buttons" description="raised adiciona sombra ao botao.">
+      <Section title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
-            <SgButton key={s} severity={s} raised>{capitalize(s)}</SgButton>
+            <SgButton key={s} severity={s} appearance="solid" elevation="sm">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={`<SgButton severity="primary" raised>Primary</SgButton>
-<SgButton severity="secondary" raised>Secondary</SgButton>
-<SgButton severity="success" raised>Success</SgButton>
-<SgButton severity="info" raised>Info</SgButton>
-<SgButton severity="warning" raised>Warning</SgButton>
-<SgButton severity="help" raised>Help</SgButton>
-<SgButton severity="danger" raised>Danger</SgButton>`} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="solid" elevation="sm">Primary</SgButton>
+<SgButton severity="secondary" appearance="solid" elevation="sm">Secondary</SgButton>
+<SgButton severity="success" appearance="solid" elevation="sm">Success</SgButton>
+<SgButton severity="info" appearance="solid" elevation="sm">Info</SgButton>
+<SgButton severity="warning" appearance="solid" elevation="sm">Warning</SgButton>
+<SgButton severity="help" appearance="solid" elevation="sm">Help</SgButton>
+<SgButton severity="danger" appearance="solid" elevation="sm">Danger</SgButton>`} />
       </Section>
 
       {/* ── Rounded Buttons ── */}
@@ -227,9 +226,9 @@ import { SgButton } from "@seedgrid/fe-components";
       </Section>
 
       {/* ── Flat Buttons (ghost) ── */}
-      <Section title="Flat Buttons" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
+      <Section title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
-          {SEVERITIES_WITH_PLAIN.map((s) => (
+          {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="ghost">{capitalize(s)}</SgButton>
           ))}
         </Row>
@@ -239,25 +238,23 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="info" appearance="ghost">Info</SgButton>
 <SgButton severity="warning" appearance="ghost">Warning</SgButton>
 <SgButton severity="help" appearance="ghost">Help</SgButton>
-<SgButton severity="danger" appearance="ghost">Danger</SgButton>
-<SgButton severity="plain" appearance="ghost">Plain</SgButton>`} />
+<SgButton severity="danger" appearance="ghost">Danger</SgButton>`} />
       </Section>
 
       {/* ── Raised Text Buttons ── */}
-      <Section title="Raised Text Buttons" description='appearance="outline" + raised - bordas com sombra.'>
+      <Section title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
         <Row>
-          {SEVERITIES_WITH_PLAIN.map((s) => (
-            <SgButton key={s} severity={s} appearance="outline" raised>{capitalize(s)}</SgButton>
+          {SEVERITIES.map((s) => (
+            <SgButton key={s} severity={s} appearance="outline" elevation="sm">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={`<SgButton severity="primary" appearance="outline" raised>Primary</SgButton>
-<SgButton severity="secondary" appearance="outline" raised>Secondary</SgButton>
-<SgButton severity="success" appearance="outline" raised>Success</SgButton>
-<SgButton severity="info" appearance="outline" raised>Info</SgButton>
-<SgButton severity="warning" appearance="outline" raised>Warning</SgButton>
-<SgButton severity="help" appearance="outline" raised>Help</SgButton>
-<SgButton severity="danger" appearance="outline" raised>Danger</SgButton>
-<SgButton severity="plain" appearance="outline" raised>Plain</SgButton>`} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="outline" elevation="sm">Primary</SgButton>
+<SgButton severity="secondary" appearance="outline" elevation="sm">Secondary</SgButton>
+<SgButton severity="success" appearance="outline" elevation="sm">Success</SgButton>
+<SgButton severity="info" appearance="outline" elevation="sm">Info</SgButton>
+<SgButton severity="warning" appearance="outline" elevation="sm">Warning</SgButton>
+<SgButton severity="help" appearance="outline" elevation="sm">Help</SgButton>
+<SgButton severity="danger" appearance="outline" elevation="sm">Danger</SgButton>`} />
       </Section>
 
       {/* ── Outlined Buttons ── */}
@@ -298,7 +295,6 @@ import { SgButton } from "@seedgrid/fe-components";
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="ghost" leftIcon={icon} />
           ))}
-          <SgButton severity="plain" shape="rounded" appearance="ghost" leftIcon={<Filter className="size-4" />} />
         </Row>
         <CodeBlock code={`<SgButton severity="primary" shape="rounded" appearance="ghost" leftIcon={<Check className="size-4" />} />
 <SgButton severity="secondary" shape="rounded" appearance="ghost" leftIcon={<Bookmark className="size-4" />} />

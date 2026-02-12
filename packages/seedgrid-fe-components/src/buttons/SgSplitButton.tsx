@@ -11,12 +11,15 @@ type Severity =
   | "info"
   | "warning"
   | "help"
-  | "danger"
-  | "plain";
+  | "danger";
 
 type Appearance = "solid" | "outline" | "ghost";
 
 type Size = "sm" | "md" | "lg";
+
+type Shape = "default" | "rounded" | "square";
+
+type Elevation = "none" | "sm" | "md";
 
 export type SgSplitButtonItem = {
   label: string;
@@ -32,7 +35,8 @@ export type SgSplitButtonProps = {
   severity?: Severity;
   appearance?: Appearance;
   size?: Size;
-  raised?: boolean;
+  shape?: Shape;
+  elevation?: Elevation;
   disabled?: boolean;
   loading?: boolean;
   onClick?: () => void;
@@ -66,7 +70,8 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
       severity = "primary",
       appearance = "solid",
       size = "md",
-      raised = false,
+      shape = "default",
+      elevation = "none",
       disabled = false,
       loading = false,
       onClick,
@@ -111,21 +116,30 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
     };
 
     const colors = resolveButtonColors(severity, customColors);
-    const menuBg = appearance === "solid" ? colors.bg : "#ffffff";
-    const menuFg = appearance === "solid" ? colors.fg : colors.bg;
+    const toneKey =
+      severity === "danger"
+        ? "error"
+        : severity === "help"
+          ? "tertiary"
+          : severity;
+    const tone100 = `var(--sg-${toneKey}-100, var(--sg-primary-100))`;
+    const tone200 = `var(--sg-${toneKey}-200, ${tone100})`;
+    const tone300 = `var(--sg-${toneKey}-300, ${tone200})`;
+    const menuBg = appearance === "solid" ? `rgb(${tone100})` : "#ffffff";
+    const menuFg = appearance === "solid" ? "rgb(var(--sg-text))" : colors.bg;
     const menuHoverBg = appearance === "solid"
-      ? colors.hoverBg
-      : `color-mix(in_srgb, ${colors.bg} 12%, transparent)`;
+      ? `rgb(${tone200})`
+      : `rgb(${tone100})`;
     const menuBorder =
       appearance === "outline"
         ? colors.border
         : appearance === "solid"
-          ? colors.hoverBg
+          ? `rgb(${tone200})`
           : "transparent";
 
     const dividerBorderClass =
       appearance === "solid"
-        ? "border-l border-white/30"
+        ? "border-l border-[rgb(var(--sg-border))]"
         : appearance === "outline"
           ? "border-l border-[var(--sg-btn-border,currentColor)]"
           : "border-l border-current/20";
@@ -143,7 +157,8 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
           severity={severity}
           appearance={appearance}
           size={size}
-          raised={raised}
+          shape={shape}
+          elevation={elevation}
           disabled={disabled}
           loading={loading}
           leftIcon={leftIcon}
@@ -158,7 +173,8 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
           severity={severity}
           appearance={appearance}
           size={size}
-          raised={raised}
+          shape={shape}
+          elevation={elevation}
           disabled={disabled || loading}
           leftIcon={<ChevronDown className="size-4" />}
           onClick={toggle}
@@ -185,7 +201,7 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
                   <div
                     className="my-0.5"
                     style={{
-                      borderTop: `1px solid ${appearance === "solid" ? "rgba(255,255,255,0.2)" : "#e5e7eb"}`
+                      borderTop: `1px solid ${appearance === "solid" ? `rgb(${tone300})` : "rgb(var(--sg-text)/0.2)"}`
                     }}
                   />
                 ) : null}

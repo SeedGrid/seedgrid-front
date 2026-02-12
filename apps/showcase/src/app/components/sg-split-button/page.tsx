@@ -139,20 +139,21 @@ const items = [
       </Section>
 
       {/* ── Raised ── */}
-      <Section title="Raised" description="raised adiciona sombra ao split button.">
+      <Section title="Elevated" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgSplitButton
               key={s}
               label={capitalize(s)}
               severity={s}
-              raised
+              appearance="solid"
+              elevation="sm"
               onClick={() => console.log(s)}
               items={BASIC_ITEMS}
             />
           ))}
         </Row>
-        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" raised onClick={() => {}} items={items} />`} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="solid" elevation="sm" onClick={() => {}} items={items} />`} />
       </Section>
 
       {/* ── Sizes ── */}
