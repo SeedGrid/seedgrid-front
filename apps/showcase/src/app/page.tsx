@@ -21,7 +21,8 @@ const COMPONENTS = [
       { slug: "sg-input-cpf-cnpj", name: "SgInputCPFCNPJ", desc: "Input que aceita CPF ou CNPJ com deteccao automatica" },
       { slug: "sg-input-postal-code", name: "SgInputPostalCode", desc: "Input de codigo postal com mascara por pais (BR, PT, US, ES, UY, AR, PY)" },
       { slug: "sg-input-phone", name: "SgInputPhone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" },
-      { slug: "sg-autocomplete", name: "SgAutocomplete", desc: "Autocomplete com busca, agrupamento e render custom" }
+      { slug: "sg-autocomplete", name: "SgAutocomplete", desc: "Autocomplete com busca, agrupamento e render custom" },
+      { slug: "sg-text-editor", name: "SgTextEditor", desc: "Editor rico HTML com save/load" }
     ]
   },
   {

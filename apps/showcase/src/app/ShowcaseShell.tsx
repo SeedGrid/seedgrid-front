@@ -42,6 +42,7 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-postal-code", label: "SgInputPostalCode" },
   { group: "Inputs", slug: "sg-input-phone", label: "SgInputPhone" },
   { group: "Inputs", slug: "sg-autocomplete", label: "SgAutocomplete" },
+  { group: "Inputs", slug: "sg-text-editor", label: "SgTextEditor" },
   { group: "Buttons", slug: "sg-button", label: "SgButton" },
   { group: "Buttons", slug: "sg-split-button", label: "SgSplitButton" },
   { group: "Buttons", slug: "sg-float-action-button", label: "SgFloatActionButton" },

@@ -288,9 +288,8 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       >
         {React.Children.map(children, (child) => {
           if (!isCollapsed) return child;
-          return React.isValidElement(child)
-            ? React.cloneElement(child, { hideLabel: true })
-            : child;
+          if (!React.isValidElement(child)) return child;
+          return React.cloneElement(child as React.ReactElement<any>, { hideLabel: true });
         })}
       </div>
     </div>

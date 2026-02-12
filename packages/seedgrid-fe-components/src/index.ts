@@ -24,6 +24,8 @@ export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
 export { SgAutocomplete } from "./inputs/SgAutocomplete";
 export type { SgAutocompleteItem, SgAutocompleteProps } from "./inputs/SgAutocomplete";
+export { SgTextEditor } from "./inputs/SgTextEditor";
+export type { SgTextEditorProps, SgTextEditorSaveMeta } from "./inputs/SgTextEditor";
 export { SgButton } from "./buttons/SgButton";
 export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
 export { SgSplitButton } from "./buttons/SgSplitButton";
