@@ -24,6 +24,7 @@ export type SgTreeNodeJson = {
   label: string;
   icon?: string;
   disabled?: boolean;
+  checked?: boolean;
   children?: SgTreeNodeJson[];
   meta?: unknown;
 };
@@ -41,6 +42,39 @@ export function sgTreeFromJson(json: SgTreeNodeJson[], iconRegistry?: SgTreeIcon
       meta: n.meta
     }));
   return walk(json);
+}
+
+export function sgTreeFromJsonWithChecked(
+  json: SgTreeNodeJson[],
+  iconRegistry?: SgTreeIconRegistry
+): { nodes: SgTreeNode[]; checkedIds: string[] } {
+  const checkedIds: string[] = [];
+
+  const walk = (list: SgTreeNodeJson[]): SgTreeNode[] =>
+    list.map((n) => {
+      if (n.checked) checkedIds.push(n.id);
+      return {
+        id: n.id,
+        label: n.label,
+        disabled: n.disabled,
+        icon: n.icon ? iconRegistry?.[n.icon] : undefined,
+        children: n.children?.length ? walk(n.children) : undefined,
+        meta: n.meta
+      };
+    });
+
+  const nodes = walk(json);
+
+  // If a branch is checked, include all descendants to reflect the visual state.
+  const maps = buildMaps(nodes);
+  const expandedChecked = new Set<string>();
+  for (const id of checkedIds) {
+    expandedChecked.add(id);
+    const descendants = collectDescendants(maps.childrenById, id);
+    for (const d of descendants) expandedChecked.add(d);
+  }
+
+  return { nodes, checkedIds: Array.from(expandedChecked) };
 }
 
 type CheckedState = "unchecked" | "checked" | "indeterminate";

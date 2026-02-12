@@ -4,6 +4,7 @@ import React from "react";
 import {
   SgCard,
   SgTreeView,
+  sgTreeFromJsonWithChecked,
   type SgTreeNode,
   type SgTreeViewRef
 } from "@seedgrid/fe-components";
@@ -47,6 +48,31 @@ const DATA: SgTreeNode[] = [
         children: [
           { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
           { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
+
+const JSON_DATA = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users", checked: true },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report", checked: true },
+          { id: "reports.financial", label: "Financial report" }
         ]
       }
     ]
@@ -117,9 +143,40 @@ export default function SgTreeViewPage() {
         <CodeBlock
           code={`import React from "react";
 import { SgTreeView } from "@seedgrid/fe-components";
+import { Shield, Users, FileText, BarChart3 } from "lucide-react";
+
+const nodes = [
+  {
+    id: "root",
+    label: "Admin",
+    icon: <Shield className="h-4 w-4" />,
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        icon: <Users className="h-4 w-4" />,
+        children: [
+          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
+          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+        children: [
+          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
+          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
 
 export default function Example() {
   const [checkedIds, setCheckedIds] = React.useState([]);
+  const [readAll, setReadAll] = React.useState([]);
+  const [readLeafs, setReadLeafs] = React.useState([]);
   const treeRef = React.useRef(null);
 
   return (
@@ -128,17 +185,22 @@ export default function Example() {
         ref={treeRef}
         nodes={nodes}
         searchable
+        searchPlaceholder="Search..."
         checkable
         checkedIds={checkedIds}
         onCheckedChange={setCheckedIds}
         onLeafClick={(id) => console.log(id)}
       />
-      <button onClick={() => console.log(treeRef.current?.getCheckedIds())}>
+
+      <button onClick={() => setReadAll(treeRef.current?.getCheckedIds() ?? [])}>
         Ler todos os checkeds
       </button>
-      <button onClick={() => console.log(treeRef.current?.getCheckedLeafIds())}>
+      <button onClick={() => setReadLeafs(treeRef.current?.getCheckedLeafIds() ?? [])}>
         Ler apenas leafs
       </button>
+
+      <div>checkedIds: {readAll.join(", ") || "-"}</div>
+      <div>leafIds: {readLeafs.join(", ") || "-"}</div>
     </>
   );
 }`}
@@ -174,6 +236,35 @@ export default function Example() {
         <CodeBlock
           code={`import React from "react";
 import { SgTreeView } from "@seedgrid/fe-components";
+import { Shield, Users, FileText, BarChart3 } from "lucide-react";
+
+const nodes = [
+  {
+    id: "root",
+    label: "Admin",
+    icon: <Shield className="h-4 w-4" />,
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        icon: <Users className="h-4 w-4" />,
+        children: [
+          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
+          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+        children: [
+          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
+          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
 
 export default function Example() {
   const [confirmed, setConfirmed] = React.useState([]);
@@ -184,18 +275,21 @@ export default function Example() {
       <SgTreeView
         ref={treeRef}
         nodes={nodes}
+        searchable
+        searchPlaceholder="Search..."
         checkable
         checkMode="confirm"
         confirmSelection="leafOnly"
         confirmBar={{
-          label: "${t(i18n, "showcase.component.treeView.labels.confirm")}",
+          label: "Confirmar",
           showCancel: true,
-          cancelLabel: "${t(i18n, "showcase.component.treeView.labels.clear")}",
+          cancelLabel: "Limpar",
           onConfirm: (ids) => setConfirmed(ids),
           onCancel: () => treeRef.current?.clearChecked()
         }}
       />
-      <div>confirmIds: {confirmed.join(", ")}</div>
+
+      <div>confirmIds: {confirmed.join(", ") || "-"}</div>
     </>
   );
 }`}
@@ -211,6 +305,121 @@ export default function Example() {
           <SgTreeView nodes={DATA} size="md" density="normal" />
           <SgTreeView nodes={DATA} size="lg" density="comfortable" />
         </div>
+      </Section>
+
+      <Section
+        title={t(i18n, "showcase.component.treeView.sections.expanded.title")}
+        description={t(i18n, "showcase.component.treeView.sections.expanded.description")}
+      >
+        <SgCard title={t(i18n, "showcase.component.treeView.labels.expandedTitle")}>
+          <SgTreeView
+            nodes={DATA}
+            searchable
+            searchPlaceholder={t(i18n, "showcase.component.treeView.labels.search")}
+            defaultExpandedIds={["root", "users"]}
+          />
+        </SgCard>
+        <CodeBlock
+          code={`import React from "react";
+import { SgTreeView } from "@seedgrid/fe-components";
+
+const nodes = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users" },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report" },
+          { id: "reports.financial", label: "Financial report" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  return (
+    <SgTreeView
+      nodes={nodes}
+      searchable
+      searchPlaceholder="Search..."
+      defaultExpandedIds={["root", "users"]}
+    />
+  );
+}`}
+        />
+      </Section>
+
+      <Section
+        title={t(i18n, "showcase.component.treeView.sections.jsonChecked.title")}
+        description={t(i18n, "showcase.component.treeView.sections.jsonChecked.description")}
+      >
+        <SgCard title={t(i18n, "showcase.component.treeView.labels.jsonTitle")}>
+          {(() => {
+            const { nodes, checkedIds } = sgTreeFromJsonWithChecked(JSON_DATA);
+            return (
+              <SgTreeView
+                nodes={nodes}
+                checkable
+                defaultCheckedIds={checkedIds}
+                defaultExpandedIds={["root", "users"]}
+              />
+            );
+          })()}
+        </SgCard>
+        <CodeBlock
+          code={`import React from "react";
+import { SgTreeView, sgTreeFromJsonWithChecked } from "@seedgrid/fe-components";
+
+const json = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users", checked: true },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report", checked: true },
+          { id: "reports.financial", label: "Financial report" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  const { nodes, checkedIds } = sgTreeFromJsonWithChecked(json);
+
+  return (
+    <SgTreeView
+      nodes={nodes}
+      checkable
+      defaultCheckedIds={checkedIds}
+      defaultExpandedIds={["root", "users"]}
+    />
+  );
+}`}
+        />
       </Section>
     </div>
   );
