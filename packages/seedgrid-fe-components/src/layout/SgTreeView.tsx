@@ -282,6 +282,7 @@ export type SgTreeViewProps = {
   size?: SgSize;
   density?: SgDensity;
   tone?: SgTone;
+  iconTone?: "default" | "primary";
   checkable?: boolean;
   checkMode?: "live" | "confirm";
   confirmSelection?: "all" | "leafOnly";
@@ -313,6 +314,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     size = "md",
     density = "normal",
     tone = "default",
+    iconTone = "default",
     checkable = false,
     checkMode = "live",
     confirmSelection = "leafOnly",
@@ -530,7 +532,17 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
             />
           )}
 
-          {node.icon && <div className={cn("shrink-0", SZ.icon)}>{node.icon}</div>}
+          {node.icon && (
+            <div
+              className={cn(
+                "shrink-0",
+                SZ.icon,
+                iconTone === "primary" ? "text-[rgb(var(--sg-primary-600))]" : ""
+              )}
+            >
+              {node.icon}
+            </div>
+          )}
 
           <button
             type="button"

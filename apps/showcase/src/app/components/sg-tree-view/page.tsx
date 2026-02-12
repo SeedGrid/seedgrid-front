@@ -207,6 +207,25 @@ export default function Example() {
         />
       </Section>
 
+      <Section title="Icon Tone" description="Altere a cor dos icones para primary.">
+        <SgCard title="Icons in Primary">
+          <SgTreeView
+            nodes={DATA}
+            iconTone="primary"
+            searchable
+            searchPlaceholder={t(i18n, "showcase.component.treeView.labels.search")}
+          />
+        </SgCard>
+        <CodeBlock
+          code={`import { SgTreeView } from "@seedgrid/fe-components";
+
+<SgTreeView
+  nodes={nodes}
+  iconTone="primary"
+/>`}
+        />
+      </Section>
+
       <Section
         title={t(i18n, "showcase.component.treeView.sections.confirm.title")}
         description={t(i18n, "showcase.component.treeView.sections.confirm.description")}
