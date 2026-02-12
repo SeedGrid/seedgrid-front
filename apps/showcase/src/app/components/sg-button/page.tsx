@@ -95,26 +95,88 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* ── Icons ── */}
-      <Section title="Icons" description="leftIcon, rightIcon ou icon-only (sem children).">
-        <Row>
-          <SgButton leftIcon={<Check className="size-4" />} />
-          <SgButton leftIcon={<Check className="size-4" />}>Submit</SgButton>
-          <SgButton rightIcon={<Check className="size-4" />}>Submit</SgButton>
-        </Row>
+      <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/raised.">
+        <div className="space-y-4">
+          <div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Raised Buttons</div>
+            <Row>
+              {SEVERITIES.map((s) => (
+                <SgButton key={`raised-${s}`} severity={s} raised leftIcon={<Check className="size-4" />}>
+                  {capitalize(s)}
+                </SgButton>
+              ))}
+            </Row>
+          </div>
+
+          <div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Rounded Buttons</div>
+            <Row>
+              {SEVERITIES.map((s) => (
+                <SgButton key={`rounded-${s}`} severity={s} shape="rounded" leftIcon={<Check className="size-4" />}>
+                  {capitalize(s)}
+                </SgButton>
+              ))}
+            </Row>
+          </div>
+
+          <div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Ghost Buttons (Flat)</div>
+            <Row>
+              {SEVERITIES.map((s) => (
+                <SgButton key={`flat-${s}`} severity={s} appearance="ghost" leftIcon={<Check className="size-4" />}>
+                  {capitalize(s)}
+                </SgButton>
+              ))}
+            </Row>
+          </div>
+
+          <div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Raised Text Buttons</div>
+            <Row>
+              {SEVERITIES.map((s) => (
+                <SgButton key={`raised-text-${s}`} severity={s} appearance="outline" raised leftIcon={<Check className="size-4" />}>
+                  {capitalize(s)}
+                </SgButton>
+              ))}
+            </Row>
+          </div>
+
+          <div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">Outlined Buttons</div>
+            <Row>
+              {SEVERITIES.map((s) => (
+                <SgButton key={`outline-${s}`} severity={s} appearance="outline" leftIcon={<Check className="size-4" />}>
+                  {capitalize(s)}
+                </SgButton>
+              ))}
+            </Row>
+          </div>
+        </div>
+
         <CodeBlock code={`import { Check } from "lucide-react";
 import { SgButton } from "@seedgrid/fe-components";
 
-// Icon only
-<SgButton leftIcon={<Check className="size-4" />} />
+// Raised Buttons
+<SgButton severity="primary" raised leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="info" raised leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" raised leftIcon={<Check className="size-4" />}>Danger</SgButton>
 
-// Icon + text (left)
-<SgButton leftIcon={<Check className="size-4" />}>Submit</SgButton>
+// Rounded Buttons
+<SgButton severity="secondary" shape="rounded" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="success" shape="rounded" leftIcon={<Check className="size-4" />}>Success</SgButton>
 
-// Text + icon (right)
-<SgButton rightIcon={<Check className="size-4" />}>Submit</SgButton>`} />
+// Ghost Buttons (Flat)
+<SgButton severity="secondary" appearance="ghost" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="warning" appearance="ghost" leftIcon={<Check className="size-4" />}>Warning</SgButton>
+
+// Raised Text Buttons (outline + raised)
+<SgButton severity="primary" appearance="outline" raised leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="help" appearance="outline" raised leftIcon={<Check className="size-4" />}>Help</SgButton>
+
+// Outlined Buttons
+<SgButton severity="info" appearance="outline" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="outline" leftIcon={<Check className="size-4" />}>Danger</SgButton>`} />
       </Section>
-
-      {/* ── Severities ── */}
       <Section title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
         <Row>
           {SEVERITIES.map((s) => (

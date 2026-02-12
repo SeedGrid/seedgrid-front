@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { SgInputText } from "../inputs/SgInputText";
+import { SgButton } from "../buttons/SgButton";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -201,7 +204,6 @@ function useControllable<T>(opts: Controlled<T>, fallback: T) {
     (next: T) => {
       if (!isControlled) setInner(next);
       (opts as any).onChange?.(next);
-      if (isControlled) (opts as any).onChange(next);
     },
     [isControlled, opts]
   );
@@ -211,6 +213,15 @@ function useControllable<T>(opts: Controlled<T>, fallback: T) {
 
 function uniq(arr: string[]) {
   return Array.from(new Set(arr));
+}
+
+function sameStringArray(a: string[], b: string[]) {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
 
 const sizeMap: Record<SgSize, { text: string; btn: string; input: string; checkbox: string; icon: string }> = {
@@ -355,6 +366,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
       : { defaultValue: props.defaultSearchValue ?? "", onChange: props.onSearchChange },
     ""
   );
+  const searchId = React.useId();
 
   const expandedSet = React.useMemo(() => new Set<string>(expandedIds), [expandedIds]);
   const checkedSet = React.useMemo(() => new Set<string>(effectiveCheckedIds), [effectiveCheckedIds]);
@@ -369,8 +381,9 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     for (const id of matchIds) {
       for (const a of collectAncestors(maps.parentById, id)) add.add(a);
     }
-    setExpandedIds(Array.from(add));
-  }, [search, expandMatchesOnSearch, matchIds, maps.parentById, expandedSet, setExpandedIds]);
+    const nextIds = Array.from(add);
+    if (!sameStringArray(nextIds, expandedIds)) setExpandedIds(nextIds);
+  }, [search, expandMatchesOnSearch, matchIds, maps.parentById, expandedSet, expandedIds, setExpandedIds]);
 
   const toggleExpand = React.useCallback(
     (node: SgTreeNode) => {
@@ -554,63 +567,52 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     <div className={cn("w-full", className)}>
       <div className="mb-2 flex items-center gap-2">
         {searchable && (
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+          <SgInputText
+            id={searchId}
+            labelText={searchPlaceholder}
             placeholder={searchPlaceholder}
-            className={cn(
-              "w-full rounded-md border border-sg-border",
-              T.panelBg,
-              "text-sg-text",
-              "focus:outline-none focus:ring-2 focus:ring-sg-focus/30",
-              SZ.input
-            )}
+            prefixIcon={<Search size={16} />}
+            clearButton
+            filled
+            inputProps={{ value: search }}
+            onChange={(value) => setSearch(value)}
           />
         )}
 
-        <button
-          type="button"
+        <SgButton
+          severity="secondary"
+          appearance="ghost"
+          size="sm"
+          shape="rounded"
           onClick={expandAll}
-          className={cn(
-            "shrink-0 rounded-md border border-sg-border",
-            T.panelBg,
-            "text-sg-text hover:bg-sg-hover",
-            "focus:outline-none focus:ring-2 focus:ring-sg-focus/30",
-            SZ.btn
-          )}
+          leftIcon={<ChevronDown className="size-4" />}
         >
           Expand all
-        </button>
+        </SgButton>
 
-        <button
-          type="button"
+        <SgButton
+          severity="info"
+          appearance="ghost"
+          size="sm"
+          shape="rounded"
           onClick={collapseAll}
-          className={cn(
-            "shrink-0 rounded-md border border-sg-border",
-            T.panelBg,
-            "text-sg-text hover:bg-sg-hover",
-            "focus:outline-none focus:ring-2 focus:ring-sg-focus/30",
-            SZ.btn
-          )}
+          leftIcon={<ChevronUp className="size-4" />}
         >
           Collapse all
-        </button>
+        </SgButton>
 
         {checkable && (
-          <button
-            type="button"
+          <SgButton
+            severity="danger"
+            appearance="outline"
+            raised
+            size="sm"
+            shape="rounded"
             onClick={clearChecked}
-            className={cn(
-              "shrink-0 rounded-md border border-sg-border",
-              T.panelBg,
-              "text-sg-text hover:bg-sg-hover",
-              "focus:outline-none focus:ring-2 focus:ring-sg-focus/30",
-              SZ.btn
-            )}
             title="Clear selection"
           >
             Clear
-          </button>
+          </SgButton>
         )}
       </div>
 
@@ -659,21 +661,27 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
                   </button>
                 )}
 
-                <button
-                  type="button"
-                  onClick={onConfirm}
+                <SgButton
+                  severity="secondary"
+                  appearance="outline"
+                  size="md"
+                  shape="rounded"
+                  onClick={clearChecked}
                   disabled={!!confirmDisabled}
-                  className={cn(
-                    "rounded-md border border-sg-border",
-                    T.panelBg,
-                    "text-sg-text hover:bg-sg-hover",
-                    "focus:outline-none focus:ring-2 focus:ring-sg-focus/30",
-                    SZ.btn,
-                    confirmDisabled && "opacity-50 cursor-not-allowed"
-                  )}
+                >
+                  Clear
+                </SgButton>
+
+                <SgButton
+                  severity="primary"
+                  raised
+                  size="md"
+                  shape="rounded"
+                  disabled={!!confirmDisabled}
+                  onClick={onConfirm}
                 >
                   {confirmCfg.label ?? "Confirm"}
-                </button>
+                </SgButton>
               </div>
             </div>
           </div>
