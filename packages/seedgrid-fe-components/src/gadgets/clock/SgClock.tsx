@@ -452,13 +452,26 @@ function DigitalClock({
   useSecondTick();
 
   const d = new Date(nowMs());
-  const text = new Intl.DateTimeFormat(locale, {
+  const parts = new Intl.DateTimeFormat(locale, {
     timeZone: timezone,
     hour: "2-digit",
     minute: "2-digit",
     second: showSeconds ? "2-digit" : undefined,
     hour12: format === "12h"
-  }).format(d);
+  }).formatToParts(d);
+
+  const getPart = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  const hour = getPart("hour");
+  const minute = getPart("minute");
+  const second = getPart("second");
+  let dayPeriod = getPart("dayPeriod");
+
+  if (format === "12h" && !dayPeriod) {
+    const { h } = getHmsForTimezone(d, locale, timezone);
+    dayPeriod = h >= 12 ? "PM" : "AM";
+  }
+
+  const text = `${hour}:${minute}${showSeconds ? `:${second}` : ""}`;
 
   const classSize = sizeToClass(size);
   const fontSize =
@@ -468,21 +481,23 @@ function DigitalClock({
   if (digitalStyle === "segment") {
     const seg = renderSegmentText(text, sizePx);
     return (
-      <svg
-        width={seg.width}
-        height={seg.height}
-        viewBox={`0 0 ${seg.width} ${seg.height}`}
-        className={cn("block", className)}
-        aria-label="Digital clock"
-      >
-        {seg.nodes}
-      </svg>
+      <div className={cn("flex items-end gap-2", className)} aria-label="Digital clock">
+        <svg width={seg.width} height={seg.height} viewBox={`0 0 ${seg.width} ${seg.height}`} className="block">
+          {seg.nodes}
+        </svg>
+        {format === "12h" && dayPeriod ? (
+          <span className="text-xs font-semibold text-muted-foreground">{dayPeriod}</span>
+        ) : null}
+      </div>
     );
   }
 
   return (
     <div className={cn("font-mono tabular-nums", classSize, className)} style={fontSize}>
       {text}
+      {format === "12h" && dayPeriod ? (
+        <span className="ml-2 align-top text-xs font-semibold text-muted-foreground">{dayPeriod}</span>
+      ) : null}
     </div>
   );
 }

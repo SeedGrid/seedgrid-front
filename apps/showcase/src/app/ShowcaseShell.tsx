@@ -56,7 +56,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-toolbar", label: "SgToolBar" },
   { group: "Layout", slug: "sg-dock-layout", label: "SgDockLayout" },
   { group: "Layout", slug: "sg-tree-view", label: "SgTreeView" },
-  { group: "Layout", slug: "sg-clock", label: "SgClock" },
+  { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];
@@ -235,7 +235,7 @@ export default function ShowcaseShell(props: {
                 </Link>
               ))}
               <div className="border-t border-border my-2" />
-              {(["Inputs", "Buttons", "Layout", "Wizard", "Utils"] as const).map((group) => {
+              {(["Inputs", "Buttons", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
                 const items = COMPONENTS.filter((c) => c.group === group);
                 if (items.length === 0) return null;
                 return (

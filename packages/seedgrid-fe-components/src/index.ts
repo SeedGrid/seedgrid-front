@@ -121,10 +121,10 @@ export type {
   SgDensity,
   SgTone
 } from "./layout/SgTreeView";
-export { SgTimeProvider, useSgTime } from "./clock/SgTimeProvider";
-export { SgClock } from "./clock/SgClock";
-export type { SgTimeContextValue } from "./clock/SgTimeProvider";
-export type { SgClockProps } from "./clock/SgClock";
+export { SgTimeProvider, useSgTime } from "./gadgets/clock/SgTimeProvider";
+export { SgClock } from "./gadgets/clock/SgClock";
+export type { SgTimeContextValue } from "./gadgets/clock/SgTimeProvider";
+export type { SgClockProps } from "./gadgets/clock/SgClock";
 export {
   registerTheme,
   registerThemes,
@@ -142,13 +142,13 @@ export {
   SgClockThemePicker,
   SgClockThemePreview,
   sgClockThemesBuiltIn
-} from "./clock/themes";
+} from "./gadgets/clock/themes";
 export type {
   SgClockTheme,
   SgClockThemeRenderArgs,
   SgClockThemeResolveMode,
   SgClockThemeResolver
-} from "./clock/themes";
+} from "./gadgets/clock/themes";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
 export {

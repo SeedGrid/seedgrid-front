@@ -125,17 +125,10 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
     const tone100 = `var(--sg-${toneKey}-100, var(--sg-primary-100))`;
     const tone200 = `var(--sg-${toneKey}-200, ${tone100})`;
     const tone300 = `var(--sg-${toneKey}-300, ${tone200})`;
-    const menuBg = appearance === "solid" ? `rgb(${tone100})` : "#ffffff";
-    const menuFg = appearance === "solid" ? "rgb(var(--sg-text))" : colors.bg;
-    const menuHoverBg = appearance === "solid"
-      ? `rgb(${tone200})`
-      : `rgb(${tone100})`;
-    const menuBorder =
-      appearance === "outline"
-        ? colors.border
-        : appearance === "solid"
-          ? `rgb(${tone200})`
-          : "transparent";
+    const menuBg = `rgb(${tone100})`;
+    const menuFg = colors.bg;
+    const menuHoverBg = `rgb(${tone200})`;
+    const menuBorder = `rgb(${tone200})`;
 
     const dividerBorderClass =
       appearance === "solid"

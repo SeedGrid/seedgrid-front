@@ -10,8 +10,8 @@ import {
   registerThemes,
   sgClockThemesBuiltIn
 } from "@seedgrid/fe-components";
-import { t, useShowcaseI18n } from "../../../i18n";
-import CodeBlockBase from "../CodeBlockBase";
+import { t, useShowcaseI18n } from "../../../../i18n";
+import CodeBlockBase from "../../CodeBlockBase";
 
 let themesRegistered = false;
 
@@ -217,6 +217,9 @@ export default function Example({ initialServerTime }) {
                   ? t(i18n, "showcase.component.clock.labels.segmentToggleOn")
                   : t(i18n, "showcase.component.clock.labels.segmentToggleOff")}
               </SgButton>
+              <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+                {format === "24h" ? "24h" : "12h"}
+              </SgButton>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <SgClock variant="digital" size="sm" timezone={timezone} format={format} digitalStyle={digitalStyle} />
@@ -238,22 +241,26 @@ import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 
 export default function Example({ initialServerTime }) {
   const [digitalStyle, setDigitalStyle] = React.useState("default");
+  const [format, setFormat] = React.useState("24h");
 
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>
       <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
         {digitalStyle === "default" ? "Ativar segmentado" : "Desativar segmentado"}
       </SgButton>
+      <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+        {format === "24h" ? "24h" : "12h"}
+      </SgButton>
 
       <div className="mt-3 grid gap-4 md:grid-cols-3">
-        <SgClock variant="digital" size="sm" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
-        <SgClock variant="digital" size="md" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
-        <SgClock variant="digital" size="lg" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="sm" timezone="America/Sao_Paulo" format={format} digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="md" timezone="America/Sao_Paulo" format={format} digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="lg" timezone="America/Sao_Paulo" format={format} digitalStyle={digitalStyle} />
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-6">
-        <SgClock variant="digital" digitalStyle="segment" size="md" timezone="America/Sao_Paulo" format="24h" />
-        <SgClock variant="digital" digitalStyle="segment" size="lg" timezone="America/Sao_Paulo" format="24h" />
+        <SgClock variant="digital" digitalStyle="segment" size="md" timezone="America/Sao_Paulo" format={format} />
+        <SgClock variant="digital" digitalStyle="segment" size="lg" timezone="America/Sao_Paulo" format={format} />
       </div>
     </SgTimeProvider>
   );

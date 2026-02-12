@@ -4,7 +4,7 @@ import * as React from "react";
 import type { SgClockTheme } from "./types";
 import { useSgClockThemeResolver } from "./provider";
 import { SgClockThemePreview } from "./SgClockThemePreview";
-import { SgAutocomplete, type SgAutocompleteItem } from "../../inputs/SgAutocomplete";
+import { SgAutocomplete, type SgAutocompleteItem } from "../../../inputs/SgAutocomplete";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -120,7 +120,7 @@ export function SgClockThemePicker({
                 showDropDownButton
                 clearOnSelect
                 minLengthForSearch={0}
-                source={(query) => {
+                source={(query: string | null | undefined) => {
                   const s = (query ?? "").trim().toLowerCase();
                   const items: SgAutocompleteItem[] = all.map((t) => ({
                     id: t.id,
@@ -131,7 +131,7 @@ export function SgClockThemePicker({
                   if (!s) return items;
                   return items.filter((item) => item.label?.toLowerCase().includes(s));
                 }}
-                onSelect={(item) => {
+                onSelect={(item: SgAutocompleteItem) => {
                   const id = item.value ?? item.id;
                   onChange(String(id));
                   setOpen(false);
