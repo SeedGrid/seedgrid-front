@@ -33,7 +33,6 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
   const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment">("default");
-  const [instrumentSmooth, setInstrumentSmooth] = React.useState(true);
 
   if (!themesRegistered) {
     themesRegistered = true;
@@ -269,64 +268,6 @@ export default function Example({ initialServerTime }) {
             </div>
           </Section>
 
-          <Section
-            title={t(i18n, "showcase.component.clock.sections.instrument.title")}
-            description={t(i18n, "showcase.component.clock.sections.instrument.description")}
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              <SgButton onClick={() => setInstrumentSmooth((v) => !v)}>
-                {instrumentSmooth
-                  ? t(i18n, "showcase.component.clock.labels.instrumentSmoothOn")
-                  : t(i18n, "showcase.component.clock.labels.instrumentSmoothOff")}
-              </SgButton>
-            </div>
-
-            <div className="mt-4">
-              <SgClock
-                variant="instrument"
-                instrumentSmooth={instrumentSmooth}
-                instrumentWindow={13}
-                instrumentStep={1}
-                instrumentStyle="outlined"
-                size="md"
-                timezone={timezone}
-              />
-            </div>
-
-            <div className="mt-6">
-              <CodeBlockBase
-                code={`"use client";
-import React from "react";
-import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
-
-export default function Example({ initialServerTime }) {
-  const [instrumentSmooth, setInstrumentSmooth] = React.useState(true);
-
-  return (
-    <SgTimeProvider initialServerTime={initialServerTime}>
-      <div className="flex flex-wrap items-center gap-2">
-        <SgButton onClick={() => setInstrumentSmooth((v) => !v)}>
-          {instrumentSmooth ? "Suavizar: ON" : "Suavizar: OFF"}
-        </SgButton>
-      </div>
-
-      <div className="mt-4">
-        <SgClock
-          variant="instrument"
-          instrumentSmooth={instrumentSmooth}
-          instrumentWindow={13}
-          instrumentStep={1}
-          instrumentStyle="outlined"
-          size="md"
-          timezone="America/Sao_Paulo"
-        />
-      </div>
-    </SgTimeProvider>
-  );
-}`}
-              />
-            </div>
-          </Section>
 
           <Section
             title={t(i18n, "showcase.component.clock.sections.timezone.title")}

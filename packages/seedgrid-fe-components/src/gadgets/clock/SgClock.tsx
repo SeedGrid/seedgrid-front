@@ -21,7 +21,7 @@ function useSecondTick() {
 }
 
 export type SgClockProps = {
-  variant?: "digital" | "analog" | "instrument";
+  variant?: "digital" | "analog";
   size?: "sm" | "md" | "lg" | number;
   timezone?: string;
   locale?: string;
@@ -29,13 +29,6 @@ export type SgClockProps = {
   showSeconds?: boolean;
   digitalStyle?: "default" | "segment";
   secondHandMode?: "step" | "smooth";
-  instrumentMode?: "hours" | "minutes" | "seconds";
-  instrumentWindow?: number;
-  instrumentRange?: { start: number; end: number };
-  instrumentStep?: number;
-  instrumentStyle?: "outlined" | "soft";
-  instrumentHighlight?: boolean;
-  instrumentSmooth?: boolean;
   themeId?: string;
   theme?: SgClockTheme;
   className?: string;
@@ -248,108 +241,6 @@ function getTimeValue(
   return { base: Math.floor(value), frac: value - Math.floor(value) };
 }
 
-function InstrumentClock({
-  size = "md",
-  locale = "pt-BR",
-  timezone,
-  instrumentWindow = 12,
-  instrumentRange,
-  instrumentStep = 1,
-  instrumentStyle = "outlined",
-  instrumentHighlight = true,
-  instrumentSmooth = true,
-  className
-}: Omit<SgClockProps, "variant" | "format" | "secondHandMode" | "themeId" | "theme" | "centerOverlay">) {
-  const { tick, nowMs } = useSgTime();
-  void tick;
-  useSecondTick();
-
-  const date = new Date(nowMs());
-  const windowSize = instrumentWindow % 2 === 0 ? instrumentWindow + 1 : instrumentWindow;
-  const centerIndex = Math.floor(windowSize / 2);
-
-  const cellWidth = typeof size === "number" ? size : size === "sm" ? 36 : size === "lg" ? 64 : 48;
-  const height = Math.round(cellWidth * 0.9);
-  const pad = instrumentStyle === "soft" ? "bg-muted/40" : "bg-background";
-  const border = instrumentStyle === "outlined" ? "border border-border" : "";
-
-  const lastPosRef = React.useRef<Record<"hours" | "minutes" | "seconds", number | null>>({
-    hours: null,
-    minutes: null,
-    seconds: null
-  });
-
-  const renderLine = (
-    mode: "hours" | "minutes" | "seconds",
-    range: { start: number; end: number }
-  ) => {
-    const { base, frac } = getTimeValue(date, locale, timezone, mode, instrumentSmooth);
-    const values = Array.from({ length: windowSize }).map((_, idx) => {
-      const offset = (idx - centerIndex) * instrumentStep;
-      const value = wrapRange(base + offset, range.start, range.end);
-      return value;
-    });
-
-    const pos = base + frac;
-    const lastPos = lastPosRef.current[mode] ?? null;
-    if (lastPos === null) {
-      lastPosRef.current[mode] = pos;
-    } else if (instrumentSmooth) {
-      const rangeSize = range.end - range.start + 1;
-      const delta = pos - lastPos;
-      if (delta < -rangeSize / 2) {
-        lastPosRef.current[mode] = lastPos - rangeSize;
-      }
-    }
-
-    const translateX = ((lastPosRef.current[mode] ?? pos) - pos) * cellWidth;
-    lastPosRef.current[mode] = pos;
-
-    return (
-      <div className={cn("relative overflow-hidden rounded-lg", pad, border)} style={{ height }}>
-        <div
-          className="flex items-center"
-          style={{
-            transform: `translateX(${translateX}px)`,
-            transition: instrumentSmooth ? "transform 60ms linear" : "none"
-          }}
-        >
-          {values.map((v, idx) => {
-            const isCenter = idx === centerIndex;
-            return (
-              <div
-                key={`${mode}-${v}-${idx}`}
-                className={cn(
-                  "flex items-center justify-center font-mono tabular-nums text-muted-foreground",
-                  isCenter && instrumentHighlight ? "text-foreground font-semibold" : ""
-                )}
-                style={{ width: cellWidth, height }}
-              >
-                {String(v).padStart(2, "0")}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="relative">
-            <div className="absolute -top-2 left-1/2 h-2 w-0.5 -translate-x-1/2 bg-foreground" />
-            <div className="absolute -bottom-2 left-1/2 h-2 w-0.5 -translate-x-1/2 bg-foreground" />
-            <div className="h-full w-0.5 bg-foreground" style={{ height }} />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className={cn("relative w-full max-w-full space-y-3", className)}>
-      {renderLine("hours", instrumentRange ?? { start: 0, end: 23 })}
-      {renderLine("minutes", instrumentRange ?? { start: 0, end: 59 })}
-      {renderLine("seconds", instrumentRange ?? { start: 0, end: 59 })}
-    </div>
-  );
-}
 
 function AnalogClock({
   size = 280,
@@ -512,13 +403,6 @@ export function SgClock(props: SgClockProps) {
     showSeconds = true,
     digitalStyle = "default",
     secondHandMode = "step",
-    instrumentMode = "minutes",
-    instrumentWindow = 12,
-    instrumentRange,
-    instrumentStep = 1,
-    instrumentStyle = "outlined",
-    instrumentHighlight = true,
-    instrumentSmooth = true,
     themeId = "classic",
     theme,
     className,
@@ -538,24 +422,6 @@ export function SgClock(props: SgClockProps) {
         secondHandMode={secondHandMode}
         className={className}
         centerOverlay={centerOverlay}
-      />
-    );
-  }
-
-  if (variant === "instrument") {
-    return (
-      <InstrumentClock
-        size={size}
-        locale={locale}
-        timezone={timezone}
-        instrumentMode={instrumentMode}
-        instrumentWindow={instrumentWindow}
-        instrumentRange={instrumentRange}
-        instrumentStep={instrumentStep}
-        instrumentStyle={instrumentStyle}
-        instrumentHighlight={instrumentHighlight}
-        instrumentSmooth={instrumentSmooth}
-        className={className}
       />
     );
   }
