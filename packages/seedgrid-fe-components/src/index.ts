@@ -117,7 +117,6 @@ export type {
   SgTreeNodeJson,
   SgTreeIconRegistry,
   SgTreeConfirmBar,
-  sgTreeFromJsonWithChecked,
   SgSize,
   SgDensity,
   SgTone

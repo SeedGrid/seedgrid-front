@@ -356,8 +356,8 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     ""
   );
 
-  const expandedSet = React.useMemo(() => new Set(expandedIds), [expandedIds]);
-  const checkedSet = React.useMemo(() => new Set(effectiveCheckedIds), [effectiveCheckedIds]);
+  const expandedSet = React.useMemo(() => new Set<string>(expandedIds), [expandedIds]);
+  const checkedSet = React.useMemo(() => new Set<string>(effectiveCheckedIds), [effectiveCheckedIds]);
 
   const { filtered, matchIds } = React.useMemo(() => filterTreeByQuery(nodes, search), [nodes, search]);
 
@@ -365,7 +365,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     if (!expandMatchesOnSearch) return;
     const q = search.trim();
     if (!q) return;
-    const add = new Set(expandedSet);
+    const add = new Set<string>(expandedSet);
     for (const id of matchIds) {
       for (const a of collectAncestors(maps.parentById, id)) add.add(a);
     }
@@ -375,7 +375,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
   const toggleExpand = React.useCallback(
     (node: SgTreeNode) => {
       const isOpen = expandedSet.has(node.id);
-      const next = new Set(expandedSet);
+      const next = new Set<string>(expandedSet);
       if (isOpen) {
         next.delete(node.id);
         props.onCollapse?.(node);
@@ -403,7 +403,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
   const toggleCheck = React.useCallback(
     (node: SgTreeNode) => {
       if (!checkable || node.disabled) return;
-      const next = new Set(checkedSet);
+      const next = new Set<string>(checkedSet);
       const st = computeCheckedState(node.id, maps.childrenById, checkedSet);
       const willCheck = st !== "checked";
       setBranchChecked(node.id, willCheck, maps.childrenById, next);

@@ -6,7 +6,7 @@ import { loadSvgText } from "./urlThemeCache";
 
 function extractInnerSvg(svgText: string) {
   const match = svgText.match(/<svg[\s\S]*?>([\s\S]*?)<\/svg>/i);
-  return match ? match[1] : svgText;
+  return match?.[1] ?? svgText;
 }
 
 export function ThemeLayer({

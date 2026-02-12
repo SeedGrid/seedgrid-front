@@ -273,7 +273,7 @@ function InstrumentClock({
   const pad = instrumentStyle === "soft" ? "bg-muted/40" : "bg-background";
   const border = instrumentStyle === "outlined" ? "border border-border" : "";
 
-  const lastPosRef = React.useRef<Record<string, number | null>>({
+  const lastPosRef = React.useRef<Record<"hours" | "minutes" | "seconds", number | null>>({
     hours: null,
     minutes: null,
     seconds: null
@@ -291,7 +291,7 @@ function InstrumentClock({
     });
 
     const pos = base + frac;
-    const lastPos = lastPosRef.current[mode];
+    const lastPos = lastPosRef.current[mode] ?? null;
     if (lastPos === null) {
       lastPosRef.current[mode] = pos;
     } else if (instrumentSmooth) {

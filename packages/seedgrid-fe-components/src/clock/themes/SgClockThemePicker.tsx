@@ -133,7 +133,7 @@ export function SgClockThemePicker({
                 }}
                 onSelect={(item) => {
                   const id = item.value ?? item.id;
-                  onChange(id);
+                  onChange(String(id));
                   setOpen(false);
                 }}
               />

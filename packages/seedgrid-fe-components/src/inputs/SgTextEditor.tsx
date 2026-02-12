@@ -91,10 +91,10 @@ function toFile(fullHtml: string, fileName: string) {
   return new File([fullHtml], fileName, { type: "text/html;charset=utf-8" });
 }
 
-function canRun(editor: Editor | null, fn: () => boolean) {
+function canRun(editor: Editor | null, fn: (editor: Editor) => boolean) {
   if (!editor) return false;
   try {
-    return fn();
+    return fn(editor);
   } catch {
     return false;
   }
@@ -123,7 +123,7 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
   const editor = useEditor({
     editable: !disabled,
     extensions: [
-      StarterKit.configure({ codeBlock: true }),
+      StarterKit.configure({ codeBlock: {} }),
       Underline,
       Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
       Image.configure({ inline: false }),
@@ -265,28 +265,28 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
           label="Bold"
           text="B"
           active={active("bold")}
-          disabled={!canRun(editor, () => editor.can().chain().focus().toggleBold().run()) || !!disabled}
+          disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleBold().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleBold().run())}
         />
         <ToolbarButton
           label="Italic"
           text="I"
           active={active("italic")}
-          disabled={!canRun(editor, () => editor.can().chain().focus().toggleItalic().run()) || !!disabled}
+          disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleItalic().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleItalic().run())}
         />
         <ToolbarButton
           label="Underline"
           text="U"
           active={active("underline")}
-          disabled={!canRun(editor, () => editor.can().chain().focus().toggleUnderline().run()) || !!disabled}
+          disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleUnderline().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleUnderline().run())}
         />
         <ToolbarButton
           label="Strike"
           text="S"
           active={active("strike")}
-          disabled={!canRun(editor, () => editor.can().chain().focus().toggleStrike().run()) || !!disabled}
+          disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleStrike().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleStrike().run())}
         />
 
