@@ -25,6 +25,65 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
+function RollerShowcase(props: { timezone: string }) {
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [format, setFormat] = React.useState<"12h" | "24h">("12h");
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <SgButton onClick={() => setShowSeconds((v) => !v)}>
+          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+        </SgButton>
+        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+          {format === "24h" ? "24h" : "12h"}
+        </SgButton>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-6">
+        <SgClock
+          variant="digital"
+          digitalStyle="roller3d"
+          size="lg"
+          timezone={props.timezone}
+          format={format}
+          showSeconds={showSeconds}
+        />
+      </div>
+
+      <CodeBlockBase
+        code={`import React from "react";
+import { SgClock, SgButton, SgTimeProvider } from "@seedgrid/fe-components";
+
+export default function Example({ initialServerTime }) {
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [format, setFormat] = React.useState("12h");
+
+  return (
+    <SgTimeProvider initialServerTime={initialServerTime}>
+      <SgButton onClick={() => setShowSeconds((v) => !v)}>
+        {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+      </SgButton>
+      <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+        {format === "24h" ? "24h" : "12h"}
+      </SgButton>
+
+      <SgClock
+        variant="digital"
+        digitalStyle="roller3d"
+        size="lg"
+        timezone="America/Sao_Paulo"
+        format={format}
+        showSeconds={showSeconds}
+      />
+    </SgTimeProvider>
+  );
+}`}
+      />
+    </div>
+  );
+}
+
 export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime: string }) {
   const i18n = useShowcaseI18n();
   const [themeId, setThemeId] = React.useState("seedgrid");
@@ -32,7 +91,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment">("default");
+  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment" | "roller3d">("default");
 
   if (!themesRegistered) {
     themesRegistered = true;
@@ -241,6 +300,7 @@ import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 export default function Example({ initialServerTime }) {
   const [digitalStyle, setDigitalStyle] = React.useState("default");
   const [format, setFormat] = React.useState("24h");
+  const [format, setFormat] = React.useState("24h");
 
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>
@@ -266,6 +326,10 @@ export default function Example({ initialServerTime }) {
 }`}
               />
             </div>
+          </Section>
+
+          <Section title="Roller 3D" description="Rolos 3D com AM/PM opcional e segundos sob demanda.">
+            <RollerShowcase timezone={timezone} />
           </Section>
 
 

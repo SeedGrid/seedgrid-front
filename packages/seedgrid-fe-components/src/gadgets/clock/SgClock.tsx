@@ -27,7 +27,7 @@ export type SgClockProps = {
   locale?: string;
   format?: "12h" | "24h";
   showSeconds?: boolean;
-  digitalStyle?: "default" | "segment";
+  digitalStyle?: "default" | "segment" | "roller3d";
   secondHandMode?: "step" | "smooth";
   themeId?: string;
   theme?: SgClockTheme;
@@ -65,6 +65,19 @@ function digitalSizeToNumber(size: SgClockProps["size"]) {
   if (size === "sm") return 12;
   if (size === "lg") return 28;
   return 16;
+}
+
+function getPrevNext(value: number, min: number, max: number) {
+  const range = max - min + 1;
+  const prev = ((value - 1 - min + range) % range) + min;
+  const next = ((value + 1 - min) % range) + min;
+  return { prev, next };
+}
+
+function buildRange(min: number, max: number) {
+  const out: number[] = [];
+  for (let i = min; i <= max; i += 1) out.push(i);
+  return out;
 }
 
 const SEGMENTS: Record<string, Array<{ x: number; y: number; w: number; h: number }>> = {
@@ -368,6 +381,68 @@ function DigitalClock({
   const fontSize =
     typeof size === "number" ? { fontSize: `${size}px`, lineHeight: 1 } : undefined;
   const sizePx = digitalSizeToNumber(size);
+
+  if (digitalStyle === "roller3d") {
+    const hNum = Number.parseInt(hour, 10) || 0;
+    const mNum = Number.parseInt(minute, 10) || 0;
+    const sNum = Number.parseInt(second || "0", 10) || 0;
+    const hourMax = format === "12h" ? 12 : 23;
+    const hourMin = format === "12h" ? 1 : 0;
+    const safeHour = format === "12h" ? (hNum === 0 ? 12 : hNum) : hNum;
+    const hours = buildRange(hourMin, hourMax);
+    const minutes = buildRange(0, 59);
+    const seconds = buildRange(0, 59);
+    const periodList = ["AM", "PM"];
+
+    const w = Math.round(sizePx * 2.8);
+    const h = Math.round(sizePx * 3.6);
+    const itemH = Math.round(sizePx * 1.6);
+    const glow = "shadow-[inset_0_0_28px_rgba(0,0,0,0.08),0_8px_28px_rgba(0,0,0,0.12)]";
+    const face = "relative overflow-hidden rounded-2xl bg-white text-neutral-900 ring-1 ring-black/5";
+    const topShade = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-black/6 before:to-transparent before:content-['']";
+    const bottomShade = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/12 after:to-transparent after:content-['']";
+    const divider = "absolute left-0 right-0 top-1/2 h-px bg-red-500/70";
+    const mask =
+      "[mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]";
+
+    const renderRoll = (list: Array<string | number>, value: number | string, pad = 2) => {
+      const idx =
+        typeof value === "string" ? list.indexOf(value) : list.indexOf(value);
+      const translateY = -idx * itemH + h / 2 - itemH / 2;
+      return (
+        <div className={cn("relative", glow, face, topShade, bottomShade)} style={{ width: w, height: h }}>
+          <div className={divider} />
+          <div
+            className={cn("absolute left-0 top-0 w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]", mask)}
+            style={{ transform: `translateY(${translateY}px)` }}
+          >
+            {list.map((v, i) => (
+              <div
+                key={`${v}-${i}`}
+                className="flex h-[var(--sg-roll-h)] items-center justify-center font-medium tabular-nums text-neutral-400"
+                style={{
+                  height: itemH,
+                  fontSize: Math.round(sizePx * 1.35),
+                  color: i === idx ? "rgb(30 30 34)" : "rgb(163 163 170)"
+                }}
+              >
+                {typeof v === "number" ? String(v).padStart(pad, "0") : v}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className={cn("flex items-center gap-4", className)} style={fontSize} aria-label="Digital clock">
+        {renderRoll(hours, safeHour)}
+        {renderRoll(minutes, mNum)}
+        {showSeconds ? renderRoll(seconds, sNum) : null}
+        {format === "12h" && dayPeriod ? renderRoll(periodList, dayPeriod.toUpperCase(), 0) : null}
+      </div>
+    );
+  }
 
   if (digitalStyle === "segment") {
     const seg = renderSegmentText(text, sizePx);
