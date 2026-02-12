@@ -109,6 +109,18 @@ export { SgDockLayout } from "./layout/SgDockLayout";
 export type { SgDockLayoutProps, SgDockLayoutState, SgDockToolbarState, SgDockZoneId } from "./layout/SgDockLayout";
 export { SgDockZone } from "./layout/SgDockZone";
 export type { SgDockZoneProps } from "./layout/SgDockZone";
+export { SgTreeView, sgTreeFromJson } from "./layout/SgTreeView";
+export type {
+  SgTreeViewProps,
+  SgTreeViewRef,
+  SgTreeNode,
+  SgTreeNodeJson,
+  SgTreeIconRegistry,
+  SgTreeConfirmBar,
+  SgSize,
+  SgDensity,
+  SgTone
+} from "./layout/SgTreeView";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
 export {

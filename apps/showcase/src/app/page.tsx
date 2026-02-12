@@ -34,7 +34,8 @@ const COMPONENTS = [
       { slug: "sg-badge-overlay", name: "SgBadgeOverlay", desc: "Badge sobre icone/elemento" },
       { slug: "sg-dialog", name: "SgDialog", desc: "Dialog com header, severidade e footer" },
       { slug: "sg-toolbar", name: "SgToolBar", desc: "Toolbar com botoes e drag" },
-      { slug: "sg-dock-layout", name: "SgDockLayout", desc: "Layout com dock zones e persistencia" }
+      { slug: "sg-dock-layout", name: "SgDockLayout", desc: "Layout com dock zones e persistencia" },
+      { slug: "sg-tree-view", name: "SgTreeView", desc: "Arvore com check, busca e confirmacao" }
     ]
   },
   {

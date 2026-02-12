@@ -37,22 +37,25 @@ export function ThemeEditor() {
       snapshotThemeRef.current = { seed: "#16803D" };
     }
     snapshotModeRef.current = currentMode;
+    setTheme({ persistMode: false });
     setIsOpen(true);
   };
 
   const cancelEditor = () => {
     if (snapshotThemeRef.current) {
-      setTheme(snapshotThemeRef.current);
+      setTheme({ ...snapshotThemeRef.current, persistMode: true });
     }
     setMode(snapshotModeRef.current);
     setIsOpen(false);
   };
 
   const applyEditor = () => {
+    setTheme({ persistMode: true });
     setIsOpen(false);
   };
 
   const handlePresetClick = (color: string) => {
+    setCustomColor(color);
     setTheme({ seed: color });
   };
 
@@ -187,6 +190,7 @@ export function ThemeEditor() {
                   maxLength={6}
                   clearButton={false}
                   validateOnBlur={false}
+                  inputProps={{ value: customColor.replace("#", "") }}
                   validation={(raw) =>
                     /^[0-9a-fA-F]{6}$/.test(raw)
                       ? null
