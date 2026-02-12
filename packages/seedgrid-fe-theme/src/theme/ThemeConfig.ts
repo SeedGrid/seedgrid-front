@@ -1,4 +1,6 @@
-﻿export type Mode = "light" | "dark" | "auto";
+﻿import type { PersistenceStrategy } from "@seedgrid/fe-core";
+
+export type Mode = "light" | "dark" | "auto";
 
 export type SeedThemeInput = {
   seed: string; // "#RRGGBB"
@@ -13,6 +15,8 @@ export type SeedThemeInput = {
   customVars?: Record<string, string>;
   // persistPreference: if true saves mode choice in localStorage
   persistMode?: boolean;
+  // optional persistence strategy (defaults to localStorage)
+  persistenceStrategy?: PersistenceStrategy;
 };
 
 export type ThemeVars = Record<string, string>;
@@ -22,6 +26,7 @@ export type ThemeContextValue = {
   setTheme: (next: Partial<SeedThemeInput>) => void;
   setMode: (m: Exclude<Mode, "auto">) => void;
   currentMode: "light" | "dark";
+  currentTheme: Pick<SeedThemeInput, "seed" | "mode" | "radius">;
 };
 
 // Legacy type for backward compatibility

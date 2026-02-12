@@ -17,7 +17,13 @@
       "Bash(npx turbo:*)",
       "Bash(pnpm run build:*)",
       "Bash(wc:*)",
-      "WebFetch(domain:showcase.primefaces.org)"
+      "WebFetch(domain:showcase.primefaces.org)",
+      "Bash(pnpm --filter @seedgrid/fe-core build:*)",
+      "Bash(pnpm --filter @seedgrid/fe-components build:*)",
+      "Bash(pnpm --filter @seedgrid/fe-core typecheck:*)",
+      "Bash(pnpm --filter @seedgrid/fe-theme typecheck:*)",
+      "Bash(pnpm --filter @seedgrid/fe-components typecheck:*)",
+      "Bash(pnpm --filter showcase typecheck:*)"
     ]
   }
 }

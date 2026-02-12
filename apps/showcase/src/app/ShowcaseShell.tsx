@@ -56,6 +56,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-toolbar", label: "SgToolBar" },
   { group: "Layout", slug: "sg-dock-layout", label: "SgDockLayout" },
   { group: "Layout", slug: "sg-tree-view", label: "SgTreeView" },
+  { group: "Layout", slug: "sg-clock", label: "SgClock" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];

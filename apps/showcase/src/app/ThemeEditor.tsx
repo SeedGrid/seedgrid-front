@@ -18,7 +18,7 @@ const PRESET_COLORS = [
 
 export function ThemeEditor() {
   const i18n = useShowcaseI18n();
-  const { setTheme, setMode, currentMode } = useSgTheme();
+  const { setTheme, setMode, currentMode, currentTheme } = useSgTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const [customColor, setCustomColor] = React.useState("#16803D");
   const colorInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -30,12 +30,7 @@ export function ThemeEditor() {
   const isValidCustom = /^#[0-9a-fA-F]{6}$/.test(customColor);
 
   const openEditor = () => {
-    try {
-      const stored = localStorage.getItem("sg:theme:config");
-      snapshotThemeRef.current = stored ? JSON.parse(stored) : { seed: "#16803D" };
-    } catch {
-      snapshotThemeRef.current = { seed: "#16803D" };
-    }
+    snapshotThemeRef.current = { ...currentTheme };
     snapshotModeRef.current = currentMode;
     setTheme({ persistMode: false });
     setIsOpen(true);

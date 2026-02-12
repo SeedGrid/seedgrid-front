@@ -5,6 +5,8 @@ import type { SeedThemeInput, ThemeContextValue, Mode } from "./ThemeConfig";
 import { defaultSeedTheme } from "./ThemeConfig";
 import { generateThemeVars, getSystemMode } from "./themeGenerator";
 import { generateComponentTokens } from "./componentTokens";
+import { createLocalStorageStrategy } from "@seedgrid/fe-core";
+import type { PersistenceStrategy } from "@seedgrid/fe-core";
 
 /* ------------- React Provider ------------- */
 
@@ -14,6 +16,17 @@ export function useSgTheme() {
   const ctx = React.useContext(ThemeContext);
   if (!ctx) throw new Error("useSgTheme must be used within SeedThemeProvider");
   return ctx;
+}
+
+/** Try sync load from strategy; returns null for async strategies */
+function trySyncLoad(strategy: PersistenceStrategy, key: string): unknown | null {
+  try {
+    const result = strategy.load(key);
+    if (result instanceof Promise) return null;
+    return result;
+  } catch {
+    return null;
+  }
 }
 
 export function SeedThemeProvider({
@@ -28,21 +41,21 @@ export function SeedThemeProvider({
   const persistedModeKey = "sg:theme:mode";
   const persistedThemeKey = "sg:theme:config";
 
-  // Try to load persisted theme from localStorage
+  // Strategy is determined once from initialTheme prop
+  const strategy = React.useMemo(
+    () => initialTheme?.persistenceStrategy ?? createLocalStorageStrategy(),
+    [initialTheme?.persistenceStrategy]
+  );
+
+  // Try to load persisted theme (sync for localStorage, null for async)
   const getPersistedTheme = React.useCallback((): SeedThemeInput | null => {
     if (typeof window === "undefined") return null;
-    try {
-      const stored = localStorage.getItem(persistedThemeKey);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Validate that it has at least a seed
-        if (parsed && typeof parsed.seed === "string") {
-          return parsed;
-        }
-      }
-    } catch {}
+    const stored = trySyncLoad(strategy, persistedThemeKey);
+    if (stored && typeof (stored as any).seed === "string") {
+      return stored as SeedThemeInput;
+    }
     return null;
-  }, []);
+  }, [strategy]);
 
   // Merge persisted theme with initial theme (persisted takes precedence)
   const mergedInitialTheme = React.useMemo(() => {
@@ -55,28 +68,59 @@ export function SeedThemeProvider({
         ...base,
         ...persisted,
         persistMode: base.persistMode, // Keep persistMode from initial config
+        persistenceStrategy: base.persistenceStrategy, // Keep strategy from initial config
       };
     }
     return base;
   }, [initialTheme, getPersistedTheme]);
 
-  // Resolve initial mode: if auto, detect system (or localStorage if persisted)
+  // Resolve initial mode: if auto, detect system (or persisted mode)
   const initialResolvedMode = React.useMemo(() => {
     const theme = mergedInitialTheme;
     const m = theme.mode ?? "light";
     if (m === "auto") {
       // If persisted, prefer it
-      try {
-        const persisted = typeof window !== "undefined" ? localStorage.getItem(persistedModeKey) : null;
-        if (persisted === "light" || persisted === "dark") return persisted;
-      } catch {}
+      const persisted = typeof window !== "undefined" ? trySyncLoad(strategy, persistedModeKey) : null;
+      if (persisted === "light" || persisted === "dark") return persisted;
       return getSystemMode();
     }
     return m;
-  }, [mergedInitialTheme]) as "light" | "dark";
+  }, [mergedInitialTheme, strategy]) as "light" | "dark";
 
   const [mode, setModeState] = React.useState<"light" | "dark">(initialResolvedMode);
   const [themeInput, setThemeInput] = React.useState<SeedThemeInput>(mergedInitialTheme);
+
+  // Async hydration for async strategies (e.g. API)
+  React.useEffect(() => {
+    let alive = true;
+    const themeResult = strategy.load(persistedThemeKey);
+    const modeResult = strategy.load(persistedModeKey);
+    // Only run async hydration if either load returns a Promise
+    if (!(themeResult instanceof Promise) && !(modeResult instanceof Promise)) return;
+
+    (async () => {
+      try {
+        const [loadedTheme, loadedMode] = await Promise.all([
+          Promise.resolve(themeResult),
+          Promise.resolve(modeResult),
+        ]);
+        if (!alive) return;
+        if (loadedTheme && typeof (loadedTheme as any).seed === "string") {
+          setThemeInput((prev) => ({
+            ...prev,
+            ...(loadedTheme as SeedThemeInput),
+            persistMode: prev.persistMode,
+            persistenceStrategy: prev.persistenceStrategy,
+          }));
+        }
+        if (loadedMode === "light" || loadedMode === "dark") {
+          setModeState(loadedMode);
+        }
+      } catch {}
+    })();
+
+    return () => { alive = false; };
+  }, [strategy]);
 
   const vars = React.useMemo(() => {
     const baseVars = generateThemeVars(themeInput, mode);
@@ -94,18 +138,15 @@ export function SeedThemeProvider({
   // Optionally persist mode and theme
   React.useEffect(() => {
     if (themeInput.persistMode) {
-      try {
-        localStorage.setItem(persistedModeKey, mode);
-        // Also persist the full theme config (seed, radius, etc.)
-        const themeToStore = {
-          seed: themeInput.seed,
-          mode: themeInput.mode,
-          radius: themeInput.radius,
-        };
-        localStorage.setItem(persistedThemeKey, JSON.stringify(themeToStore));
-      } catch {}
+      const themeToStore = {
+        seed: themeInput.seed,
+        mode: themeInput.mode,
+        radius: themeInput.radius,
+      };
+      void Promise.resolve(strategy.save(persistedModeKey, mode)).catch(() => {});
+      void Promise.resolve(strategy.save(persistedThemeKey, themeToStore)).catch(() => {});
     }
-  }, [mode, themeInput, persistedModeKey, persistedThemeKey]);
+  }, [mode, themeInput, strategy, persistedModeKey, persistedThemeKey]);
 
   // Listen for system changes when initial mode = auto
   React.useEffect(() => {
@@ -129,16 +170,22 @@ export function SeedThemeProvider({
   const setMode = React.useCallback((m: Exclude<Mode, "auto">) => {
     setModeState(m);
     if (themeInput.persistMode) {
-      try { localStorage.setItem(persistedModeKey, m); } catch {}
+      void Promise.resolve(strategy.save(persistedModeKey, m)).catch(() => {});
     }
-  }, [themeInput.persistMode, persistedModeKey]);
+  }, [themeInput.persistMode, strategy, persistedModeKey]);
 
   // Export currentMode normalized (no "auto")
   const currentMode = mode;
 
+  const currentTheme = React.useMemo(() => ({
+    seed: themeInput.seed,
+    mode: themeInput.mode,
+    radius: themeInput.radius,
+  }), [themeInput.seed, themeInput.mode, themeInput.radius]);
+
   if (applyTo === "wrapper") {
     return (
-      <ThemeContext.Provider value={{ vars, setTheme, setMode, currentMode }}>
+      <ThemeContext.Provider value={{ vars, setTheme, setMode, currentMode, currentTheme }}>
         <div style={Object.fromEntries(Object.entries(vars).map(([k, v]) => [k as any, v])) as React.CSSProperties}>
           {children}
         </div>
@@ -147,7 +194,7 @@ export function SeedThemeProvider({
   }
 
   return (
-    <ThemeContext.Provider value={{ vars, setTheme, setMode, currentMode }}>
+    <ThemeContext.Provider value={{ vars, setTheme, setMode, currentMode, currentTheme }}>
       {children}
     </ThemeContext.Provider>
   );
