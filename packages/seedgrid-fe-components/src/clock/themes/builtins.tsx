@@ -11,6 +11,106 @@ function polar(r: number, a: number) {
   return { x: round(50 + r * Math.sin(a)), y: round(50 - r * Math.cos(a)) };
 }
 
+const SEGMENTS: Record<string, Array<{ x: number; y: number; w: number; h: number }>> = {
+  "0": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 0, y: 1, w: 1, h: 4 }
+  ],
+  "1": [
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "2": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "3": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "4": [
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "5": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "6": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "7": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "8": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 }
+  ],
+  "9": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 }
+  ]
+};
+
+function renderSevenSegDigit(digit: string, x: number, y: number, scale: number) {
+  const segs = SEGMENTS[digit] ?? [];
+  return segs.map((s, idx) => (
+    <rect
+      key={`${digit}-${idx}`}
+      x={round(x + s.x * scale)}
+      y={round(y + s.y * scale)}
+      width={round(s.w * scale)}
+      height={round(s.h * scale)}
+      className="fill-neutral-700 dark:fill-neutral-300"
+      rx={round(0.3 * scale)}
+    />
+  ));
+}
+
+function renderSevenSegNumber(num: number, cx: number, cy: number, scale: number) {
+  const digits = String(num).split("");
+  const w = 6 * scale;
+  const gap = 1.2 * scale;
+  const total = digits.length * w + (digits.length - 1) * gap;
+  const startX = cx - total / 2;
+  const startY = cy - (10 * scale) / 2;
+
+  return digits.map((d, i) => (
+    <g key={`${num}-${i}`}>{renderSevenSegDigit(d, startX + i * (w + gap), startY, scale)}</g>
+  ));
+}
+
 const ThemeClassic = () => (
   <>
     <circle cx="50" cy="50" r="48" className="fill-neutral-100 dark:fill-neutral-900" />
@@ -425,6 +525,42 @@ const ThemeRomanOrnate = () => (
   </>
 );
 
+const ThemeSegment = () => (
+  <>
+    <circle cx="50" cy="50" r="48" className="fill-white dark:fill-neutral-950" />
+    <circle cx="50" cy="50" r="47" className="fill-none stroke-neutral-300 dark:stroke-neutral-700" />
+
+    {Array.from({ length: 60 }).map((_, i) => {
+      const major = i % 5 === 0;
+      const len = major ? 4 : 2;
+      const r1 = 46;
+      const r2 = r1 - len;
+      const a = (i * Math.PI) / 30;
+      const p1 = polar(r1, a);
+      const p2 = polar(r2, a);
+      return (
+        <line
+          key={i}
+          x1={p1.x}
+          y1={p1.y}
+          x2={p2.x}
+          y2={p2.y}
+          className={major ? "stroke-neutral-400 stroke-[0.9]" : "stroke-neutral-400/60 stroke-[0.6]"}
+          strokeLinecap="round"
+        />
+      );
+    })}
+
+    {Array.from({ length: 12 }).map((_, idx) => {
+      const n = idx + 1;
+      const a = (n * Math.PI) / 6;
+      const r = 32;
+      const p = polar(r, a);
+      return <g key={n}>{renderSevenSegNumber(n, p.x, p.y, 0.7)}</g>;
+    })}
+  </>
+);
+
 export const sgClockThemesBuiltIn: SgClockTheme[] = [
   { id: "classic", label: "Classic", render: () => <ThemeClassic />, order: 1 },
   { id: "minimal", label: "Minimal", render: () => <ThemeMinimal />, order: 2 },
@@ -434,5 +570,6 @@ export const sgClockThemesBuiltIn: SgClockTheme[] = [
   { id: "music-notes", label: "Music Notes", render: () => <ThemeMusicNotes />, order: 6 },
   { id: "music-staff", label: "Music Staff", render: () => <ThemeMusicStaff />, order: 8 },
   { id: "roman-classic", label: "Roman Classic", render: () => <ThemeRomanClassic />, order: 9 },
-  { id: "roman-ornate", label: "Roman Ornate", render: () => <ThemeRomanOrnate />, order: 10 }
+  { id: "roman-ornate", label: "Roman Ornate", render: () => <ThemeRomanOrnate />, order: 10 },
+  { id: "segment", label: "Segment", render: () => <ThemeSegment />, order: 11 }
 ];

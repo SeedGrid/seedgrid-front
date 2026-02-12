@@ -5,6 +5,7 @@ import {
   SgClock,
   SgClockThemePicker,
   SgClockThemeProvider,
+  SgButton,
   SgTimeProvider,
   registerThemes,
   sgClockThemesBuiltIn
@@ -31,6 +32,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
+  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment">("default");
 
   if (!themesRegistered) {
     themesRegistered = true;
@@ -64,24 +66,16 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
                 />
 
                 <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className="rounded-md border border-border px-3 py-2 text-sm"
-                    onClick={() => setSecondMode((v) => (v === "step" ? "smooth" : "step"))}
-                  >
+                  <SgButton onClick={() => setSecondMode((v) => (v === "step" ? "smooth" : "step"))}>
                     {secondMode === "step"
                       ? t(i18n, "showcase.component.clock.labels.secondStep")
                       : t(i18n, "showcase.component.clock.labels.secondSmooth")}
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-md border border-border px-3 py-2 text-sm"
-                    onClick={() => setShowSeconds((v) => !v)}
-                  >
+                  </SgButton>
+                  <SgButton onClick={() => setShowSeconds((v) => !v)}>
                     {showSeconds
                       ? t(i18n, "showcase.component.clock.labels.secondsOn")
                       : t(i18n, "showcase.component.clock.labels.secondsOff")}
-                  </button>
+                  </SgButton>
                 </div>
               </div>
 
@@ -105,6 +99,7 @@ import {
   SgClock,
   SgClockThemePicker,
   SgClockThemeProvider,
+  SgButton,
   SgTimeProvider,
   registerThemes,
   sgClockThemesBuiltIn
@@ -127,6 +122,13 @@ export default function SgClockShowcaseClient({ initialServerTime }) {
     <SgTimeProvider initialServerTime={initialServerTime}>
       <SgClockThemeProvider value={{ mode: "fallback", fallbackThemeId: "classic" }}>
         <SgClockThemePicker value={themeId} onChange={setThemeId} label="Theme" />
+
+        <SgButton onClick={() => setSecondMode((v) => (v === "step" ? "smooth" : "step"))}>
+          {secondMode === "step" ? "Segundos: step" : "Segundos: smooth"}
+        </SgButton>
+        <SgButton onClick={() => setShowSeconds((v) => !v)}>
+          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+        </SgButton>
 
         <SgClock
           variant="analog"
@@ -208,21 +210,43 @@ export default function Example({ initialServerTime }) {
             title={t(i18n, "showcase.component.clock.sections.digital.title")}
             description={t(i18n, "showcase.component.clock.sections.digital.description")}
           >
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
+                {digitalStyle === "default"
+                  ? t(i18n, "showcase.component.clock.labels.segmentToggleOn")
+                  : t(i18n, "showcase.component.clock.labels.segmentToggleOff")}
+              </SgButton>
+            </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <SgClock variant="digital" size="sm" timezone={timezone} format={format} />
-              <SgClock variant="digital" size="md" timezone={timezone} format={format} />
-              <SgClock variant="digital" size="lg" timezone={timezone} format={format} />
+              <SgClock variant="digital" size="sm" timezone={timezone} format={format} digitalStyle={digitalStyle} />
+              <SgClock variant="digital" size="md" timezone={timezone} format={format} digitalStyle={digitalStyle} />
+              <SgClock variant="digital" size="lg" timezone={timezone} format={format} digitalStyle={digitalStyle} />
+            </div>
+            <div className="mt-4">
+              <div className="text-sm font-medium">{t(i18n, "showcase.component.clock.labels.segmentTitle")}</div>
+              <div className="mt-2 flex flex-wrap items-center gap-6">
+                <SgClock variant="digital" digitalStyle="segment" size="md" timezone={timezone} format={format} />
+                <SgClock variant="digital" digitalStyle="segment" size="lg" timezone={timezone} format={format} />
+              </div>
             </div>
             <div className="mt-6">
               <CodeBlockBase
-                code={`import { SgClock, SgTimeProvider } from "@seedgrid/fe-components";
+                code={`"use client";
+import React from "react";
+import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 
 export default function Example({ initialServerTime }) {
+  const [digitalStyle, setDigitalStyle] = React.useState("default");
+
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>
-      <SgClock variant="digital" size="sm" timezone="America/Sao_Paulo" format="24h" />
-      <SgClock variant="digital" size="md" timezone="America/Sao_Paulo" format="24h" />
-      <SgClock variant="digital" size="lg" timezone="America/Sao_Paulo" format="24h" />
+      <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
+        {digitalStyle === "default" ? "Ativar segmentado" : "Desativar segmentado"}
+      </SgButton>
+
+      <SgClock variant="digital" size="sm" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
+      <SgClock variant="digital" size="md" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
+      <SgClock variant="digital" size="lg" timezone="America/Sao_Paulo" format="24h" digitalStyle={digitalStyle} />
     </SgTimeProvider>
   );
 }`}
@@ -235,41 +259,13 @@ export default function Example({ initialServerTime }) {
             description={t(i18n, "showcase.component.clock.sections.timezone.description")}
           >
             <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => setTimezone("America/Sao_Paulo")}
-              >
-                Sao Paulo
-              </button>
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => setTimezone("Europe/Lisbon")}
-              >
-                Lisboa
-              </button>
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => setTimezone("America/New_York")}
-              >
-                New York
-              </button>
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => setTimezone("Asia/Tokyo")}
-              >
-                Tokyo
-              </button>
-              <button
-                type="button"
-                className="rounded-md border border-border px-3 py-2 text-sm"
-                onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}
-              >
+              <SgButton onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</SgButton>
+              <SgButton onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</SgButton>
+              <SgButton onClick={() => setTimezone("America/New_York")}>New York</SgButton>
+              <SgButton onClick={() => setTimezone("Asia/Tokyo")}>Tokyo</SgButton>
+              <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
                 {format === "24h" ? "24h" : "12h"}
-              </button>
+              </SgButton>
             </div>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -280,7 +276,7 @@ export default function Example({ initialServerTime }) {
               <CodeBlockBase
                 code={`"use client";
 import React from "react";
-import { SgClock, SgTimeProvider } from "@seedgrid/fe-components";
+import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 
 export default function Example({ initialServerTime }) {
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
@@ -289,13 +285,13 @@ export default function Example({ initialServerTime }) {
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</button>
-        <button onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</button>
-        <button onClick={() => setTimezone("America/New_York")}>New York</button>
-        <button onClick={() => setTimezone("Asia/Tokyo")}>Tokyo</button>
-        <button onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+        <SgButton onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</SgButton>
+        <SgButton onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</SgButton>
+        <SgButton onClick={() => setTimezone("America/New_York")}>New York</SgButton>
+        <SgButton onClick={() => setTimezone("Asia/Tokyo")}>Tokyo</SgButton>
+        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
           {format === "24h" ? "24h" : "12h"}
-        </button>
+        </SgButton>
       </div>
 
       <div className="mt-4 grid gap-3 md:grid-cols-2">

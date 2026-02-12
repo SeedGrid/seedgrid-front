@@ -19,6 +19,7 @@ export type SgClockProps = {
   locale?: string;
   format?: "12h" | "24h";
   showSeconds?: boolean;
+  digitalStyle?: "default" | "segment";
   secondHandMode?: "step" | "smooth";
   themeId?: string;
   theme?: SgClockTheme;
@@ -56,6 +57,149 @@ function digitalSizeToNumber(size: SgClockProps["size"]) {
   if (size === "sm") return 12;
   if (size === "lg") return 28;
   return 16;
+}
+
+const SEGMENTS: Record<string, Array<{ x: number; y: number; w: number; h: number }>> = {
+  "0": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 0, y: 1, w: 1, h: 4 }
+  ],
+  "1": [
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "2": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "3": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "4": [
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "5": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "6": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 }
+  ],
+  "7": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 }
+  ],
+  "8": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 5, w: 1, h: 4 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 }
+  ],
+  "9": [
+    { x: 1, y: 0, w: 4, h: 1 },
+    { x: 5, y: 1, w: 1, h: 4 },
+    { x: 5, y: 5, w: 1, h: 4 },
+    { x: 1, y: 9, w: 4, h: 1 },
+    { x: 0, y: 1, w: 1, h: 4 },
+    { x: 1, y: 4.5, w: 4, h: 1 }
+  ]
+};
+
+function round(n: number) {
+  return Math.round(n * 1000) / 1000;
+}
+
+function renderSegmentDigit(digit: string, x: number, y: number, scale: number, keyPrefix: string) {
+  const segs = SEGMENTS[digit] ?? [];
+  return segs.map((s, idx) => (
+    <rect
+      key={`${keyPrefix}-${idx}`}
+      x={round(x + s.x * scale)}
+      y={round(y + s.y * scale)}
+      width={round(s.w * scale)}
+      height={round(s.h * scale)}
+      className="fill-neutral-800 dark:fill-neutral-200"
+      rx={round(0.3 * scale)}
+    />
+  ));
+}
+
+function renderSegmentChar(ch: string, x: number, y: number, scale: number, keyPrefix: string) {
+  if (ch === ":") {
+    return (
+      <g key={keyPrefix}>
+        <rect
+          x={round(x + 2.2 * scale)}
+          y={round(y + 2 * scale)}
+          width={round(1 * scale)}
+          height={round(1 * scale)}
+          className="fill-neutral-800 dark:fill-neutral-200"
+        />
+        <rect
+          x={round(x + 2.2 * scale)}
+          y={round(y + 7 * scale)}
+          width={round(1 * scale)}
+          height={round(1 * scale)}
+          className="fill-neutral-800 dark:fill-neutral-200"
+        />
+      </g>
+    );
+  }
+  if (!SEGMENTS[ch]) return null;
+  return <g key={keyPrefix}>{renderSegmentDigit(ch, x, y, scale, keyPrefix)}</g>;
+}
+
+function renderSegmentText(text: string, sizePx: number) {
+  const baseScale = sizePx / 16;
+  const digitW = 6 * baseScale;
+  const digitH = 10 * baseScale;
+  const gap = 1.4 * baseScale;
+  const colonW = 4 * baseScale;
+  let width = 0;
+
+  for (const ch of text) {
+    width += ch === ":" ? colonW : digitW;
+    width += gap;
+  }
+  width -= gap;
+  const height = digitH;
+
+  let cursor = 0;
+  const nodes: React.ReactNode[] = [];
+
+  text.split("").forEach((ch, idx) => {
+    const w = ch === ":" ? colonW : digitW;
+    nodes.push(renderSegmentChar(ch, cursor, 0, baseScale, `seg-${idx}`));
+    cursor += w + gap;
+  });
+
+  return { width, height, nodes };
 }
 
 function AnalogClock({
@@ -150,6 +294,7 @@ function DigitalClock({
   format = "24h",
   showSeconds = true,
   size = "md",
+  digitalStyle = "default",
   className
 }: Omit<SgClockProps, "variant" | "secondHandMode" | "themeId" | "theme" | "centerOverlay">) {
   const { tick, nowMs } = useSgTime();
@@ -167,6 +312,22 @@ function DigitalClock({
   const classSize = sizeToClass(size);
   const fontSize =
     typeof size === "number" ? { fontSize: `${size}px`, lineHeight: 1 } : undefined;
+  const sizePx = digitalSizeToNumber(size);
+
+  if (digitalStyle === "segment") {
+    const seg = renderSegmentText(text, sizePx);
+    return (
+      <svg
+        width={seg.width}
+        height={seg.height}
+        viewBox={`0 0 ${seg.width} ${seg.height}`}
+        className={cn("block", className)}
+        aria-label="Digital clock"
+      >
+        {seg.nodes}
+      </svg>
+    );
+  }
 
   return (
     <div className={cn("font-mono tabular-nums", classSize, className)} style={fontSize}>
@@ -183,6 +344,7 @@ export function SgClock(props: SgClockProps) {
     locale = "pt-BR",
     format = "24h",
     showSeconds = true,
+    digitalStyle = "default",
     secondHandMode = "step",
     themeId = "classic",
     theme,
@@ -214,6 +376,7 @@ export function SgClock(props: SgClockProps) {
       format={format}
       showSeconds={showSeconds}
       size={size}
+      digitalStyle={digitalStyle}
       className={className}
     />
   );

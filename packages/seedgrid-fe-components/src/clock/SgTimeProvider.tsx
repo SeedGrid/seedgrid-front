@@ -25,10 +25,14 @@ export function SgTimeProvider({
   children: React.ReactNode;
 }) {
   const serverStartMsRef = React.useRef<number>(Date.parse(initialServerTime));
-  const perfStartMsRef = React.useRef<number>(performance.now());
+  const perfStartMsRef = React.useRef<number>(0);
   const [tick, setTick] = React.useState(0);
+  const [hydrated, setHydrated] = React.useState(false);
 
   React.useEffect(() => {
+    perfStartMsRef.current = performance.now();
+    setHydrated(true);
+
     const alignDelay = 1000 - (Date.now() % 1000);
     let intervalId: number | null = null;
 
@@ -44,9 +48,10 @@ export function SgTimeProvider({
   }, []);
 
   const nowMs = React.useCallback(() => {
+    if (!hydrated) return serverStartMsRef.current;
     const delta = performance.now() - perfStartMsRef.current;
     return serverStartMsRef.current + delta;
-  }, []);
+  }, [hydrated]);
 
   const value = React.useMemo<SgTimeContextValue>(
     () => ({
