@@ -347,11 +347,9 @@ type FlipDigitCardProps = {
   w: number;
   h: number;
   digitFont: number;
-  digitPad: number;
-  digitNudge: number;
 };
 
-function FlipDigitCard({ ch, w, h, digitFont, digitPad, digitNudge }: FlipDigitCardProps) {
+function FlipDigitCard({ ch, w, h, digitFont }: FlipDigitCardProps) {
   const prevRef = React.useRef(ch);
   const [prev, setPrev] = React.useState(ch);
   const [flip, setFlip] = React.useState(false);
@@ -368,7 +366,7 @@ function FlipDigitCard({ ch, w, h, digitFont, digitPad, digitNudge }: FlipDigitC
     const id = window.setTimeout(() => {
       setFlip(false);
       prevRef.current = ch;
-    }, 650);
+    }, 1200);
     return () => {
       window.cancelAnimationFrame(raf);
       window.clearTimeout(id);
@@ -377,35 +375,41 @@ function FlipDigitCard({ ch, w, h, digitFont, digitPad, digitNudge }: FlipDigitC
 
   const panel =
     "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
-  const seam = "absolute left-0 right-0 top-1/2 z-10 h-px bg-white/20 shadow-[0_1px_0_rgba(255,255,255,0.06)]";
+  const seam = "absolute left-0 right-0 top-1/2 z-10 h-[3px] bg-gradient-to-b from-black/70 to-transparent shadow-[0_3px_8px_rgba(0,0,0,0.7),0_-2px_6px_rgba(255,255,255,0.25)]";
   const half = "absolute left-0 w-full overflow-hidden";
   const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
   const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
 
   return (
-    <div className={cn(panel, glossTop, glossBottom)} style={{ width: w, height: h }}>
+    <div className={cn(panel, glossTop, glossBottom)} style={{ width: w, height: h, transformStyle: "preserve-3d", perspective: "1000px" }}>
       <div className={seam} />
+      {/* Top half - shows upper portion of the digit */}
       <div className={cn(half, "top-0")} style={{ height: h / 2 }}>
         <div
-          className="flex h-full items-start justify-center font-semibold"
+          className="absolute flex items-center justify-center font-bold font-mono"
           style={{
             fontSize: digitFont,
-            paddingTop: digitPad,
-            transform: `translateY(-${digitNudge}px)`,
-            lineHeight: 0.9
+            lineHeight: 1,
+            width: "100%",
+            height: h,
+            top: 0,
+            left: 0
           }}
         >
           {flip ? prev : ch}
         </div>
       </div>
+      {/* Bottom half - shows lower portion of the digit */}
       <div className={cn(half, "bottom-0")} style={{ height: h / 2 }}>
         <div
-          className="flex h-full items-end justify-center font-semibold"
+          className="absolute flex items-center justify-center font-bold font-mono"
           style={{
             fontSize: digitFont,
-            paddingBottom: digitPad,
-            transform: `translateY(${digitNudge}px)`,
-            lineHeight: 0.9
+            lineHeight: 1,
+            width: "100%",
+            height: h,
+            top: `-${h / 2}px`,
+            left: 0
           }}
         >
           {ch}
@@ -414,42 +418,52 @@ function FlipDigitCard({ ch, w, h, digitFont, digitPad, digitNudge }: FlipDigitC
 
       {flip ? (
         <>
-          <div className="absolute left-0 top-0 z-20 w-full" style={{ height: h / 2, perspective: "900px" }}>
+          {/* Animated top half */}
+          <div className="absolute left-0 top-0 z-20 w-full overflow-hidden rounded-t-lg" style={{ height: h / 2 }}>
             <div
               key={`top-${animKey}`}
               className="flip-top"
               style={{
-                transformOrigin: "center bottom"
+                transformOrigin: "center bottom",
+                height: "100%",
+                width: "100%"
               }}
             >
               <div
-                className="flex h-full items-start justify-center font-semibold"
+                className="absolute flex items-center justify-center font-bold font-mono"
                 style={{
                   fontSize: digitFont,
-                  paddingTop: digitPad,
-                  transform: `translateY(-${digitNudge}px)`,
-                  lineHeight: 0.9
+                  lineHeight: 1,
+                  width: "100%",
+                  height: h,
+                  top: 0,
+                  left: 0
                 }}
               >
                 {prev}
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 left-0 z-20 w-full" style={{ height: h / 2, perspective: "900px" }}>
+          {/* Animated bottom half */}
+          <div className="absolute bottom-0 left-0 z-20 w-full overflow-hidden rounded-b-lg" style={{ height: h / 2 }}>
             <div
               key={`bottom-${animKey}`}
               className="flip-bottom"
               style={{
-                transformOrigin: "center top"
+                transformOrigin: "center top",
+                height: "100%",
+                width: "100%"
               }}
             >
               <div
-                className="flex h-full items-end justify-center font-semibold"
+                className="absolute flex items-center justify-center font-bold font-mono"
                 style={{
                   fontSize: digitFont,
-                  paddingBottom: digitPad,
-                  transform: `translateY(${digitNudge}px)`,
-                  lineHeight: 0.9
+                  lineHeight: 1,
+                  width: "100%",
+                  height: h,
+                  top: `-${h / 2}px`,
+                  left: 0
                 }}
               >
                 {ch}
@@ -513,9 +527,7 @@ function DigitalClock({
 
     const w = Math.round(sizePx * 1.62);
     const h = Math.round(sizePx * 2.35);
-    const digitFont = Math.round(sizePx * 1.6);
-    const digitPad = Math.max(1, Math.round(sizePx * 0.12));
-    const digitNudge = Math.max(0, Math.round(sizePx * 0.04));
+    const digitFont = Math.round(sizePx * 1.4);
     const panel =
       "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
     const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
@@ -543,33 +555,43 @@ function DigitalClock({
       <div className={cn("flex items-center gap-2", className)} aria-label="Digital clock">
         <style>{`
           .flip-top {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.1));
-            animation: sgFlipTop 0.38s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+            background: #1a1a1a;
+            border-radius: 8px 8px 0 0;
+            animation: sgFlipTop 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
             backface-visibility: hidden;
             transform-style: preserve-3d;
-            will-change: transform, filter;
-            box-shadow: inset 0 -10px 18px rgba(0,0,0,0.25);
+            will-change: transform;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2);
           }
           .flip-bottom {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.04));
-            animation: sgFlipBottom 0.38s cubic-bezier(0.25, 0.8, 0.25, 1) both;
-            animation-delay: 0.34s;
+            background: #1a1a1a;
+            border-radius: 0 0 8px 8px;
+            animation: sgFlipBottom 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
+            animation-delay: 0.6s;
             backface-visibility: hidden;
             transform-style: preserve-3d;
-            will-change: transform, filter;
-            box-shadow: inset 0 10px 18px rgba(0,0,0,0.22);
+            will-change: transform;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2);
           }
           @keyframes sgFlipTop {
-            0% { transform: rotateX(0deg); filter: brightness(1); }
-            100% { transform: rotateX(-90deg); filter: brightness(0.72); }
+            0% {
+              transform: rotateX(0deg);
+              z-index: 30;
+            }
+            100% {
+              transform: rotateX(-180deg);
+              z-index: 5;
+            }
           }
           @keyframes sgFlipBottom {
-            0% { transform: rotateX(90deg); filter: brightness(0.7); }
-            100% { transform: rotateX(0deg); filter: brightness(1); }
+            0% {
+              transform: rotateX(180deg);
+              z-index: 5;
+            }
+            100% {
+              transform: rotateX(0deg);
+              z-index: 30;
+            }
           }
         `}</style>
         <FlipDigitCard
@@ -577,16 +599,12 @@ function DigitalClock({
           w={w}
           h={h}
           digitFont={digitFont}
-          digitPad={digitPad}
-          digitNudge={digitNudge}
         />
         <FlipDigitCard
           ch={hh.charAt(1)}
           w={w}
           h={h}
           digitFont={digitFont}
-          digitPad={digitPad}
-          digitNudge={digitNudge}
         />
         <Colon />
         <FlipDigitCard
@@ -594,16 +612,12 @@ function DigitalClock({
           w={w}
           h={h}
           digitFont={digitFont}
-          digitPad={digitPad}
-          digitNudge={digitNudge}
         />
         <FlipDigitCard
           ch={mm.charAt(1)}
           w={w}
           h={h}
           digitFont={digitFont}
-          digitPad={digitPad}
-          digitNudge={digitNudge}
         />
         {showSeconds ? (
           <>
@@ -613,16 +627,12 @@ function DigitalClock({
               w={w}
               h={h}
               digitFont={digitFont}
-              digitPad={digitPad}
-              digitNudge={digitNudge}
             />
             <FlipDigitCard
               ch={ss.charAt(1)}
               w={w}
               h={h}
               digitFont={digitFont}
-              digitPad={digitPad}
-              digitNudge={digitNudge}
             />
           </>
         ) : null}

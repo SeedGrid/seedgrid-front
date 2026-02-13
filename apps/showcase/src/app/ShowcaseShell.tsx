@@ -49,6 +49,11 @@ const COMPONENTS = [
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },
+  { group: "Layout", slug: "sg-screen", label: "SgScreen" },
+  { group: "Layout", slug: "sg-main-panel", label: "SgMainPanel" },
+  { group: "Layout", slug: "sg-panel", label: "SgPanel" },
+  { group: "Layout", slug: "sg-grid", label: "SgGrid" },
+  { group: "Layout", slug: "sg-stack", label: "SgStack" },
   { group: "Layout", slug: "sg-badge", label: "SgBadge" },
   { group: "Layout", slug: "sg-badge-overlay", label: "SgBadgeOverlay" },
   { group: "Layout", slug: "sg-popup", label: "SgPopup" },
@@ -57,6 +62,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-dock-layout", label: "SgDockLayout" },
   { group: "Layout", slug: "sg-tree-view", label: "SgTreeView" },
   { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
+  { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];

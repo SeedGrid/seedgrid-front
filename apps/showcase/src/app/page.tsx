@@ -30,6 +30,11 @@ const COMPONENTS = [
     items: [
       { slug: "sg-group-box", name: "SgGroupBox", desc: "Container agrupado com legenda (fieldset/legend)" },
       { slug: "sg-card", name: "SgCard", desc: "Card com header, leading/trailing, variants e collapse" },
+      { slug: "sg-screen", name: "SgScreen", desc: "Container raiz de viewport para telas e layouts complexos" },
+      { slug: "sg-main-panel", name: "SgMainPanel", desc: "Layout dock estilo Delphi com top/left/right/bottom/client" },
+      { slug: "sg-panel", name: "SgPanel", desc: "Container visual com borderStyle, padding, scroll e props de layout" },
+      { slug: "sg-grid", name: "SgGrid", desc: "Grid responsivo com columns/minItemWidth, span, rowSpan e dense" },
+      { slug: "sg-stack", name: "SgStack", desc: "Flex declarativo com direction, gap, justify, align e wrap" },
       { slug: "sg-badge", name: "SgBadge", desc: "Badge de status, contador e labels" },
       { slug: "sg-badge-overlay", name: "SgBadgeOverlay", desc: "Badge sobre icone/elemento" },
       { slug: "sg-dialog", name: "SgDialog", desc: "Dialog com header, severidade e footer" },

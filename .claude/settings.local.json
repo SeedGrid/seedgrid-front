@@ -23,7 +23,9 @@
       "Bash(pnpm --filter @seedgrid/fe-core typecheck:*)",
       "Bash(pnpm --filter @seedgrid/fe-theme typecheck:*)",
       "Bash(pnpm --filter @seedgrid/fe-components typecheck:*)",
-      "Bash(pnpm --filter showcase typecheck:*)"
+      "Bash(pnpm --filter showcase typecheck:*)",
+      "Bash(pnpm --filter seedgrid-fe-components typecheck:*)",
+      "Bash(pnpm typecheck:*)"
     ]
   }
 }

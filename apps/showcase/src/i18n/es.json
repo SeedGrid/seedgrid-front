@@ -1031,5 +1031,21 @@
   "showcase.nav.layout": "Layout",
   "showcase.nav.search.label": "Buscar",
   "showcase.nav.search.placeholder": "Buscar componente...",
-  "showcase.nav.wizard": "Wizard"
+  "showcase.nav.wizard": "Wizard",
+  "showcase.themeEditor.apply": "Aplicar",
+  "showcase.themeEditor.cancel": "Cancelar",
+  "showcase.themeEditor.componentTokens": "Tokens de Componentes",
+  "showcase.themeEditor.components": "Componentes",
+  "showcase.themeEditor.custom": "Personalizado",
+  "showcase.themeEditor.customColor": "Color Personalizado",
+  "showcase.themeEditor.hint": "Configurar tema",
+  "showcase.themeEditor.invalidHex": "Color hex invalido",
+  "showcase.themeEditor.mode": "Modo",
+  "showcase.themeEditor.modeToDark": "Cambiar a Oscuro",
+  "showcase.themeEditor.modeToLight": "Cambiar a Claro",
+  "showcase.themeEditor.palette": "Paleta de Colores",
+  "showcase.themeEditor.presets": "Colores Predefinidos",
+  "showcase.themeEditor.semanticTokens": "Tokens Semanticos",
+  "showcase.themeEditor.title": "Editor de Tema",
+  "showcase.themeEditor.tokenPreview": "Vista Previa de Tokens"
 }
