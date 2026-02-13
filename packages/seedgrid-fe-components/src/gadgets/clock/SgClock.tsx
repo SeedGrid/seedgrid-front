@@ -27,7 +27,7 @@ export type SgClockProps = {
   locale?: string;
   format?: "12h" | "24h";
   showSeconds?: boolean;
-  digitalStyle?: "default" | "segment" | "roller3d";
+  digitalStyle?: "default" | "segment" | "roller3d" | "flip";
   secondHandMode?: "step" | "smooth";
   themeId?: string;
   theme?: SgClockTheme;
@@ -342,6 +342,126 @@ function AnalogClock({
   );
 }
 
+type FlipDigitCardProps = {
+  ch: string;
+  w: number;
+  h: number;
+  digitFont: number;
+  digitPad: number;
+  digitNudge: number;
+};
+
+function FlipDigitCard({ ch, w, h, digitFont, digitPad, digitNudge }: FlipDigitCardProps) {
+  const prevRef = React.useRef(ch);
+  const [prev, setPrev] = React.useState(ch);
+  const [flip, setFlip] = React.useState(false);
+  const [animKey, setAnimKey] = React.useState(0);
+
+  React.useEffect(() => {
+    if (ch === prevRef.current) return;
+    setPrev(prevRef.current);
+    setFlip(false);
+    const raf = window.requestAnimationFrame(() => {
+      setAnimKey((v) => v + 1);
+      setFlip(true);
+    });
+    const id = window.setTimeout(() => {
+      setFlip(false);
+      prevRef.current = ch;
+    }, 650);
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.clearTimeout(id);
+    };
+  }, [ch]);
+
+  const panel =
+    "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
+  const seam = "absolute left-0 right-0 top-1/2 z-10 h-px bg-white/20 shadow-[0_1px_0_rgba(255,255,255,0.06)]";
+  const half = "absolute left-0 w-full overflow-hidden";
+  const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
+  const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
+
+  return (
+    <div className={cn(panel, glossTop, glossBottom)} style={{ width: w, height: h }}>
+      <div className={seam} />
+      <div className={cn(half, "top-0")} style={{ height: h / 2 }}>
+        <div
+          className="flex h-full items-start justify-center font-semibold"
+          style={{
+            fontSize: digitFont,
+            paddingTop: digitPad,
+            transform: `translateY(-${digitNudge}px)`,
+            lineHeight: 0.9
+          }}
+        >
+          {flip ? prev : ch}
+        </div>
+      </div>
+      <div className={cn(half, "bottom-0")} style={{ height: h / 2 }}>
+        <div
+          className="flex h-full items-end justify-center font-semibold"
+          style={{
+            fontSize: digitFont,
+            paddingBottom: digitPad,
+            transform: `translateY(${digitNudge}px)`,
+            lineHeight: 0.9
+          }}
+        >
+          {ch}
+        </div>
+      </div>
+
+      {flip ? (
+        <>
+          <div className="absolute left-0 top-0 z-20 w-full" style={{ height: h / 2, perspective: "900px" }}>
+            <div
+              key={`top-${animKey}`}
+              className="flip-top"
+              style={{
+                transformOrigin: "center bottom"
+              }}
+            >
+              <div
+                className="flex h-full items-start justify-center font-semibold"
+                style={{
+                  fontSize: digitFont,
+                  paddingTop: digitPad,
+                  transform: `translateY(-${digitNudge}px)`,
+                  lineHeight: 0.9
+                }}
+              >
+                {prev}
+              </div>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 z-20 w-full" style={{ height: h / 2, perspective: "900px" }}>
+            <div
+              key={`bottom-${animKey}`}
+              className="flip-bottom"
+              style={{
+                transformOrigin: "center top"
+              }}
+            >
+              <div
+                className="flex h-full items-end justify-center font-semibold"
+                style={{
+                  fontSize: digitFont,
+                  paddingBottom: digitPad,
+                  transform: `translateY(${digitNudge}px)`,
+                  lineHeight: 0.9
+                }}
+              >
+                {ch}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
 function DigitalClock({
   timezone,
   locale = "pt-BR",
@@ -381,6 +501,135 @@ function DigitalClock({
   const fontSize =
     typeof size === "number" ? { fontSize: `${size}px`, lineHeight: 1 } : undefined;
   const sizePx = digitalSizeToNumber(size);
+
+  if (digitalStyle === "flip") {
+    const hNum = Number.parseInt(hour, 10) || 0;
+    const mNum = Number.parseInt(minute, 10) || 0;
+    const sNum = Number.parseInt(second || "0", 10) || 0;
+    const safeHour = format === "12h" ? (hNum === 0 ? 12 : hNum) : hNum;
+    const hh = String(safeHour).padStart(2, "0");
+    const mm = String(mNum).padStart(2, "0");
+    const ss = String(sNum).padStart(2, "0");
+
+    const w = Math.round(sizePx * 1.62);
+    const h = Math.round(sizePx * 2.35);
+    const digitFont = Math.round(sizePx * 1.6);
+    const digitPad = Math.max(1, Math.round(sizePx * 0.12));
+    const digitNudge = Math.max(0, Math.round(sizePx * 0.04));
+    const panel =
+      "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
+    const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
+    const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
+
+    const Colon = () => (
+      <div className="flex flex-col items-center justify-center" style={{ height: h }}>
+        <div className="h-2 w-2 rounded-full bg-white/80" />
+        <div className="mt-2 h-2 w-2 rounded-full bg-white/80" />
+      </div>
+    );
+
+    const PeriodCell = ({ value }: { value: string }) => (
+      <div
+        className={cn(panel, glossTop, glossBottom, "flex items-center justify-center")}
+        style={{ width: Math.round(w * 1.35), height: h }}
+      >
+        <span className="font-semibold text-white/90" style={{ fontSize: Math.round(sizePx * 1.05), lineHeight: 1 }}>
+          {value}
+        </span>
+      </div>
+    );
+
+    return (
+      <div className={cn("flex items-center gap-2", className)} aria-label="Digital clock">
+        <style>{`
+          .flip-top {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.1));
+            animation: sgFlipTop 0.38s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            will-change: transform, filter;
+            box-shadow: inset 0 -10px 18px rgba(0,0,0,0.25);
+          }
+          .flip-bottom {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.04));
+            animation: sgFlipBottom 0.38s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+            animation-delay: 0.34s;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            will-change: transform, filter;
+            box-shadow: inset 0 10px 18px rgba(0,0,0,0.22);
+          }
+          @keyframes sgFlipTop {
+            0% { transform: rotateX(0deg); filter: brightness(1); }
+            100% { transform: rotateX(-90deg); filter: brightness(0.72); }
+          }
+          @keyframes sgFlipBottom {
+            0% { transform: rotateX(90deg); filter: brightness(0.7); }
+            100% { transform: rotateX(0deg); filter: brightness(1); }
+          }
+        `}</style>
+        <FlipDigitCard
+          ch={hh.charAt(0)}
+          w={w}
+          h={h}
+          digitFont={digitFont}
+          digitPad={digitPad}
+          digitNudge={digitNudge}
+        />
+        <FlipDigitCard
+          ch={hh.charAt(1)}
+          w={w}
+          h={h}
+          digitFont={digitFont}
+          digitPad={digitPad}
+          digitNudge={digitNudge}
+        />
+        <Colon />
+        <FlipDigitCard
+          ch={mm.charAt(0)}
+          w={w}
+          h={h}
+          digitFont={digitFont}
+          digitPad={digitPad}
+          digitNudge={digitNudge}
+        />
+        <FlipDigitCard
+          ch={mm.charAt(1)}
+          w={w}
+          h={h}
+          digitFont={digitFont}
+          digitPad={digitPad}
+          digitNudge={digitNudge}
+        />
+        {showSeconds ? (
+          <>
+            <Colon />
+            <FlipDigitCard
+              ch={ss.charAt(0)}
+              w={w}
+              h={h}
+              digitFont={digitFont}
+              digitPad={digitPad}
+              digitNudge={digitNudge}
+            />
+            <FlipDigitCard
+              ch={ss.charAt(1)}
+              w={w}
+              h={h}
+              digitFont={digitFont}
+              digitPad={digitPad}
+              digitNudge={digitNudge}
+            />
+          </>
+        ) : null}
+        {format === "12h" && dayPeriod ? <PeriodCell value={dayPeriod.toUpperCase()} /> : null}
+      </div>
+    );
+  }
 
   if (digitalStyle === "roller3d") {
     const hNum = Number.parseInt(hour, 10) || 0;
