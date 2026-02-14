@@ -1,0 +1,27 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { noborder: "", filled: "" } });
+  
+  return (
+    <div className="space-y-4">
+      <SgInputText
+        id="demo-noborder"
+        label="Sem borda"
+        withBorder={false}
+        name="noborder"
+        register={register}
+      />
+
+      <SgInputText
+        id="demo-filled"
+        label="Preenchido"
+        filled
+        name="filled"
+        register={register}
+      />
+    </div>
+  );
+}

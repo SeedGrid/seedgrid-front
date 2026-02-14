@@ -1,0 +1,29 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({
+    defaultValues: { disabled: "Desabilitado", readonly: "Somente leitura" }
+  });
+  
+  return (
+    <div className="space-y-4">
+      <SgInputText
+        id="demo-disabled"
+        label="Desabilitado"
+        enabled={false}
+        name="disabled"
+        register={register}
+      />
+
+      <SgInputText
+        id="demo-readonly"
+        label="Somente Leitura"
+        readOnly
+        name="readonly"
+        register={register}
+      />
+    </div>
+  );
+}

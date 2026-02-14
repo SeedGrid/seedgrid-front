@@ -1,0 +1,28 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { w200: "", w300: "" } });
+  
+  return (
+    <div className="space-y-4">
+      <SgInputText
+        id="demo-w200"
+        label="Largura 200px"
+        width={200}
+        name="w200"
+        register={register}
+      />
+
+      <SgInputText
+        id="demo-w300"
+        label="Largura 300px com borda arredondada"
+        width={300}
+        borderRadius={20}
+        name="w300"
+        register={register}
+      />
+    </div>
+  );
+}

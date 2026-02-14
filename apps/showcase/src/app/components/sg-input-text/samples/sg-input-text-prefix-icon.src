@@ -1,0 +1,22 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { prefixIcon: "" } });
+  
+  return (
+    <SgInputText
+      id="demo-prefix"
+      label="Buscar"
+      prefixIcon={
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+      }
+      name="prefixIcon"
+      register={register}
+    />
+  );
+}

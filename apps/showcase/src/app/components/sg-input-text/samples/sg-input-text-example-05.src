@@ -1,8 +1,0 @@
-<SgInputText
-  id="demo-minlength"
-  label="${t(i18n, "showcase.component.inputText.labels.min5")}"
-  minLength={5}
-  showCharCounter
-  name="minlength"
-  register={register}
-/>

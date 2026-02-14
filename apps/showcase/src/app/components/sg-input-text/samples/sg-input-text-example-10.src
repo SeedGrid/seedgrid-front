@@ -1,2 +1,0 @@
-<SgInputText id="demo-noborder" label="${t(i18n, "showcase.common.labels.noBorder")}" withBorder={false} name="noborder" register={register} />
-<SgInputText id="demo-filled" label="${t(i18n, "showcase.common.labels.filled")}" filled name="filled" register={register} />

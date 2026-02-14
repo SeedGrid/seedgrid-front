@@ -386,7 +386,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
     expandedHeight = "70vh",
     expandable = true,
     resizable = true,
-    resizeAxis = "both",
+    resizeAxis = "vertical",
     previewPadding,
     className,
     dependencies,

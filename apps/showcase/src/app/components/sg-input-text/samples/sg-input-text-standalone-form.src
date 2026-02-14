@@ -1,0 +1,36 @@
+import * as React from "react";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const nomeRef = React.useRef(null);
+  const emailRef = React.useRef(null);
+
+  return (
+    <div className="space-y-3">
+      <SgInputText
+        id="standalone-nome"
+        label="Nome"
+        inputProps={{ ref: nomeRef, defaultValue: "João Silva" }}
+      />
+
+      <SgInputText
+        id="standalone-email"
+        label="Email"
+        inputProps={{ ref: emailRef, defaultValue: "joao@example.com" }}
+      />
+
+      <button
+        type="button"
+        className="px-4 py-2 bg-primary text-primary-foreground rounded"
+        onClick={() => {
+          console.log({
+            nome: nomeRef.current?.value,
+            email: emailRef.current?.value
+          });
+        }}
+      >
+        Salvar
+      </button>
+    </div>
+  );
+}

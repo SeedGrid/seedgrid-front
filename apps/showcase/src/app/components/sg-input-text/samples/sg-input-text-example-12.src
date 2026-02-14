@@ -1,2 +1,0 @@
-<SgInputText id="demo-w200" label="${t(i18n, "showcase.common.labels.width200")}" width={200} name="w200" register={register} />
-<SgInputText id="demo-w300" label="${t(i18n, "showcase.common.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} />

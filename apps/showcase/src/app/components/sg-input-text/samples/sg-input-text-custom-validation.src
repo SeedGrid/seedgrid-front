@@ -1,0 +1,18 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { validation: "" } });
+  
+  return (
+    <SgInputText
+      id="demo-validation"
+      label="Somente letras"
+      validation={(v) => /[^\p{L}\s]/u.test(v) ? "Use apenas letras" : null}
+      onValidation={(msg) => console.log("Validação:", msg)}
+      name="validation"
+      register={register}
+    />
+  );
+}

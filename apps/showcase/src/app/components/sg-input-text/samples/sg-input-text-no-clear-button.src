@@ -1,0 +1,17 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { noclear: "" } });
+  
+  return (
+    <SgInputText
+      id="demo-noclear"
+      label="Sem botão de limpar"
+      clearButton={false}
+      name="noclear"
+      register={register}
+    />
+  );
+}

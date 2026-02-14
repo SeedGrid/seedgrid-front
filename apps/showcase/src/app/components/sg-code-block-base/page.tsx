@@ -2,14 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
-import { loadSample } from "./samples/loadSample";
+import { loadSample } from "../utils/loadSample";
 import BackToTopFab from "./BackToTopFab";
 
 export default async function SgCodeBlockBasePage() {
-  const readonlyCode = await loadSample("readonly-button.src");
-  const interactiveRenderBody = await loadSample("interactive-render-body-buttons.src");
-  const interactiveWithDep = await loadSample("interactive-appfile-rhf-autocomplete.src");
-  const interactiveAppFile = await loadSample("interactive-appfile-basic-button.src");
+  const readonlyCode = await loadSample("sg-code-block-base", "readonly-button.src");
+  const interactiveRenderBody = await loadSample("sg-code-block-base", "interactive-render-body-buttons.src");
+  const interactiveWithDep = await loadSample("sg-code-block-base", "interactive-appfile-rhf-autocomplete.src");
+  const interactiveAppFile = await loadSample("sg-code-block-base", "interactive-appfile-basic-button.src");
   const sectionLinks = [
     { href: "#example-readonly", label: "1) Readonly" },
     { href: "#example-render-body", label: "2) Interactive renderBody" },

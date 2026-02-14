@@ -1,0 +1,22 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { register } = useForm({ defaultValues: { events: "" } });
+  
+  return (
+    <SgInputText
+      id="demo-events"
+      label="Digite e observe os logs"
+      required
+      onChange={(v) => console.log("onChange:", v)}
+      onEnter={() => console.log("onEnter disparado")}
+      onExit={() => console.log("onExit disparado")}
+      onClear={() => console.log("onClear disparado")}
+      onValidation={(msg) => console.log("onValidation:", msg ?? "válido")}
+      name="events"
+      register={register}
+    />
+  );
+}

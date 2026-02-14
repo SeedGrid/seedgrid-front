@@ -1,8 +1,0 @@
-<SgInputText
-  id="demo-counter"
-  label="${t(i18n, "showcase.component.inputText.labels.max20")}"
-  maxLength={20}
-  showCharCounter
-  name="counter"
-  register={register}
-/>

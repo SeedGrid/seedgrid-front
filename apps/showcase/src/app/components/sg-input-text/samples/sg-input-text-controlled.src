@@ -1,0 +1,50 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { control, watch, setValue } = useForm({
+    defaultValues: { controlled: "João Silva" }
+  });
+  
+  const controlledValue = watch("controlled");
+  
+  return (
+    <div className="space-y-3">
+      <SgInputText
+        id="demo-controlled"
+        label="Nome do Cliente"
+        name="controlled"
+        control={control}
+      />
+      
+      <div className="flex gap-2">
+        <button 
+          type="button" 
+          className="px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm"
+          onClick={() => setValue("controlled", "João Silva")}
+        >
+          Definir via API
+        </button>
+        
+        <button 
+          type="button" 
+          className="px-3 py-1.5 bg-secondary text-secondary-foreground rounded text-sm"
+          onClick={() => setValue("controlled", "Maria Santos")}
+        >
+          Definir outro valor
+        </button>
+        
+        <button 
+          type="button" 
+          className="px-3 py-1.5 bg-destructive text-destructive-foreground rounded text-sm"
+          onClick={() => setValue("controlled", "")}
+        >
+          Limpar
+        </button>
+      </div>
+      
+      <p className="text-sm">Estado atual: "{controlledValue}"</p>
+    </div>
+  );
+}
