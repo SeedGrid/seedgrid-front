@@ -4,6 +4,19 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PKG_DIR="${ROOT_DIR}/packages/seedgrid-fe-components"
 
+resolve_bin() {
+  local base="$1"
+  if command -v "${base}" >/dev/null 2>&1; then
+    echo "${base}"
+    return 0
+  fi
+  if command -v "${base}.cmd" >/dev/null 2>&1; then
+    echo "${base}.cmd"
+    return 0
+  fi
+  return 1
+}
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -38,13 +51,15 @@ case "${BUMP_TYPE}" in
     ;;
 esac
 
-if ! command -v pnpm >/dev/null 2>&1; then
-  echo "pnpm not found in PATH."
+PNPM_BIN="$(resolve_bin pnpm || true)"
+if [[ -z "${PNPM_BIN}" ]]; then
+  echo "pnpm/pnpm.cmd not found in PATH."
   exit 1
 fi
 
-if ! command -v npm >/dev/null 2>&1; then
-  echo "npm not found in PATH."
+NPM_BIN="$(resolve_bin npm || true)"
+if [[ -z "${NPM_BIN}" ]]; then
+  echo "npm/npm.cmd not found in PATH."
   exit 1
 fi
 
@@ -53,25 +68,25 @@ if [[ ! -f "${PKG_DIR}/package.json" ]]; then
   exit 1
 fi
 
-if ! npm whoami >/dev/null 2>&1; then
+if ! "${NPM_BIN}" whoami >/dev/null 2>&1; then
   echo "You are not logged in to npm. Run: npm login"
   exit 1
 fi
 
 echo "==> Typecheck @seedgrid/fe-components"
-pnpm -C "${PKG_DIR}" typecheck
+"${PNPM_BIN}" -C "${PKG_DIR}" typecheck
 
 echo "==> Build @seedgrid/fe-components"
-pnpm -C "${PKG_DIR}" build
+"${PNPM_BIN}" -C "${PKG_DIR}" build
 
 cd "${PKG_DIR}"
 
 echo "==> npm publish --dry-run"
-npm publish --dry-run --access public
+"${NPM_BIN}" publish --dry-run --access public
 
 if [[ "${BUMP_TYPE}" != "none" ]]; then
   echo "==> Bumping version: ${BUMP_TYPE}"
-  npm version "${BUMP_TYPE}" --no-git-tag-version
+  "${NPM_BIN}" version "${BUMP_TYPE}" --no-git-tag-version
 else
   echo "==> Skipping version bump"
 fi
@@ -82,6 +97,6 @@ if [[ -n "${NPM_OTP:-}" ]]; then
 fi
 
 echo "==> Publishing to npm"
-npm publish "${PUBLISH_ARGS[@]}"
+"${NPM_BIN}" publish "${PUBLISH_ARGS[@]}"
 
 echo "Done."

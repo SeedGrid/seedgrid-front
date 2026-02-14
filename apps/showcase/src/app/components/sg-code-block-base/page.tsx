@@ -25,20 +25,30 @@ const INTERACTIVE_RENDER_BODY = `<SgStack direction="row" gap={8}>
   <SgButton appearance="outline">Outline</SgButton>
 </SgStack>`;
 
-const INTERACTIVE_WITH_DEP = `const { control } = useForm({
+const INTERACTIVE_WITH_DEP = `import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgAutocomplete } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { control } = useForm({
   defaultValues: { country: "" }
 });
 
-<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label="Country"
-  source={async () => [
-    { id: 1, label: "Brazil" },
-    { id: 2, label: "Germany" }
-  ]}
-/>`;
+  return (
+    <div style={{ padding: 12 }}>
+      <SgAutocomplete
+        id="country"
+        name="country"
+        control={control}
+        label="Country"
+        source={async () => [
+          { id: 1, label: "Brazil" },
+          { id: 2, label: "Germany" }
+        ]}
+      />
+    </div>
+  );
+}`;
 
 const INTERACTIVE_APP_FILE = `import * as React from "react";
 import { SgButton } from "@seedgrid/fe-components";
@@ -60,8 +70,9 @@ export default function SgCodeBlockBasePage() {
           Bloco de codigo com dois modos: somente leitura ou interativo com Sandpack.
         </p>
         <p className="text-xs text-muted-foreground">
-          Para modo interativo funcionar sem mock: configure <code>NEXT_PUBLIC_SANDPACK_SEEDGRID_DEPENDENCY</code>
-          com versao publica real do pacote.
+          O modo interativo usa <code>@seedgrid/fe-components@0.2.6</code> por padrao. Se quiser trocar
+          versao/URL, configure <code>NEXT_PUBLIC_SANDPACK_SEEDGRID_DEPENDENCY</code> ou passe a prop{" "}
+          <code>seedgridDependency</code>.
         </p>
       </SgStack>
 
@@ -86,14 +97,13 @@ export default function SgCodeBlockBasePage() {
 
       <Section
         title="3) Interactive + dependencies/defaultImports"
-        description="Exemplo com dependencia extra e imports customizados para o snippet."
+        description="Exemplo com dependencia extra usando arquivo completo (appFile)."
       >
         <SgCodeBlockBase
           title="Interactive with extra dependencies"
           interactive
+          codeContract="appFile"
           dependencies={{ "react-hook-form": "^7.0.0" }}
-          defaultImports={`import { useForm } from "react-hook-form";
-import { SgAutocomplete } from "@seedgrid/fe-components";`}
           code={INTERACTIVE_WITH_DEP}
         />
       </Section>
