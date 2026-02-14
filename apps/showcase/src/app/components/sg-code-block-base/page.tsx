@@ -1,11 +1,14 @@
 import React from "react";
-import { SgCard, SgPanel, SgStack } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgButton, SgCard, SgPanel, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { loadSample } from "./samples/loadSample";
+import BackToTopFab from "./BackToTopFab";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id: string; title: string; description?: string; children: React.ReactNode }) {
   return (
     <SgCard
+      id={props.id}
       title={props.title}
       description={props.description}
       collapsible
@@ -24,10 +27,16 @@ export default async function SgCodeBlockBasePage() {
   const interactiveRenderBody = await loadSample("interactive-render-body-buttons.src");
   const interactiveWithDep = await loadSample("interactive-appfile-rhf-autocomplete.src");
   const interactiveAppFile = await loadSample("interactive-appfile-basic-button.src");
+  const sectionLinks = [
+    { href: "#example-readonly", label: "1) Readonly" },
+    { href: "#example-render-body", label: "2) Interactive renderBody" },
+    { href: "#example-dependencies", label: "3) Dependencies/defaultImports" },
+    { href: "#example-app-file", label: "4) Interactive appFile" }
+  ];
 
   return (
     <SgStack className="max-w-6xl" gap={32}>
-      <SgStack gap={8}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">SgCodeBlockBase</h1>
         <p className="text-muted-foreground">
           Bloco de codigo com dois modos: somente leitura ou interativo com Sandpack.
@@ -37,9 +46,19 @@ export default async function SgCodeBlockBasePage() {
           versao/URL, configure <code>NEXT_PUBLIC_SANDPACK_SEEDGRID_DEPENDENCY</code> ou passe a prop{" "}
           <code>seedgridDependency</code>.
         </p>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
       </SgStack>
 
       <Section
+        id="example-readonly"
         title="1) Readonly"
         description="Modo padrao (interactive=false). Exibe o codigo sem editor/preview."
       >
@@ -47,6 +66,7 @@ export default async function SgCodeBlockBasePage() {
       </Section>
 
       <Section
+        id="example-render-body"
         title="2) Interactive + renderBody"
         description="Passa somente o JSX do body; o componente gera o App.tsx automaticamente."
       >
@@ -59,6 +79,7 @@ export default async function SgCodeBlockBasePage() {
       </Section>
 
       <Section
+        id="example-dependencies"
         title="3) Interactive + dependencies/defaultImports"
         description="Exemplo com dependencia extra usando arquivo completo (appFile)."
       >
@@ -72,6 +93,7 @@ export default async function SgCodeBlockBasePage() {
       </Section>
 
       <Section
+        id="example-app-file"
         title="4) Interactive + appFile"
         description="Passa o arquivo App.tsx completo (codeContract='appFile')."
       >
@@ -82,6 +104,7 @@ export default async function SgCodeBlockBasePage() {
           code={interactiveAppFile}
         />
       </Section>
+      <BackToTopFab targetId="examples-top" />
     </SgStack>
   );
 }
