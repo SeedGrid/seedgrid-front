@@ -102,7 +102,7 @@ export default function SgInputTextPage() {
   }, [defaultValues, i18n.locale, reset]);
 
   return (
-    <div id="examples-top" className="max-w-4xl space-y-8">
+    <div id="examples-top" className="w-full space-y-8">
       <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputText.title")}</h1>
         <p className="mt-2 text-muted-foreground">

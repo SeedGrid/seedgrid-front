@@ -8,7 +8,7 @@ import {
   type SandpackFiles,
   useSandpack
 } from "@codesandbox/sandpack-react";
-import { SgButton } from "@seedgrid/fe-components";
+import { SgButton, SgCard } from "@seedgrid/fe-components";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -19,12 +19,22 @@ export type SgCodeBlockBaseProps = {
   interactive?: boolean;
   codeContract?: "renderBody" | "appFile";
   title?: string;
-  height?: number;
+  description?: string;
+  height?: number | string;
+  expandedHeight?: number | string;
+  expandable?: boolean;
+  resizable?: boolean;
+  resizeAxis?: "vertical" | "horizontal" | "both";
+  previewPadding?: number | string;
   className?: string;
   dependencies?: Record<string, string>;
   defaultImports?: string;
   previewWrapperClassName?: string;
   seedgridDependency?: string;
+  withCard?: boolean;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+  cardId?: string;
 };
 
 const DEFAULT_SEEDGRID_DEPENDENCY = "0.2.6";
@@ -96,6 +106,10 @@ html, body, #root {
   min-height: 100%;
 }
 
+#root {
+  padding: var(--sg-preview-padding, 0px);
+}
+
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   background: rgb(var(--sg-bg, 255 255 255));
@@ -123,6 +137,95 @@ body {
 .size-5 { width: 1.25rem; height: 1.25rem; }
 `;
 
+function parseRgbParts(raw: string): [number, number, number] | null {
+  const value = raw.trim();
+  if (!value) return null;
+
+  const normalized = value
+    .replace(/^rgb\(/i, "")
+    .replace(/\)$/g, "")
+    .replace(/\//g, " ")
+    .replace(/,/g, " ")
+    .trim();
+
+  const pieces = normalized
+    .split(/\s+/)
+    .map((part) => Number(part))
+    .filter((num) => Number.isFinite(num));
+
+  if (pieces.length < 3) return null;
+
+  const r = pieces[0] as number;
+  const g = pieces[1] as number;
+  const b = pieces[2] as number;
+  const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
+  return [clamp(r), clamp(g), clamp(b)];
+}
+
+function rgbToHslTriplet(r: number, g: number, b: number): string {
+  const rr = r / 255;
+  const gg = g / 255;
+  const bb = b / 255;
+  const max = Math.max(rr, gg, bb);
+  const min = Math.min(rr, gg, bb);
+  const delta = max - min;
+
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (delta !== 0) {
+    s = delta / (1 - Math.abs(2 * l - 1));
+    switch (max) {
+      case rr:
+        h = ((gg - bb) / delta + (gg < bb ? 6 : 0)) / 6;
+        break;
+      case gg:
+        h = ((bb - rr) / delta + 2) / 6;
+        break;
+      default:
+        h = ((rr - gg) / delta + 4) / 6;
+        break;
+    }
+  }
+
+  const hue = Math.round(h * 360);
+  const sat = Math.round(s * 100);
+  const lig = Math.round(l * 100);
+  return `${hue} ${sat}% ${lig}%`;
+}
+
+function toHslFromRgbVar(value?: string): string | null {
+  if (!value) return null;
+  const parts = parseRgbParts(value);
+  if (!parts) return null;
+  return rgbToHslTriplet(parts[0], parts[1], parts[2]);
+}
+
+function mapSgVarsToCoreVars(themeVars: Record<string, string>): Record<string, string> {
+  const mapped: Record<string, string> = {};
+
+  const assignFromSg = (coreVar: string, sgVar: string) => {
+    const hsl = toHslFromRgbVar(themeVars[sgVar]);
+    if (hsl) mapped[coreVar] = hsl;
+  };
+
+  assignFromSg("--background", "--sg-bg");
+  assignFromSg("--foreground", "--sg-text");
+  assignFromSg("--primary", "--sg-primary-600");
+  assignFromSg("--primary-foreground", "--sg-on-primary");
+  assignFromSg("--secondary", "--sg-secondary-600");
+  assignFromSg("--secondary-foreground", "--sg-on-secondary");
+  assignFromSg("--accent", "--sg-tertiary-600");
+  assignFromSg("--accent-foreground", "--sg-on-tertiary");
+  assignFromSg("--destructive", "--sg-error-600");
+  assignFromSg("--destructive-foreground", "--sg-on-error");
+  assignFromSg("--border", "--sg-border");
+  assignFromSg("--ring", "--sg-primary-400");
+
+  return mapped;
+}
+
 function readThemeVarsFromHost(): Record<string, string> {
   if (typeof window === "undefined") return {};
   const computed = window.getComputedStyle(document.documentElement);
@@ -140,11 +243,21 @@ function readThemeVarsFromHost(): Record<string, string> {
     if (value) themeVars[varName] = value;
   }
 
+  Object.assign(themeVars, mapSgVarsToCoreVars(themeVars));
+
   return themeVars;
 }
 
-function buildSandpackStylesCss(themeVars: Record<string, string>): string {
-  const mergedVars = { ...SANDPACK_FALLBACK_THEME_VARS, ...themeVars };
+function normalizeCssSize(value: number | string): string {
+  return typeof value === "number" ? `${value}px` : value;
+}
+
+function buildSandpackStylesCss(themeVars: Record<string, string>, previewPadding: string): string {
+  const mergedVars = {
+    ...SANDPACK_FALLBACK_THEME_VARS,
+    ...themeVars,
+    "--sg-preview-padding": previewPadding
+  };
   const rootVars = Object.entries(mergedVars)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([varName, value]) => `  ${varName}: ${value};`)
@@ -155,8 +268,6 @@ ${rootVars}
 
 ${SANDPACK_BASE_STYLES_CSS}`;
 }
-
-const SANDPACK_STYLES_CSS_FALLBACK = buildSandpackStylesCss({});
 
 function ReadonlyBlock({ code }: { code: string }) {
   return (
@@ -270,17 +381,31 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
     interactive = false,
     codeContract = "renderBody",
     title,
+    description,
     height = 360,
+    expandedHeight = "70vh",
+    expandable = true,
+    resizable = true,
+    resizeAxis = "both",
+    previewPadding,
     className,
     dependencies,
     defaultImports,
     previewWrapperClassName = "h-[420px] rounded-xl border border-border bg-muted/30 p-3",
-    seedgridDependency
+    seedgridDependency,
+    withCard = true,
+    collapsible = true,
+    defaultOpen = true,
+    cardId
   } = props;
+  const effectivePreviewPadding = normalizeCssSize(
+    previewPadding ?? (codeContract === "appFile" ? 12 : 0)
+  );
 
   const [sandpackStylesCss, setSandpackStylesCss] = React.useState<string>(() =>
-    buildSandpackStylesCss(readThemeVarsFromHost())
+    buildSandpackStylesCss(readThemeVarsFromHost(), effectivePreviewPadding)
   );
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -288,7 +413,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
     const root = document.documentElement;
     const refreshStyles = () => {
       const liveThemeVars = readThemeVarsFromHost();
-      setSandpackStylesCss(buildSandpackStylesCss(liveThemeVars));
+      setSandpackStylesCss(buildSandpackStylesCss(liveThemeVars, effectivePreviewPadding));
     };
 
     let frameId: number | null = null;
@@ -314,16 +439,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
         window.cancelAnimationFrame(frameId);
       }
     };
-  }, []);
-
-  if (!interactive) {
-    return (
-      <div className={cn("space-y-2", className)}>
-        {title ? <div className="text-sm font-medium">{title}</div> : null}
-        <ReadonlyBlock code={code} />
-      </div>
-    );
-  }
+  }, [effectivePreviewPadding]);
 
   const seedgridDefaultImports = defaultImports ?? `import {
   SgScreen,
@@ -347,7 +463,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
 
   const files: SandpackFiles = {
     "/App.tsx": { code: appTsx, active: true },
-    "/styles.css": { code: sandpackStylesCss || SANDPACK_STYLES_CSS_FALLBACK }
+    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) }
   };
 
   const deps: Record<string, string> = {
@@ -357,9 +473,17 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
     "@seedgrid/fe-components": resolvedSeedgridDependency,
     ...(dependencies ?? {})
   };
+  const currentHeight = isExpanded ? expandedHeight : height;
+  const resizeClass = !resizable
+    ? undefined
+    : resizeAxis === "vertical"
+      ? "resize-y"
+      : resizeAxis === "horizontal"
+        ? "resize-x"
+        : "resize";
 
-  return (
-    <div className={cn("rounded-lg border border-border", className)}>
+  const content = interactive ? (
+    <div className={cn(withCard ? "" : "rounded-lg border border-border", withCard ? undefined : className)}>
       <SandpackProvider
         template="react-ts"
         files={files}
@@ -373,18 +497,33 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
       >
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">{title ?? "Example"}</span>
+            {withCard ? null : <span className="text-sm font-medium">{title ?? "Example"}</span>}
             <span className="text-xs text-muted-foreground">
               {codeContract === "renderBody" ? "editable snippet" : "editable App.tsx"}
             </span>
           </div>
-          <RunButton />
+          <div className="flex items-center gap-2">
+            {expandable ? (
+              <SgButton
+                appearance="outline"
+                size="sm"
+                onClick={() => setIsExpanded((prev) => !prev)}
+              >
+                {isExpanded ? "Reduzir" : "Expandir"}
+              </SgButton>
+            ) : null}
+            <RunButton />
+          </div>
         </div>
 
         <div
-          className="grid"
+          className={cn(
+            "grid overflow-auto min-h-[260px] min-w-[480px]",
+            resizeClass
+          )}
           style={{
-            gridTemplateColumns: "1fr 1fr"
+            gridTemplateColumns: "1fr 1fr",
+            height: currentHeight
           }}
         >
           <div className="min-w-0 border-r border-border">
@@ -393,7 +532,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
               wrapContent
               showTabs={false}
               showRunButton={false}
-              style={{ height }}
+              style={{ height: "100%" }}
             />
             <div className="flex justify-end border-t border-border px-3 py-2">
               <CopyButton />
@@ -401,7 +540,7 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
           </div>
           <div className="min-w-0">
             <SandpackPreview
-              style={{ height }}
+              style={{ height: "100%" }}
               showOpenInCodeSandbox={false}
               showRefreshButton={false}
               showRestartButton={false}
@@ -410,6 +549,27 @@ export default function SgCodeBlockBase(props: Readonly<SgCodeBlockBaseProps>) {
         </div>
       </SandpackProvider>
     </div>
+  ) : (
+    <div className={cn(withCard ? undefined : "space-y-2", withCard ? undefined : className)}>
+      {withCard ? null : title ? <div className="text-sm font-medium">{title}</div> : null}
+      <ReadonlyBlock code={code} />
+    </div>
+  );
+
+  if (!withCard) return content;
+
+  return (
+    <SgCard
+      id={cardId}
+      title={title ?? "Codigo"}
+      description={description}
+      collapsible={collapsible}
+      defaultOpen={defaultOpen}
+      className={cn("rounded-lg", className)}
+      bodyClassName="p-0"
+    >
+      {content}
+    </SgCard>
   );
 }
 

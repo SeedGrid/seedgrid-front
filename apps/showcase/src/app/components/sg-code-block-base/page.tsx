@@ -1,26 +1,9 @@
 import React from "react";
 import Link from "next/link";
-import { SgButton, SgCard, SgPanel, SgStack } from "@seedgrid/fe-components";
+import { SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { loadSample } from "./samples/loadSample";
 import BackToTopFab from "./BackToTopFab";
-
-function Section(props: { id: string; title: string; description?: string; children: React.ReactNode }) {
-  return (
-    <SgCard
-      id={props.id}
-      title={props.title}
-      description={props.description}
-      collapsible
-      defaultOpen={true}
-      className="rounded-lg"
-    >
-      <SgPanel borderStyle="none" padding={0}>
-        {props.children}
-      </SgPanel>
-    </SgCard>
-  );
-}
 
 export default async function SgCodeBlockBasePage() {
   const readonlyCode = await loadSample("readonly-button.src");
@@ -35,7 +18,7 @@ export default async function SgCodeBlockBasePage() {
   ];
 
   return (
-    <SgStack className="max-w-6xl" gap={32}>
+    <SgStack className="w-full" gap={32}>
       <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">SgCodeBlockBase</h1>
         <p className="text-muted-foreground">
@@ -57,53 +40,40 @@ export default async function SgCodeBlockBasePage() {
         </SgStack>
       </SgStack>
 
-      <Section
-        id="example-readonly"
+      <SgCodeBlockBase
+        cardId="example-readonly"
         title="1) Readonly"
         description="Modo padrao (interactive=false). Exibe o codigo sem editor/preview."
-      >
-        <SgCodeBlockBase title="Readonly" code={readonlyCode} />
-      </Section>
+        code={readonlyCode}
+      />
 
-      <Section
-        id="example-render-body"
+      <SgCodeBlockBase
+        cardId="example-render-body"
         title="2) Interactive + renderBody"
         description="Passa somente o JSX do body; o componente gera o App.tsx automaticamente."
-      >
-        <SgCodeBlockBase
-          title="Interactive renderBody"
-          interactive
-          codeContract="renderBody"
-          code={interactiveRenderBody}
-        />
-      </Section>
+        interactive
+        codeContract="renderBody"
+        code={interactiveRenderBody}
+      />
 
-      <Section
-        id="example-dependencies"
+      <SgCodeBlockBase
+        cardId="example-dependencies"
         title="3) Interactive + dependencies/defaultImports"
         description="Exemplo com dependencia extra usando arquivo completo (appFile)."
-      >
-        <SgCodeBlockBase
-          title="Interactive with extra dependencies"
-          interactive
-          codeContract="appFile"
-          dependencies={{ "react-hook-form": "^7.0.0" }}
-          code={interactiveWithDep}
-        />
-      </Section>
+        interactive
+        codeContract="appFile"
+        dependencies={{ "react-hook-form": "^7.0.0" }}
+        code={interactiveWithDep}
+      />
 
-      <Section
-        id="example-app-file"
+      <SgCodeBlockBase
+        cardId="example-app-file"
         title="4) Interactive + appFile"
         description="Passa o arquivo App.tsx completo (codeContract='appFile')."
-      >
-        <SgCodeBlockBase
-          title="Interactive appFile"
-          interactive
-          codeContract="appFile"
-          code={interactiveAppFile}
-        />
-      </Section>
+        interactive
+        codeContract="appFile"
+        code={interactiveAppFile}
+      />
       <BackToTopFab targetId="examples-top" />
     </SgStack>
   );
