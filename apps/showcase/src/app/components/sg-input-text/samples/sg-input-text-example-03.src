@@ -1,0 +1,21 @@
+// Controlled porque usamos watch (valor em tempo real) + setValue externo
+<SgInputText
+  id="demo-controlled"
+  label="${t(i18n, "showcase.component.inputText.labels.customerName")}"
+  name="controlled"
+  control={control}
+/>
+
+<button type="button" onClick={() => setValue("controlled", "${t(i18n, "showcase.component.inputText.values.apiSample")}")}>
+  ${t(i18n, "showcase.component.inputText.actions.setApi")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "${t(i18n, "showcase.component.inputText.values.otherSample")}")}>
+  ${t(i18n, "showcase.component.inputText.actions.setOther")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "")}>
+  ${t(i18n, "showcase.component.inputText.actions.clear")}
+</button>
+
+<p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>

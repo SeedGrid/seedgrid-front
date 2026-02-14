@@ -6,6 +6,8 @@ import { SgButton, SgPopup, type SgPopupAction } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -82,35 +84,7 @@ export default function SgPopupPage() {
           />
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgPopup } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const btnRef = React.useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton ref={btnRef} onClick={() => setOpen(true)}>
-        ${t(i18n, "showcase.component.popup.labels.open")}
-      </SgButton>
-      <SgPopup
-        title="${t(i18n, "showcase.component.popup.labels.title")}"
-        subtitle="${t(i18n, "showcase.component.popup.labels.content")}"
-        open={open}
-        onOpenChange={setOpen}
-        anchorRef={btnRef as React.RefObject<HTMLElement>}
-        placement="auto"
-        preferPlacement="right"
-        align="start"
-        actions={[
-          { label: "${t(i18n, "showcase.component.popup.actions.confirm")}" },
-          { label: "${t(i18n, "showcase.component.popup.actions.cancel")}" }
-        ]}
-      />
-    </>
-  );
-}`}
+          code={loadSample("sg-popup-example-01.src")}
         />
       </Section>
 
@@ -134,43 +108,7 @@ export default function Example() {
           />
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { Check, X } from "lucide-react";
-import { SgButton, SgPopup } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const btnRef = React.useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton ref={btnRef} onClick={() => setOpen(true)}>
-        ${t(i18n, "showcase.component.popup.labels.openIcon")}
-      </SgButton>
-      <SgPopup
-        title="${t(i18n, "showcase.component.popup.labels.title")}"
-        open={open}
-        onOpenChange={setOpen}
-        anchorRef={btnRef as React.RefObject<HTMLElement>}
-        placement="auto"
-        preferPlacement="right"
-        align="start"
-        actions={[
-          {
-            label: "${t(i18n, "showcase.component.popup.actions.approve")}",
-            hint: "${t(i18n, "showcase.component.popup.actions.approveHint")}",
-            icon: <Check className="h-4 w-4" />
-          },
-          {
-            label: "${t(i18n, "showcase.component.popup.actions.reject")}",
-            hint: "${t(i18n, "showcase.component.popup.actions.rejectHint")}",
-            icon: <X className="h-4 w-4" />
-          }
-        ]}
-      />
-    </>
-  );
-}`}
+          code={loadSample("sg-popup-example-02.src")}
         />
       </Section>
 
@@ -180,18 +118,7 @@ export default function Example() {
       >
         <div className="w-full">
           <CodeBlock
-            code={`<SgPopup
-  title="Config"
-  open={open}
-  onOpenChange={setOpen}
-  anchorRef={btnRef as React.RefObject<HTMLElement>}
-  placement="auto"
->
-  <div className="grid gap-2 text-sm">
-    <label className="text-xs">Modo</label>
-    <input className="h-9 rounded border px-2" />
-  </div>
-</SgPopup>`}
+            code={loadSample("sg-popup-example-03.src")}
           />
         </div>
       </Section>

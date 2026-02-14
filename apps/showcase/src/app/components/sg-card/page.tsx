@@ -5,6 +5,8 @@ import { SgButton, SgCard } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -57,34 +59,7 @@ export default function SgCardPage() {
           </div>
         </SgCard>
         <CodeBlock
-          code={`import React from "react";
-import { SgCard } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgCard
-      title="${t(i18n, "showcase.component.card.labels.basicTitle")}"
-      description="${t(i18n, "showcase.component.card.labels.basicDescription")}"
-      footer={
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>${t(i18n, "showcase.component.card.labels.basicFooterLeft")}</span>
-          <span>${t(i18n, "showcase.component.card.labels.basicFooterRight")}</span>
-        </div>
-      }
-    >
-      <div className="space-y-2 text-sm">
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.basicLine1")}</span>
-          <span className="font-semibold">R$ 12.400</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.basicLine2")}</span>
-          <span className="font-semibold">83</span>
-        </div>
-      </div>
-    </SgCard>
-  );
-}`}
+          code={loadSample("sg-card-example-01.src")}
         />
       </Section>
 
@@ -125,37 +100,7 @@ export default function Example() {
           </div>
         </SgCard>
         <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgCard
-      leading={<div className="size-8 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">SG</div>}
-      trailing={<span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">${t(i18n, "showcase.component.card.labels.trailing")}</span>}
-      title="${t(i18n, "showcase.component.card.labels.leadingTitle")}"
-      description="${t(i18n, "showcase.component.card.labels.leadingDescription")}"
-      actions={<SgButton appearance="ghost" size="sm">${t(i18n, "showcase.component.card.labels.action")}</SgButton>}
-      footer={
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>${t(i18n, "showcase.component.card.labels.leadingFooterLeft")}</span>
-          <span className="text-emerald-600">${t(i18n, "showcase.component.card.labels.leadingFooterRight")}</span>
-        </div>
-      }
-    >
-      <div className="grid gap-2 text-sm">
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.leadingMetric1")}</span>
-          <span className="font-semibold">R$ 128.400</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.leadingMetric2")}</span>
-          <span className="font-semibold">+12%</span>
-        </div>
-      </div>
-    </SgCard>
-  );
-}`}
+          code={loadSample("sg-card-example-02.src")}
         />
       </Section>
 
@@ -202,48 +147,7 @@ export default function Example() {
           </SgCard>
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgCard
-        title="${t(i18n, "showcase.component.card.labels.collapsibleTitle")}"
-        description="${t(i18n, "showcase.component.card.labels.collapsibleDescription")}"
-        collapsible
-        defaultOpen={false}
-        footer={<SgButton size="sm">${t(i18n, "showcase.component.card.labels.action")}</SgButton>}
-      >
-        <div>${t(i18n, "showcase.component.card.labels.collapsibleContent")}</div>
-      </SgCard>
-
-      <SgCard
-        title="${t(i18n, "showcase.component.card.labels.collapsibleOpenTitle")}"
-        description="${t(i18n, "showcase.component.card.labels.collapsibleOpenDescription")}"
-        collapsible
-        defaultOpen
-        footer={
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterLeft")}</span>
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterRight")}</span>
-          </div>
-        }
-      >
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenLine1")}</span>
-            <span className="font-semibold">128</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenLine2")}</span>
-            <span className="font-semibold">R$ 9.820</span>
-          </div>
-        </div>
-      </SgCard>
-    </>
-  );
-}`}
+          code={loadSample("sg-card-example-03.src")}
         />
       </Section>
 
@@ -266,30 +170,7 @@ export default function Example() {
           </SgCard>
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { SgCard } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgCard variant="default" title="${t(i18n, "showcase.component.card.labels.variantDefault")}" size="sm">
-        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
-      </SgCard>
-
-      <SgCard variant="elevated" title="${t(i18n, "showcase.component.card.labels.variantElevated")}" size="sm">
-        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
-      </SgCard>
-
-      <SgCard variant="outlined" title="${t(i18n, "showcase.component.card.labels.variantOutlined")}" size="lg">
-        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
-      </SgCard>
-
-      <SgCard variant="flat" title="${t(i18n, "showcase.component.card.labels.variantFlat")}" size="lg">
-        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
-      </SgCard>
-    </>
-  );
-}`}
+          code={loadSample("sg-card-example-04.src")}
         />
       </Section>
     </div>

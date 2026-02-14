@@ -1,0 +1,26 @@
+import React from "react";
+import {
+  SgEnvironmentProvider,
+  buildSgPersistenceKey,
+  useSgEnvironment
+} from "@seedgrid/fe-components";
+
+function EnvInfo() {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
+  return <div>fullKey: {fullKey ?? "null"}</div>;
+}
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:123" },
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
+      }}
+    >
+      <EnvInfo />
+    </SgEnvironmentProvider>
+  );
+}

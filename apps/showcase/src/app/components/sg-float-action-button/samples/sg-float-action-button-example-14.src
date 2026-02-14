@@ -1,0 +1,10 @@
+<SgFloatActionButton
+  enableDragDrop
+  dragId="showcase-fab-drag"
+  actions={actions}
+  type="linear"
+  direction="up"
+  severity="info"
+  absolute
+  position="right-bottom"
+/>

@@ -1,0 +1,8 @@
+<SgInputNumber
+  id="demo-empty"
+  label="${t(i18n, "showcase.component.inputNumber.labels.canBeEmpty")}"
+  name="vazio"
+  register={register}
+  emptyValue="null"
+  decimals={2}
+/>

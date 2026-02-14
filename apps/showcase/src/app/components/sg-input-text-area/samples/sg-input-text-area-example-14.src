@@ -1,0 +1,1 @@
+<SgInputTextArea\n  id="desc"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.externalError")}"\n  error="${t(i18n, "showcase.component.inputTextArea.messages.externalError")}"\n/>

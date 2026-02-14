@@ -1,0 +1,6 @@
+<SgInputBirthDate
+  id="nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
+  minAge={12}
+  maxAge={80}
+/>

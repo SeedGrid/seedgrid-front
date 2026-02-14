@@ -1,0 +1,1 @@
+<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" width={200} inputProps={{}} />\n<SgInputCNPJ id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" width={300} borderRadius={20} inputProps={{}} />

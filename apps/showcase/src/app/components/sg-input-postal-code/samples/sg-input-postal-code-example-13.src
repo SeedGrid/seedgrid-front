@@ -1,0 +1,32 @@
+import React from "react";
+import { SgInputPostalCode } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const refA = React.useRef<HTMLInputElement | null>(null);
+  const refB = React.useRef<HTMLInputElement | null>(null);
+  const refC = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    if (refA.current) refA.current.value = "01001-000";
+    if (refB.current) refB.current.value = "04538-132";
+    if (refC.current) refC.current.value = "20040-020";
+  }, []);
+
+  const handleSave = () => {
+    const payload = {
+      entrega: refA.current?.value ?? "",
+      cobranca: refB.current?.value ?? "",
+      comercial: refC.current?.value ?? ""
+    };
+    console.log("Salvar:", payload);
+  };
+
+  return (
+    <div className="space-y-3">
+      <SgInputPostalCode id="a" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry1")}" hintText="00000-000" inputProps={{ ref: refA }} />
+      <SgInputPostalCode id="b" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry2")}" hintText="00000-000" inputProps={{ ref: refB }} />
+      <SgInputPostalCode id="c" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry3")}" hintText="00000-000" inputProps={{ ref: refC }} />
+      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputPostalCode.actions.save")}</button>
+    </div>
+  );
+}

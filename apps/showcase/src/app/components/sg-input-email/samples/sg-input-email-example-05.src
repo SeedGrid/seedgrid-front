@@ -1,0 +1,7 @@
+<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.onlyCom")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.domainHint")}"
+  validation={(v) => (v.endsWith(".com") ? null : "${t(i18n, "showcase.component.inputEmail.messages.onlyCom")}")}
+  onValidation={(msg) => console.log(msg)}
+/>

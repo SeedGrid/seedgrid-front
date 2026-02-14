@@ -13,6 +13,8 @@ import {
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -74,16 +76,7 @@ export default function SgEnvironmentProviderPage() {
           <EnvInfo baseKey="fab:theme" />
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { buildSgPersistenceKey, useSgEnvironment } from "@seedgrid/fe-components";
-
-function Example() {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
-
-  return <div>fullKey: {fullKey ?? "null"}</div>;
-}`}
+          code={loadSample("sg-environment-provider-example-01.src")}
         />
       </Section>
 
@@ -107,32 +100,7 @@ function Example() {
           </SgEnvironmentProvider>
         </div>
         <CodeBlock
-          code={`import React from "react";
-import {
-  SgEnvironmentProvider,
-  buildSgPersistenceKey,
-  useSgEnvironment
-} from "@seedgrid/fe-components";
-
-function EnvInfo() {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
-  return <div>fullKey: {fullKey ?? "null"}</div>;
-}
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      <EnvInfo />
-    </SgEnvironmentProvider>
-  );
-}`}
+          code={loadSample("sg-environment-provider-example-02.src")}
         />
       </Section>
 
@@ -142,40 +110,7 @@ export default function Example() {
       >
         <div className="w-full">
           <CodeBlock
-            code={`import React from "react";
-import {
-  SgEnvironmentProvider,
-  createApiPersistenceStrategy,
-  createCompositePersistenceStrategy,
-  createLocalStorageStrategy
-} from "@seedgrid/fe-components";
-
-const api = createApiPersistenceStrategy({
-  baseUrl: "https://api.seedgrid.com",
-  scope: "app:crm",
-  stateVersion: 1
-});
-
-const local = createLocalStorageStrategy();
-const persistence = createCompositePersistenceStrategy({
-  mode: "fallback",
-  primary: api,
-  secondary: local
-});
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistenceStrategy: persistence,
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      {/* componentes persistentes */}
-    </SgEnvironmentProvider>
-  );
-}`}
+            code={loadSample("sg-environment-provider-example-03.src")}
           />
         </div>
       </Section>
@@ -186,40 +121,7 @@ export default function Example() {
       >
         <div className="w-full">
           <CodeBlock
-            code={`import React from "react";
-import {
-  SgEnvironmentProvider,
-  createApiPersistenceStrategy,
-  createCompositePersistenceStrategy,
-  createLocalStorageStrategy
-} from "@seedgrid/fe-components";
-
-const api = createApiPersistenceStrategy({
-  baseUrl: "https://api.seedgrid.com",
-  scope: "app:crm",
-  stateVersion: 1
-});
-
-const local = createLocalStorageStrategy();
-const persistence = createCompositePersistenceStrategy({
-  mode: "mirror",
-  primary: api,
-  secondary: local
-});
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistenceStrategy: persistence,
-        persistence: { scope: "app:crm", mode: "mirror", stateVersion: 1 }
-      }}
-    >
-      {/* componentes persistentes */}
-    </SgEnvironmentProvider>
-  );
-}`}
+            code={loadSample("sg-environment-provider-example-04.src")}
           />
         </div>
       </Section>

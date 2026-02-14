@@ -1,0 +1,21 @@
+import React from "react";
+import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgBadgeOverlay placement="top-left" badge={<SgBadge value="TL" size="xs" variant="soft" />}>
+        <span className="inline-flex size-12 items-center justify-center rounded-lg border">TL</span>
+      </SgBadgeOverlay>
+      <SgBadgeOverlay placement="top-right" badge={<SgBadge value="TR" size="xs" variant="soft" />}>
+        <span className="inline-flex size-12 items-center justify-center rounded-lg border">TR</span>
+      </SgBadgeOverlay>
+      <SgBadgeOverlay placement="bottom-left" badge={<SgBadge value="BL" size="xs" variant="soft" />}>
+        <span className="inline-flex size-12 items-center justify-center rounded-lg border">BL</span>
+      </SgBadgeOverlay>
+      <SgBadgeOverlay placement="bottom-right" badge={<SgBadge value="BR" size="xs" variant="soft" />}>
+        <span className="inline-flex size-12 items-center justify-center rounded-lg border">BR</span>
+      </SgBadgeOverlay>
+    </>
+  );
+}

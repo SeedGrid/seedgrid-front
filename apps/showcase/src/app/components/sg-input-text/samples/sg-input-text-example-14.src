@@ -1,0 +1,7 @@
+<SgInputText
+  id="demo-error"
+  label="${t(i18n, "showcase.component.inputText.labels.externalError")}"
+  error="${t(i18n, "showcase.component.inputText.messages.externalError")}"
+  name="error"
+  register={register}
+/>

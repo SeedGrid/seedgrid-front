@@ -1,0 +1,1 @@
+<SgInputTextArea id="x" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} />

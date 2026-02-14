@@ -1,0 +1,49 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgAutocomplete } from "@seedgrid/fe-components";
+
+const COUNTRIES = [
+  { id: 1, description: "Afghanistan", code: "AF" },
+  { id: 2, description: "Albania", code: "AL" },
+  { id: 3, description: "Brazil", code: "BR" },
+  { id: 4, description: "South Africa", code: "ZA" }
+];
+
+const source = async (query) => {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  const q = query.toLowerCase();
+  return COUNTRIES.filter((c) => c.description.toLowerCase().includes(q));
+};
+
+export default function App() {
+  const { control, handleSubmit } = useForm({
+    defaultValues: { country: "" }
+  });
+
+  const onSubmit = (data) => console.log(data);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SgAutocomplete
+        id="country"
+        name="country"
+        control={control}
+        label="Country"
+        source={source}
+        mapItem={(raw) => ({
+          id: raw.id,
+          label: raw.description,
+          data: raw
+        })}
+        renderFooter={(query, hasResults) => (
+          <button
+            type="button"
+            className="w-full rounded bg-primary px-3 py-2 text-sm font-semibold text-white"
+          >
+            {hasResults ? `Add "${query}"` : "Add new"}
+          </button>
+        )}
+      />
+    </form>
+  );
+}

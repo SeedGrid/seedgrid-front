@@ -7,6 +7,8 @@ import { SgInputNumber } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -140,17 +142,7 @@ export default function SgInputNumberPage() {
             {t(i18n, "showcase.component.inputNumber.labels.currentValue", { value: basicValue })}
           </p>
         </form>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-basic"
-  label="${t(i18n, "showcase.component.inputNumber.labels.value")}"
-  name="valor"
-  register={register}
-  decimals={2}
-/>
-
-<button type="submit">${t(i18n, "showcase.component.inputNumber.actions.submit")}</button>
-
-<p>${t(i18n, "showcase.component.inputNumber.labels.currentValue", { value: watchValueSnippet })}</p>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-01.src")} />
       </Section>
 
       <Section
@@ -178,24 +170,7 @@ export default function SgInputNumberPage() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-required"
-  label="${t(i18n, "showcase.component.inputNumber.labels.required")}"
-  required
-  name="required"
-  register={register}
-  decimals={2}
-/>
-
-<SgInputNumber
-  id="demo-required-custom"
-  label="${t(i18n, "showcase.component.inputNumber.labels.customMessage")}"
-  required
-  requiredMessage="${t(i18n, "showcase.component.inputNumber.messages.requiredCustom")}"
-  name="requiredCustom"
-  register={register}
-  decimals={2}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-02.src")} />
       </Section>
 
       <Section
@@ -235,27 +210,7 @@ export default function SgInputNumberPage() {
             </button>
           </div>
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-controlled"
-  label="${t(i18n, "showcase.component.inputNumber.labels.controlled")}"
-  name="controlled"
-  control={control}
-  decimals={2}
-/>
-
-<button type="button" onClick={() => setValue("controlled", "12345.00")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.setApi")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "0.00")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.reset")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.clear")}
-</button>
-
-<p>${t(i18n, "showcase.component.inputNumber.labels.currentState")}: "{controlledValue}"</p>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-03.src")} />
       </Section>
 
       <Section
@@ -282,18 +237,7 @@ export default function SgInputNumberPage() {
             {validationMsg === null ? t(i18n, "showcase.component.inputNumber.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-validation"
-  label="${t(i18n, "showcase.component.inputNumber.labels.evenOnly")}"
-  name="validation"
-  register={register}
-  decimals={0}
-  validation={(v) => {
-    const n = Number(v);
-    return Number.isFinite(n) && n % 2 === 0 ? null : "${t(i18n, "showcase.component.inputNumber.messages.evenOnly")}";
-  }}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-04.src")} />
       </Section>
 
       <Section
@@ -312,16 +256,7 @@ export default function SgInputNumberPage() {
             }
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-prefix-icon"
-  label="${t(i18n, "showcase.component.inputNumber.labels.search")}"
-  name="prefixIcon"
-  register={register}
-  decimals={2}
-  prefixIcon={
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-  }
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-05.src")} />
       </Section>
 
       <Section
@@ -371,33 +306,7 @@ export default function SgInputNumberPage() {
             <code className="rounded bg-muted px-1">{bothValue}</code>
           </p>
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-prefix-text"
-  label="${t(i18n, "showcase.component.inputNumber.labels.price")}"
-  prefixText="R$"
-  name="prefix"
-  control={control}
-  decimals={2}
-/>
-
-<SgInputNumber
-  id="demo-suffix-text"
-  label="${t(i18n, "showcase.component.inputNumber.labels.weight")}"
-  suffixText="kg"
-  name="suffix"
-  control={control}
-  decimals={2}
-/>
-
-<SgInputNumber
-  id="demo-both"
-  label="${t(i18n, "showcase.component.inputNumber.labels.total")}"
-  prefixText="R$"
-  suffixText="m"
-  name="both"
-  control={control}
-  decimals={2}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-06.src")} />
       </Section>
 
       <Section
@@ -447,21 +356,7 @@ export default function SgInputNumberPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-iconbtns"
-  label="${t(i18n, "showcase.component.inputNumber.labels.copyNumber")}"
-  name="iconbtns"
-  register={register}
-  decimals={2}
-  iconButtons={[
-    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")}>
-      Copiar
-    </button>,
-    <button key="alert" type="button" onClick={() => alert("ok")}>
-      Alerta
-    </button>
-  ]}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-07.src")} />
       </Section>
 
       <Section
@@ -478,14 +373,7 @@ export default function SgInputNumberPage() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-no-negative"
-  label="${t(i18n, "showcase.component.inputNumber.labels.positiveOnly")}"
-  name="positivo"
-  register={register}
-  allowNegative={false}
-  decimals={2}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-08.src")} />
       </Section>
 
       <Section
@@ -501,13 +389,7 @@ export default function SgInputNumberPage() {
             decimals={0}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-no-decimals"
-  label="${t(i18n, "showcase.component.inputNumber.labels.quantity")}"
-  name="inteiro"
-  register={register}
-  decimals={0}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-09.src")} />
       </Section>
 
       <Section
@@ -525,15 +407,7 @@ export default function SgInputNumberPage() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-minmax"
-  label="${t(i18n, "showcase.component.inputNumber.labels.minMax")}"
-  name="minmax"
-  register={register}
-  minValue={10}
-  maxValue={100}
-  decimals={2}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-10.src")} />
       </Section>
 
       <Section
@@ -550,14 +424,7 @@ export default function SgInputNumberPage() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-empty"
-  label="${t(i18n, "showcase.component.inputNumber.labels.canBeEmpty")}"
-  name="vazio"
-  register={register}
-  emptyValue="null"
-  decimals={2}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-11.src")} />
       </Section>
 
       <Section
@@ -584,8 +451,7 @@ export default function SgInputNumberPage() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber id="demo-noborder" label="${t(i18n, "showcase.component.inputNumber.labels.noBorder")}" withBorder={false} name="noborder" register={register} decimals={2} />
-<SgInputNumber id="demo-filled" label="${t(i18n, "showcase.component.inputNumber.labels.filled")}" filled name="filled" register={register} decimals={2} />`} />
+        <CodeBlock code={loadSample("sg-input-number-example-12.src")} />
       </Section>
 
       <Section
@@ -630,38 +496,7 @@ export default function SgInputNumberPage() {
             {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
           </p>
         </div>
-        <CodeBlock code={`import React from "react";
-import { SgInputNumber } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const refA = React.useRef<HTMLInputElement | null>(null);
-  const refB = React.useRef<HTMLInputElement | null>(null);
-  const refC = React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    if (refA.current) refA.current.value = "1200.00";
-    if (refB.current) refB.current.value = "55.90";
-    if (refC.current) refC.current.value = "980.00";
-  }, []);
-
-  const handleSave = () => {
-    const payload = {
-      a: refA.current?.value ?? "",
-      b: refB.current?.value ?? "",
-      c: refC.current?.value ?? ""
-    };
-    console.log("Salvar:", payload);
-  };
-
-  return (
-    <div className="space-y-3">
-      <SgInputNumber id="a" label="${t(i18n, "showcase.component.inputNumber.labels.entry1")}" decimals={2} inputProps={{ ref: refA }} />
-      <SgInputNumber id="b" label="${t(i18n, "showcase.component.inputNumber.labels.entry2")}" decimals={2} inputProps={{ ref: refB }} />
-      <SgInputNumber id="c" label="${t(i18n, "showcase.component.inputNumber.labels.entry3")}" decimals={2} inputProps={{ ref: refC }} />
-      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputNumber.actions.save")}</button>
-    </div>
-  );
-}`} />
+        <CodeBlock code={loadSample("sg-input-number-example-13.src")} />
       </Section>
 
       <Section
@@ -690,17 +525,7 @@ export default function Example() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputNumber
-  id="demo-events"
-  label="${t(i18n, "showcase.component.inputNumber.labels.typeAndLog")}"
-  required
-  decimals={2}
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-number-example-14.src")} />
       </Section>
 
       <Section
@@ -726,8 +551,7 @@ export default function Example() {
             decimals={2}
           />
         </div>
-        <CodeBlock code={`<SgInputNumber id="demo-w200" label="${t(i18n, "showcase.component.inputNumber.labels.width200")}" width={200} name="w200" register={register} decimals={2} />
-<SgInputNumber id="demo-w300" label="${t(i18n, "showcase.component.inputNumber.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} decimals={2} />`} />
+        <CodeBlock code={loadSample("sg-input-number-example-15.src")} />
       </Section>
     </div>
   );

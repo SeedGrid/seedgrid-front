@@ -5,6 +5,8 @@ import { DEFAULT_BLOCKED_EMAIL_DOMAINS, SgInputEmail } from "@seedgrid/fe-compon
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -92,12 +94,7 @@ export default function SgInputEmailPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
-  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
-  onChange={(value) => console.log(value)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-01.src")} />
       </Section>
 
       <Section
@@ -121,13 +118,7 @@ export default function SgInputEmailPage() {
             requiredMessage={t(i18n, "showcase.component.inputEmail.messages.required")}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.required")}"
-  hintText="${t(i18n, "showcase.component.inputEmail.labels.requiredHint")}"
-  required
-  requiredMessage="${t(i18n, "showcase.component.inputEmail.messages.required")}"
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-02.src")} />
       </Section>
 
       <Section
@@ -142,12 +133,7 @@ export default function SgInputEmailPage() {
             invalidMessage={t(i18n, "showcase.component.inputEmail.messages.invalid")}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
-  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
-  invalidMessage="${t(i18n, "showcase.component.inputEmail.messages.invalid")}"
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-03.src")} />
       </Section>
 
       <Section
@@ -169,11 +155,7 @@ export default function SgInputEmailPage() {
             blockFakeMail={false}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
-  blockFakeMail={false}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-04.src")} />
       </Section>
 
       <Section
@@ -195,13 +177,7 @@ export default function SgInputEmailPage() {
             {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.onlyCom")}"
-  hintText="${t(i18n, "showcase.component.inputEmail.labels.domainHint")}"
-  validation={(v) => (v.endsWith(".com") ? null : "${t(i18n, "showcase.component.inputEmail.messages.onlyCom")}")}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-05.src")} />
       </Section>
 
       <Section
@@ -218,17 +194,7 @@ export default function SgInputEmailPage() {
         description={t(i18n, "showcase.component.inputEmail.sections.json.description")}
       >
         <CodeBlock
-          code={`// 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
-// {
-//   "blockedEmailDomains": ["exemplo.com", "teste.com"]
-// }
-//
-// 2) No startup da app:
-fetch("/seedgrid-blocked-email-domains.json")
-  .then((res) => res.json())
-  .then((data) => {
-    window.__seedgridBlockedEmailDomains = data.blockedEmailDomains ?? [];
-  });`}
+          code={loadSample("sg-input-email-example-06.src")}
         />
       </Section>
 
@@ -252,8 +218,7 @@ fetch("/seedgrid-blocked-email-domains.json")
             filled
           />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" withBorder={false} />
-<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" filled />`} />
+        <CodeBlock code={loadSample("sg-input-email-example-07.src")} />
       </Section>
 
       <Section
@@ -269,7 +234,7 @@ fetch("/seedgrid-blocked-email-domains.json")
           />
         </div>
         <CodeBlock
-          code={`<SgInputEmail id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" clearButton={false} />`}
+          code={loadSample("sg-input-email-example-08.src")}
         />
       </Section>
 
@@ -292,8 +257,7 @@ fetch("/seedgrid-blocked-email-domains.json")
             borderRadius={20}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={200} />
-<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={300} borderRadius={20} />`} />
+        <CodeBlock code={loadSample("sg-input-email-example-09.src")} />
       </Section>
 
       <Section
@@ -309,7 +273,7 @@ fetch("/seedgrid-blocked-email-domains.json")
             inputProps={{ defaultValue: t(i18n, "showcase.common.labels.notEditable") }}
           />
         </div>
-        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" enabled={false} />`} />
+        <CodeBlock code={loadSample("sg-input-email-example-10.src")} />
       </Section>
 
       <Section
@@ -338,17 +302,7 @@ fetch("/seedgrid-blocked-email-domains.json")
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputEmail
-  id="eventos"
-  label="${t(i18n, "showcase.common.labels.typeAndLog")}"
-  hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}"
-  required
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-email-example-11.src")} />
       </Section>
     </div>
   );

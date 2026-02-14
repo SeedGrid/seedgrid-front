@@ -1,0 +1,1 @@
+<SgInputTextArea\n  id="counter"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.max100")}"\n  maxLength={100}\n  showCharCounter\n/>

@@ -1,0 +1,30 @@
+<SgInputText
+  id="demo-suffix"
+  label="${t(i18n, "showcase.component.inputText.labels.email")}"
+  suffixText="@gmail.com"
+  name="suffix"
+  control={control}
+  onChange={(value) => log(\`${t(i18n, "showcase.component.inputText.labels.fullValue")}: \${value}\`)}
+/>
+
+<SgInputText
+  id="demo-prefix-text"
+  label="${t(i18n, "showcase.component.inputText.labels.website")}"
+  prefixText="www."
+  name="prefix"
+  control={control}
+  onChange={(value) => log(\`${t(i18n, "showcase.component.inputText.labels.fullValue")}: \${value}\`)}
+/>
+
+<button type="button" onClick={() => setValue("prefix", "www.test.com.br")}>
+  ${t(i18n, "showcase.component.inputText.actions.setExternalValue")}
+</button>
+
+<SgInputText
+  id="demo-both"
+  label="${t(i18n, "showcase.component.inputText.labels.domain")}"
+  prefixText="www."
+  suffixText=".seedgrid.com.br"
+  name="both"
+  control={control}
+/>

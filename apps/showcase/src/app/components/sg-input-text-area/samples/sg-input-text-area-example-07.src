@@ -1,0 +1,1 @@
+<SgInputTextArea\n  id="linhas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min3Lines")}"\n  minLines={3}\n  minLinesMessage="${t(i18n, "showcase.component.inputTextArea.messages.min3Lines")}"\n/>

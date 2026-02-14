@@ -1,0 +1,27 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.open")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="${t(i18n, "showcase.component.dialog.labels.title")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.subtitle")}"
+        leading={<span>â—Ž</span>}
+        trailing={<span>ID: 428</span>}
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.cancel")}</SgButton>
+            <SgButton onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.confirm")}</SgButton>
+          </>
+        }
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.body")}</div>
+      </SgDialog>
+    </>
+  );
+}

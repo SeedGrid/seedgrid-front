@@ -1,0 +1,1 @@
+<SgInputTextArea id="a" label="${t(i18n, "showcase.common.labels.disabled")}" enabled={false} />\n<SgInputTextArea\n  id="b"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.readonly")}"\n  textareaProps={{ readOnly: true }}\n/>

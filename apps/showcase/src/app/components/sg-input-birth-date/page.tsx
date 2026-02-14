@@ -5,6 +5,8 @@ import { SgInputBirthDate } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -89,12 +91,7 @@ export default function SgInputBirthDatePage() {
               : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputBirthDate
-  id="nascimento"
-  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
-  minAge={18}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-birth-date-example-01.src")} />
       </Section>
 
       <Section
@@ -110,13 +107,7 @@ export default function SgInputBirthDatePage() {
             requiredMessage={t(i18n, "showcase.component.inputBirthDate.messages.required")}
           />
         </div>
-        <CodeBlock code={`<SgInputBirthDate
-  id="nascimento"
-  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
-  minAge={18}
-  required
-  requiredMessage="${t(i18n, "showcase.component.inputBirthDate.messages.required")}"
-/>`} />
+        <CodeBlock code={loadSample("sg-input-birth-date-example-02.src")} />
       </Section>
 
       <Section
@@ -131,12 +122,7 @@ export default function SgInputBirthDatePage() {
             maxAge={80}
           />
         </div>
-        <CodeBlock code={`<SgInputBirthDate
-  id="nascimento"
-  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
-  minAge={12}
-  maxAge={80}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-birth-date-example-03.src")} />
       </Section>
     </div>
   );

@@ -1,0 +1,3 @@
+<SgFloatActionButton shape="circle" size="sm" />
+<SgFloatActionButton shape="rounded" size="md" />
+<SgFloatActionButton shape="square" size="lg" />

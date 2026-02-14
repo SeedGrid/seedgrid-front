@@ -1,0 +1,1 @@
+<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" enabled={false} inputProps={{}} />

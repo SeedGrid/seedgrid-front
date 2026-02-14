@@ -1,0 +1,23 @@
+import { Check } from "lucide-react";
+import { SgButton } from "@seedgrid/fe-components";
+
+// Elevated Buttons (solid + elevation)
+<SgButton severity="primary" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="info" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Danger</SgButton>
+
+// Rounded Buttons
+<SgButton severity="secondary" shape="rounded" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="success" shape="rounded" leftIcon={<Check className="size-4" />}>Success</SgButton>
+
+// Ghost Buttons (Flat)
+<SgButton severity="secondary" appearance="ghost" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="warning" appearance="ghost" leftIcon={<Check className="size-4" />}>Warning</SgButton>
+
+// Outlined + Elevation
+<SgButton severity="primary" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="help" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Help</SgButton>
+
+// Outlined Buttons
+<SgButton severity="info" appearance="outline" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="outline" leftIcon={<Check className="size-4" />}>Danger</SgButton>

@@ -1,0 +1,38 @@
+import React from "react";
+import { SgTreeView } from "@seedgrid/fe-components";
+
+const nodes = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users" },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report" },
+          { id: "reports.financial", label: "Financial report" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  return (
+    <SgTreeView
+      nodes={nodes}
+      searchable
+      searchPlaceholder="Search..."
+      defaultExpandedIds={["root", "users"]}
+    />
+  );
+}

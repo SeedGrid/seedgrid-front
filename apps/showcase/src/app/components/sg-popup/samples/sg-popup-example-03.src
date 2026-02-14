@@ -1,0 +1,12 @@
+<SgPopup
+  title="Config"
+  open={open}
+  onOpenChange={setOpen}
+  anchorRef={btnRef as React.RefObject<HTMLElement>}
+  placement="auto"
+>
+  <div className="grid gap-2 text-sm">
+    <label className="text-xs">Modo</label>
+    <input className="h-9 rounded border px-2" />
+  </div>
+</SgPopup>

@@ -1,0 +1,11 @@
+<SgInputPostalCode
+  id="eventos"
+  label="${t(i18n, "showcase.component.inputPostalCode.labels.withEvents")}"
+  hintText="00000-000"
+  required
+  onChange={(v) => console.log("onChange:", v)}
+  onEnter={() => console.log("focus")}
+  onExit={() => console.log("blur")}
+  onClear={() => console.log("cleared")}
+  onValidation={(msg) => console.log("validation:", msg)}
+/>

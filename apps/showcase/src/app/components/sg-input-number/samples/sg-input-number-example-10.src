@@ -1,0 +1,9 @@
+<SgInputNumber
+  id="demo-minmax"
+  label="${t(i18n, "showcase.component.inputNumber.labels.minMax")}"
+  name="minmax"
+  register={register}
+  minValue={10}
+  maxValue={100}
+  decimals={2}
+/>

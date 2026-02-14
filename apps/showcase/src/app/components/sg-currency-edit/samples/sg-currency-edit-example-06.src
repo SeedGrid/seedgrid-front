@@ -1,0 +1,18 @@
+<SgCurrencyEdit
+  id="demo-no-symbol"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.noSymbol")}"
+  name="noSymbol"
+  register={register}
+  currency="BRL"
+  showCurrencySymbol={false}
+/>
+
+<SgCurrencyEdit
+  id="demo-code"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.codeSuffix")}"
+  name="codeSuffix"
+  register={register}
+  currency="USD"
+  currencyDisplay="code"
+  currencySymbolPlacement="suffix"
+/>

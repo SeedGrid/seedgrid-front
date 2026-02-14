@@ -1,0 +1,6 @@
+<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
+  onChange={(value) => console.log(value)}
+/>

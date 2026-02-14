@@ -13,6 +13,8 @@ import {
 } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <SgPanel borderStyle="solid" className="rounded-lg border-border" padding={24}>
@@ -194,34 +196,7 @@ export default function SgMainPanelPage() {
 
         <SgStack className="mt-6">
           <SgCodeBlockBase
-            code={`import {
-  SgScreen,
-  SgMainPanel,
-  SgPanel,
-  SgGrid,
-  SgStack
-} from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgScreen padding={12} className="bg-zinc-100">
-      <SgMainPanel gap={8} padding={12}>
-        <SgPanel align="top" height={10}>Header</SgPanel>
-        <SgPanel align="left" width={18}>Sidebar</SgPanel>
-        <SgPanel align="right" width={18}>Acoes</SgPanel>
-        <SgPanel align="bottom" height={7}>Footer</SgPanel>
-
-        <SgPanel align="client" scrollable="y">
-          <SgGrid columns={{ base: 1, md: 2, lg: 3 }} gap={12}>
-            <SgPanel>Card 1</SgPanel>
-            <SgPanel span={2}>Card 2</SgPanel>
-            <SgPanel rowSpan={2}>Card 3</SgPanel>
-          </SgGrid>
-        </SgPanel>
-      </SgMainPanel>
-    </SgScreen>
-  );
-}`}
+            code={loadSample("sg-main-panel-example-01.src")}
           />
         </SgStack>
       </Section>

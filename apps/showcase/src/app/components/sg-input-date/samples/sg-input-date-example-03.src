@@ -1,0 +1,1 @@
+<SgInputDate\n  id="evento"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>

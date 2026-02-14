@@ -1,0 +1,7 @@
+<SgInputNumber
+  id="demo-no-decimals"
+  label="${t(i18n, "showcase.component.inputNumber.labels.quantity")}"
+  name="inteiro"
+  register={register}
+  decimals={0}
+/>

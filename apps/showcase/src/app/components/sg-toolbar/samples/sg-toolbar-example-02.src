@@ -1,0 +1,18 @@
+import React from "react";
+import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgToolBar
+      id="tb-actions"
+      title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
+      orientation="horizontal"
+      collapsible
+      collapseDirection="right"
+    >
+      <SgToolbarIconButton icon="C" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
+      <SgToolbarIconButton icon="E" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
+      <SgToolbarIconButton icon="D" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
+    </SgToolBar>
+  );
+}

@@ -1,0 +1,24 @@
+import React from "react";
+import { SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgCard variant="default" title="${t(i18n, "showcase.component.card.labels.variantDefault")}" size="sm">
+        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
+      </SgCard>
+
+      <SgCard variant="elevated" title="${t(i18n, "showcase.component.card.labels.variantElevated")}" size="sm">
+        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
+      </SgCard>
+
+      <SgCard variant="outlined" title="${t(i18n, "showcase.component.card.labels.variantOutlined")}" size="lg">
+        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
+      </SgCard>
+
+      <SgCard variant="flat" title="${t(i18n, "showcase.component.card.labels.variantFlat")}" size="lg">
+        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
+      </SgCard>
+    </>
+  );
+}

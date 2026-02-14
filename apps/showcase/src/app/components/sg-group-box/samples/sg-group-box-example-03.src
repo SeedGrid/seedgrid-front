@@ -1,0 +1,7 @@
+<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.width320")}" width={320}>
+  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
+</SgGroupBox>
+
+<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.height180")}" height={180}>
+  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
+</SgGroupBox>

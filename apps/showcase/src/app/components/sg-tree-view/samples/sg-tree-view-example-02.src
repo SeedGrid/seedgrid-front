@@ -1,0 +1,6 @@
+import { SgTreeView } from "@seedgrid/fe-components";
+
+<SgTreeView
+  nodes={nodes}
+  iconTone="primary"
+/>

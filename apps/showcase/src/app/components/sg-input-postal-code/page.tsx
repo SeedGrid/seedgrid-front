@@ -7,6 +7,8 @@ import { SgInputPostalCode, type ViaCepResponse, type PostalCodeCountry } from "
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -147,13 +149,7 @@ export default function SgInputPostalCodePage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: `"${basicValue}"` })}
           </p>
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="cep"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.BR")}"
-  hintText="00000-000"
-  name="cep"
-  register={register}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-01.src")} />
       </Section>
 
       {/* â”€â”€ Paises â”€â”€ */}
@@ -172,15 +168,7 @@ export default function SgInputPostalCodePage() {
             />
           ))}
         </div>
-        <CodeBlock code={`import { SgInputPostalCode } from "@seedgrid/fe-components";
-
-<SgInputPostalCode id="br" country="BR" label="CEP (Brasil)" hintText="00000-000" />
-<SgInputPostalCode id="pt" country="PT" label="Codigo postal (Portugal)" hintText="0000-000" />
-<SgInputPostalCode id="us" country="US" label="ZIP code (USA)" hintText="00000" />
-<SgInputPostalCode id="es" country="ES" label="Codigo postal (Espanha)" hintText="00000" />
-<SgInputPostalCode id="uy" country="UY" label="Codigo postal (Uruguai)" hintText="00000" />
-<SgInputPostalCode id="ar" country="AR" label="Codigo postal (Argentina)" hintText="A0000AAA" />
-<SgInputPostalCode id="py" country="PY" label="Codigo postal (Paraguai)" hintText="000000" />`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-02.src")} />
       </Section>
 
       {/* â”€â”€ Required â”€â”€ */}
@@ -205,12 +193,7 @@ export default function SgInputPostalCodePage() {
             requiredMessage={t(i18n, "showcase.component.inputPostalCode.messages.required")}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="postal"
-  label="Codigo postal obrigatorio"
-  required
-  requiredMessage="Informe o codigo postal."
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-03.src")} />
       </Section>
 
       {/* â”€â”€ Controlado (setValue / clear) â”€â”€ */}
@@ -251,27 +234,7 @@ export default function SgInputPostalCodePage() {
             </button>
           </div>
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="demo-controlled"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.controlled")}"
-  hintText="00000-000"
-  name="controlled"
-  control={control}
-/>
-
-<button type="button" onClick={() => setValue("controlled", "04538-132")}>
-  ${t(i18n, "showcase.component.inputPostalCode.actions.setApi")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "20040-020")}>
-  ${t(i18n, "showcase.component.inputPostalCode.actions.setOther")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "")}>
-  ${t(i18n, "showcase.component.inputPostalCode.actions.clear")}
-</button>
-
-<p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-04.src")} />
       </Section>
 
       {/* â”€â”€ Validacao customizada â”€â”€ */}
@@ -293,13 +256,7 @@ export default function SgInputPostalCodePage() {
               : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="cep"
-  label="CEP (Brasil)"
-  hintText="00000-000"
-  validation={(v) => (v.startsWith("00") ? "CEP nao pode iniciar com 00." : null)}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-05.src")} />
       </Section>
 
       {/* â”€â”€ ViaCEP (BR only) â”€â”€ */}
@@ -318,15 +275,7 @@ export default function SgInputPostalCodePage() {
             onViaCepResult={(data) => setViaCepResult(data)}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="cep"
-  label="CEP (Brasil)"
-  hintText="00000-000"
-  country="BR"
-  validateWithViaCep
-  viaCepErrorMessage="CEP invalido."
-  onViaCepResult={(data) => console.log(data)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-06.src")} />
         {viaCepResult ? (
           <div className="mt-3 w-full rounded border border-border bg-foreground/5 p-3 text-xs">
             <div className="mb-2 text-sm font-semibold">{t(i18n, "showcase.component.inputPostalCode.labels.viacepResult")}</div>
@@ -355,16 +304,7 @@ export default function SgInputPostalCodePage() {
             register={register}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="demo-prefix-icon"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.search")}"
-  hintText="00000-000"
-  prefixIcon={
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-  }
-  name="prefixIcon"
-  register={register}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-07.src")} />
       </Section>
 
       {/* â”€â”€ Prefixo e sufixo â”€â”€ */}
@@ -392,23 +332,7 @@ export default function SgInputPostalCodePage() {
             register={register}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="demo-prefix-text"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.prefixLabel")}"
-  hintText="00000-000"
-  prefixText="CEP:"
-  name="prefix"
-  register={register}
-/>
-
-<SgInputPostalCode
-  id="demo-suffix-text"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.suffixLabel")}"
-  hintText="00000-000"
-  suffixText="BR"
-  name="suffix"
-  register={register}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-08.src")} />
       </Section>
 
       {/* â”€â”€ Botoes de icone â”€â”€ */}
@@ -465,21 +389,7 @@ export default function SgInputPostalCodePage() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="demo-iconbtns"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.copyText")}"
-  hintText="00000-000"
-  name="iconbtns"
-  register={register}
-  iconButtons={[
-    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(value)}>
-      Copiar
-    </button>,
-    <button key="alert" type="button" onClick={() => alert("ok")}>
-      Alerta
-    </button>
-  ]}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-09.src")} />
       </Section>
 
       {/* â”€â”€ Variacoes visuais â”€â”€ */}
@@ -507,8 +417,7 @@ export default function SgInputPostalCodePage() {
             register={register}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="00000-000" withBorder={false} name="noborder" register={register} />
-<SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="00000-000" filled name="filled" register={register} />`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-10.src")} />
       </Section>
 
       {/* â”€â”€ Largura e borda â”€â”€ */}
@@ -535,8 +444,7 @@ export default function SgInputPostalCodePage() {
             register={register}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="00000-000" width={200} name="w200" register={register} />
-<SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="00000-000" width={300} borderRadius={20} name="w300" register={register} />`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-11.src")} />
       </Section>
 
       {/* â”€â”€ Desabilitado e somente leitura â”€â”€ */}
@@ -564,23 +472,7 @@ export default function SgInputPostalCodePage() {
             register={register}
           />
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="demo-disabled"
-  label="${t(i18n, "showcase.common.labels.disabled")}"
-  hintText="00000-000"
-  enabled={false}
-  name="disabled"
-  register={register}
-/>
-
-<SgInputPostalCode
-  id="demo-readonly"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.readonly")}"
-  hintText="00000-000"
-  readOnly
-  name="readonly"
-  register={register}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-12.src")} />
       </Section>
 
       {/* â”€â”€ Standalone Form â”€â”€ */}
@@ -626,38 +518,7 @@ export default function SgInputPostalCodePage() {
             {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
           </p>
         </div>
-        <CodeBlock code={`import React from "react";
-import { SgInputPostalCode } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const refA = React.useRef<HTMLInputElement | null>(null);
-  const refB = React.useRef<HTMLInputElement | null>(null);
-  const refC = React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    if (refA.current) refA.current.value = "01001-000";
-    if (refB.current) refB.current.value = "04538-132";
-    if (refC.current) refC.current.value = "20040-020";
-  }, []);
-
-  const handleSave = () => {
-    const payload = {
-      entrega: refA.current?.value ?? "",
-      cobranca: refB.current?.value ?? "",
-      comercial: refC.current?.value ?? ""
-    };
-    console.log("Salvar:", payload);
-  };
-
-  return (
-    <div className="space-y-3">
-      <SgInputPostalCode id="a" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry1")}" hintText="00000-000" inputProps={{ ref: refA }} />
-      <SgInputPostalCode id="b" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry2")}" hintText="00000-000" inputProps={{ ref: refB }} />
-      <SgInputPostalCode id="c" label="${t(i18n, "showcase.component.inputPostalCode.labels.entry3")}" hintText="00000-000" inputProps={{ ref: refC }} />
-      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputPostalCode.actions.save")}</button>
-    </div>
-  );
-}`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-13.src")} />
       </Section>
 
       {/* â”€â”€ Eventos standalone â”€â”€ */}
@@ -685,17 +546,7 @@ export default function Example() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputPostalCode
-  id="eventos"
-  label="${t(i18n, "showcase.component.inputPostalCode.labels.withEvents")}"
-  hintText="00000-000"
-  required
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-input-postal-code-example-14.src")} />
       </Section>
     </div>
   );

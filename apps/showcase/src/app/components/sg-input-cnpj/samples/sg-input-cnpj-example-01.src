@@ -1,0 +1,1 @@
+<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>

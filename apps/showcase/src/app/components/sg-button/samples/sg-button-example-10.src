@@ -1,0 +1,3 @@
+<SgButton severity="primary" shape="rounded" appearance="ghost" leftIcon={<Check className="size-4" />} />
+<SgButton severity="secondary" shape="rounded" appearance="ghost" leftIcon={<Bookmark className="size-4" />} />
+<SgButton severity="danger" shape="rounded" appearance="ghost" leftIcon={<X className="size-4" />} />

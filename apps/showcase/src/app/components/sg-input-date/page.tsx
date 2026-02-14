@@ -5,6 +5,8 @@ import { SgInputDate } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -72,7 +74,7 @@ export default function SgInputDatePage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={`<SgInputDate\n  id="data"\n  label="${t(i18n, "showcase.component.inputDate.labels.date")}"\n  hintText="${t(i18n, "showcase.component.inputDate.labels.dateHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-date-example-01.src")} />
       </Section>
 
       <Section
@@ -87,7 +89,7 @@ export default function SgInputDatePage() {
             maxDate="2030-12-31"
           />
         </div>
-        <CodeBlock code={`<SgInputDate\n  id="periodo"\n  label="${t(i18n, "showcase.component.inputDate.labels.period")}"\n  minDate="2020-01-01"\n  maxDate="2030-12-31"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-date-example-02.src")} />
       </Section>
 
       <Section
@@ -100,7 +102,7 @@ export default function SgInputDatePage() {
             label={t(i18n, "showcase.component.inputDate.labels.eventDate")}
           />
         </div>
-        <CodeBlock code={`<SgInputDate\n  id="evento"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-date-example-03.src")} />
       </Section>
     </div>
   );

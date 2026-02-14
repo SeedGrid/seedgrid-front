@@ -1,0 +1,19 @@
+import React from "react";
+import { SgTextEditor } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [htmlBody, setHtmlBody] = React.useState("<p><strong>SeedGrid</strong> editor</p>");
+  const [cssText, setCssText] = React.useState("body { font-family: Arial; }");
+
+  return (
+    <SgTextEditor
+      id="sg-text-editor"
+      valueHtml={htmlBody}
+      onChangeHtml={setHtmlBody}
+      cssText={cssText}
+      onCssTextChange={setCssText}
+      showCssEditor
+      onSave={(file) => console.log(file)}
+    />
+  );
+}

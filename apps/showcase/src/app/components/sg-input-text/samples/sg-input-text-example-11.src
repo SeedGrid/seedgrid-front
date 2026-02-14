@@ -1,0 +1,1 @@
+<SgInputText id="demo-noclear" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} name="noclear" register={register} />

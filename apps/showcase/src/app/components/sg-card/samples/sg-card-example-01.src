@@ -1,0 +1,28 @@
+import React from "react";
+import { SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgCard
+      title="${t(i18n, "showcase.component.card.labels.basicTitle")}"
+      description="${t(i18n, "showcase.component.card.labels.basicDescription")}"
+      footer={
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>${t(i18n, "showcase.component.card.labels.basicFooterLeft")}</span>
+          <span>${t(i18n, "showcase.component.card.labels.basicFooterRight")}</span>
+        </div>
+      }
+    >
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between">
+          <span>${t(i18n, "showcase.component.card.labels.basicLine1")}</span>
+          <span className="font-semibold">R$ 12.400</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span>${t(i18n, "showcase.component.card.labels.basicLine2")}</span>
+          <span className="font-semibold">83</span>
+        </div>
+      </div>
+    </SgCard>
+  );
+}

@@ -1,0 +1,1 @@
+<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" withBorder={false} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" filled />

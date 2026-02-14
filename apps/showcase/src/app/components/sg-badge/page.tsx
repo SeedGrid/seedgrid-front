@@ -5,6 +5,8 @@ import { SgBadge } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -65,18 +67,7 @@ export default function SgBadgePage() {
         <SgBadge value={t(i18n, "showcase.component.badge.labels.pending")} severity="warning" variant="soft" />
         <SgBadge value={t(i18n, "showcase.component.badge.labels.paid")} severity="success" variant="solid" />
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.admin")}" />
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.pending")}" severity="warning" variant="soft" />
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.paid")}" severity="success" variant="solid" />
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-example-01.src")}
         />
       </Section>
 
@@ -89,19 +80,7 @@ export default function Example() {
         <SgBadge value="Outline" variant="outline" severity="info" />
         <SgBadge value="Ghost" variant="ghost" severity="neutral" />
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="Solid" variant="solid" />
-      <SgBadge value="Soft" variant="soft" severity="secondary" />
-      <SgBadge value="Outline" variant="outline" severity="info" />
-      <SgBadge value="Ghost" variant="ghost" severity="neutral" />
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-example-02.src")}
         />
       </Section>
 
@@ -114,19 +93,7 @@ export default function Example() {
         <SgBadge value="MD" size="md" />
         <SgBadge value="LG" size="lg" />
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="XS" size="xs" />
-      <SgBadge value="SM" size="sm" />
-      <SgBadge value="MD" size="md" />
-      <SgBadge value="LG" size="lg" />
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-example-03.src")}
         />
       </Section>
 
@@ -139,19 +106,7 @@ export default function Example() {
         <SgBadge dot severity="success" />
         <SgBadge dot severity="success" pulse />
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value={3} severity="danger" />
-      <SgBadge value={120} max={99} severity="danger" />
-      <SgBadge dot severity="success" />
-      <SgBadge dot severity="success" pulse />
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-example-04.src")}
         />
       </Section>
 
@@ -162,35 +117,7 @@ export default function Example() {
         <AutoRemoveExample />
         <ManualRemoveExample />
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const [visible, setVisible] = React.useState(true);
-
-  return (
-    <>
-      <SgBadge
-        value="${t(i18n, "showcase.component.badge.labels.removableAuto")}"
-        removable
-        autoRemove
-        onRemove={() => alert("onRemove")}
-      />
-
-      {visible ? (
-        <SgBadge
-          value="${t(i18n, "showcase.component.badge.labels.removableManual")}"
-          removable
-          autoRemove={false}
-          onRemove={() => {
-            alert("onRemove");
-            setVisible(false);
-          }}
-        />
-      ) : null}
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-example-05.src")}
         />
       </Section>
 

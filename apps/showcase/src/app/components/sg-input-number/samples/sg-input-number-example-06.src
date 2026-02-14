@@ -1,0 +1,27 @@
+<SgInputNumber
+  id="demo-prefix-text"
+  label="${t(i18n, "showcase.component.inputNumber.labels.price")}"
+  prefixText="R$"
+  name="prefix"
+  control={control}
+  decimals={2}
+/>
+
+<SgInputNumber
+  id="demo-suffix-text"
+  label="${t(i18n, "showcase.component.inputNumber.labels.weight")}"
+  suffixText="kg"
+  name="suffix"
+  control={control}
+  decimals={2}
+/>
+
+<SgInputNumber
+  id="demo-both"
+  label="${t(i18n, "showcase.component.inputNumber.labels.total")}"
+  prefixText="R$"
+  suffixText="m"
+  name="both"
+  control={control}
+  decimals={2}
+/>

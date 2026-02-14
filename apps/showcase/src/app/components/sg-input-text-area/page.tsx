@@ -5,6 +5,8 @@ import { SgInputTextArea } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -84,7 +86,7 @@ export default function SgInputTextAreaPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="descricao"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.description")}"\n  onChange={(value) => console.log(value)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-01.src")} />
       </Section>
 
       <Section
@@ -106,7 +108,7 @@ export default function SgInputTextAreaPage() {
             requiredMessage={t(i18n, "showcase.component.inputTextArea.messages.requiredCustom")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="campo"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.requiredField")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputTextArea.messages.requiredCustom")}"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-02.src")} />
       </Section>
 
       <Section
@@ -156,7 +158,7 @@ export default function SgInputTextAreaPage() {
             <li>{t(i18n, "showcase.component.inputTextArea.bullets.controlled.4")}</li>
           </ul>
           <CodeBlock
-            code={`import React from "react";\nimport { useForm } from "react-hook-form";\nimport { SgInputTextArea } from "@seedgrid/fe-components";\n\nexport default function Example() {\n  const { control, handleSubmit, setValue, watch } = useForm({\n    defaultValues: { obs: "" }\n  });\n\n  const onSubmit = (data) => console.log(data);\n  const value = watch("obs");\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)}>\n      <SgInputTextArea\n        id="obs"\n        name="obs"\n        control={control}\n        label="${t(i18n, "showcase.component.inputTextArea.labels.notes")}"\n      />\n\n      <button type="button" onClick={() => setValue("obs", "${t(i18n, "showcase.component.inputTextArea.values.apiSample").replace(/\n/g, "\\n")}")}>\n        ${t(i18n, "showcase.component.inputTextArea.actions.setApi")}\n      </button>\n\n      <button type="button" onClick={() => setValue("obs", "")}>\n        ${t(i18n, "showcase.component.inputTextArea.actions.clear")}\n      </button>\n\n      <p>${t(i18n, "showcase.common.labels.currentState")}: "{value}"</p>\n    </form>\n  );\n}`}
+            code={loadSample("sg-input-text-area-example-03.src")}
           />
         </div>
       </Section>
@@ -173,7 +175,7 @@ export default function SgInputTextAreaPage() {
             showCharCounter
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="counter"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.max100")}"\n  maxLength={100}\n  showCharCounter\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-04.src")} />
       </Section>
 
       <Section
@@ -188,7 +190,7 @@ export default function SgInputTextAreaPage() {
             showCharCounter
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="min"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min10")}"\n  minLength={10}\n  showCharCounter\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-05.src")} />
       </Section>
 
       <Section
@@ -203,7 +205,7 @@ export default function SgInputTextAreaPage() {
             minNumberOfWordsMessage={t(i18n, "showcase.component.inputTextArea.messages.min5Words")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="words"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min5Words")}"\n  minNumberOfWords={5}\n  minNumberOfWordsMessage="${t(i18n, "showcase.component.inputTextArea.messages.min5Words")}"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-06.src")} />
       </Section>
 
       <Section
@@ -218,7 +220,7 @@ export default function SgInputTextAreaPage() {
             minLinesMessage={t(i18n, "showcase.component.inputTextArea.messages.min3Lines")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="linhas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min3Lines")}"\n  minLines={3}\n  minLinesMessage="${t(i18n, "showcase.component.inputTextArea.messages.min3Lines")}"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-07.src")} />
       </Section>
 
       <Section
@@ -239,7 +241,7 @@ export default function SgInputTextAreaPage() {
             {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={String.raw`<SgInputTextArea\n  id="sem-numeros"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.noNumbers")}"\n  validation={(v) =>\n    /\\d/.test(v) ? "${t(i18n, "showcase.component.inputTextArea.messages.noNumbers")}" : null\n  }\n  onValidation={(msg) => console.log(msg)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-16.src")} />
       </Section>
 
       <Section
@@ -262,7 +264,7 @@ export default function SgInputTextAreaPage() {
             maxLines={8}
           />
         </div>
-        <CodeBlock code={`// ${t(i18n, "showcase.component.inputTextArea.labels.compact")}\n<SgInputTextArea\n  id="a"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.compact")}"\n  height={100}\n  maxLines={2}\n/>\n\n// ${t(i18n, "showcase.component.inputTextArea.labels.expanded")}\n<SgInputTextArea\n  id="b"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.expanded")}"\n  height={250}\n  maxLines={8}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-08.src")} />
       </Section>
 
       <Section
@@ -278,7 +280,7 @@ export default function SgInputTextAreaPage() {
             }
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="notas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.notes")}"\n  prefixIcon={<PencilIcon />}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-09.src")} />
       </Section>
 
       <Section
@@ -291,7 +293,7 @@ export default function SgInputTextAreaPage() {
         <div className="w-96">
           <SgInputTextArea id="demo-filled" label={t(i18n, "showcase.common.labels.filled")} filled />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" withBorder={false} />\n<SgInputTextArea id="b" label="${t(i18n, "showcase.common.labels.filled")}" filled />`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-10.src")} />
       </Section>
 
       <Section
@@ -301,7 +303,7 @@ export default function SgInputTextAreaPage() {
         <div className="w-96">
           <SgInputTextArea id="demo-noclear" label={t(i18n, "showcase.common.labels.noClear")} clearButton={false} />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="x" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} />`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-11.src")} />
       </Section>
 
       <Section
@@ -312,7 +314,7 @@ export default function SgInputTextAreaPage() {
           <SgInputTextArea id="demo-w250" label={t(i18n, "showcase.component.inputTextArea.labels.width250")} width={250} />
           <SgInputTextArea id="demo-w350" label={t(i18n, "showcase.component.inputTextArea.labels.width350Rounded")} width={350} borderRadius={16} />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.component.inputTextArea.labels.width250")}" width={250} />\n<SgInputTextArea id="b" label="${t(i18n, "showcase.component.inputTextArea.labels.width350Rounded")}" width={350} borderRadius={16} />`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-12.src")} />
       </Section>
 
       <Section
@@ -334,7 +336,7 @@ export default function SgInputTextAreaPage() {
             textareaProps={{ readOnly: true, defaultValue: t(i18n, "showcase.component.inputTextArea.defaults.readonly") }}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea id="a" label="${t(i18n, "showcase.common.labels.disabled")}" enabled={false} />\n<SgInputTextArea\n  id="b"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.readonly")}"\n  textareaProps={{ readOnly: true }}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-13.src")} />
       </Section>
 
       <Section
@@ -348,7 +350,7 @@ export default function SgInputTextAreaPage() {
             error={t(i18n, "showcase.component.inputTextArea.messages.externalError")}
           />
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="desc"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.externalError")}"\n  error="${t(i18n, "showcase.component.inputTextArea.messages.externalError")}"\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-14.src")} />
       </Section>
 
       <Section
@@ -382,7 +384,7 @@ export default function SgInputTextAreaPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputTextArea\n  id="eventos"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.withEvents")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onEnter")}")} \n  onExit={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onExit")}")} \n  onClear={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onClear")}")} \n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-text-area-example-15.src")} />
       </Section>
 
       <section className="rounded-lg border border-border p-6">

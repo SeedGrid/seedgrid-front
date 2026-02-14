@@ -5,6 +5,8 @@ import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -39,18 +41,7 @@ export default function SgToolBarPage() {
           <SgToolbarIconButton icon="S" hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
         </SgToolBar>
         <CodeBlock
-          code={`import React from "react";
-import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgToolBar id="tb-nav" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
-      <SgToolbarIconButton icon="H" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
-      <SgToolbarIconButton icon="U" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
-      <SgToolbarIconButton icon="S" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
-    </SgToolBar>
-  );
-}`}
+          code={loadSample("sg-toolbar-example-01.src")}
         />
       </Section>
 
@@ -70,24 +61,7 @@ export default function Example() {
           <SgToolbarIconButton icon="D" hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
         </SgToolBar>
         <CodeBlock
-          code={`import React from "react";
-import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgToolBar
-      id="tb-actions"
-      title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
-      orientation="horizontal"
-      collapsible
-      collapseDirection="right"
-    >
-      <SgToolbarIconButton icon="C" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
-      <SgToolbarIconButton icon="E" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
-      <SgToolbarIconButton icon="D" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
-    </SgToolBar>
-  );
-}`}
+          code={loadSample("sg-toolbar-example-02.src")}
         />
       </Section>
 
@@ -110,17 +84,7 @@ export default function Example() {
           </SgToolBar>
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgToolBar id="tb-free" title="${t(i18n, "showcase.component.toolbar.labels.free")}" orientation="vertical" draggable freeDrag defaultPosition={{ x: 16, y: 16 }}>
-      <SgToolbarIconButton icon="F" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
-      <SgToolbarIconButton icon="R" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
-    </SgToolBar>
-  );
-}`}
+          code={loadSample("sg-toolbar-example-03.src")}
         />
       </Section>
     </div>

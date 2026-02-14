@@ -1,0 +1,7 @@
+<SgFloatActionButton
+  actions={actions}
+  activeIcon={<Settings />}
+  type="semi-circle"
+  direction="up"
+  severity="secondary"
+/>

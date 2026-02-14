@@ -1,0 +1,10 @@
+import React from "react";
+import { buildSgPersistenceKey, useSgEnvironment } from "@seedgrid/fe-components";
+
+function Example() {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
+
+  return <div>fullKey: {fullKey ?? "null"}</div>;
+}

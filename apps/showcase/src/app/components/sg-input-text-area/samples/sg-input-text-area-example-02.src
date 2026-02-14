@@ -1,0 +1,1 @@
+<SgInputTextArea\n  id="campo"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.requiredField")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputTextArea.messages.requiredCustom")}"\n/>

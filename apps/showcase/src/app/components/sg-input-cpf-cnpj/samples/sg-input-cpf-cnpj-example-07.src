@@ -1,0 +1,1 @@
+<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" withBorder={false} inputProps={{}} />\n<SgInputCPFCNPJ id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" filled inputProps={{}} />

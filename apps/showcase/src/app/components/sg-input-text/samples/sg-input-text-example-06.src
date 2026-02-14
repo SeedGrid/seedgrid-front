@@ -1,0 +1,8 @@
+<SgInputText
+  id="demo-words"
+  label="${t(i18n, "showcase.component.inputText.labels.min3Words")}"
+  minNumberOfWords={3}
+  minNumberOfWordsMessage="${t(i18n, "showcase.component.inputText.messages.min3Words")}"
+  name="words"
+  register={register}
+/>

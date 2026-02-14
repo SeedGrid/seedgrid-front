@@ -1,0 +1,7 @@
+<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.required")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.requiredHint")}"
+  required
+  requiredMessage="${t(i18n, "showcase.component.inputEmail.messages.required")}"
+/>

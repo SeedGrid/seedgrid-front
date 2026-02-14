@@ -1,0 +1,34 @@
+import React from "react";
+import {
+  SgEnvironmentProvider,
+  createApiPersistenceStrategy,
+  createCompositePersistenceStrategy,
+  createLocalStorageStrategy
+} from "@seedgrid/fe-components";
+
+const api = createApiPersistenceStrategy({
+  baseUrl: "https://api.seedgrid.com",
+  scope: "app:crm",
+  stateVersion: 1
+});
+
+const local = createLocalStorageStrategy();
+const persistence = createCompositePersistenceStrategy({
+  mode: "fallback",
+  primary: api,
+  secondary: local
+});
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:123" },
+        persistenceStrategy: persistence,
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
+      }}
+    >
+      {/* componentes persistentes */}
+    </SgEnvironmentProvider>
+  );
+}

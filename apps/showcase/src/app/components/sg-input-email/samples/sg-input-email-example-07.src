@@ -1,0 +1,2 @@
+<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" withBorder={false} />
+<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" filled />

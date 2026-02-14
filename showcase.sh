@@ -3,7 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-pnpm -C "${ROOT_DIR}/packages/seedgrid-fe-components" build --watch &
+pnpm -C "${ROOT_DIR}/packages/seedgrid-fe-components" build
+pnpm -C "${ROOT_DIR}/packages/seedgrid-fe-components" dev &
 COMPONENTS_PID=$!
 
 cleanup() {

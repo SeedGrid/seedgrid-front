@@ -1,0 +1,1 @@
+<SgInputDate\n  id="periodo"\n  label="${t(i18n, "showcase.component.inputDate.labels.period")}"\n  minDate="2020-01-01"\n  maxDate="2030-12-31"\n/>

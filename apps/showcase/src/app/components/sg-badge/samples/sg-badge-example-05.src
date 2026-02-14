@@ -1,0 +1,29 @@
+import React from "react";
+import { SgBadge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [visible, setVisible] = React.useState(true);
+
+  return (
+    <>
+      <SgBadge
+        value="${t(i18n, "showcase.component.badge.labels.removableAuto")}"
+        removable
+        autoRemove
+        onRemove={() => alert("onRemove")}
+      />
+
+      {visible ? (
+        <SgBadge
+          value="${t(i18n, "showcase.component.badge.labels.removableManual")}"
+          removable
+          autoRemove={false}
+          onRemove={() => {
+            alert("onRemove");
+            setVisible(false);
+          }}
+        />
+      ) : null}
+    </>
+  );
+}

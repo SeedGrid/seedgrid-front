@@ -1,0 +1,32 @@
+import React from "react";
+import { SgInputText } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const nomeRef = React.useRef<HTMLInputElement | null>(null);
+  const emailRef = React.useRef<HTMLInputElement | null>(null);
+  const cpfRef = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    if (nomeRef.current) nomeRef.current.value = "${t(i18n, "showcase.component.inputText.defaults.name")}";
+    if (emailRef.current) emailRef.current.value = "${t(i18n, "showcase.component.inputText.defaults.email")}";
+    if (cpfRef.current) cpfRef.current.value = "12345678909";
+  }, []);
+
+  const handleSave = () => {
+    const payload = {
+      nome: nomeRef.current?.value ?? "",
+      email: emailRef.current?.value ?? "",
+      cpf: cpfRef.current?.value ?? ""
+    };
+    console.log("Salvar:", payload);
+  };
+
+  return (
+    <div className="space-y-3">
+      <SgInputText id="nome" label="${t(i18n, "showcase.component.inputText.labels.name")}" inputProps={{ ref: nomeRef }} />
+      <SgInputText id="email" label="${t(i18n, "showcase.component.inputText.labels.emailLabel")}" inputProps={{ ref: emailRef }} />
+      <SgInputText id="cpf" label="${t(i18n, "showcase.component.inputText.labels.cpf")}" inputProps={{ ref: cpfRef }} />
+      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputText.actions.save")}</button>
+    </div>
+  );
+}

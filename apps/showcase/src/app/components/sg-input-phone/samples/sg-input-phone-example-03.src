@@ -1,0 +1,1 @@
+<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  invalidMessage="${t(i18n, "showcase.component.inputPhone.messages.invalid")}"\n/>

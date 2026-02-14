@@ -1,0 +1,12 @@
+import React from "react";
+import { SgBadge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgBadge value="${t(i18n, "showcase.component.badge.labels.admin")}" />
+      <SgBadge value="${t(i18n, "showcase.component.badge.labels.pending")}" severity="warning" variant="soft" />
+      <SgBadge value="${t(i18n, "showcase.component.badge.labels.paid")}" severity="success" variant="solid" />
+    </>
+  );
+}

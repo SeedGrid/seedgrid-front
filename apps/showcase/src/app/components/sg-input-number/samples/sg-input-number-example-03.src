@@ -1,0 +1,21 @@
+<SgInputNumber
+  id="demo-controlled"
+  label="${t(i18n, "showcase.component.inputNumber.labels.controlled")}"
+  name="controlled"
+  control={control}
+  decimals={2}
+/>
+
+<button type="button" onClick={() => setValue("controlled", "12345.00")}>
+  ${t(i18n, "showcase.component.inputNumber.actions.setApi")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "0.00")}>
+  ${t(i18n, "showcase.component.inputNumber.actions.reset")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "")}>
+  ${t(i18n, "showcase.component.inputNumber.actions.clear")}
+</button>
+
+<p>${t(i18n, "showcase.component.inputNumber.labels.currentState")}: "{controlledValue}"</p>

@@ -1,0 +1,40 @@
+import React from "react";
+import { SgTreeView, sgTreeFromJsonWithChecked } from "@seedgrid/fe-components";
+
+const json = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users", checked: true },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report", checked: true },
+          { id: "reports.financial", label: "Financial report" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  const { nodes, checkedIds } = sgTreeFromJsonWithChecked(json);
+
+  return (
+    <SgTreeView
+      nodes={nodes}
+      checkable
+      defaultCheckedIds={checkedIds}
+      defaultExpandedIds={["root", "users"]}
+    />
+  );
+}

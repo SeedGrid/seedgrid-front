@@ -1,0 +1,63 @@
+import React from "react";
+import { SgTreeView } from "@seedgrid/fe-components";
+import { Shield, Users, FileText, BarChart3 } from "lucide-react";
+
+const nodes = [
+  {
+    id: "root",
+    label: "Admin",
+    icon: <Shield className="h-4 w-4" />,
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        icon: <Users className="h-4 w-4" />,
+        children: [
+          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
+          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+        children: [
+          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
+          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  const [checkedIds, setCheckedIds] = React.useState([]);
+  const [readAll, setReadAll] = React.useState([]);
+  const [readLeafs, setReadLeafs] = React.useState([]);
+  const treeRef = React.useRef(null);
+
+  return (
+    <>
+      <SgTreeView
+        ref={treeRef}
+        nodes={nodes}
+        searchable
+        searchPlaceholder="Search..."
+        checkable
+        checkedIds={checkedIds}
+        onCheckedChange={setCheckedIds}
+        onLeafClick={(id) => console.log(id)}
+      />
+
+      <button onClick={() => setReadAll(treeRef.current?.getCheckedIds() ?? [])}>
+        Ler todos os checkeds
+      </button>
+      <button onClick={() => setReadLeafs(treeRef.current?.getCheckedLeafIds() ?? [])}>
+        Ler apenas leafs
+      </button>
+
+      <div>checkedIds: {readAll.join(", ") || "-"}</div>
+      <div>leafIds: {readLeafs.join(", ") || "-"}</div>
+    </>
+  );
+}

@@ -10,6 +10,8 @@ import {
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -88,26 +90,7 @@ export default function SgDockLayoutPage() {
           </SgDockLayout>
         </div>
         <CodeBlock
-          code={`import React from "react";
-import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgDockLayout id="dock-main">
-      <SgDockZone zone="top">
-        <SgToolBar id="tb-top" dockZone="top" orientation="horizontal" title="${t(i18n, "showcase.component.dockLayout.labels.top")}">
-          <SgToolbarIconButton icon="T1" hint="Top 1" />
-        </SgToolBar>
-      </SgDockZone>
-
-      <SgDockZone zone="left">
-        <SgToolBar id="tb-left" dockZone="left" orientation="vertical" title="${t(i18n, "showcase.component.dockLayout.labels.left")}" collapsible collapseDirection="left">
-          <SgToolbarIconButton icon="L1" hint="Left 1" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
-  );
-}`}
+          code={loadSample("sg-dock-layout-example-01.src")}
         />
       </Section>
     </div>

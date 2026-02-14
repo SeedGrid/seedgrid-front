@@ -1,0 +1,7 @@
+<SgInputPostalCode
+  id="cep"
+  label="${t(i18n, "showcase.component.inputPostalCode.labels.BR")}"
+  hintText="00000-000"
+  name="cep"
+  register={register}
+/>

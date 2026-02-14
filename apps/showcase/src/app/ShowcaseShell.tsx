@@ -3,7 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import {
+  SgButton,
   SgToaster,
+  SgFloatActionButton,
+  SgStack,
   SgComponentsI18nProvider,
   setComponentsI18n,
   componentsMessagesPtBr,
@@ -24,7 +27,7 @@ import {
   type ShowcaseLocale
 } from "../i18n";
 import { ThemeEditor } from "./ThemeEditor";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-text", label: "SgInputText" },
@@ -118,12 +121,148 @@ function LocaleSwitcher(props: {
   );
 }
 
+type ShowcaseSectionLink = {
+  id: string;
+  label: string;
+};
+
+function ArrowUpIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  );
+}
+
+function sanitizeIdPart(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function ShowcasePageTools(props: {
+  pathname: string;
+  scrollContainerRef: React.RefObject<HTMLElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const [links, setLinks] = React.useState<ShowcaseSectionLink[]>([]);
+
+  React.useEffect(() => {
+    const content = props.contentRef.current;
+    if (!content) return;
+
+    const buildLinks = () => {
+      const sections = Array.from(content.querySelectorAll("section, [data-showcase-section]"));
+      const usedIds = new Set<string>();
+      const nextLinks: ShowcaseSectionLink[] = [];
+
+      sections.forEach((section, index) => {
+        const heading =
+          section.querySelector("h2, h3") ??
+          section.querySelector("[data-showcase-title]");
+        if (!heading) return;
+
+        const label = heading.textContent?.trim() ?? "";
+        if (!label) return;
+
+        const element = section as HTMLElement;
+        let id = element.id;
+        if (!id) {
+          const suffix = sanitizeIdPart(label) || `section-${index + 1}`;
+          id = `showcase-section-${suffix}`;
+          if (usedIds.has(id)) id = `${id}-${index + 1}`;
+          element.id = id;
+        }
+        if (usedIds.has(id)) return;
+
+        usedIds.add(id);
+        nextLinks.push({ id, label });
+      });
+
+      setLinks((prev) => {
+        if (
+          prev.length === nextLinks.length &&
+          prev.every((item, index) => item.id === nextLinks[index]?.id && item.label === nextLinks[index]?.label)
+        ) {
+          return prev;
+        }
+        return nextLinks;
+      });
+    };
+
+    buildLinks();
+    const observer = new MutationObserver(buildLinks);
+    observer.observe(content, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [props.pathname, props.contentRef]);
+
+  if (props.pathname === "/components/sg-code-block-base") {
+    return null;
+  }
+
+  return (
+    <>
+      {links.length > 0 ? (
+        <div className="mb-6 overflow-x-auto">
+          <SgStack direction="row" gap={8} className="min-w-max pb-1">
+            {links.map((link) => (
+              <SgButton
+                key={link.id}
+                appearance="outline"
+                size="sm"
+                onClick={() => {
+                  const container = props.scrollContainerRef.current;
+                  const content = props.contentRef.current;
+                  if (!container || !content) return;
+                  const target = document.getElementById(link.id);
+                  if (!target || !content.contains(target)) return;
+                  const top = target.offsetTop - 16;
+                  container.scrollTo({ top, behavior: "smooth" });
+                }}
+              >
+                {link.label}
+              </SgButton>
+            ))}
+          </SgStack>
+        </div>
+      ) : null}
+      <SgFloatActionButton
+        hint="Ir para o inicio"
+        icon={<ArrowUpIcon />}
+        position="right-bottom"
+        absolute
+        onClick={() => {
+          const container = props.scrollContainerRef.current;
+          container?.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
+    </>
+  );
+}
+
 export default function ShowcaseShell(props: {
   children: React.ReactNode;
   initialLocale?: ShowcaseLocale;
   initialMessages?: Record<string, string>;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const mainRef = React.useRef<HTMLElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const [locale, setLocale] = React.useState<ShowcaseLocale>(props.initialLocale ?? "pt-BR");
   const [messages, setMessages] = React.useState<Record<string, string>>(
     props.initialMessages ?? showcaseMessagesPtBr
@@ -264,7 +403,16 @@ export default function ShowcaseShell(props: {
               })}
             </nav>
           </aside>
-          <main className="flex-1 p-8 overflow-y-auto">{props.children}</main>
+          <main ref={mainRef} className="flex-1 overflow-y-auto p-8">
+            <div ref={contentRef} id="showcase-page-top" className="relative min-h-full">
+              <ShowcasePageTools
+                pathname={pathname}
+                scrollContainerRef={mainRef}
+                contentRef={contentRef}
+              />
+              {props.children}
+            </div>
+          </main>
           <SgToaster />
           <ThemeEditor />
         </div>

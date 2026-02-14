@@ -1,0 +1,27 @@
+import React from "react";
+import { SgClock, SgButton, SgTimeProvider } from "@seedgrid/fe-components";
+
+export default function Example({ initialServerTime }) {
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [format, setFormat] = React.useState("24h");
+
+  return (
+    <SgTimeProvider initialServerTime={initialServerTime}>
+      <SgButton onClick={() => setShowSeconds((v) => !v)}>
+        {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+      </SgButton>
+      <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+        {format === "24h" ? "24h" : "12h"}
+      </SgButton>
+
+      <SgClock
+        variant="digital"
+        digitalStyle="flip"
+        size="lg"
+        timezone="America/Sao_Paulo"
+        format={format}
+        showSeconds={showSeconds}
+      />
+    </SgTimeProvider>
+  );
+}

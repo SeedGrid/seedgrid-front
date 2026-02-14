@@ -1,0 +1,24 @@
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="up"
+  severity="secondary"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="down"
+  severity="success"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="left"
+  severity="warning"
+/>
+<SgFloatActionButton
+  actions={actions}
+  type="quarter-circle"
+  direction="right"
+  severity="danger"
+/>

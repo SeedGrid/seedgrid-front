@@ -1,0 +1,1 @@
+<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" enabled={false} />

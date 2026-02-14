@@ -1,0 +1,21 @@
+// ${t(i18n, "showcase.component.wizard.labels.validateStepComment1")}
+// ${t(i18n, "showcase.component.wizard.labels.validateStepComment2")}
+
+const [formValues, setFormValues] = React.useState({ name: "", email: "" });
+
+<SgWizard
+  validateStep={(index) => {
+    if (index === 0) {
+      return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
+    }
+    return true;
+  }}
+  onFinish={() => {}}
+>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.validateStep1")}</div>
+  </SgWizardPage>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.validateStep2")}</div>
+  </SgWizardPage>
+</SgWizard>

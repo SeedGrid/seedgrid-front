@@ -1,0 +1,8 @@
+<SgFloatActionButton severity="primary" />
+<SgFloatActionButton severity="secondary" />
+<SgFloatActionButton severity="success" />
+<SgFloatActionButton severity="info" />
+<SgFloatActionButton severity="warning" />
+<SgFloatActionButton severity="help" />
+<SgFloatActionButton severity="danger" />
+<SgFloatActionButton severity="plain" />

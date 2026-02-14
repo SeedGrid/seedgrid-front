@@ -4,6 +4,7 @@ import React from "react";
 import { SgAutocomplete, type SgAutocompleteItem } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
+import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -27,51 +28,6 @@ function CodeBlock(props: { code: string }) {
       }}
     />
   );
-}
-
-function wrapExample(label: string, code: string) {
-  return `import React from "react";
-import { useForm } from "react-hook-form";
-import { SgAutocomplete, type SgAutocompleteItem } from "@seedgrid/fe-components";
-
-type Country = {
-  id: number;
-  description: string;
-  code: string;
-};
-
-const COUNTRIES: Country[] = [
-  { id: 1, description: "Afghanistan", code: "AF" },
-  { id: 2, description: "Albania", code: "AL" },
-  { id: 3, description: "Brazil", code: "BR" },
-  { id: 4, description: "South Africa", code: "ZA" }
-];
-
-const source = async (query: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 200));
-  const q = query.toLowerCase();
-  return COUNTRIES.filter((c) => c.description.toLowerCase().includes(q));
-};
-
-const mapItem = (raw: Country): SgAutocompleteItem => ({
-  id: raw.id,
-  label: raw.description,
-  data: raw
-});
-
-export default function Example() {
-  const { control, handleSubmit } = useForm({
-    defaultValues: { country: "" }
-  });
-
-  const onSubmit = (data: { country: string }) => console.log(data);
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-${code.split("\n").map((line) => (line ? `      ${line}` : "")).join("\n")}
-    </form>
-  );
-}`.replace("label=\"\"", `label=\"${label}\"`);
 }
 
 type Country = {
@@ -155,28 +111,7 @@ export default function SgAutocompletePage() {
             <pre className="mt-2 rounded border border-border bg-foreground/5 p-2 text-xs">{JSON.stringify(selectedItem, null, 2)}</pre>
           ) : null}
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `const [selected, setSelected] = React.useState<SgAutocompleteItem | null>(null);
-
-<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  mapItem={(raw) => ({
-    id: raw.id,
-    label: raw.description
-  })}
-  minLengthForSearch={1}
-  onSelect={(item) => setSelected(item)}
-/>
-
-{selected ? (
-  <pre>{JSON.stringify(selected, null, 2)}</pre>
-) : null}`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-01.src")} />
       </Section>
 
       <Section
@@ -200,23 +135,7 @@ export default function SgAutocompletePage() {
             }}
           />
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  mapItem={mapItem}
-  renderItem={(item) => (
-    <div className="flex items-center gap-2">
-      <span>{item.data.code}</span>
-      <span>{item.label}</span>
-    </div>
-  )}
-/>`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-02.src")} />
       </Section>
 
       <Section
@@ -232,18 +151,7 @@ export default function SgAutocompletePage() {
             grouped
           />
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  mapItem={mapItem}
-  grouped
-/>`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-03.src")} />
       </Section>
 
       <Section
@@ -260,18 +168,7 @@ export default function SgAutocompletePage() {
             openOnFocus
           />
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  showDropDownButton
-  openOnFocus
-/>`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-04.src")} />
       </Section>
 
       <Section
@@ -296,19 +193,7 @@ export default function SgAutocompletePage() {
             )}
           />
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  renderFooter={(query) => (
-    <button>${t(i18n, "showcase.component.autocomplete.actions.addNew")} \\"{query}\\"</button>
-  )}
-/>`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-05.src")} />
       </Section>
 
       <Section
@@ -324,17 +209,7 @@ export default function SgAutocompletePage() {
             minLengthForSearch={3}
           />
         </div>
-        <CodeBlock code={wrapExample(
-          t(i18n, "showcase.component.autocomplete.labels.country"),
-          `<SgAutocomplete
-  id="country"
-  name="country"
-  control={control}
-  label=""
-  source={source}
-  minLengthForSearch={3}
-/>`
-        )} />
+        <CodeBlock code={loadSample("sg-autocomplete-example-06.src")} />
       </Section>
     </div>
   );

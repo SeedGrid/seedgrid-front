@@ -7,6 +7,8 @@ import { SgCurrencyEdit } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -135,17 +137,7 @@ export default function SgCurrencyEditPage() {
             {t(i18n, "showcase.component.currencyEdit.labels.currentValue", { value: basicValue })}
           </p>
         </form>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-basic"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.value")}"
-  name="total"
-  register={register}
-  currency="BRL"
-/>
-
-<button type="submit">${t(i18n, "showcase.component.currencyEdit.actions.submit")}</button>
-
-<p>${t(i18n, "showcase.component.currencyEdit.labels.currentValue", { value: watchValueSnippet })}</p>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-01.src")} />
       </Section>
 
       <Section
@@ -173,24 +165,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-required"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.required")}"
-  required
-  name="required"
-  register={register}
-  currency="BRL"
-/>
-
-<SgCurrencyEdit
-  id="demo-required-custom"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.customMessage")}"
-  required
-  requiredMessage="${t(i18n, "showcase.component.currencyEdit.messages.requiredCustom")}"
-  name="requiredCustom"
-  register={register}
-  currency="BRL"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-02.src")} />
       </Section>
 
       <Section
@@ -230,27 +205,7 @@ export default function SgCurrencyEditPage() {
             </button>
           </div>
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-controlled"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.controlled")}"
-  name="controlled"
-  control={control}
-  currency="BRL"
-/>
-
-<button type="button" onClick={() => setValue("controlled", "12345.00")}>
-  ${t(i18n, "showcase.component.currencyEdit.actions.setApi")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "0.00")}>
-  ${t(i18n, "showcase.component.currencyEdit.actions.reset")}
-</button>
-
-<button type="button" onClick={() => setValue("controlled", "")}>
-  ${t(i18n, "showcase.component.currencyEdit.actions.clear")}
-</button>
-
-<p>${t(i18n, "showcase.component.currencyEdit.labels.currentState")}: "{controlledValue}"</p>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-03.src")} />
       </Section>
 
       <Section
@@ -277,18 +232,7 @@ export default function SgCurrencyEditPage() {
             {validationMsg === null ? t(i18n, "showcase.component.currencyEdit.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-validation"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.minimum")}"
-  name="validation"
-  register={register}
-  currency="BRL"
-  validation={(v) => {
-    const n = Number(v);
-    return Number.isFinite(n) && n >= 1000 ? null : "${t(i18n, "showcase.component.currencyEdit.messages.min1000")}";
-  }}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-04.src")} />
       </Section>
 
       <Section
@@ -325,32 +269,7 @@ export default function SgCurrencyEditPage() {
             locale="pt-PT"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-brl"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.brl")}"
-  name="total"
-  register={register}
-  currency="BRL"
-  locale="pt-BR"
-/>
-
-<SgCurrencyEdit
-  id="demo-usd"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.usd")}"
-  name="usd"
-  register={register}
-  currency="USD"
-  locale="en-US"
-/>
-
-<SgCurrencyEdit
-  id="demo-eur"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.eur")}"
-  name="eur"
-  register={register}
-  currency="EUR"
-  locale="pt-PT"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-05.src")} />
       </Section>
 
       <Section
@@ -378,24 +297,7 @@ export default function SgCurrencyEditPage() {
             currencySymbolPlacement="suffix"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-no-symbol"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.noSymbol")}"
-  name="noSymbol"
-  register={register}
-  currency="BRL"
-  showCurrencySymbol={false}
-/>
-
-<SgCurrencyEdit
-  id="demo-code"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.codeSuffix")}"
-  name="codeSuffix"
-  register={register}
-  currency="USD"
-  currencyDisplay="code"
-  currencySymbolPlacement="suffix"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-06.src")} />
       </Section>
 
       <Section
@@ -445,21 +347,7 @@ export default function SgCurrencyEditPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-iconbtns"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.copyValue")}"
-  name="iconbtns"
-  register={register}
-  currency="BRL"
-  iconButtons={[
-    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")}>
-      Copiar
-    </button>,
-    <button key="alert" type="button" onClick={() => alert("ok")}>
-      Alerta
-    </button>
-  ]}
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-07.src")} />
       </Section>
 
       <Section
@@ -476,14 +364,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-no-negative"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.positiveOnly")}"
-  name="positivo"
-  register={register}
-  allowNegative={false}
-  currency="BRL"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-08.src")} />
       </Section>
 
       <Section
@@ -500,14 +381,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-no-decimals"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.quantity")}"
-  name="inteiro"
-  register={register}
-  decimals={0}
-  currency="BRL"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-09.src")} />
       </Section>
 
       <Section
@@ -525,15 +399,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-minmax"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.minMax")}"
-  name="minmax"
-  register={register}
-  minValue={10}
-  maxValue={100}
-  currency="BRL"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-10.src")} />
       </Section>
 
       <Section
@@ -550,14 +416,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-empty"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.canBeEmpty")}"
-  name="vazio"
-  register={register}
-  emptyValue="null"
-  currency="BRL"
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-11.src")} />
       </Section>
 
       <Section
@@ -584,8 +443,7 @@ export default function SgCurrencyEditPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit id="demo-noborder" label="${t(i18n, "showcase.component.currencyEdit.labels.noBorder")}" withBorder={false} name="noborder" register={register} currency="BRL" />
-<SgCurrencyEdit id="demo-filled" label="${t(i18n, "showcase.component.currencyEdit.labels.filled")}" filled name="filled" register={register} currency="BRL" />`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-12.src")} />
       </Section>
 
       <Section
@@ -630,38 +488,7 @@ export default function SgCurrencyEditPage() {
             {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
           </p>
         </div>
-        <CodeBlock code={`import React from "react";
-import { SgCurrencyEdit } from "@seedgrid/fe-components";
-
-export default function Example() {
-  const refA = React.useRef<HTMLInputElement | null>(null);
-  const refB = React.useRef<HTMLInputElement | null>(null);
-  const refC = React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    if (refA.current) refA.current.value = "1200.00";
-    if (refB.current) refB.current.value = "55.90";
-    if (refC.current) refC.current.value = "980.00";
-  }, []);
-
-  const handleSave = () => {
-    const payload = {
-      a: refA.current?.value ?? "",
-      b: refB.current?.value ?? "",
-      c: refC.current?.value ?? ""
-    };
-    console.log("Salvar:", payload);
-  };
-
-  return (
-    <div className="space-y-3">
-      <SgCurrencyEdit id="a" label="${t(i18n, "showcase.component.currencyEdit.labels.entry1")}" currency="BRL" inputProps={{ ref: refA }} />
-      <SgCurrencyEdit id="b" label="${t(i18n, "showcase.component.currencyEdit.labels.entry2")}" currency="BRL" inputProps={{ ref: refB }} />
-      <SgCurrencyEdit id="c" label="${t(i18n, "showcase.component.currencyEdit.labels.entry3")}" currency="BRL" inputProps={{ ref: refC }} />
-      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.currencyEdit.actions.save")}</button>
-    </div>
-  );
-}`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-13.src")} />
       </Section>
 
       <Section
@@ -690,17 +517,7 @@ export default function Example() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgCurrencyEdit
-  id="demo-events"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.typeAndLog")}"
-  required
-  currency="BRL"
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-14.src")} />
       </Section>
 
       <Section
@@ -726,8 +543,7 @@ export default function Example() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgCurrencyEdit id="demo-w200" label="${t(i18n, "showcase.component.currencyEdit.labels.width200")}" width={200} name="w200" register={register} currency="BRL" />
-<SgCurrencyEdit id="demo-w300" label="${t(i18n, "showcase.component.currencyEdit.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} currency="BRL" />`} />
+        <CodeBlock code={loadSample("sg-currency-edit-example-15.src")} />
       </Section>
     </div>
   );

@@ -1,0 +1,5 @@
+<SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
+  <SgPanel>Card A</SgPanel>
+  <SgPanel rowSpan={2}>Card B</SgPanel>
+  <SgPanel span={2}>Card C</SgPanel>
+</SgGrid>

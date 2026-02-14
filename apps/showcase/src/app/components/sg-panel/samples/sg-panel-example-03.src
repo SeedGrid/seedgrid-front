@@ -1,0 +1,11 @@
+<SgGrid columns={{ base: 1, md: 3 }} gap={4}>
+  <SgPanel borderStyle="none" padding={12} className="rounded-lg bg-muted/50">
+    children + borderStyle="none"
+  </SgPanel>
+  <SgPanel borderStyle="solid" padding={12} className="rounded-lg">
+    children + borderStyle="solid"
+  </SgPanel>
+  <SgPanel borderStyle="dashed" padding={12} className="rounded-lg">
+    children + borderStyle="dashed"
+  </SgPanel>
+</SgGrid>

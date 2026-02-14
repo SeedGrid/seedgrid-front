@@ -1,0 +1,1 @@
+<SgInputTextArea id="a" label="${t(i18n, "showcase.component.inputTextArea.labels.width250")}" width={250} />\n<SgInputTextArea id="b" label="${t(i18n, "showcase.component.inputTextArea.labels.width350Rounded")}" width={350} borderRadius={16} />

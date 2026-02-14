@@ -1,0 +1,1 @@
+<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  validation={(v) => (v.startsWith("123") ? "${t(i18n, "showcase.component.cpf.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>

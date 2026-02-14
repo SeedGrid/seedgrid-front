@@ -1,0 +1,10 @@
+<SgInputText
+  id="demo-events"
+  label="${t(i18n, "showcase.common.labels.typeAndLog")}"
+  required
+  onChange={(v) => log(\`onChange: "\${v}"\`)}
+  onEnter={() => log("${t(i18n, "showcase.component.inputText.logs.onEnter")}")} 
+  onExit={() => log("${t(i18n, "showcase.component.inputText.logs.onExit")}")} 
+  onClear={() => log("${t(i18n, "showcase.component.inputText.logs.onClear")}")} 
+  onValidation={(msg) => log(\`${t(i18n, "showcase.common.labels.onValidation")}: \${msg ?? "${t(i18n, "showcase.common.labels.valid")}" }\`)}
+/>

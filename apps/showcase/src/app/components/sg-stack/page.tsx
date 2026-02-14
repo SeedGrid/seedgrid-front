@@ -4,6 +4,8 @@ import React from "react";
 import { SgGrid, SgPanel, SgStack, SgButton } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <SgPanel borderStyle="solid" className="rounded-lg border-border" padding={24}>
@@ -52,17 +54,7 @@ export default function SgStackPage() {
 
         <SgStack className="mt-6">
           <SgCodeBlockBase
-            code={`import { SgStack, SgButton } from "@seedgrid/fe-components";
-
-<SgStack gap={8}>
-  <SgButton>Salvar</SgButton>
-  <SgButton appearance="outline">Cancelar</SgButton>
-</SgStack>
-
-<SgStack direction="row" justify="between" align="center">
-  <span>Titulo</span>
-  <SgButton size="sm">Confirmar</SgButton>
-</SgStack>`}
+            code={loadSample("sg-stack-example-01.src")}
           />
         </SgStack>
       </Section>

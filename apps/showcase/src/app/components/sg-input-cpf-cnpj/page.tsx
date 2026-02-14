@@ -5,6 +5,8 @@ import { SgInputCPFCNPJ } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../i18n";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -86,7 +88,7 @@ export default function SgInputCpfCnpjPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: `\"${basicValue}\"` })}
           </p>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-01.src")} />
       </Section>
 
       <Section
@@ -112,7 +114,7 @@ export default function SgInputCpfCnpjPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cpfcnpj.messages.required")}"\n  inputProps={{}}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-02.src")} />
       </Section>
 
       <Section
@@ -128,7 +130,7 @@ export default function SgInputCpfCnpjPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  invalidMessage="${t(i18n, "showcase.component.cpfcnpj.messages.invalid")}"\n  inputProps={{}}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-03.src")} />
       </Section>
 
       <Section
@@ -150,7 +152,7 @@ export default function SgInputCpfCnpjPage() {
               : `\"${validationMsg}\"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  validation={(v) => (v.startsWith("00") ? "${t(i18n, "showcase.component.cpfcnpj.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-04.src")} />
       </Section>
 
       <Section
@@ -165,7 +167,7 @@ export default function SgInputCpfCnpjPage() {
             inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.alnum")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.alnumHint")}"\n  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-05.src")} />
       </Section>
 
       <Section
@@ -173,27 +175,7 @@ export default function SgInputCpfCnpjPage() {
         description={t(i18n, "showcase.component.cpfcnpj.sections.alnumList.description")}
       >
         <CodeBlock
-          code={`// Filial 0001
-9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
-LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)
-GK.1EK.OFE/0001-58  (raw: GK1EKOFE000158)
-QF.18A.388/0001-00  (raw: QF18A388000100)
-KF.TG0.Z4P/0001-90  (raw: KFTG0Z4P000190)
-9P.UO0.1W2/0001-07  (raw: 9PUO01W2000107)
-GK.IPC.PIK/0001-52  (raw: GKIPCPIK000152)
-11.TYE.JIE/0001-68  (raw: 11TYEJIE000168)
-J1.KBD.U64/0001-09  (raw: J1KBDU64000109)
-L2.WTW.2N8/0001-06  (raw: L2WTW2N8000106)
-J0.KBM.EUL/0001-05  (raw: J0KBMEUL000105)
-ZQ.V25.1CK/0001-33  (raw: ZQV251CK000133)
-
-// Filial 0002
-B4.TMM.Q8D/0002-24  (raw: B4TMMQ8D000224)
-79.B4O.GMG/0002-50  (raw: 79B4OGMG000250)
-DN.FP6.V2Z/0002-05  (raw: DNFP6V2Z000205)
-RY.JCA.S6R/0002-68  (raw: RYJCAS6R000268)
-IW.UJ6.3BG/0002-46  (raw: IWUJ63BG000246)
-OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
+          code={loadSample("sg-input-cpf-cnpj-example-06.src")}
         />
       </Section>
 
@@ -219,7 +201,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" withBorder={false} inputProps={{}} />\n<SgInputCPFCNPJ id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" filled inputProps={{}} />`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-07.src")} />
       </Section>
 
       <Section
@@ -235,7 +217,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" clearButton={false} inputProps={{}} />`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-08.src")} />
       </Section>
 
       <Section
@@ -259,7 +241,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" width={200} inputProps={{}} />\n<SgInputCPFCNPJ id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" width={300} borderRadius={20} inputProps={{}} />`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-09.src")} />
       </Section>
 
       <Section
@@ -275,7 +257,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
             inputProps={{ defaultValue: "00.000.000/0000-00" }}
           />
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" enabled={false} inputProps={{}} />`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-10.src")} />
       </Section>
 
       <Section
@@ -303,7 +285,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputCPFCNPJ\n  id="eventos"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
+        <CodeBlock code={loadSample("sg-input-cpf-cnpj-example-11.src")} />
       </Section>
     </div>
   );

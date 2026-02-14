@@ -1,0 +1,42 @@
+import React from "react";
+import { SgButton, SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgCard
+        title="${t(i18n, "showcase.component.card.labels.collapsibleTitle")}"
+        description="${t(i18n, "showcase.component.card.labels.collapsibleDescription")}"
+        collapsible
+        defaultOpen={false}
+        footer={<SgButton size="sm">${t(i18n, "showcase.component.card.labels.action")}</SgButton>}
+      >
+        <div>${t(i18n, "showcase.component.card.labels.collapsibleContent")}</div>
+      </SgCard>
+
+      <SgCard
+        title="${t(i18n, "showcase.component.card.labels.collapsibleOpenTitle")}"
+        description="${t(i18n, "showcase.component.card.labels.collapsibleOpenDescription")}"
+        collapsible
+        defaultOpen
+        footer={
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterLeft")}</span>
+            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterRight")}</span>
+          </div>
+        }
+      >
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenLine1")}</span>
+            <span className="font-semibold">128</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenLine2")}</span>
+            <span className="font-semibold">R$ 9.820</span>
+          </div>
+        </div>
+      </SgCard>
+    </>
+  );
+}

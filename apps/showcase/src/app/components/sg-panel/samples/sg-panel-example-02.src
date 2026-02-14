@@ -1,0 +1,14 @@
+<SgGrid columns={{ base: 1, md: 4 }} gap={8} rowHeight={90} dense>
+  <SgPanel padding={10} className="rounded-md">Item 1</SgPanel>
+  <SgPanel span={2} padding={10} className="rounded-md">
+    span={2}
+  </SgPanel>
+  <SgPanel rowSpan={2} padding={10} className="rounded-md">
+    rowSpan={2}
+  </SgPanel>
+  <SgPanel padding={10} className="rounded-md">Item 4</SgPanel>
+  <SgPanel padding={10} className="rounded-md">Item 5</SgPanel>
+  <SgPanel span={2} rowSpan={2} padding={10} className="rounded-md">
+    span={2} + rowSpan={2}
+  </SgPanel>
+</SgGrid>

@@ -1,0 +1,1 @@
+<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.document")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.documentHint")}"\n  validation={(v) => (v.startsWith("00") ? "${t(i18n, "showcase.component.cpfcnpj.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>

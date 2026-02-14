@@ -1,0 +1,2 @@
+<SgInputPostalCode id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="00000-000" width={200} name="w200" register={register} />
+<SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="00000-000" width={300} borderRadius={20} name="w300" register={register} />

@@ -1,0 +1,12 @@
+<SgInputNumber
+  id="demo-validation"
+  label="${t(i18n, "showcase.component.inputNumber.labels.evenOnly")}"
+  name="validation"
+  register={register}
+  decimals={0}
+  validation={(v) => {
+    const n = Number(v);
+    return Number.isFinite(n) && n % 2 === 0 ? null : "${t(i18n, "showcase.component.inputNumber.messages.evenOnly")}";
+  }}
+  onValidation={(msg) => console.log(msg)}
+/>

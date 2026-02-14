@@ -1,0 +1,1 @@
+<SgInputCPFCNPJ id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cpfcnpj.labels.document")}" clearButton={false} inputProps={{}} />

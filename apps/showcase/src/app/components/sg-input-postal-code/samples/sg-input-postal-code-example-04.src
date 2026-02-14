@@ -1,0 +1,21 @@
+<SgInputPostalCode
+  id="demo-controlled"
+  label="${t(i18n, "showcase.component.inputPostalCode.labels.controlled")}"
+  hintText="00000-000"
+  name="controlled"
+  control={control}
+/>
+
+<button type="button" onClick={() => setValue("controlled", "04538-132")}>
+  ${t(i18n, "showcase.component.inputPostalCode.actions.setApi")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "20040-020")}>
+  ${t(i18n, "showcase.component.inputPostalCode.actions.setOther")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "")}>
+  ${t(i18n, "showcase.component.inputPostalCode.actions.clear")}
+</button>
+
+<p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>

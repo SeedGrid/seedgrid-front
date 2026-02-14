@@ -1,0 +1,32 @@
+import React from "react";
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const refA = React.useRef<HTMLInputElement | null>(null);
+  const refB = React.useRef<HTMLInputElement | null>(null);
+  const refC = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    if (refA.current) refA.current.value = "1200.00";
+    if (refB.current) refB.current.value = "55.90";
+    if (refC.current) refC.current.value = "980.00";
+  }, []);
+
+  const handleSave = () => {
+    const payload = {
+      a: refA.current?.value ?? "",
+      b: refB.current?.value ?? "",
+      c: refC.current?.value ?? ""
+    };
+    console.log("Salvar:", payload);
+  };
+
+  return (
+    <div className="space-y-3">
+      <SgInputNumber id="a" label="${t(i18n, "showcase.component.inputNumber.labels.entry1")}" decimals={2} inputProps={{ ref: refA }} />
+      <SgInputNumber id="b" label="${t(i18n, "showcase.component.inputNumber.labels.entry2")}" decimals={2} inputProps={{ ref: refB }} />
+      <SgInputNumber id="c" label="${t(i18n, "showcase.component.inputNumber.labels.entry3")}" decimals={2} inputProps={{ ref: refC }} />
+      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputNumber.actions.save")}</button>
+    </div>
+  );
+}

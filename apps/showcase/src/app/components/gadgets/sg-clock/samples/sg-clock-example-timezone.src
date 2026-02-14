@@ -1,0 +1,28 @@
+"use client";
+
+import React from "react";
+import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
+
+export default function Example({ initialServerTime }) {
+  const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
+  const [format, setFormat] = React.useState("24h");
+
+  return (
+    <SgTimeProvider initialServerTime={initialServerTime}>
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</SgButton>
+        <SgButton onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</SgButton>
+        <SgButton onClick={() => setTimezone("America/New_York")}>New York</SgButton>
+        <SgButton onClick={() => setTimezone("Asia/Tokyo")}>Tokyo</SgButton>
+        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+          {format === "24h" ? "24h" : "12h"}
+        </SgButton>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        <SgClock variant="digital" size="lg" timezone={timezone} format={format} showSeconds />
+        <SgClock variant="analog" size={220} themeId="seedgrid" timezone={timezone} showSeconds={false} />
+      </div>
+    </SgTimeProvider>
+  );
+}

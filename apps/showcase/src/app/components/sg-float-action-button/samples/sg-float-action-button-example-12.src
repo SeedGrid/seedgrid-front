@@ -1,0 +1,3 @@
+<SgFloatActionButton color="#8b5cf6" icon={<Star />} />
+<SgFloatActionButton color="#ec4899" icon={<Heart />} />
+<SgFloatActionButton color="#f97316" icon={<Settings />} />

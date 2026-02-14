@@ -1,0 +1,18 @@
+<SgInputNumber
+  id="demo-required"
+  label="${t(i18n, "showcase.component.inputNumber.labels.required")}"
+  required
+  name="required"
+  register={register}
+  decimals={2}
+/>
+
+<SgInputNumber
+  id="demo-required-custom"
+  label="${t(i18n, "showcase.component.inputNumber.labels.customMessage")}"
+  required
+  requiredMessage="${t(i18n, "showcase.component.inputNumber.messages.requiredCustom")}"
+  name="requiredCustom"
+  register={register}
+  decimals={2}
+/>

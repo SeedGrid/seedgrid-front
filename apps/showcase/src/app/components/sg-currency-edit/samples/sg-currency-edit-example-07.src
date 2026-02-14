@@ -1,0 +1,15 @@
+<SgCurrencyEdit
+  id="demo-iconbtns"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.copyValue")}"
+  name="iconbtns"
+  register={register}
+  currency="BRL"
+  iconButtons={[
+    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")}>
+      Copiar
+    </button>,
+    <button key="alert" type="button" onClick={() => alert("ok")}>
+      Alerta
+    </button>
+  ]}
+/>

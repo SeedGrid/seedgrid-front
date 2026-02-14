@@ -1,0 +1,4 @@
+<SgFloatActionButton elevation="none" />
+<SgFloatActionButton elevation="sm" />
+<SgFloatActionButton elevation="md" />
+<SgFloatActionButton elevation="lg" />

@@ -1,0 +1,8 @@
+<SgCurrencyEdit
+  id="demo-no-decimals"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.quantity")}"
+  name="inteiro"
+  register={register}
+  decimals={0}
+  currency="BRL"
+/>

@@ -1,0 +1,21 @@
+<SgCurrencyEdit
+  id="demo-controlled"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.controlled")}"
+  name="controlled"
+  control={control}
+  currency="BRL"
+/>
+
+<button type="button" onClick={() => setValue("controlled", "12345.00")}>
+  ${t(i18n, "showcase.component.currencyEdit.actions.setApi")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "0.00")}>
+  ${t(i18n, "showcase.component.currencyEdit.actions.reset")}
+</button>
+
+<button type="button" onClick={() => setValue("controlled", "")}>
+  ${t(i18n, "showcase.component.currencyEdit.actions.clear")}
+</button>
+
+<p>${t(i18n, "showcase.component.currencyEdit.labels.currentState")}: "{controlledValue}"</p>

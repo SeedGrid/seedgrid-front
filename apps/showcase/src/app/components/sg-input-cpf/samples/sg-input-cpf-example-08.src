@@ -1,0 +1,1 @@
+<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={200} inputProps={{}} />\n<SgInputCPF id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={300} borderRadius={20} inputProps={{}} />

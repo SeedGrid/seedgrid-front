@@ -1,0 +1,10 @@
+<SgSplitButton
+  label="Actions"
+  severity="primary"
+  onClick={() => {}}
+  items={[
+    { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+    { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {}, disabled: true },
+    { label: "Homepage", icon: <Home className="size-4" />, onClick: () => {} },
+  ]}
+/>

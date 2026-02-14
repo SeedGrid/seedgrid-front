@@ -1,0 +1,16 @@
+<SgWizard
+  onBeforeNext={async () => {
+    // ${t(i18n, "showcase.component.wizard.labels.beforeNextComment")}\n    await new Promise((r) => setTimeout(r, 600));
+    return true; // ${t(i18n, "showcase.component.wizard.labels.beforeNextReturn")}
+  }}
+  onFinish={async () => {
+    await new Promise((r) => setTimeout(r, 400));
+  }}
+>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep1")}</div>
+  </SgWizardPage>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep2")}</div>
+  </SgWizardPage>
+</SgWizard>

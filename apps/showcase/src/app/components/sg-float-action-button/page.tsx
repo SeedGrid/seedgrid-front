@@ -5,6 +5,8 @@ import { SgFloatActionButton, type SgFABAction } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -87,14 +89,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">8 positions</span>
           </div>
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton position="left-top" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-top" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-top" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-center" size="sm" severity="warning" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-center" size="sm" severity="danger" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-bottom" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-bottom" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-01.src")} />
       </Section>
 
       {/* â”€â”€ Variants â”€â”€ */}
@@ -110,14 +105,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton severity="primary" />
-<SgFloatActionButton severity="secondary" />
-<SgFloatActionButton severity="success" />
-<SgFloatActionButton severity="info" />
-<SgFloatActionButton severity="warning" />
-<SgFloatActionButton severity="help" />
-<SgFloatActionButton severity="danger" />
-<SgFloatActionButton severity="plain" />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-02.src")} />
       </Section>
 
       {/* â”€â”€ Shapes & Sizes â”€â”€ */}
@@ -143,9 +131,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton shape="circle" size="sm" />
-<SgFloatActionButton shape="rounded" size="md" />
-<SgFloatActionButton shape="square" size="lg" />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-03.src")} />
       </Section>
 
       {/* â”€â”€ Elevation â”€â”€ */}
@@ -161,10 +147,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton elevation="none" />
-<SgFloatActionButton elevation="sm" />
-<SgFloatActionButton elevation="md" />
-<SgFloatActionButton elevation="lg" />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-04.src")} />
       </Section>
 
       {/* â”€â”€ Hint â”€â”€ */}
@@ -186,12 +169,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  hint="Add new"
-  hintPosition="top"
-  hintDelay={300}
-  onClick={handleClick}
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-05.src")} />
       </Section>
 
       {/* â”€â”€ Actions - Linear Layout â”€â”€ */}
@@ -217,16 +195,7 @@ export default function SgFloatActionButtonPage() {
             <SgFloatActionButton absolute position="left-center" actions={actionsNoLabel} type="linear" direction="right" />
           </DemoBox>
         </div>
-        <CodeBlock code={`const actions = [
-  { icon: <UserPlus />, label: "New user", onClick: () => {} },
-  { icon: <FilePlus />, label: "New file", onClick: () => {} },
-  { icon: <FolderPlus />, label: "New folder", onClick: () => {} },
-];
-
-<SgFloatActionButton actions={actions} type="linear" direction="up" />
-<SgFloatActionButton actions={actions} type="linear" direction="down" />
-<SgFloatActionButton actions={actions} type="linear" direction="left" />
-<SgFloatActionButton actions={actions} type="linear" direction="right" />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-06.src")} />
       </Section>
 
       {/* â”€â”€ Circle Layout â”€â”€ */}
@@ -245,12 +214,7 @@ export default function SgFloatActionButtonPage() {
             severity="secondary"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="circle"
-  radius={120}
-  severity="secondary"
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-07.src")} />
       </Section>
 
       {/* â”€â”€ Semi-Circle Layout â”€â”€ */}
@@ -303,29 +267,7 @@ export default function SgFloatActionButtonPage() {
             />
           </DemoBox>
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="up"
-  severity="success"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="down"
-  severity="warning"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="left"
-  severity="danger"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="right"
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-08.src")} />
       </Section>
 
       {/* â”€â”€ Quarter-Circle Layout â”€â”€ */}
@@ -379,30 +321,7 @@ export default function SgFloatActionButtonPage() {
             />
           </DemoBox>
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="up"
-  severity="secondary"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="down"
-  severity="success"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="left"
-  severity="warning"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="right"
-  severity="danger"
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-09.src")} />
       </Section>
 
       {/* â”€â”€ Active Icon â”€â”€ */}
@@ -422,13 +341,7 @@ export default function SgFloatActionButtonPage() {
             severity="secondary"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  activeIcon={<Settings />}
-  type="semi-circle"
-  direction="up"
-  severity="secondary"
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-10.src")} />
       </Section>
 
       {/* â”€â”€ Animations â”€â”€ */}
@@ -454,11 +367,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           )})}
         </div>
-        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="fade" animationOn="mount" severity="danger" />
-<SgFloatActionButton animation="slide" animationOn="mount" severity="danger" />
-<SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-11.src")} />
       </Section>
 
       {/* â”€â”€ Custom Color â”€â”€ */}
@@ -480,9 +389,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">#f97316</span>
           </div>
         </div>
-        <CodeBlock code={`<SgFloatActionButton color="#8b5cf6" icon={<Star />} />
-<SgFloatActionButton color="#ec4899" icon={<Heart />} />
-<SgFloatActionButton color="#f97316" icon={<Settings />} />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-12.src")} />
       </Section>
 
       {/* â”€â”€ Disabled & Loading â”€â”€ */}
@@ -500,8 +407,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">loading</span>
           </div>
         </div>
-        <CodeBlock code={`<SgFloatActionButton disabled />
-<SgFloatActionButton loading />`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-13.src")} />
       </Section>
 
       {/* â”€â”€ Drag & Drop â”€â”€ */}
@@ -521,16 +427,7 @@ export default function SgFloatActionButtonPage() {
             position="right-bottom"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  enableDragDrop
-  dragId="showcase-fab-drag"
-  actions={actions}
-  type="linear"
-  direction="up"
-  severity="info"
-  absolute
-  position="right-bottom"
-/>`} />
+        <CodeBlock code={loadSample("sg-float-action-button-example-14.src")} />
       </Section>
     </div>
   );

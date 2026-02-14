@@ -1,0 +1,9 @@
+import { SgInputPostalCode } from "@seedgrid/fe-components";
+
+<SgInputPostalCode id="br" country="BR" label="CEP (Brasil)" hintText="00000-000" />
+<SgInputPostalCode id="pt" country="PT" label="Codigo postal (Portugal)" hintText="0000-000" />
+<SgInputPostalCode id="us" country="US" label="ZIP code (USA)" hintText="00000" />
+<SgInputPostalCode id="es" country="ES" label="Codigo postal (Espanha)" hintText="00000" />
+<SgInputPostalCode id="uy" country="UY" label="Codigo postal (Uruguai)" hintText="00000" />
+<SgInputPostalCode id="ar" country="AR" label="Codigo postal (Argentina)" hintText="A0000AAA" />
+<SgInputPostalCode id="py" country="PY" label="Codigo postal (Paraguai)" hintText="000000" />

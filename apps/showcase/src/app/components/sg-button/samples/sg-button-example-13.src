@@ -1,0 +1,4 @@
+<SgButton loading>Processing...</SgButton>
+<SgButton severity="success" loading>Saving...</SgButton>
+<SgButton severity="danger" loading leftIcon={<X className="size-4" />}>Deleting...</SgButton>
+<SgButton shape="rounded" loading leftIcon={<Check className="size-4" />} />

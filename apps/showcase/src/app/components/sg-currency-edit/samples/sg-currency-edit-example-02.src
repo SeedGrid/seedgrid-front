@@ -1,0 +1,18 @@
+<SgCurrencyEdit
+  id="demo-required"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.required")}"
+  required
+  name="required"
+  register={register}
+  currency="BRL"
+/>
+
+<SgCurrencyEdit
+  id="demo-required-custom"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.customMessage")}"
+  required
+  requiredMessage="${t(i18n, "showcase.component.currencyEdit.messages.requiredCustom")}"
+  name="requiredCustom"
+  register={register}
+  currency="BRL"
+/>

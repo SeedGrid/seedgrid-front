@@ -1,0 +1,41 @@
+<SgGrid columns={{ base: 1, md: 2 }} gap={4}>
+  <SgPanel scrollable padding={10} className="h-48 rounded-lg">
+    <SgStack gap={6}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <SgPanel key={i} borderStyle="solid" className="rounded bg-muted/30" padding={8}>
+          scrollable=true - linha {i + 1}
+        </SgPanel>
+      ))}
+    </SgStack>
+  </SgPanel>
+
+  <SgPanel scrollable="auto" padding={10} className="h-48 rounded-lg">
+    <SgStack gap={6}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <SgPanel key={i} borderStyle="solid" className="rounded bg-muted/30" padding={8}>
+          scrollable="auto" - linha {i + 1}
+        </SgPanel>
+      ))}
+    </SgStack>
+  </SgPanel>
+
+  <SgPanel scrollable="y" padding={10} className="h-48 rounded-lg">
+    <SgStack gap={6}>
+      {Array.from({ length: 15 }).map((_, i) => (
+        <SgPanel key={i} borderStyle="solid" className="rounded bg-muted/30" padding={8}>
+          Item vertical {i + 1}
+        </SgPanel>
+      ))}
+    </SgStack>
+  </SgPanel>
+
+  <SgPanel scrollable="x" scrollbarGutter padding={10} className="h-48 rounded-lg">
+    <SgStack direction="row" gap={8} className="w-[960px]">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <SgPanel key={i} borderStyle="solid" className="h-24 w-24 rounded bg-muted/30">
+          <SgStack className="h-full" justify="center" align="center">Box {i + 1}</SgStack>
+        </SgPanel>
+      ))}
+    </SgStack>
+  </SgPanel>
+</SgGrid>

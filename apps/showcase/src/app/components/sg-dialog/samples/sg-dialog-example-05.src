@@ -1,0 +1,20 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.openAutoClose")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        autoCloseMs={3000}
+        title="${t(i18n, "showcase.component.dialog.labels.autoCloseTitle")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.autoCloseSubtitle")}"
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.autoCloseBody")}</div>
+      </SgDialog>
+    </>
+  );
+}

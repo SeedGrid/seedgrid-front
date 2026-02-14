@@ -1,0 +1,15 @@
+<SgInputNumber
+  id="demo-iconbtns"
+  label="${t(i18n, "showcase.component.inputNumber.labels.copyNumber")}"
+  name="iconbtns"
+  register={register}
+  decimals={2}
+  iconButtons={[
+    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")}>
+      Copiar
+    </button>,
+    <button key="alert" type="button" onClick={() => alert("ok")}>
+      Alerta
+    </button>
+  ]}
+/>

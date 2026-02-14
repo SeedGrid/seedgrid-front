@@ -5,6 +5,8 @@ import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
+import { loadSample } from "./samples/loadSample";
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="rounded-lg border border-border p-6">
@@ -44,22 +46,7 @@ export default function SgBadgeOverlayPage() {
           </span>
         </SgBadgeOverlay>
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadgeOverlay badge={<SgBadge value={7} severity="danger" size="xs" />}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">ðŸ””</span>
-      </SgBadgeOverlay>
-
-      <SgBadgeOverlay badge={<SgBadge dot severity="success" />}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">âœ…</span>
-      </SgBadgeOverlay>
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-overlay-example-01.src")}
         />
       </Section>
 
@@ -80,27 +67,7 @@ export default function Example() {
           <span className="inline-flex size-12 items-center justify-center rounded-lg border border-border bg-background text-xs">BR</span>
         </SgBadgeOverlay>
         <CodeBlock
-          code={`import React from "react";
-import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadgeOverlay placement="top-left" badge={<SgBadge value="TL" size="xs" variant="soft" />}>
-        <span className="inline-flex size-12 items-center justify-center rounded-lg border">TL</span>
-      </SgBadgeOverlay>
-      <SgBadgeOverlay placement="top-right" badge={<SgBadge value="TR" size="xs" variant="soft" />}>
-        <span className="inline-flex size-12 items-center justify-center rounded-lg border">TR</span>
-      </SgBadgeOverlay>
-      <SgBadgeOverlay placement="bottom-left" badge={<SgBadge value="BL" size="xs" variant="soft" />}>
-        <span className="inline-flex size-12 items-center justify-center rounded-lg border">BL</span>
-      </SgBadgeOverlay>
-      <SgBadgeOverlay placement="bottom-right" badge={<SgBadge value="BR" size="xs" variant="soft" />}>
-        <span className="inline-flex size-12 items-center justify-center rounded-lg border">BR</span>
-      </SgBadgeOverlay>
-    </>
-  );
-}`}
+          code={loadSample("sg-badge-overlay-example-02.src")}
         />
       </Section>
     </div>

@@ -1,0 +1,17 @@
+<SgInputPostalCode
+  id="demo-disabled"
+  label="${t(i18n, "showcase.common.labels.disabled")}"
+  hintText="00000-000"
+  enabled={false}
+  name="disabled"
+  register={register}
+/>
+
+<SgInputPostalCode
+  id="demo-readonly"
+  label="${t(i18n, "showcase.component.inputPostalCode.labels.readonly")}"
+  hintText="00000-000"
+  readOnly
+  name="readonly"
+  register={register}
+/>

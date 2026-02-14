@@ -1,0 +1,12 @@
+<SgSplitButton
+  label="File"
+  leftIcon={<FileText className="size-4" />}
+  severity="secondary"
+  onClick={() => console.log("File")}
+  items={[
+    { label: "Copy", icon: <Copy className="size-4" />, onClick: () => {} },
+    { label: "Print", icon: <Printer className="size-4" />, onClick: () => {} },
+    { separator: true, label: "Export as PDF", icon: <FileText className="size-4" />, onClick: () => {} },
+    { label: "Share via email", icon: <Mail className="size-4" />, onClick: () => {} },
+  ]}
+/>

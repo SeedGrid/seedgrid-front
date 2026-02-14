@@ -1,0 +1,8 @@
+<SgCurrencyEdit
+  id="demo-empty"
+  label="${t(i18n, "showcase.component.currencyEdit.labels.canBeEmpty")}"
+  name="vazio"
+  register={register}
+  emptyValue="null"
+  currency="BRL"
+/>

@@ -1,0 +1,1 @@
+<SgInputTextArea\n  id="min"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min10")}"\n  minLength={10}\n  showCharCounter\n/>

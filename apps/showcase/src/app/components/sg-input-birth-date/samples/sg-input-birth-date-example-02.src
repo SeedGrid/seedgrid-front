@@ -1,0 +1,7 @@
+<SgInputBirthDate
+  id="nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
+  minAge={18}
+  required
+  requiredMessage="${t(i18n, "showcase.component.inputBirthDate.messages.required")}"
+/>

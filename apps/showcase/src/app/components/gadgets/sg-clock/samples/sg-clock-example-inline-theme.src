@@ -1,0 +1,25 @@
+import { SgClock, SgTimeProvider } from "@seedgrid/fe-components";
+
+export default function Example({ initialServerTime }) {
+  return (
+    <SgTimeProvider initialServerTime={initialServerTime}>
+      <SgClock
+        variant="analog"
+        size={260}
+        showSeconds
+        secondHandMode="smooth"
+        theme={{
+          id: "inline-theme",
+          label: "Inline Theme",
+          render: () => (
+            <>
+              <circle cx="50" cy="50" r="48" />
+              <circle cx="50" cy="50" r="47" />
+              <text x="50" y="56" textAnchor="middle">SeedGrid</text>
+            </>
+          )
+        }}
+      />
+    </SgTimeProvider>
+  );
+}
