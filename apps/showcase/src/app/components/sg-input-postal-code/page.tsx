@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { SgInputPostalCode, type ViaCepResponse, type PostalCodeCountry } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -20,7 +20,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
+  return <SgCodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -130,7 +130,7 @@ export default function SgInputPostalCodePage() {
         </p>
       </div>
 
-      {/* ── Basico ── */}
+      {/* â”€â”€ Basico â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.basic.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.basic.description")}
@@ -156,7 +156,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Paises ── */}
+      {/* â”€â”€ Paises â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.countries.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.countries.description")}
@@ -183,7 +183,7 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="py" country="PY" label="Codigo postal (Paraguai)" hintText="000000" />`} />
       </Section>
 
-      {/* ── Required ── */}
+      {/* â”€â”€ Required â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.required.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.required.description")}
@@ -213,7 +213,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Controlado (setValue / clear) ── */}
+      {/* â”€â”€ Controlado (setValue / clear) â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.controlled.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.controlled.description")}
@@ -274,7 +274,7 @@ export default function SgInputPostalCodePage() {
 <p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>`} />
       </Section>
 
-      {/* ── Validacao customizada ── */}
+      {/* â”€â”€ Validacao customizada â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.validation.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.validation.description")}
@@ -302,7 +302,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── ViaCEP (BR only) ── */}
+      {/* â”€â”€ ViaCEP (BR only) â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.viacep.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.viacep.description")}
@@ -338,7 +338,7 @@ export default function SgInputPostalCodePage() {
         </p>
       </Section>
 
-      {/* ── Icone prefixo ── */}
+      {/* â”€â”€ Icone prefixo â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.prefixIcon.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.prefixIcon.description")}
@@ -367,7 +367,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Prefixo e sufixo ── */}
+      {/* â”€â”€ Prefixo e sufixo â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.prefixSuffix.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.prefixSuffix.description")}
@@ -411,7 +411,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Botoes de icone ── */}
+      {/* â”€â”€ Botoes de icone â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.iconButtons.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.iconButtons.description")}
@@ -482,7 +482,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Variacoes visuais ── */}
+      {/* â”€â”€ Variacoes visuais â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
@@ -511,7 +511,7 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="00000-000" filled name="filled" register={register} />`} />
       </Section>
 
-      {/* ── Largura e borda ── */}
+      {/* â”€â”€ Largura e borda â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
@@ -539,7 +539,7 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="00000-000" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
-      {/* ── Desabilitado e somente leitura ── */}
+      {/* â”€â”€ Desabilitado e somente leitura â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.disabledReadonly.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.disabledReadonly.description")}
@@ -583,7 +583,7 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Standalone Form ── */}
+      {/* â”€â”€ Standalone Form â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputPostalCode.sections.standalone.title")}
         description={t(i18n, "showcase.component.inputPostalCode.sections.standalone.description")}
@@ -660,7 +660,7 @@ export default function Example() {
 }`} />
       </Section>
 
-      {/* ── Eventos standalone ── */}
+      {/* â”€â”€ Eventos standalone â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
@@ -700,3 +700,5 @@ export default function Example() {
     </div>
   );
 }
+
+

@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgInputTextArea } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -18,7 +18,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
+  return <SgCodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -435,3 +435,5 @@ export default function SgInputTextAreaPage() {
     </div>
   );
 }
+
+

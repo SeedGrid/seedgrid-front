@@ -2,7 +2,7 @@
 
 import React from "react";
 import { SgAutocomplete, type SgAutocompleteItem } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -16,7 +16,17 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code} />;
+  return (
+    <SgCodeBlockBase
+      code={props.code}
+      interactive
+      codeContract="appFile"
+      title="Autocomplete Playground"
+      dependencies={{
+        "react-hook-form": "^7.0.0"
+      }}
+    />
+  );
 }
 
 function wrapExample(label: string, code: string) {
@@ -54,7 +64,7 @@ export default function Example() {
     defaultValues: { country: "" }
   });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data: { country: string }) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -329,3 +339,5 @@ export default function SgAutocompletePage() {
     </div>
   );
 }
+
+

@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgButton, SgDialog } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -16,7 +16,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code} />;
+  return <SgCodeBlockBase code={props.code} />;
 }
 
 export default function SgDialogPage() {
@@ -46,7 +46,7 @@ export default function SgDialogPage() {
           onOpenChange={setOpenBasic}
           title={t(i18n, "showcase.component.dialog.labels.title")}
           subtitle={t(i18n, "showcase.component.dialog.labels.subtitle")}
-          leading={<span className="text-primary">◎</span>}
+          leading={<span className="text-primary">â—Ž</span>}
           trailing={<span className="text-xs text-muted-foreground">ID: 428</span>}
           footer={
             <>
@@ -82,7 +82,7 @@ export default function Example() {
         onOpenChange={setOpen}
         title="${t(i18n, "showcase.component.dialog.labels.title")}"
         subtitle="${t(i18n, "showcase.component.dialog.labels.subtitle")}"
-        leading={<span>◎</span>}
+        leading={<span>â—Ž</span>}
         trailing={<span>ID: 428</span>}
         footer={
           <>
@@ -321,3 +321,5 @@ export default function Example() {
     </div>
   );
 }
+
+

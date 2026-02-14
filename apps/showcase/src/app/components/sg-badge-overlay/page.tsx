@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -16,7 +16,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code} />;
+  return <SgCodeBlockBase code={props.code} />;
 }
 
 export default function SgBadgeOverlayPage() {
@@ -35,12 +35,12 @@ export default function SgBadgeOverlayPage() {
       >
         <SgBadgeOverlay badge={<SgBadge value={7} severity="danger" size="xs" />}>
           <span className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-background text-sm">
-            🔔
+            ðŸ””
           </span>
         </SgBadgeOverlay>
         <SgBadgeOverlay badge={<SgBadge dot severity="success" />}>
           <span className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-background text-sm">
-            ✅
+            âœ…
           </span>
         </SgBadgeOverlay>
         <CodeBlock
@@ -51,11 +51,11 @@ export default function Example() {
   return (
     <>
       <SgBadgeOverlay badge={<SgBadge value={7} severity="danger" size="xs" />}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">🔔</span>
+        <span className="inline-flex size-10 items-center justify-center rounded-lg border">ðŸ””</span>
       </SgBadgeOverlay>
 
       <SgBadgeOverlay badge={<SgBadge dot severity="success" />}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">✅</span>
+        <span className="inline-flex size-10 items-center justify-center rounded-lg border">âœ…</span>
       </SgBadgeOverlay>
     </>
   );
@@ -106,3 +106,5 @@ export default function Example() {
     </div>
   );
 }
+
+

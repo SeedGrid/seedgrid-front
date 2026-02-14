@@ -2,7 +2,7 @@
 
 import React from "react";
 import { SgScreen, SgMainPanel, SgPanel, SgStack } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -136,9 +136,11 @@ export default function SgScreenPage() {
         </SgPanel>
 
         <SgStack className="mt-6">
-          <CodeBlockBase code={fullExampleCode} />
+          <SgCodeBlockBase code={fullExampleCode} />
         </SgStack>
       </Section>
     </SgStack>
   );
 }
+
+

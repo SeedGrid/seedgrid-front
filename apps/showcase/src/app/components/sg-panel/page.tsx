@@ -2,7 +2,7 @@
 
 import React from "react";
 import { SgGrid, SgMainPanel, SgPanel, SgStack } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -78,7 +78,7 @@ export default function SgPanelPage() {
         </SgPanel>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`<SgPanel className="h-[430px] rounded-xl bg-muted/30" padding={12}>
   <SgMainPanel gap={8} className="h-full w-full rounded-lg bg-background p-3">
     <SgPanel align="top" height={12} padding={10} className="rounded-md">
@@ -147,7 +147,7 @@ export default function SgPanelPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`<SgGrid columns={{ base: 1, md: 4 }} gap={8} rowHeight={90} dense>
   <SgPanel padding={10} className="rounded-md">Item 1</SgPanel>
   <SgPanel span={2} padding={10} className="rounded-md">
@@ -180,7 +180,7 @@ export default function SgPanelPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`<SgGrid columns={{ base: 1, md: 3 }} gap={4}>
   <SgPanel borderStyle="none" padding={12} className="rounded-lg bg-muted/50">
     children + borderStyle="none"
@@ -247,7 +247,7 @@ export default function SgPanelPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`<SgGrid columns={{ base: 1, md: 2 }} gap={4}>
   <SgPanel scrollable padding={10} className="h-48 rounded-lg">
     <SgStack gap={6}>
@@ -294,7 +294,7 @@ export default function SgPanelPage() {
       </Section>
 
       <Section title="Snippet com todas as props" description="Resumo rapido de uso cobrindo toda a API do SgPanel.">
-        <CodeBlockBase
+        <SgCodeBlockBase
           code={`import { SgMainPanel, SgGrid, SgPanel } from "@seedgrid/fe-components";
 
 // Props de dock/layout
@@ -320,3 +320,5 @@ export default function SgPanelPage() {
     </SgStack>
   );
 }
+
+

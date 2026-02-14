@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Save, RefreshCw, Trash2, Home, Plus, Download, Upload, Copy, Printer, Share2, Mail, FileText } from "lucide-react";
 import { SgSplitButton } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
 
@@ -22,7 +22,7 @@ function Row(props: { children: React.ReactNode }) {
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code.trim()} />;
+  return <SgCodeBlockBase code={props.code.trim()} />;
 }
 
 function capitalize(s: string) {
@@ -52,7 +52,7 @@ export default function SgSplitButtonShowcase() {
         </p>
       </div>
 
-      {/* ── Basic ── */}
+      {/* â”€â”€ Basic â”€â”€ */}
       <Section title="Basic" description="Split button com acao principal e dropdown de itens.">
         <Row>
           <SgSplitButton
@@ -77,7 +77,7 @@ import { SgSplitButton } from "@seedgrid/fe-components";
 />`} />
       </Section>
 
-      {/* ── Severities ── */}
+      {/* â”€â”€ Severities â”€â”€ */}
       <Section title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -102,7 +102,7 @@ const items = [
 <SgSplitButton label="Danger" severity="danger" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Outlined ── */}
+      {/* â”€â”€ Outlined â”€â”€ */}
       <Section title="Outlined" description='appearance="outline" - bordas coloridas sem preenchimento.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -120,7 +120,7 @@ const items = [
 <SgSplitButton label="Success" severity="success" appearance="outline" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Ghost ── */}
+      {/* â”€â”€ Ghost â”€â”€ */}
       <Section title="Ghost" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -138,7 +138,7 @@ const items = [
 <SgSplitButton label="Danger" severity="danger" appearance="ghost" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Raised ── */}
+      {/* â”€â”€ Raised â”€â”€ */}
       <Section title="Elevated" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -156,7 +156,7 @@ const items = [
         <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="solid" elevation="sm" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Sizes ── */}
+      {/* â”€â”€ Sizes â”€â”€ */}
       <Section title="Sizes" description='size="sm" | "md" | "lg"'>
         <Row>
           <SgSplitButton
@@ -186,7 +186,7 @@ const items = [
 <SgSplitButton label="Large" size="lg" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── With Icons ── */}
+      {/* â”€â”€ With Icons â”€â”€ */}
       <Section title="With Icons" description="leftIcon na acao principal e icon nos itens do menu.">
         <Row>
           <SgSplitButton
@@ -226,7 +226,7 @@ const items = [
 />`} />
       </Section>
 
-      {/* ── Separators ── */}
+      {/* â”€â”€ Separators â”€â”€ */}
       <Section title="Menu Separators" description="separator=true para dividir grupos de itens no menu.">
         <Row>
           <SgSplitButton
@@ -251,7 +251,7 @@ const items = [
 />`} />
       </Section>
 
-      {/* ── Disabled ── */}
+      {/* â”€â”€ Disabled â”€â”€ */}
       <Section title="Disabled" description="disabled=true desabilita o split button inteiro.">
         <Row>
           <SgSplitButton
@@ -273,7 +273,7 @@ const items = [
         <CodeBlock code={`<SgSplitButton label="Save" leftIcon={<Save className="size-4" />} disabled onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Loading ── */}
+      {/* â”€â”€ Loading â”€â”€ */}
       <Section title="Loading" description="loading=true exibe spinner na acao principal e desabilita o menu.">
         <Row>
           <SgSplitButton
@@ -294,7 +294,7 @@ const items = [
         <CodeBlock code={`<SgSplitButton label="Saving..." leftIcon={<Save className="size-4" />} loading onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* ── Disabled Items ── */}
+      {/* â”€â”€ Disabled Items â”€â”€ */}
       <Section title="Disabled Items" description="Itens individuais podem ser desabilitados.">
         <Row>
           <SgSplitButton
@@ -322,3 +322,5 @@ const items = [
     </div>
   );
 }
+
+

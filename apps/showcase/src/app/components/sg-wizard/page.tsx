@@ -3,7 +3,7 @@
 import React from "react";
 import { User, Mail, Phone, MapPin, Tag, Send, CheckCircle } from "lucide-react";
 import { SgInputEmail, SgInputPhone, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -17,7 +17,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code} />;
+  return <SgCodeBlockBase code={props.code} />;
 }
 
 export default function SgWizardPageDemo() {
@@ -415,3 +415,5 @@ const [formValues, setFormValues] = React.useState({ name: "", email: "" });
     </div>
   );
 }
+
+

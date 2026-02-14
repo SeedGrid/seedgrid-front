@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgGrid, SgPanel, SgStack, SgButton } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -51,7 +51,7 @@ export default function SgStackPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`import { SgStack, SgButton } from "@seedgrid/fe-components";
 
 <SgStack gap={8}>
@@ -69,4 +69,6 @@ export default function SgStackPage() {
     </SgStack>
   );
 }
+
+
 

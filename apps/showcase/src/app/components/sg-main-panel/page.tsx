@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -11,7 +11,7 @@ import {
   SgInputText,
   SgBadge
 } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -193,7 +193,7 @@ export default function SgMainPanelPage() {
         </SgPanel>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
+          <SgCodeBlockBase
             code={`import {
   SgScreen,
   SgMainPanel,
@@ -228,4 +228,6 @@ export default function Example() {
     </SgStack>
   );
 }
+
+
 

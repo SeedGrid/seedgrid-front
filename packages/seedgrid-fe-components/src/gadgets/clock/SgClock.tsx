@@ -672,7 +672,7 @@ function DigitalClock({
         <div className={cn("relative", glow, face, topShade, bottomShade)} style={{ width: w, height: h }}>
           <div className={divider} />
           <div
-            className={cn("absolute left-0 top-0 w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]", mask)}
+            className={cn("absolute left-0 top-0 w-full transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]", mask)}
             style={{ transform: `translateY(${translateY}px)` }}
           >
             {list.map((v, i) => (

@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
 import { SgButton } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
 
@@ -57,7 +57,7 @@ function Row(props: { children: React.ReactNode }) {
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code.trim()} />;
+  return <SgCodeBlockBase code={props.code.trim()} />;
 }
 
 function capitalize(s: string) {
@@ -76,7 +76,7 @@ export default function SgButtonShowcase() {
         </p>
       </div>
 
-      {/* ── Basic ── */}
+      {/* â”€â”€ Basic â”€â”€ */}
       <Section title="Basic" description="Botao padrao com onClick e estado disabled.">
         <Row>
           <SgButton onClick={submit.run} loading={submit.loading}>
@@ -93,7 +93,7 @@ export default function SgButtonShowcase() {
 <SgButton disabled>Disabled</SgButton>`} />
       </Section>
 
-      {/* ── Icons ── */}
+      {/* â”€â”€ Icons â”€â”€ */}
       <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
         <div className="space-y-4">
           <div>
@@ -193,7 +193,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Raised Buttons ── */}
+      {/* â”€â”€ Raised Buttons â”€â”€ */}
       <Section title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -209,7 +209,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="solid" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Rounded Buttons ── */}
+      {/* â”€â”€ Rounded Buttons â”€â”€ */}
       <Section title="Rounded Buttons" description='shape="rounded" para formato pill.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -225,7 +225,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Flat Buttons (ghost) ── */}
+      {/* â”€â”€ Flat Buttons (ghost) â”€â”€ */}
       <Section title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -241,7 +241,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="ghost">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Raised Text Buttons ── */}
+      {/* â”€â”€ Raised Text Buttons â”€â”€ */}
       <Section title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -257,7 +257,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="outline" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Outlined Buttons ── */}
+      {/* â”€â”€ Outlined Buttons â”€â”€ */}
       <Section title="Outlined Buttons" description='appearance="outline" - apenas bordas coloridas.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -273,7 +273,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="outline">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Rounded Icon Buttons (solid) ── */}
+      {/* â”€â”€ Rounded Icon Buttons (solid) â”€â”€ */}
       <Section title="Rounded Icon Buttons" description='shape="rounded" + icon only - botoes circulares.'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
@@ -289,7 +289,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Rounded Text Icon Buttons (ghost) ── */}
+      {/* â”€â”€ Rounded Text Icon Buttons (ghost) â”€â”€ */}
       <Section title="Rounded Text Icon Buttons" description='shape="rounded" + icon only + appearance="ghost"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
@@ -301,7 +301,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" appearance="ghost" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Rounded and Outlined Icon Buttons ── */}
+      {/* â”€â”€ Rounded and Outlined Icon Buttons â”€â”€ */}
       <Section title="Rounded and Outlined Icon Buttons" description='shape="rounded" + icon only + appearance="outline"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
@@ -313,7 +313,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" appearance="outline" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Sizes ── */}
+      {/* â”€â”€ Sizes â”€â”€ */}
       <Section title="Sizes" description='size="sm" | "md" | "lg"'>
         <Row>
           <SgButton size="sm">Small</SgButton>
@@ -335,7 +335,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton size="lg" shape="rounded" leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* ── Loading ── */}
+      {/* â”€â”€ Loading â”€â”€ */}
       <Section title="Loading" description="loading=true exibe spinner e desabilita o botao.">
         <Row>
           <SgButton loading>Processing...</SgButton>
@@ -349,7 +349,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton shape="rounded" loading leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* ── Custom Colors ── */}
+      {/* â”€â”€ Custom Colors â”€â”€ */}
       <Section title="Custom Colors" description="customColors permite qualquer cor via CSS.">
         <Row>
           <SgButton
@@ -423,3 +423,5 @@ import { SgButton } from "@seedgrid/fe-components";
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -11,7 +11,7 @@ import {
   sgClockThemesBuiltIn
 } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../../i18n";
-import CodeBlockBase from "../../CodeBlockBase";
+import SgCodeBlockBase from "../../others/SgCodeBlockBase";
 
 let themesRegistered = false;
 
@@ -51,7 +51,7 @@ function RollerShowcase(props: { timezone: string }) {
         />
       </div>
 
-      <CodeBlockBase
+      <SgCodeBlockBase
         code={`import React from "react";
 import { SgClock, SgButton, SgTimeProvider } from "@seedgrid/fe-components";
 
@@ -110,7 +110,7 @@ function FlipShowcase(props: { timezone: string }) {
         />
       </div>
 
-      <CodeBlockBase
+      <SgCodeBlockBase
         code={`import React from "react";
 import { SgClock, SgButton, SgTimeProvider } from "@seedgrid/fe-components";
 
@@ -210,7 +210,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
             </div>
 
             <div className="mt-6">
-              <CodeBlockBase
+              <SgCodeBlockBase
                 code={`"use client";
 import React from "react";
 import {
@@ -294,7 +294,7 @@ export default function SgClockShowcaseClient({ initialServerTime }) {
             </div>
 
             <div className="mt-6">
-              <CodeBlockBase
+              <SgCodeBlockBase
                 code={`import { SgClock, SgTimeProvider } from "@seedgrid/fe-components";
 
 export default function Example({ initialServerTime }) {
@@ -351,7 +351,7 @@ export default function Example({ initialServerTime }) {
               </div>
             </div>
             <div className="mt-6">
-              <CodeBlockBase
+              <SgCodeBlockBase
                 code={`"use client";
 import React from "react";
 import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
@@ -415,7 +415,7 @@ export default function Example({ initialServerTime }) {
               <SgClock variant="analog" size={220} themeId={themeId} timezone={timezone} showSeconds={false} />
             </div>
             <div className="mt-6">
-              <CodeBlockBase
+              <SgCodeBlockBase
                 code={`"use client";
 import React from "react";
 import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
@@ -451,3 +451,5 @@ export default function Example({ initialServerTime }) {
     </SgTimeProvider>
   );
 }
+
+

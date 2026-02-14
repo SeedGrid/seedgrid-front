@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgFloatActionButton, type SgFABAction } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -16,10 +16,10 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <CodeBlockBase code={props.code} />;
+  return <SgCodeBlockBase code={props.code} />;
 }
 
-/* ── icons ── */
+/* â”€â”€ icons â”€â”€ */
 const UserPlusIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
 );
@@ -42,7 +42,7 @@ const SettingsIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
 );
 
-/* ── demo container for absolute positioning ── */
+/* â”€â”€ demo container for absolute positioning â”€â”€ */
 function DemoBox(props: { children: React.ReactNode; className?: string; height?: string }) {
   return (
     <div className={`relative w-full rounded-md border border-dashed border-border bg-muted/20 pt-10 ${props.height ?? "h-48"} ${props.className ?? ""}`}>
@@ -69,7 +69,7 @@ export default function SgFloatActionButtonPage() {
         <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.fab.subtitle")}</p>
       </div>
 
-      {/* ── Positions ── */}
+      {/* â”€â”€ Positions â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.positions.title")}
         description={t(i18n, "showcase.component.fab.sections.positions.description")}
@@ -97,7 +97,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />`} />
       </Section>
 
-      {/* ── Variants ── */}
+      {/* â”€â”€ Variants â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.variants.title")}
         description={t(i18n, "showcase.component.fab.sections.variants.description")}
@@ -120,7 +120,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton severity="plain" />`} />
       </Section>
 
-      {/* ── Shapes & Sizes ── */}
+      {/* â”€â”€ Shapes & Sizes â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.shapesAndSizes.title")}
         description={t(i18n, "showcase.component.fab.sections.shapesAndSizes.description")}
@@ -148,7 +148,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton shape="square" size="lg" />`} />
       </Section>
 
-      {/* ── Elevation ── */}
+      {/* â”€â”€ Elevation â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.elevation.title")}
         description={t(i18n, "showcase.component.fab.sections.elevation.description")}
@@ -167,7 +167,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton elevation="lg" />`} />
       </Section>
 
-      {/* ── Hint ── */}
+      {/* â”€â”€ Hint â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.hint.title")}
         description={t(i18n, "showcase.component.fab.sections.hint.description")}
@@ -194,7 +194,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Actions - Linear Layout ── */}
+      {/* â”€â”€ Actions - Linear Layout â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.actions.title")}
         description={t(i18n, "showcase.component.fab.sections.actions.description")}
@@ -229,7 +229,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton actions={actions} type="linear" direction="right" />`} />
       </Section>
 
-      {/* ── Circle Layout ── */}
+      {/* â”€â”€ Circle Layout â”€â”€ */}
       <Section
         title="Circle Layout"
         description="Actions arranged in a full circle around the button"
@@ -253,10 +253,10 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Semi-Circle Layout ── */}
+      {/* â”€â”€ Semi-Circle Layout â”€â”€ */}
       <Section
         title="Semi-Circle Layout"
-        description="Actions arranged in a semi-circle (180°) in different directions"
+        description="Actions arranged in a semi-circle (180Â°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
           <DemoBox height="h-72" className="flex items-end justify-center">
@@ -328,10 +328,10 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Quarter-Circle Layout ── */}
+      {/* â”€â”€ Quarter-Circle Layout â”€â”€ */}
       <Section
         title="Quarter-Circle Layout"
-        description="Actions arranged in a quarter circle (90°) in different directions"
+        description="Actions arranged in a quarter circle (90Â°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
           <DemoBox height="h-64" className="flex items-end justify-center">
@@ -405,7 +405,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Active Icon ── */}
+      {/* â”€â”€ Active Icon â”€â”€ */}
       <Section
         title="Active Icon"
         description="Show a different icon when the menu is open"
@@ -431,7 +431,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Animations ── */}
+      {/* â”€â”€ Animations â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.animations.title")}
         description={t(i18n, "showcase.component.fab.sections.animations.description")}
@@ -461,7 +461,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
       </Section>
 
-      {/* ── Custom Color ── */}
+      {/* â”€â”€ Custom Color â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.customColor.title")}
         description={t(i18n, "showcase.component.fab.sections.customColor.description")}
@@ -485,7 +485,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton color="#f97316" icon={<Settings />} />`} />
       </Section>
 
-      {/* ── Disabled & Loading ── */}
+      {/* â”€â”€ Disabled & Loading â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.disabled.title")}
         description={t(i18n, "showcase.component.fab.sections.disabled.description")}
@@ -504,7 +504,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton loading />`} />
       </Section>
 
-      {/* ── Drag & Drop ── */}
+      {/* â”€â”€ Drag & Drop â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.fab.sections.dragDrop.title")}
         description={t(i18n, "showcase.component.fab.sections.dragDrop.description")}
@@ -535,3 +535,5 @@ export default function SgFloatActionButtonPage() {
     </div>
   );
 }
+
+

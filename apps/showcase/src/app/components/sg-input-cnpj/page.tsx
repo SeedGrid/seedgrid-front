@@ -3,7 +3,7 @@
 import React from "react";
 import { SgInputCNPJ } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../i18n";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -18,7 +18,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
+  return <SgCodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -360,3 +360,5 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
     </div>
   );
 }
+
+

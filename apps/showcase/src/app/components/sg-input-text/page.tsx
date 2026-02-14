@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { SgInputText } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -20,7 +20,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
+  return <SgCodeBlockBase code={content} />;
 }
 
 export default function SgInputTextPage() {
@@ -92,7 +92,7 @@ export default function SgInputTextPage() {
         </p>
       </div>
 
-      {/* ── Basico ── */}
+      {/* â”€â”€ Basico â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.basic.title")}
         description={t(i18n, "showcase.component.inputText.sections.basic.description")}
@@ -128,7 +128,7 @@ export default function SgInputTextPage() {
 <p>${t(i18n, "showcase.common.labels.currentValue", { value: watch("nome") })}</p>`} />
       </Section>
 
-      {/* ── Required ── */}
+      {/* â”€â”€ Required â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.required.title")}
         description={t(i18n, "showcase.component.inputText.sections.required.description")}
@@ -170,7 +170,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Controlled ── */}
+      {/* â”€â”€ Controlled â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.controlled.title")}
         description={t(i18n, "showcase.component.inputText.sections.controlled.description")}
@@ -239,7 +239,7 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* ── MaxLength + Counter ── */}
+      {/* â”€â”€ MaxLength + Counter â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.counter.title")}
         description={t(i18n, "showcase.component.inputText.sections.counter.description")}
@@ -264,7 +264,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── MinLength ── */}
+      {/* â”€â”€ MinLength â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.minLength.title")}
         description={t(i18n, "showcase.component.inputText.sections.minLength.description")}
@@ -289,7 +289,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── MinNumberOfWords ── */}
+      {/* â”€â”€ MinNumberOfWords â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.minWords.title")}
         description={t(i18n, "showcase.component.inputText.sections.minWords.description")}
@@ -314,7 +314,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Custom Validation ── */}
+      {/* â”€â”€ Custom Validation â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.validation.title")}
         description={t(i18n, "showcase.component.inputText.sections.validation.description")}
@@ -324,7 +324,7 @@ export default function SgInputTextPage() {
             id="demo-validation"
             label={t(i18n, "showcase.component.inputText.labels.onlyLetters")}
             validation={(v) =>
-              /[^a-zA-ZÀ-ú\s]/.test(v)
+              /[^\p{L}\s]/u.test(v)
                 ? t(i18n, "showcase.component.inputText.messages.onlyLetters")
                 : null
             }
@@ -341,7 +341,7 @@ export default function SgInputTextPage() {
   id="demo-validation"
   label="${t(i18n, "showcase.component.inputText.labels.onlyLetters")}"
   validation={(v) =>
-    /[^a-zA-ZÀ-ú\s]/.test(v)
+    /[^\p{L}\s]/u.test(v)
       ? "${t(i18n, "showcase.component.inputText.messages.onlyLetters")}"
       : null
   }
@@ -351,7 +351,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Prefix Icon ── */}
+      {/* â”€â”€ Prefix Icon â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.prefixIcon.title")}
         description={t(i18n, "showcase.component.inputText.sections.prefixIcon.description")}
@@ -378,8 +378,8 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Icon Buttons ── */}
-      {/* â”€â”€ Prefixo / Sufixo â”€â”€ */}
+      {/* â”€â”€ Icon Buttons â”€â”€ */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Prefixo / Sufixo Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.prefixSuffix.title")}
         description={t(i18n, "showcase.component.inputText.sections.prefixSuffix.description")}
@@ -471,7 +471,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Icon Buttons â”€â”€ */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Icon Buttons Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.iconButtons.title")}
         description={t(i18n, "showcase.component.inputText.sections.iconButtons.description")}
@@ -565,7 +565,7 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* ── Sem borda / Filled ── */}
+      {/* â”€â”€ Sem borda / Filled â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
@@ -592,7 +592,7 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-filled" label="${t(i18n, "showcase.common.labels.filled")}" filled name="filled" register={register} />`} />
       </Section>
 
-      {/* ── Sem clear button ── */}
+      {/* â”€â”€ Sem clear button â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
@@ -609,7 +609,7 @@ export default function SgInputTextPage() {
         <CodeBlock code={`<SgInputText id="demo-noclear" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} name="noclear" register={register} />`} />
       </Section>
 
-      {/* ── Width / Border Radius ── */}
+      {/* â”€â”€ Width / Border Radius â”€â”€ */}
       <Section
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
@@ -635,7 +635,7 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-w300" label="${t(i18n, "showcase.common.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
-      {/* ── Disabled / ReadOnly ── */}
+      {/* â”€â”€ Disabled / ReadOnly â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.disabledReadonly.title")}
         description={t(i18n, "showcase.component.inputText.sections.disabledReadonly.description")}
@@ -675,7 +675,7 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Erro externo ── */}
+      {/* â”€â”€ Erro externo â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.externalError.title")}
         description={t(i18n, "showcase.component.inputText.sections.externalError.description")}
@@ -768,7 +768,7 @@ export default function Example() {
 }`} />
       </Section>
 
-      {/* ── Callbacks / Events ── */}
+      {/* â”€â”€ Callbacks / Events â”€â”€ */}
       <Section
         title={t(i18n, "showcase.component.inputText.sections.events.title")}
         description={t(i18n, "showcase.component.inputText.sections.events.description")}
@@ -812,7 +812,7 @@ export default function Example() {
 />`} />
       </Section>
 
-      {/* ── Props Reference ── */}
+      {/* â”€â”€ Props Reference â”€â”€ */}
       <section className="rounded-lg border border-border p-6">
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputText.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
@@ -919,3 +919,6 @@ ${bodyIndented}
   );
 }`;
 }
+
+
+

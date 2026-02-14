@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgInputText } from "@seedgrid/fe-components";
-import CodeBlockBase from "../CodeBlockBase";
+import SgCodeBlockBase from "../others/SgCodeBlockBase";
 
 const FIELD_COUNT = 60;
 const UPDATES = 200;
@@ -136,7 +136,7 @@ function UncontrolledSgBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <CodeBlockBase code={code} />
+            <SgCodeBlockBase code={code} />
           </div>
         </div>
       </div>
@@ -255,7 +255,7 @@ function UncontrolledNativeBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <CodeBlockBase code={code} />
+            <SgCodeBlockBase code={code} />
           </div>
         </div>
       </div>
@@ -278,3 +278,5 @@ export default function BenchmarkPage() {
     </div>
   );
 }
+
+
