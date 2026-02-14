@@ -1,19 +1,21 @@
 import React from "react";
-import { SgPanel, SgStack } from "@seedgrid/fe-components";
+import { SgCard, SgPanel, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <SgPanel borderStyle="solid" className="rounded-lg border-border" padding={24}>
-      <SgStack gap={16}>
-        <SgStack gap={4}>
-          <h2 className="text-lg font-semibold">{props.title}</h2>
-          {props.description ? <p className="text-sm text-muted-foreground">{props.description}</p> : null}
-        </SgStack>
+    <SgCard
+      title={props.title}
+      description={props.description}
+      collapsible
+      defaultOpen={true}
+      className="rounded-lg"
+    >
+      <SgPanel borderStyle="none" padding={0}>
         {props.children}
-      </SgStack>
-    </SgPanel>
+      </SgPanel>
+    </SgCard>
   );
 }
 
