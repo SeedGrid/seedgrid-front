@@ -1,0 +1,24 @@
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgAutocomplete } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { control } = useForm({
+    defaultValues: { country: "" }
+  });
+
+  return (
+    <div style={{ padding: 12 }}>
+      <SgAutocomplete
+        id="country"
+        name="country"
+        control={control}
+        label="Country"
+        source={async () => [
+          { id: 1, label: "Brazil" },
+          { id: 2, label: "Germany" }
+        ]}
+      />
+    </div>
+  );
+}

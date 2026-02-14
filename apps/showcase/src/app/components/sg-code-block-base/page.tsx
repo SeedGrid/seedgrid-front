@@ -1,8 +1,7 @@
-﻿"use client";
-
 import React from "react";
 import { SgPanel, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -18,50 +17,12 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-const READONLY_CODE = `<SgButton severity="primary">Salvar</SgButton>`;
+export default async function SgCodeBlockBasePage() {
+  const readonlyCode = await loadSample("readonly-button.src");
+  const interactiveRenderBody = await loadSample("interactive-render-body-buttons.src");
+  const interactiveWithDep = await loadSample("interactive-appfile-rhf-autocomplete.src");
+  const interactiveAppFile = await loadSample("interactive-appfile-basic-button.src");
 
-const INTERACTIVE_RENDER_BODY = `<SgStack direction="row" gap={8}>
-  <SgButton severity="primary">Primary</SgButton>
-  <SgButton appearance="outline">Outline</SgButton>
-</SgStack>`;
-
-const INTERACTIVE_WITH_DEP = `import * as React from "react";
-import { useForm } from "react-hook-form";
-import { SgAutocomplete } from "@seedgrid/fe-components";
-
-export default function App() {
-  const { control } = useForm({
-  defaultValues: { country: "" }
-});
-
-  return (
-    <div style={{ padding: 12 }}>
-      <SgAutocomplete
-        id="country"
-        name="country"
-        control={control}
-        label="Country"
-        source={async () => [
-          { id: 1, label: "Brazil" },
-          { id: 2, label: "Germany" }
-        ]}
-      />
-    </div>
-  );
-}`;
-
-const INTERACTIVE_APP_FILE = `import * as React from "react";
-import { SgButton } from "@seedgrid/fe-components";
-
-export default function App() {
-  return (
-    <div style={{ padding: 20 }}>
-      <SgButton severity="success">Full App Mode</SgButton>
-    </div>
-  );
-}`;
-
-export default function SgCodeBlockBasePage() {
   return (
     <SgStack className="max-w-6xl" gap={32}>
       <SgStack gap={8}>
@@ -80,7 +41,7 @@ export default function SgCodeBlockBasePage() {
         title="1) Readonly"
         description="Modo padrao (interactive=false). Exibe o codigo sem editor/preview."
       >
-        <SgCodeBlockBase title="Readonly" code={READONLY_CODE} />
+        <SgCodeBlockBase title="Readonly" code={readonlyCode} />
       </Section>
 
       <Section
@@ -91,7 +52,7 @@ export default function SgCodeBlockBasePage() {
           title="Interactive renderBody"
           interactive
           codeContract="renderBody"
-          code={INTERACTIVE_RENDER_BODY}
+          code={interactiveRenderBody}
         />
       </Section>
 
@@ -104,7 +65,7 @@ export default function SgCodeBlockBasePage() {
           interactive
           codeContract="appFile"
           dependencies={{ "react-hook-form": "^7.0.0" }}
-          code={INTERACTIVE_WITH_DEP}
+          code={interactiveWithDep}
         />
       </Section>
 
@@ -116,11 +77,9 @@ export default function SgCodeBlockBasePage() {
           title="Interactive appFile"
           interactive
           codeContract="appFile"
-          code={INTERACTIVE_APP_FILE}
+          code={interactiveAppFile}
         />
       </Section>
     </SgStack>
   );
 }
-
-
