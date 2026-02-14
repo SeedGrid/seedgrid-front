@@ -64,7 +64,16 @@ export type {
   SgBadgePartsClassName
 } from "./commons/SgBadge";
 export type { SgBadgeOverlayProps, SgBadgeOverlayPlacement } from "./commons/SgBadgeOverlay";
-export { toast } from "sonner";
+export { toast } from "./commons/SgToast";
+export type {
+  SgToastFn,
+  SgToastId,
+  SgToastType,
+  SgToastAction,
+  SgToastOptions,
+  SgToastRecord,
+  SgToastPromiseMessages
+} from "./commons/SgToast";
 export {
   onlyDigits,
   maskCpf,
@@ -189,6 +198,15 @@ export type {
   SgPersistenceConfig,
   SgPersistenceRecordDTO
 } from "./environment/SgEnvironmentProvider";
+export type {
+  SeedGridModuleId,
+  SeedGridProvider,
+  SeedGridNavItem,
+  SeedGridRoute,
+  SeedGridI18nBundle,
+  SeedGridRegistry,
+  SeedGridModuleManifest
+} from "./integration/module";
 export { componentsManifest } from "./manifest";
 export {
   SgComponentsI18nProvider,

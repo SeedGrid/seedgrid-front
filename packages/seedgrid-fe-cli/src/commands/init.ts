@@ -179,8 +179,7 @@ export async function cmdInit(params: { appName?: string }) {
         "@seedgrid/fe-core": vendorDependencySpec("@seedgrid/fe-core"),
         "@seedgrid/fe-commons": vendorDependencySpec("@seedgrid/fe-commons"),
         "@seedgrid/fe-theme": vendorDependencySpec("@seedgrid/fe-theme"),
-        "@seedgrid/fe-components": vendorDependencySpec("@seedgrid/fe-components"),
-        "sonner": "^1.7.0"
+        "@seedgrid/fe-components": vendorDependencySpec("@seedgrid/fe-components")
       },
       devDependencies: {
         tailwindcss: "^3.4.10",

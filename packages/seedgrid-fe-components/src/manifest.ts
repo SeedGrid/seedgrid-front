@@ -1,4 +1,4 @@
-import type { SeedGridModuleManifest, SeedGridRegistry } from "@seedgrid/fe-core";
+import type { SeedGridModuleManifest, SeedGridRegistry } from "./integration/module";
 import ptBr from "./i18n/pt-BR.json";
 
 export const componentsManifest: SeedGridModuleManifest = {

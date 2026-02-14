@@ -4,7 +4,7 @@ import React from "react";
 import {
   createLocalStorageStrategy,
   buildSgPersistenceKey,
-} from "@seedgrid/fe-core";
+} from "./persistence";
 import type {
   NamespaceProvider,
   PersistenceStrategy,
@@ -13,9 +13,9 @@ import type {
   SgPersistenceConfig,
   SgEnvironmentValue,
   SgEnvironment,
-} from "@seedgrid/fe-core";
+} from "./persistence";
 
-// Re-export types and functions from fe-core for backward compatibility
+// Re-export types and functions to keep the existing public API stable.
 export type {
   NamespaceProvider,
   PersistenceStrategy,
@@ -30,7 +30,7 @@ export {
   createLocalStorageStrategy,
   createApiPersistenceStrategy,
   createCompositePersistenceStrategy,
-} from "@seedgrid/fe-core";
+} from "./persistence";
 
 const defaultNamespaceProvider: NamespaceProvider = {
   getNamespace: () => ""
