@@ -1,15 +1,17 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import { SgInputCPF } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgInputCPF, SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -55,16 +57,39 @@ export default function SgInputCPFPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Básico" },
+    { href: "#section-required", label: "2) Required" },
+    { href: "#section-length", label: "3) Length" },
+    { href: "#section-invalid", label: "4) Invalid" },
+    { href: "#section-validation", label: "5) Validation" },
+    { href: "#section-visual", label: "6) Visual" },
+    { href: "#section-no-clear", label: "7) No Clear" },
+    { href: "#section-size-border", label: "8) Size/Border" },
+    { href: "#section-disabled", label: "9) Disabled" },
+    { href: "#section-events", label: "10) Events" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cpf.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.cpf.subtitle")}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="section-basic"
         title={t(i18n, "showcase.component.cpf.sections.basic.title")}
         description={t(i18n, "showcase.component.cpf.sections.basic.description")}
       >
@@ -84,6 +109,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-required"
         title={t(i18n, "showcase.component.cpf.sections.required.title")}
         description={t(i18n, "showcase.component.cpf.sections.required.description")}
       >
@@ -110,6 +136,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-length"
         title={t(i18n, "showcase.component.cpf.sections.length.title")}
         description={t(i18n, "showcase.component.cpf.sections.length.description")}
       >
@@ -126,6 +153,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-invalid"
         title={t(i18n, "showcase.component.cpf.sections.invalid.title")}
         description={t(i18n, "showcase.component.cpf.sections.invalid.description")}
       >
@@ -142,6 +170,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-validation"
         title={t(i18n, "showcase.component.cpf.sections.validation.title")}
         description={t(i18n, "showcase.component.cpf.sections.validation.description")}
       >
@@ -164,6 +193,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -189,6 +219,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-no-clear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -205,6 +236,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-size-border"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -229,6 +261,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-disabled"
         title={t(i18n, "showcase.common.sections.disabled.title")}
         description={t(i18n, "showcase.common.sections.disabled.description")}
       >
@@ -245,6 +278,7 @@ export default function SgInputCPFPage() {
       </Section>
 
       <Section
+        id="section-events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -271,8 +305,9 @@ export default function SgInputCPFPage() {
         </div>
         <CodeBlock code={loadSample("sg-input-cpf-example-10.src")} />
       </Section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
-
 

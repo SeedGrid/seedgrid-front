@@ -1,14 +1,16 @@
 ﻿"use client";
 
 import React from "react";
-import { SgAutocomplete, type SgAutocompleteItem } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgAutocomplete, type SgAutocompleteItem, SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 import { t, useShowcaseI18n } from "../../../i18n";
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -76,16 +78,35 @@ export default function SgAutocompletePage() {
     data: raw
   });
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Básico" },
+    { href: "#section-custom", label: "2) Custom Render" },
+    { href: "#section-grouped", label: "3) Grouped" },
+    { href: "#section-dropdown", label: "4) Dropdown Button" },
+    { href: "#section-footer", label: "5) Footer" },
+    { href: "#section-minlength", label: "6) MinLength" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.autocomplete.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.autocomplete.subtitle")}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="section-basic"
         title={t(i18n, "showcase.component.autocomplete.sections.basic.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.basic.description")}
       >
@@ -115,6 +136,7 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
+        id="section-custom"
         title={t(i18n, "showcase.component.autocomplete.sections.custom.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.custom.description")}
       >
@@ -139,6 +161,7 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
+        id="section-grouped"
         title={t(i18n, "showcase.component.autocomplete.sections.grouped.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.grouped.description")}
       >
@@ -155,6 +178,7 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
+        id="section-dropdown"
         title={t(i18n, "showcase.component.autocomplete.sections.dropdown.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.dropdown.description")}
       >
@@ -172,6 +196,7 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
+        id="section-footer"
         title={t(i18n, "showcase.component.autocomplete.sections.footer.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.footer.description")}
       >
@@ -197,6 +222,7 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
+        id="section-minlength"
         title={t(i18n, "showcase.component.autocomplete.sections.minLength.title")}
         description={t(i18n, "showcase.component.autocomplete.sections.minLength.description")}
       >
@@ -211,7 +237,9 @@ export default function SgAutocompletePage() {
         </div>
         <CodeBlock code={loadSample("sg-autocomplete-example-06.src")} />
       </Section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

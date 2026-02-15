@@ -1,9 +1,11 @@
 ﻿"use client";
 
 import React from "react";
+import Link from "next/link";
 import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
-import { SgButton } from "@seedgrid/fe-components";
+import { SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
 import { loadSample } from "./samples/loadSample";
 
@@ -44,9 +46,9 @@ function useFakeProcess(durationMs: number) {
   return { loading, run };
 }
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: Readonly<{ id?: string; title: string; description?: string; children: React.ReactNode }>) {
   return (
-    <section className="space-y-3">
+    <section id={props.id} className="space-y-3">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="text-sm text-muted-foreground">{props.description}</p> : null}
       {props.children}
@@ -69,17 +71,43 @@ function capitalize(s: string) {
 export default function SgButtonShowcase() {
   const submit = useFakeProcess(2000);
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Basic" },
+    { href: "#section-icons", label: "2) Icons" },
+    { href: "#section-severities", label: "3) Severities" },
+    { href: "#section-elevated", label: "4) Elevated" },
+    { href: "#section-rounded", label: "5) Rounded" },
+    { href: "#section-ghost", label: "6) Ghost" },
+    { href: "#section-outline-elevated", label: "7) Outline+Elevation" },
+    { href: "#section-outline", label: "8) Outline" },
+    { href: "#section-rounded-icon", label: "9) Rounded Icon" },
+    { href: "#section-rounded-text-icon", label: "10) Rounded Text Icon" },
+    { href: "#section-rounded-outline-icon", label: "11) Rounded Outline Icon" },
+    { href: "#section-sizes", label: "12) Sizes" },
+    { href: "#section-loading", label: "13) Loading" },
+    { href: "#section-custom-colors", label: "14) Custom Colors" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-10">
-      <div>
+    <SgStack className="w-full max-w-4xl" gap={40}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">SgButton</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           Botao com suporte a severity, appearance, shape, elevation, icons e loading.
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       {/* â”€â”€ Basic â”€â”€ */}
-      <Section title="Basic" description="Botao padrao com onClick e estado disabled.">
+      <Section id="section-basic" title="Basic" description="Botao padrao com onClick e estado disabled.">
         <Row>
           <SgButton onClick={submit.run} loading={submit.loading}>
             Submit
@@ -90,7 +118,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Icons â”€â”€ */}
-      <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
+      <Section id="section-icons" title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
         <div className="space-y-4">
           <div>
             <div className="mb-2 text-sm font-medium text-muted-foreground">Elevated Buttons</div>
@@ -150,7 +178,7 @@ export default function SgButtonShowcase() {
 
         <CodeBlock code={loadSample("sg-button-example-02.src")} />
       </Section>
-      <Section title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
+      <Section id="section-severities" title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s}>{capitalize(s)}</SgButton>
@@ -160,7 +188,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Raised Buttons â”€â”€ */}
-      <Section title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
+      <Section id="section-elevated" title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="solid" elevation="sm">{capitalize(s)}</SgButton>
@@ -170,7 +198,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Rounded Buttons â”€â”€ */}
-      <Section title="Rounded Buttons" description='shape="rounded" para formato pill.'>
+      <Section id="section-rounded" title="Rounded Buttons" description='shape="rounded" para formato pill.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} shape="rounded">{capitalize(s)}</SgButton>
@@ -180,7 +208,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Flat Buttons (ghost) â”€â”€ */}
-      <Section title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
+      <Section id="section-ghost" title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="ghost">{capitalize(s)}</SgButton>
@@ -190,7 +218,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Raised Text Buttons â”€â”€ */}
-      <Section title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
+      <Section id="section-outline-elevated" title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline" elevation="sm">{capitalize(s)}</SgButton>
@@ -200,7 +228,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Outlined Buttons â”€â”€ */}
-      <Section title="Outlined Buttons" description='appearance="outline" - apenas bordas coloridas.'>
+      <Section id="section-outline" title="Outlined Buttons" description='appearance="outline" - apenas bordas coloridas.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline">{capitalize(s)}</SgButton>
@@ -210,7 +238,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Rounded Icon Buttons (solid) â”€â”€ */}
-      <Section title="Rounded Icon Buttons" description='shape="rounded" + icon only - botoes circulares.'>
+      <Section id="section-rounded-icon" title="Rounded Icon Buttons" description='shape="rounded" + icon only - botoes circulares.'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" leftIcon={icon} />
@@ -220,7 +248,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Rounded Text Icon Buttons (ghost) â”€â”€ */}
-      <Section title="Rounded Text Icon Buttons" description='shape="rounded" + icon only + appearance="ghost"'>
+      <Section id="section-rounded-text-icon" title="Rounded Text Icon Buttons" description='shape="rounded" + icon only + appearance="ghost"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="ghost" leftIcon={icon} />
@@ -230,7 +258,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Rounded and Outlined Icon Buttons â”€â”€ */}
-      <Section title="Rounded and Outlined Icon Buttons" description='shape="rounded" + icon only + appearance="outline"'>
+      <Section id="section-rounded-outline-icon" title="Rounded and Outlined Icon Buttons" description='shape="rounded" + icon only + appearance="outline"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="outline" leftIcon={icon} />
@@ -240,7 +268,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Sizes â”€â”€ */}
-      <Section title="Sizes" description='size="sm" | "md" | "lg"'>
+      <Section id="section-sizes" title="Sizes" description='size="sm" | "md" | "lg"'>
         <Row>
           <SgButton size="sm">Small</SgButton>
           <SgButton size="md">Medium</SgButton>
@@ -255,7 +283,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Loading â”€â”€ */}
-      <Section title="Loading" description="loading=true exibe spinner e desabilita o botao.">
+      <Section id="section-loading" title="Loading" description="loading=true exibe spinner e desabilita o botao.">
         <Row>
           <SgButton loading>Processing...</SgButton>
           <SgButton severity="success" loading>Saving...</SgButton>
@@ -266,7 +294,7 @@ export default function SgButtonShowcase() {
       </Section>
 
       {/* â”€â”€ Custom Colors â”€â”€ */}
-      <Section title="Custom Colors" description="customColors permite qualquer cor via CSS.">
+      <Section id="section-custom-colors" title="Custom Colors" description="customColors permite qualquer cor via CSS.">
         <Row>
           <SgButton
             customColors={{
@@ -303,7 +331,9 @@ export default function SgButtonShowcase() {
         </Row>
         <CodeBlock code={loadSample("sg-button-example-14.src")} />
       </Section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

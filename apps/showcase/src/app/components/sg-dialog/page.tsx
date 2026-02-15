@@ -1,15 +1,17 @@
 ﻿"use client";
 
 import React from "react";
-import { SgButton, SgDialog } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgButton, SgDialog, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: Readonly<{ id?: string; title: string; description?: string; children: React.ReactNode }>) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap items-center gap-4">{props.children}</div>
@@ -29,14 +31,32 @@ export default function SgDialogPage() {
   const [openStrict, setOpenStrict] = React.useState(false);
   const [openAutoClose, setOpenAutoClose] = React.useState(false);
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Básico" },
+    { href: "#section-severity", label: "2) Severity" },
+    { href: "#section-no-close", label: "3) No Close Button" },
+    { href: "#section-strict", label: "4) Strict Mode" },
+    { href: "#section-auto-close", label: "5) Auto Close" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.dialog.title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.dialog.subtitle")}</p>
-      </div>
+        <p className="text-muted-foreground">{t(i18n, "showcase.component.dialog.subtitle")}</p>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="section-basic"
         title={t(i18n, "showcase.component.dialog.sections.basic.title")}
         description={t(i18n, "showcase.component.dialog.sections.basic.description")}
       >
@@ -76,6 +96,7 @@ export default function SgDialogPage() {
       </Section>
 
       <Section
+        id="section-severity"
         title={t(i18n, "showcase.component.dialog.sections.severity.title")}
         description={t(i18n, "showcase.component.dialog.sections.severity.description")}
       >
@@ -109,6 +130,7 @@ export default function SgDialogPage() {
       </Section>
 
       <Section
+        id="section-no-close"
         title={t(i18n, "showcase.component.dialog.sections.noClose.title")}
         description={t(i18n, "showcase.component.dialog.sections.noClose.description")}
       >
@@ -142,6 +164,7 @@ export default function SgDialogPage() {
       </Section>
 
       <Section
+        id="section-strict"
         title={t(i18n, "showcase.component.dialog.sections.strict.title")}
         description={t(i18n, "showcase.component.dialog.sections.strict.description")}
       >
@@ -177,6 +200,7 @@ export default function SgDialogPage() {
       </Section>
 
       <Section
+        id="section-auto-close"
         title={t(i18n, "showcase.component.dialog.sections.autoClose.title")}
         description={t(i18n, "showcase.component.dialog.sections.autoClose.description")}
       >
@@ -198,7 +222,9 @@ export default function SgDialogPage() {
           code={loadSample("sg-dialog-example-05.src")}
         />
       </Section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

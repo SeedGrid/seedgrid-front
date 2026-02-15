@@ -1,17 +1,19 @@
 ﻿"use client";
 
 import React from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
-import { SgCurrencyEdit } from "@seedgrid/fe-components";
+import { SgCurrencyEdit, SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -109,16 +111,44 @@ export default function SgCurrencyEditPage() {
     if (standaloneCRef.current) standaloneCRef.current.value = "980.00";
   }, []);
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Básico" },
+    { href: "#section-required", label: "2) Required" },
+    { href: "#section-controlled", label: "3) Controlled" },
+    { href: "#section-validation", label: "4) Validation" },
+    { href: "#section-currency", label: "5) Currencies" },
+    { href: "#section-symbol", label: "6) Symbol" },
+    { href: "#section-icon-buttons", label: "7) Icon Buttons" },
+    { href: "#section-no-negative", label: "8) No Negative" },
+    { href: "#section-no-decimals", label: "9) No Decimals" },
+    { href: "#section-min-max", label: "10) Min/Max" },
+    { href: "#section-empty-value", label: "11) Empty Value" },
+    { href: "#section-visual", label: "12) Visual" },
+    { href: "#section-standalone", label: "13) Standalone" },
+    { href: "#section-events", label: "14) Events" },
+    { href: "#section-size-border", label: "15) Size/Border" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.currencyEdit.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.currencyEdit.subtitle")}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="section-basic"
         title={t(i18n, "showcase.component.currencyEdit.sections.basic.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.basic.description")}
       >
@@ -141,6 +171,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-required"
         title={t(i18n, "showcase.component.currencyEdit.sections.required.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.required.description")}
       >
@@ -169,6 +200,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-controlled"
         title={t(i18n, "showcase.component.currencyEdit.sections.controlled.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.controlled.description")}
       >
@@ -209,6 +241,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-validation"
         title={t(i18n, "showcase.component.currencyEdit.sections.validation.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.validation.description")}
       >
@@ -236,6 +269,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-currency"
         title={t(i18n, "showcase.component.currencyEdit.sections.currency.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.currency.description")}
       >
@@ -273,6 +307,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-symbol"
         title={t(i18n, "showcase.component.currencyEdit.sections.symbol.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.symbol.description")}
       >
@@ -301,6 +336,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-icon-buttons"
         title={t(i18n, "showcase.component.currencyEdit.sections.iconButtons.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.iconButtons.description")}
       >
@@ -351,6 +387,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-no-negative"
         title={t(i18n, "showcase.component.currencyEdit.sections.noNegative.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.noNegative.description")}
       >
@@ -368,6 +405,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-no-decimals"
         title={t(i18n, "showcase.component.currencyEdit.sections.noDecimals.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.noDecimals.description")}
       >
@@ -385,6 +423,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-min-max"
         title={t(i18n, "showcase.component.currencyEdit.sections.minMax.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.minMax.description")}
       >
@@ -403,6 +442,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-empty-value"
         title={t(i18n, "showcase.component.currencyEdit.sections.emptyValue.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.emptyValue.description")}
       >
@@ -420,6 +460,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-visual"
         title={t(i18n, "showcase.component.currencyEdit.sections.visual.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.visual.description")}
       >
@@ -447,6 +488,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-standalone"
         title={t(i18n, "showcase.component.currencyEdit.sections.standalone.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.standalone.description")}
       >
@@ -492,6 +534,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-events"
         title={t(i18n, "showcase.component.currencyEdit.sections.events.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.events.description")}
       >
@@ -521,6 +564,7 @@ export default function SgCurrencyEditPage() {
       </Section>
 
       <Section
+        id="section-size-border"
         title={t(i18n, "showcase.component.currencyEdit.sections.sizeBorder.title")}
         description={t(i18n, "showcase.component.currencyEdit.sections.sizeBorder.description")}
       >
@@ -545,7 +589,9 @@ export default function SgCurrencyEditPage() {
         </div>
         <CodeBlock code={loadSample("sg-currency-edit-example-15.src")} />
       </Section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

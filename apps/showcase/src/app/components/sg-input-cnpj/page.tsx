@@ -1,15 +1,17 @@
 ﻿"use client";
 
 import React from "react";
-import { SgInputCNPJ } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgButton, SgInputCNPJ, SgStack } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../i18n";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -57,14 +59,30 @@ export default function SgInputCNPJPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
+  const sectionLinks = [
+    { href: "#basic", label: t(i18n, "showcase.component.cnpj.sections.basic.title") },
+    { href: "#alnum", label: t(i18n, "showcase.component.cnpj.sections.alnum.title") },
+    { href: "#alnumList", label: t(i18n, "showcase.component.cnpj.sections.alnumList.title") },
+    { href: "#publica", label: t(i18n, "showcase.component.cnpj.sections.publica.title") },
+    { href: "#required", label: t(i18n, "showcase.component.cnpj.sections.required.title") },
+    { href: "#length", label: t(i18n, "showcase.component.cnpj.sections.length.title") },
+    { href: "#invalid", label: t(i18n, "showcase.component.cnpj.sections.invalid.title") },
+    { href: "#validation", label: t(i18n, "showcase.component.cnpj.sections.validation.title") },
+    { href: "#visual", label: t(i18n, "showcase.common.sections.visual.title") },
+    { href: "#noClear", label: t(i18n, "showcase.common.sections.noClear.title") },
+    { href: "#sizeBorder", label: t(i18n, "showcase.common.sections.sizeBorder.title") },
+    { href: "#disabled", label: t(i18n, "showcase.common.sections.disabled.title") },
+    { href: "#events", label: t(i18n, "showcase.common.sections.events.title") }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cnpj.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.cnpj.subtitle")}
         </p>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t(i18n, "showcase.component.cnpj.i18nNote").split("\n").map((part, idx, arr) => (
             <span key={idx}>
               {part}
@@ -72,9 +90,19 @@ export default function SgInputCNPJPage() {
             </span>
           ))}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="basic"
         title={t(i18n, "showcase.component.cnpj.sections.basic.title")}
         description={t(i18n, "showcase.component.cnpj.sections.basic.description")}
       >
@@ -94,6 +122,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="alnum"
         title={t(i18n, "showcase.component.cnpj.sections.alnum.title")}
         description={t(i18n, "showcase.component.cnpj.sections.alnum.description")}
       >
@@ -109,6 +138,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="alnumList"
         title={t(i18n, "showcase.component.cnpj.sections.alnumList.title")}
         description={t(i18n, "showcase.component.cnpj.sections.alnumList.description")}
       >
@@ -118,6 +148,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="publica"
         title={t(i18n, "showcase.component.cnpj.sections.publica.title")}
         description={t(i18n, "showcase.component.cnpj.sections.publica.description")}
       >
@@ -152,6 +183,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="required"
         title={t(i18n, "showcase.component.cnpj.sections.required.title")}
         description={t(i18n, "showcase.component.cnpj.sections.required.description")}
       >
@@ -178,6 +210,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="length"
         title={t(i18n, "showcase.component.cnpj.sections.length.title")}
         description={t(i18n, "showcase.component.cnpj.sections.length.description")}
       >
@@ -194,6 +227,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="invalid"
         title={t(i18n, "showcase.component.cnpj.sections.invalid.title")}
         description={t(i18n, "showcase.component.cnpj.sections.invalid.description")}
       >
@@ -210,6 +244,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="validation"
         title={t(i18n, "showcase.component.cnpj.sections.validation.title")}
         description={t(i18n, "showcase.component.cnpj.sections.validation.description")}
       >
@@ -232,6 +267,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -257,6 +293,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="noClear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -273,6 +310,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="sizeBorder"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -297,6 +335,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="disabled"
         title={t(i18n, "showcase.common.sections.disabled.title")}
         description={t(i18n, "showcase.common.sections.disabled.description")}
       >
@@ -313,6 +352,7 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
+        id="events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -339,7 +379,8 @@ export default function SgInputCNPJPage() {
         </div>
         <CodeBlock code={loadSample("sg-input-cnpj-example-13.src")} />
       </Section>
-    </div>
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

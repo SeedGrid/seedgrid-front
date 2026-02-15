@@ -23,6 +23,21 @@ function ArrowUpIcon() {
 }
 
 export default function BackToTopFab(props: Readonly<{ targetId: string }>) {
+  const [visible, setVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setVisible(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (!visible) return null;
+
   return (
     <SgFloatActionButton
       hint="Ir para o inicio"

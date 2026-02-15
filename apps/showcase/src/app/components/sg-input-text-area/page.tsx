@@ -1,15 +1,17 @@
 ﻿"use client";
 
 import React from "react";
-import { SgInputTextArea } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgInputTextArea, SgButton, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -63,16 +65,45 @@ export default function SgInputTextAreaPage() {
     setControlledValue(t(i18n, "showcase.component.inputTextArea.defaults.controlled"));
   }, [i18n.locale]);
 
+  const sectionLinks = [
+    { href: "#section-basic", label: "1) Básico" },
+    { href: "#section-required", label: "2) Required" },
+    { href: "#section-controlled", label: "3) Controlled" },
+    { href: "#section-counter", label: "4) Counter" },
+    { href: "#section-minlength", label: "5) MinLength" },
+    { href: "#section-minwords", label: "6) MinWords" },
+    { href: "#section-minlines", label: "7) MinLines" },
+    { href: "#section-validation", label: "8) Validation" },
+    { href: "#section-size-lines", label: "9) Size/Lines" },
+    { href: "#section-prefix-icon", label: "10) Prefix Icon" },
+    { href: "#section-visual", label: "11) Visual" },
+    { href: "#section-no-clear", label: "12) No Clear" },
+    { href: "#section-size-border", label: "13) Size/Border" },
+    { href: "#section-disabled", label: "14) Disabled/Readonly" },
+    { href: "#section-error", label: "15) External Error" },
+    { href: "#section-events", label: "16) Events" }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputTextArea.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.inputTextArea.subtitle")}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="section-basic"
         title={t(i18n, "showcase.component.inputTextArea.sections.basic.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.basic.description")}
       >
@@ -90,6 +121,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-required"
         title={t(i18n, "showcase.component.inputTextArea.sections.required.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.required.description")}
       >
@@ -112,6 +144,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-controlled"
         title={t(i18n, "showcase.component.inputTextArea.sections.controlled.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.controlled.description")}
       >
@@ -164,6 +197,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-counter"
         title={t(i18n, "showcase.component.inputTextArea.sections.counter.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.counter.description")}
       >
@@ -179,6 +213,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-minlength"
         title={t(i18n, "showcase.component.inputTextArea.sections.minLength.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.minLength.description")}
       >
@@ -194,6 +229,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-minwords"
         title={t(i18n, "showcase.component.inputTextArea.sections.minWords.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.minWords.description")}
       >
@@ -209,6 +245,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-minlines"
         title={t(i18n, "showcase.component.inputTextArea.sections.minLines.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.minLines.description")}
       >
@@ -224,6 +261,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-validation"
         title={t(i18n, "showcase.component.inputTextArea.sections.validation.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.validation.description")}
       >
@@ -245,6 +283,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-size-lines"
         title={t(i18n, "showcase.component.inputTextArea.sections.sizeLines.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.sizeLines.description")}
       >
@@ -268,6 +307,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-prefix-icon"
         title={t(i18n, "showcase.component.inputTextArea.sections.prefixIcon.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.prefixIcon.description")}
       >
@@ -284,6 +324,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -297,6 +338,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-no-clear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -307,6 +349,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-size-border"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -318,6 +361,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-disabled"
         title={t(i18n, "showcase.component.inputTextArea.sections.disabledReadonly.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.disabledReadonly.description")}
       >
@@ -340,6 +384,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-error"
         title={t(i18n, "showcase.component.inputTextArea.sections.externalError.title")}
         description={t(i18n, "showcase.component.inputTextArea.sections.externalError.description")}
       >
@@ -354,6 +399,7 @@ export default function SgInputTextAreaPage() {
       </Section>
 
       <Section
+        id="section-events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -387,7 +433,7 @@ export default function SgInputTextAreaPage() {
         <CodeBlock code={loadSample("sg-input-text-area-example-15.src")} />
       </Section>
 
-      <section className="rounded-lg border border-border p-6">
+      <section id="section-props" className="rounded-lg border border-border p-6">
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputTextArea.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
@@ -434,7 +480,9 @@ export default function SgInputTextAreaPage() {
           </table>
         </div>
       </section>
-    </div>
+
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 

@@ -1,15 +1,17 @@
 ﻿"use client";
 
 import React from "react";
-import { SgInputBirthDate } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgButton, SgInputBirthDate, SgStack } from "@seedgrid/fe-components";
 import SgCodeBlockBase from "../others/SgCodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
+import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
 import { loadSample } from "./samples/loadSample";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -65,16 +67,32 @@ export default function SgInputBirthDatePage() {
   const i18n = useShowcaseI18n();
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
 
+  const sectionLinks = [
+    { href: "#basic", label: t(i18n, "showcase.component.inputBirthDate.sections.basic.title") },
+    { href: "#required", label: t(i18n, "showcase.component.inputBirthDate.sections.required.title") },
+    { href: "#range", label: t(i18n, "showcase.component.inputBirthDate.sections.range.title") }
+  ];
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
+    <SgStack className="w-full" gap={32}>
+      <SgStack id="examples-top" gap={8}>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputBirthDate.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="text-muted-foreground">
           {t(i18n, "showcase.component.inputBirthDate.subtitle")}
         </p>
-      </div>
+        <SgStack direction="row" gap={8} wrap>
+          {sectionLinks.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <SgButton appearance="outline" size="sm">
+                {item.label}
+              </SgButton>
+            </Link>
+          ))}
+        </SgStack>
+      </SgStack>
 
       <Section
+        id="basic"
         title={t(i18n, "showcase.component.inputBirthDate.sections.basic.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.basic.description")}
       >
@@ -95,6 +113,7 @@ export default function SgInputBirthDatePage() {
       </Section>
 
       <Section
+        id="required"
         title={t(i18n, "showcase.component.inputBirthDate.sections.required.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.required.description")}
       >
@@ -111,6 +130,7 @@ export default function SgInputBirthDatePage() {
       </Section>
 
       <Section
+        id="range"
         title={t(i18n, "showcase.component.inputBirthDate.sections.range.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.range.description")}
       >
@@ -124,7 +144,8 @@ export default function SgInputBirthDatePage() {
         </div>
         <CodeBlock code={loadSample("sg-input-birth-date-example-03.src")} />
       </Section>
-    </div>
+      <BackToTopFab targetId="examples-top" />
+    </SgStack>
   );
 }
 
