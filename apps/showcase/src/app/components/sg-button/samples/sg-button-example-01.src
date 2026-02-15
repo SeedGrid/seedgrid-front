@@ -1,7 +1,0 @@
-import { SgButton } from "@seedgrid/fe-components";
-
-<SgButton onClick={() => console.log("click")} loading={isLoading}>
-  Submit
-</SgButton>
-
-<SgButton disabled>Disabled</SgButton>

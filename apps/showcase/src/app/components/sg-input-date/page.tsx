@@ -1,11 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgInputDate } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -20,7 +18,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -74,7 +72,7 @@ export default function SgInputDatePage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-date-example-01.src")} />
+        <CodeBlock code={`<SgInputDate\n  id="data"\n  label="${t(i18n, "showcase.component.inputDate.labels.date")}"\n  hintText="${t(i18n, "showcase.component.inputDate.labels.dateHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
       <Section
@@ -89,7 +87,7 @@ export default function SgInputDatePage() {
             maxDate="2030-12-31"
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-date-example-02.src")} />
+        <CodeBlock code={`<SgInputDate\n  id="periodo"\n  label="${t(i18n, "showcase.component.inputDate.labels.period")}"\n  minDate="2020-01-01"\n  maxDate="2030-12-31"\n/>`} />
       </Section>
 
       <Section
@@ -102,10 +100,8 @@ export default function SgInputDatePage() {
             label={t(i18n, "showcase.component.inputDate.labels.eventDate")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-date-example-03.src")} />
+        <CodeBlock code={`<SgInputDate\n  id="evento"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>`} />
       </Section>
     </div>
   );
 }
-
-

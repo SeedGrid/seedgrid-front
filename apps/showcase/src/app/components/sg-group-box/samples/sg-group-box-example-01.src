@@ -1,6 +1,0 @@
-<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.personalData")}">
-  <div className="grid gap-3 sm:grid-cols-2">
-    <div>${t(i18n, "showcase.component.groupBox.labels.field1")}</div>
-    <div>${t(i18n, "showcase.component.groupBox.labels.field2")}</div>
-  </div>
-</SgGroupBox>

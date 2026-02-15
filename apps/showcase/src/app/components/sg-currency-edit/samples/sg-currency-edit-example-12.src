@@ -1,2 +1,0 @@
-<SgCurrencyEdit id="demo-noborder" label="${t(i18n, "showcase.component.currencyEdit.labels.noBorder")}" withBorder={false} name="noborder" register={register} currency="BRL" />
-<SgCurrencyEdit id="demo-filled" label="${t(i18n, "showcase.component.currencyEdit.labels.filled")}" filled name="filled" register={register} currency="BRL" />

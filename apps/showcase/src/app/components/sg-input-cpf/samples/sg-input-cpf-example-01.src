@@ -1,1 +1,0 @@
-<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>

@@ -1,3 +1,0 @@
-<SgSplitButton label="Small" size="sm" onClick={() => {}} items={items} />
-<SgSplitButton label="Medium" size="md" onClick={() => {}} items={items} />
-<SgSplitButton label="Large" size="lg" onClick={() => {}} items={items} />

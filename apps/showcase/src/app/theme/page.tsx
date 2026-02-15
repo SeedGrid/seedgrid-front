@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { useSgTheme } from "@seedgrid/fe-theme";
-import SgCodeBlockBase from "../components/others/SgCodeBlockBase";
+import CodeBlockBase from "../components/CodeBlockBase";
 
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -17,7 +17,7 @@ function Section({ title, description, children }: { title: string; description?
 }
 
 function CodeBlock({ code }: { code: string }) {
-  return <SgCodeBlockBase code={code} />;
+  return <CodeBlockBase code={code} />;
 }
 
 function ColorSwatch({ varName, label }: { varName: string; label: string }) {
@@ -63,17 +63,17 @@ export default function ThemeShowcase() {
       <div>
         <h1 className="text-3xl font-bold">SeedThemeProvider</h1>
         <p className="mt-2 text-[rgb(var(--sg-muted))]">
-          Sistema de temas baseado em uma Ãºnica cor seed que gera automaticamente paletas harmoniosas.
+          Sistema de temas baseado em uma única cor seed que gera automaticamente paletas harmoniosas.
         </p>
       </div>
 
-      {/* â”€â”€ InstalaÃ§Ã£o â”€â”€ */}
-      <Section title="InstalaÃ§Ã£o" description="Adicione o pacote ao seu projeto">
+      {/* ── Instalação ── */}
+      <Section title="Instalação" description="Adicione o pacote ao seu projeto">
         <CodeBlock code={`pnpm add @seedgrid/fe-theme`} />
       </Section>
 
-      {/* â”€â”€ Setup BÃ¡sico â”€â”€ */}
-      <Section title="Setup BÃ¡sico" description="Configure o provider no layout raiz da sua aplicaÃ§Ã£o">
+      {/* ── Setup Básico ── */}
+      <Section title="Setup Básico" description="Configure o provider no layout raiz da sua aplicação">
         <CodeBlock code={`import { SeedThemeProvider } from "@seedgrid/fe-theme";
 
 export default function RootLayout({ children }) {
@@ -84,8 +84,8 @@ export default function RootLayout({ children }) {
           initialTheme={{
             seed: "#16803D",      // Cor principal do tema
             mode: "auto",         // "light" | "dark" | "auto"
-            radius: 8,            // Border radius padrÃ£o
-            persistMode: true,    // Salvar preferÃªncias no localStorage
+            radius: 8,            // Border radius padrão
+            persistMode: true,    // Salvar preferências no localStorage
           }}
           applyTo="html"          // Aplicar CSS vars no <html>
         >
@@ -97,7 +97,7 @@ export default function RootLayout({ children }) {
 }`} />
       </Section>
 
-      {/* â”€â”€ Hook useSgTheme â”€â”€ */}
+      {/* ── Hook useSgTheme ── */}
       <Section title="Hook useSgTheme" description="Acesse e modifique o tema em qualquer componente">
         <CodeBlock code={`import { useSgTheme } from "@seedgrid/fe-theme";
 
@@ -118,16 +118,16 @@ function MyComponent() {
 }`} />
       </Section>
 
-      {/* â”€â”€ Usando CSS Variables â”€â”€ */}
-      <Section title="Usando CSS Variables" description="Todas as cores estÃ£o disponÃ­veis como CSS variables">
+      {/* ── Usando CSS Variables ── */}
+      <Section title="Usando CSS Variables" description="Todas as cores estão disponíveis como CSS variables">
         <CodeBlock code={`// Em componentes React
 <div className="bg-[rgb(var(--sg-primary-600))] text-[rgb(var(--sg-on-primary))]">
-  BotÃ£o Primary
+  Botão Primary
 </div>
 
 // Em Tailwind (configurado)
 <div className="bg-sg-primary-600 text-sg-on-primary">
-  BotÃ£o Primary
+  Botão Primary
 </div>
 
 // Em CSS puro
@@ -137,7 +137,7 @@ function MyComponent() {
 }`} />
       </Section>
 
-      {/* â”€â”€ Paletas de Cores â”€â”€ */}
+      {/* ── Paletas de Cores ── */}
       <Section title="Paletas de Cores" description="Cada cor possui uma escala de 50 a 900">
         <div className="space-y-6">
           <PaletteScale name="primary" label="Primary (muda com seed)" />
@@ -146,8 +146,8 @@ function MyComponent() {
         </div>
       </Section>
 
-      {/* â”€â”€ Cores SemÃ¢nticas â”€â”€ */}
-      <Section title="Cores SemÃ¢nticas" description="Cores fixas para convenÃ§Ãµes universais de UI/UX">
+      {/* ── Cores Semânticas ── */}
+      <Section title="Cores Semânticas" description="Cores fixas para convenções universais de UI/UX">
         <div className="space-y-6">
           <PaletteScale name="success" label="Success (verde fixo)" />
           <PaletteScale name="info" label="Info (azul fixo)" />
@@ -156,7 +156,7 @@ function MyComponent() {
         </div>
       </Section>
 
-      {/* â”€â”€ Cores Neutras â”€â”€ */}
+      {/* ── Cores Neutras ── */}
       <Section title="Cores Neutras" description="Cores harmonizadas sutilmente com a seed">
         <div className="grid grid-cols-2 gap-4">
           <ColorSwatch varName="--sg-bg" label="Background" />
@@ -168,9 +168,9 @@ function MyComponent() {
         </div>
       </Section>
 
-      {/* â”€â”€ Tokens de Componentes â”€â”€ */}
-      <Section title="Tokens de Componentes" description="VariÃ¡veis semÃ¢nticas para componentes especÃ­ficos">
-        <CodeBlock code={`// BotÃµes
+      {/* ── Tokens de Componentes ── */}
+      <Section title="Tokens de Componentes" description="Variáveis semânticas para componentes específicos">
+        <CodeBlock code={`// Botões
 --sg-btn-primary-bg
 --sg-btn-primary-fg
 --sg-btn-primary-border
@@ -198,8 +198,8 @@ function MyComponent() {
 // ... (info, warning, error)`} />
       </Section>
 
-      {/* â”€â”€ ConfiguraÃ§Ã£o do Tailwind â”€â”€ */}
-      <Section title="ConfiguraÃ§Ã£o do Tailwind" description="Configure o Tailwind para usar as CSS variables">
+      {/* ── Configuração do Tailwind ── */}
+      <Section title="Configuração do Tailwind" description="Configure o Tailwind para usar as CSS variables">
         <CodeBlock code={`// tailwind.config.ts
 import type { Config } from "tailwindcss";
 
@@ -235,7 +235,7 @@ export default {
 } satisfies Config;`} />
       </Section>
 
-      {/* â”€â”€ Modo Atual â”€â”€ */}
+      {/* ── Modo Atual ── */}
       <Section title="Estado Atual do Tema">
         <div className="p-6 rounded-lg bg-[rgb(var(--sg-surface))] border border-[rgb(var(--sg-border))]">
           <div className="grid grid-cols-2 gap-4">
@@ -257,29 +257,29 @@ export default {
         </div>
       </Section>
 
-      {/* â”€â”€ PersistÃªncia â”€â”€ */}
-      <Section title="PersistÃªncia no localStorage" description="O tema Ã© salvo automaticamente">
+      {/* ── Persistência ── */}
+      <Section title="Persistência no localStorage" description="O tema é salvo automaticamente">
         <div className="p-6 rounded-lg bg-[rgb(var(--sg-surface))] border border-[rgb(var(--sg-border))]">
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <div className="text-2xl">ðŸ’¾</div>
+              <div className="text-2xl">💾</div>
               <div>
                 <div className="font-semibold">Tema salvo automaticamente</div>
                 <div className="text-sm text-[rgb(var(--sg-muted))]">
-                  Quando vocÃª muda a cor seed ou o modo (light/dark), as preferÃªncias sÃ£o salvas no localStorage
-                  e restauradas automaticamente quando vocÃª recarrega a pÃ¡gina.
+                  Quando você muda a cor seed ou o modo (light/dark), as preferências são salvas no localStorage
+                  e restauradas automaticamente quando você recarrega a página.
                 </div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="text-2xl">ðŸ”‘</div>
+              <div className="text-2xl">🔑</div>
               <div>
                 <div className="font-mono text-sm">sg:theme:config</div>
-                <div className="text-xs text-[rgb(var(--sg-muted))]">Chave do localStorage para configuraÃ§Ã£o do tema</div>
+                <div className="text-xs text-[rgb(var(--sg-muted))]">Chave do localStorage para configuração do tema</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="text-2xl">ðŸ”‘</div>
+              <div className="text-2xl">🔑</div>
               <div>
                 <div className="font-mono text-sm">sg:theme:mode</div>
                 <div className="text-xs text-[rgb(var(--sg-muted))]">Chave do localStorage para modo light/dark</div>
@@ -291,6 +291,4 @@ export default {
     </div>
   );
 }
-
-
 

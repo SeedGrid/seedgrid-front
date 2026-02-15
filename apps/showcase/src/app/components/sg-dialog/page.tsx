@@ -1,17 +1,13 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import Link from "next/link";
-import { SgButton, SgDialog, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
-import { loadSample } from "./samples/loadSample";
-
-function Section(props: Readonly<{ id?: string; title: string; description?: string; children: React.ReactNode }>) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="rounded-lg border border-border p-6">
+    <section className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap items-center gap-4">{props.children}</div>
@@ -20,7 +16,7 @@ function Section(props: Readonly<{ id?: string; title: string; description?: str
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+  return <CodeBlockBase code={props.code} />;
 }
 
 export default function SgDialogPage() {
@@ -31,32 +27,14 @@ export default function SgDialogPage() {
   const [openStrict, setOpenStrict] = React.useState(false);
   const [openAutoClose, setOpenAutoClose] = React.useState(false);
 
-  const sectionLinks = [
-    { href: "#section-basic", label: "1) Básico" },
-    { href: "#section-severity", label: "2) Severity" },
-    { href: "#section-no-close", label: "3) No Close Button" },
-    { href: "#section-strict", label: "4) Strict Mode" },
-    { href: "#section-auto-close", label: "5) Auto Close" }
-  ];
-
   return (
-    <SgStack className="w-full" gap={32}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-8">
+      <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.dialog.title")}</h1>
-        <p className="text-muted-foreground">{t(i18n, "showcase.component.dialog.subtitle")}</p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+        <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.dialog.subtitle")}</p>
+      </div>
 
       <Section
-        id="section-basic"
         title={t(i18n, "showcase.component.dialog.sections.basic.title")}
         description={t(i18n, "showcase.component.dialog.sections.basic.description")}
       >
@@ -68,7 +46,7 @@ export default function SgDialogPage() {
           onOpenChange={setOpenBasic}
           title={t(i18n, "showcase.component.dialog.labels.title")}
           subtitle={t(i18n, "showcase.component.dialog.labels.subtitle")}
-          leading={<span className="text-primary">â—Ž</span>}
+          leading={<span className="text-primary">◎</span>}
           trailing={<span className="text-xs text-muted-foreground">ID: 428</span>}
           footer={
             <>
@@ -91,12 +69,37 @@ export default function SgDialogPage() {
           </div>
         </SgDialog>
         <CodeBlock
-          code={loadSample("sg-dialog-example-01.src")}
+          code={`import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.open")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="${t(i18n, "showcase.component.dialog.labels.title")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.subtitle")}"
+        leading={<span>◎</span>}
+        trailing={<span>ID: 428</span>}
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.cancel")}</SgButton>
+            <SgButton onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.confirm")}</SgButton>
+          </>
+        }
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.body")}</div>
+      </SgDialog>
+    </>
+  );
+}`}
         />
       </Section>
 
       <Section
-        id="section-severity"
         title={t(i18n, "showcase.component.dialog.sections.severity.title")}
         description={t(i18n, "showcase.component.dialog.sections.severity.description")}
       >
@@ -125,12 +128,36 @@ export default function SgDialogPage() {
           </div>
         </SgDialog>
         <CodeBlock
-          code={loadSample("sg-dialog-example-02.src")}
+          code={`import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton severity="danger" onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.openDanger")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        severity="danger"
+        title="${t(i18n, "showcase.component.dialog.labels.dangerTitle")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.dangerSubtitle")}"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.cancel")}</SgButton>
+            <SgButton severity="danger" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.delete")}</SgButton>
+          </>
+        }
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.dangerBody")}</div>
+      </SgDialog>
+    </>
+  );
+}`}
         />
       </Section>
 
       <Section
-        id="section-no-close"
         title={t(i18n, "showcase.component.dialog.sections.noClose.title")}
         description={t(i18n, "showcase.component.dialog.sections.noClose.description")}
       >
@@ -159,12 +186,36 @@ export default function SgDialogPage() {
           </div>
         </SgDialog>
         <CodeBlock
-          code={loadSample("sg-dialog-example-03.src")}
+          code={`import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.openNoClose")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        closeable={false}
+        title="${t(i18n, "showcase.component.dialog.labels.noCloseTitle")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.noCloseSubtitle")}"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.cancel")}</SgButton>
+            <SgButton onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.confirm")}</SgButton>
+          </>
+        }
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.noCloseBody")}</div>
+      </SgDialog>
+    </>
+  );
+}`}
         />
       </Section>
 
       <Section
-        id="section-strict"
         title={t(i18n, "showcase.component.dialog.sections.strict.title")}
         description={t(i18n, "showcase.component.dialog.sections.strict.description")}
       >
@@ -195,12 +246,38 @@ export default function SgDialogPage() {
           </div>
         </SgDialog>
         <CodeBlock
-          code={loadSample("sg-dialog-example-04.src")}
+          code={`import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.openStrict")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        closeable={false}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+        title="${t(i18n, "showcase.component.dialog.labels.strictTitle")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.strictSubtitle")}"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.cancel")}</SgButton>
+            <SgButton onClick={() => setOpen(false)}>${t(i18n, "showcase.component.dialog.labels.confirm")}</SgButton>
+          </>
+        }
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.strictBody")}</div>
+      </SgDialog>
+    </>
+  );
+}`}
         />
       </Section>
 
       <Section
-        id="section-auto-close"
         title={t(i18n, "showcase.component.dialog.sections.autoClose.title")}
         description={t(i18n, "showcase.component.dialog.sections.autoClose.description")}
       >
@@ -219,13 +296,28 @@ export default function SgDialogPage() {
           </div>
         </SgDialog>
         <CodeBlock
-          code={loadSample("sg-dialog-example-05.src")}
+          code={`import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>${t(i18n, "showcase.component.dialog.labels.openAutoClose")}</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        autoCloseMs={3000}
+        title="${t(i18n, "showcase.component.dialog.labels.autoCloseTitle")}"
+        subtitle="${t(i18n, "showcase.component.dialog.labels.autoCloseSubtitle")}"
+      >
+        <div>${t(i18n, "showcase.component.dialog.labels.autoCloseBody")}</div>
+      </SgDialog>
+    </>
+  );
+}`}
         />
       </Section>
-
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+    </div>
   );
 }
-
-

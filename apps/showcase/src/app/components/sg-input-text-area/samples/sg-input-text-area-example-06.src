@@ -1,1 +1,0 @@
-<SgInputTextArea\n  id="words"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.min5Words")}"\n  minNumberOfWords={5}\n  minNumberOfWordsMessage="${t(i18n, "showcase.component.inputTextArea.messages.min5Words")}"\n/>

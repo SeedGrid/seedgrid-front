@@ -1,1 +1,0 @@
-<SgInputCPFCNPJ\n  id="doc"\n  label="${t(i18n, "showcase.component.cpfcnpj.labels.alnum")}"\n  hintText="${t(i18n, "showcase.component.cpfcnpj.labels.alnumHint")}"\n  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}\n/>

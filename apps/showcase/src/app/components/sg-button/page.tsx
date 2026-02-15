@@ -1,13 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import Link from "next/link";
 import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
-import { SgButton, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
-
-import { loadSample } from "./samples/loadSample";
+import { SgButton } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
 
@@ -46,9 +42,9 @@ function useFakeProcess(durationMs: number) {
   return { loading, run };
 }
 
-function Section(props: Readonly<{ id?: string; title: string; description?: string; children: React.ReactNode }>) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="space-y-3">
+    <section className="space-y-3">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="text-sm text-muted-foreground">{props.description}</p> : null}
       {props.children}
@@ -61,7 +57,7 @@ function Row(props: { children: React.ReactNode }) {
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code.trim()} />;
+  return <CodeBlockBase code={props.code.trim()} />;
 }
 
 function capitalize(s: string) {
@@ -71,54 +67,34 @@ function capitalize(s: string) {
 export default function SgButtonShowcase() {
   const submit = useFakeProcess(2000);
 
-  const sectionLinks = [
-    { href: "#section-basic", label: "1) Basic" },
-    { href: "#section-icons", label: "2) Icons" },
-    { href: "#section-severities", label: "3) Severities" },
-    { href: "#section-elevated", label: "4) Elevated" },
-    { href: "#section-rounded", label: "5) Rounded" },
-    { href: "#section-ghost", label: "6) Ghost" },
-    { href: "#section-outline-elevated", label: "7) Outline+Elevation" },
-    { href: "#section-outline", label: "8) Outline" },
-    { href: "#section-rounded-icon", label: "9) Rounded Icon" },
-    { href: "#section-rounded-text-icon", label: "10) Rounded Text Icon" },
-    { href: "#section-rounded-outline-icon", label: "11) Rounded Outline Icon" },
-    { href: "#section-sizes", label: "12) Sizes" },
-    { href: "#section-loading", label: "13) Loading" },
-    { href: "#section-custom-colors", label: "14) Custom Colors" }
-  ];
-
   return (
-    <SgStack className="w-full max-w-4xl" gap={40}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-10">
+      <div>
         <h1 className="text-3xl font-bold">SgButton</h1>
-        <p className="text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           Botao com suporte a severity, appearance, shape, elevation, icons e loading.
         </p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+      </div>
 
-      {/* â”€â”€ Basic â”€â”€ */}
-      <Section id="section-basic" title="Basic" description="Botao padrao com onClick e estado disabled.">
+      {/* ── Basic ── */}
+      <Section title="Basic" description="Botao padrao com onClick e estado disabled.">
         <Row>
           <SgButton onClick={submit.run} loading={submit.loading}>
             Submit
           </SgButton>
           <SgButton disabled>Disabled</SgButton>
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-01.src")} />
+        <CodeBlock code={`import { SgButton } from "@seedgrid/fe-components";
+
+<SgButton onClick={() => console.log("click")} loading={isLoading}>
+  Submit
+</SgButton>
+
+<SgButton disabled>Disabled</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Icons â”€â”€ */}
-      <Section id="section-icons" title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
+      {/* ── Icons ── */}
+      <Section title="Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
         <div className="space-y-4">
           <div>
             <div className="mb-2 text-sm font-medium text-muted-foreground">Elevated Buttons</div>
@@ -176,99 +152,169 @@ export default function SgButtonShowcase() {
           </div>
         </div>
 
-        <CodeBlock code={loadSample("sg-button-example-02.src")} />
+        <CodeBlock code={`import { Check } from "lucide-react";
+import { SgButton } from "@seedgrid/fe-components";
+
+// Elevated Buttons (solid + elevation)
+<SgButton severity="primary" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="info" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>Danger</SgButton>
+
+// Rounded Buttons
+<SgButton severity="secondary" shape="rounded" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="success" shape="rounded" leftIcon={<Check className="size-4" />}>Success</SgButton>
+
+// Ghost Buttons (Flat)
+<SgButton severity="secondary" appearance="ghost" leftIcon={<Check className="size-4" />}>Secondary</SgButton>
+<SgButton severity="warning" appearance="ghost" leftIcon={<Check className="size-4" />}>Warning</SgButton>
+
+// Outlined + Elevation
+<SgButton severity="primary" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Primary</SgButton>
+<SgButton severity="help" appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>Help</SgButton>
+
+// Outlined Buttons
+<SgButton severity="info" appearance="outline" leftIcon={<Check className="size-4" />}>Info</SgButton>
+<SgButton severity="danger" appearance="outline" leftIcon={<Check className="size-4" />}>Danger</SgButton>`} />
       </Section>
-      <Section id="section-severities" title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
+      <Section title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s}>{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-03.src")} />
+        <CodeBlock code={`import { SgButton } from "@seedgrid/fe-components";
+
+<SgButton severity="primary">Primary</SgButton>
+<SgButton severity="secondary">Secondary</SgButton>
+<SgButton severity="success">Success</SgButton>
+<SgButton severity="info">Info</SgButton>
+<SgButton severity="warning">Warning</SgButton>
+<SgButton severity="help">Help</SgButton>
+<SgButton severity="danger">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Raised Buttons â”€â”€ */}
-      <Section id="section-elevated" title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
+      {/* ── Raised Buttons ── */}
+      <Section title="Elevated Buttons" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="solid" elevation="sm">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-04.src")} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="solid" elevation="sm">Primary</SgButton>
+<SgButton severity="secondary" appearance="solid" elevation="sm">Secondary</SgButton>
+<SgButton severity="success" appearance="solid" elevation="sm">Success</SgButton>
+<SgButton severity="info" appearance="solid" elevation="sm">Info</SgButton>
+<SgButton severity="warning" appearance="solid" elevation="sm">Warning</SgButton>
+<SgButton severity="help" appearance="solid" elevation="sm">Help</SgButton>
+<SgButton severity="danger" appearance="solid" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Rounded Buttons â”€â”€ */}
-      <Section id="section-rounded" title="Rounded Buttons" description='shape="rounded" para formato pill.'>
+      {/* ── Rounded Buttons ── */}
+      <Section title="Rounded Buttons" description='shape="rounded" para formato pill.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} shape="rounded">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-05.src")} />
+        <CodeBlock code={`<SgButton severity="primary" shape="rounded">Primary</SgButton>
+<SgButton severity="secondary" shape="rounded">Secondary</SgButton>
+<SgButton severity="success" shape="rounded">Success</SgButton>
+<SgButton severity="info" shape="rounded">Info</SgButton>
+<SgButton severity="warning" shape="rounded">Warning</SgButton>
+<SgButton severity="help" shape="rounded">Help</SgButton>
+<SgButton severity="danger" shape="rounded">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Flat Buttons (ghost) â”€â”€ */}
-      <Section id="section-ghost" title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
+      {/* ── Flat Buttons (ghost) ── */}
+      <Section title="Ghost Buttons (Flat)" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="ghost">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-06.src")} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="ghost">Primary</SgButton>
+<SgButton severity="secondary" appearance="ghost">Secondary</SgButton>
+<SgButton severity="success" appearance="ghost">Success</SgButton>
+<SgButton severity="info" appearance="ghost">Info</SgButton>
+<SgButton severity="warning" appearance="ghost">Warning</SgButton>
+<SgButton severity="help" appearance="ghost">Help</SgButton>
+<SgButton severity="danger" appearance="ghost">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Raised Text Buttons â”€â”€ */}
-      <Section id="section-outline-elevated" title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
+      {/* ── Raised Text Buttons ── */}
+      <Section title="Outlined + Elevation" description='appearance="outline" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline" elevation="sm">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-07.src")} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="outline" elevation="sm">Primary</SgButton>
+<SgButton severity="secondary" appearance="outline" elevation="sm">Secondary</SgButton>
+<SgButton severity="success" appearance="outline" elevation="sm">Success</SgButton>
+<SgButton severity="info" appearance="outline" elevation="sm">Info</SgButton>
+<SgButton severity="warning" appearance="outline" elevation="sm">Warning</SgButton>
+<SgButton severity="help" appearance="outline" elevation="sm">Help</SgButton>
+<SgButton severity="danger" appearance="outline" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Outlined Buttons â”€â”€ */}
-      <Section id="section-outline" title="Outlined Buttons" description='appearance="outline" - apenas bordas coloridas.'>
+      {/* ── Outlined Buttons ── */}
+      <Section title="Outlined Buttons" description='appearance="outline" - apenas bordas coloridas.'>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline">{capitalize(s)}</SgButton>
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-08.src")} />
+        <CodeBlock code={`<SgButton severity="primary" appearance="outline">Primary</SgButton>
+<SgButton severity="secondary" appearance="outline">Secondary</SgButton>
+<SgButton severity="success" appearance="outline">Success</SgButton>
+<SgButton severity="info" appearance="outline">Info</SgButton>
+<SgButton severity="warning" appearance="outline">Warning</SgButton>
+<SgButton severity="help" appearance="outline">Help</SgButton>
+<SgButton severity="danger" appearance="outline">Danger</SgButton>`} />
       </Section>
 
-      {/* â”€â”€ Rounded Icon Buttons (solid) â”€â”€ */}
-      <Section id="section-rounded-icon" title="Rounded Icon Buttons" description='shape="rounded" + icon only - botoes circulares.'>
+      {/* ── Rounded Icon Buttons (solid) ── */}
+      <Section title="Rounded Icon Buttons" description='shape="rounded" + icon only - botoes circulares.'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" leftIcon={icon} />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-09.src")} />
+        <CodeBlock code={`import { Bookmark, Search, Users, Bell, Heart, X, Check } from "lucide-react";
+import { SgButton } from "@seedgrid/fe-components";
+
+<SgButton severity="primary" shape="rounded" leftIcon={<Bookmark className="size-4" />} />
+<SgButton severity="secondary" shape="rounded" leftIcon={<Search className="size-4" />} />
+<SgButton severity="success" shape="rounded" leftIcon={<Users className="size-4" />} />
+<SgButton severity="danger" shape="rounded" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* â”€â”€ Rounded Text Icon Buttons (ghost) â”€â”€ */}
-      <Section id="section-rounded-text-icon" title="Rounded Text Icon Buttons" description='shape="rounded" + icon only + appearance="ghost"'>
+      {/* ── Rounded Text Icon Buttons (ghost) ── */}
+      <Section title="Rounded Text Icon Buttons" description='shape="rounded" + icon only + appearance="ghost"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="ghost" leftIcon={icon} />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-10.src")} />
+        <CodeBlock code={`<SgButton severity="primary" shape="rounded" appearance="ghost" leftIcon={<Check className="size-4" />} />
+<SgButton severity="secondary" shape="rounded" appearance="ghost" leftIcon={<Bookmark className="size-4" />} />
+<SgButton severity="danger" shape="rounded" appearance="ghost" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* â”€â”€ Rounded and Outlined Icon Buttons â”€â”€ */}
-      <Section id="section-rounded-outline-icon" title="Rounded and Outlined Icon Buttons" description='shape="rounded" + icon only + appearance="outline"'>
+      {/* ── Rounded and Outlined Icon Buttons ── */}
+      <Section title="Rounded and Outlined Icon Buttons" description='shape="rounded" + icon only + appearance="outline"'>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="outline" leftIcon={icon} />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-11.src")} />
+        <CodeBlock code={`<SgButton severity="primary" shape="rounded" appearance="outline" leftIcon={<Check className="size-4" />} />
+<SgButton severity="secondary" shape="rounded" appearance="outline" leftIcon={<Bookmark className="size-4" />} />
+<SgButton severity="danger" shape="rounded" appearance="outline" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* â”€â”€ Sizes â”€â”€ */}
-      <Section id="section-sizes" title="Sizes" description='size="sm" | "md" | "lg"'>
+      {/* ── Sizes ── */}
+      <Section title="Sizes" description='size="sm" | "md" | "lg"'>
         <Row>
           <SgButton size="sm">Small</SgButton>
           <SgButton size="md">Medium</SgButton>
@@ -279,22 +325,32 @@ export default function SgButtonShowcase() {
           <SgButton size="md" shape="rounded" leftIcon={<Check className="size-4" />} />
           <SgButton size="lg" shape="rounded" leftIcon={<Check className="size-4" />} />
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-12.src")} />
+        <CodeBlock code={`<SgButton size="sm">Small</SgButton>
+<SgButton size="md">Medium</SgButton>
+<SgButton size="lg">Large</SgButton>
+
+// Icon buttons in different sizes
+<SgButton size="sm" shape="rounded" leftIcon={<Check className="size-4" />} />
+<SgButton size="md" shape="rounded" leftIcon={<Check className="size-4" />} />
+<SgButton size="lg" shape="rounded" leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* â”€â”€ Loading â”€â”€ */}
-      <Section id="section-loading" title="Loading" description="loading=true exibe spinner e desabilita o botao.">
+      {/* ── Loading ── */}
+      <Section title="Loading" description="loading=true exibe spinner e desabilita o botao.">
         <Row>
           <SgButton loading>Processing...</SgButton>
           <SgButton severity="success" loading>Saving...</SgButton>
           <SgButton severity="danger" loading leftIcon={<X className="size-4" />}>Deleting...</SgButton>
           <SgButton shape="rounded" loading leftIcon={<Check className="size-4" />} />
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-13.src")} />
+        <CodeBlock code={`<SgButton loading>Processing...</SgButton>
+<SgButton severity="success" loading>Saving...</SgButton>
+<SgButton severity="danger" loading leftIcon={<X className="size-4" />}>Deleting...</SgButton>
+<SgButton shape="rounded" loading leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* â”€â”€ Custom Colors â”€â”€ */}
-      <Section id="section-custom-colors" title="Custom Colors" description="customColors permite qualquer cor via CSS.">
+      {/* ── Custom Colors ── */}
+      <Section title="Custom Colors" description="customColors permite qualquer cor via CSS.">
         <Row>
           <SgButton
             customColors={{
@@ -329,12 +385,41 @@ export default function SgButtonShowcase() {
             Violet Outline
           </SgButton>
         </Row>
-        <CodeBlock code={loadSample("sg-button-example-14.src")} />
-      </Section>
+        <CodeBlock code={`<SgButton
+  customColors={{
+    bg: "#0f172a",
+    fg: "#ffffff",
+    hoverBg: "#020617",
+    ring: "rgba(15,23,42,.35)"
+  }}
+>
+  Brand Dark
+</SgButton>
 
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+<SgButton
+  customColors={{
+    bg: "#ec4899",
+    fg: "#ffffff",
+    border: "#db2777",
+    hoverBg: "#db2777",
+    ring: "rgba(236,72,153,.35)"
+  }}
+>
+  Pink
+</SgButton>
+
+<SgButton
+  appearance="outline"
+  customColors={{
+    bg: "#8b5cf6",
+    fg: "#8b5cf6",
+    border: "#8b5cf6",
+    ring: "rgba(139,92,246,.35)"
+  }}
+>
+  Violet Outline
+</SgButton>`} />
+      </Section>
+    </div>
   );
 }
-
-

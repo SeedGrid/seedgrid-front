@@ -1,11 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { Save, RefreshCw, Trash2, Home, Plus, Download, Upload, Copy, Printer, Share2, Mail, FileText } from "lucide-react";
 import { SgSplitButton } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-
-import { loadSample } from "./samples/loadSample";
+import CodeBlockBase from "../CodeBlockBase";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
 
@@ -24,7 +22,7 @@ function Row(props: { children: React.ReactNode }) {
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code.trim()} />;
+  return <CodeBlockBase code={props.code.trim()} />;
 }
 
 function capitalize(s: string) {
@@ -54,7 +52,7 @@ export default function SgSplitButtonShowcase() {
         </p>
       </div>
 
-      {/* â”€â”€ Basic â”€â”€ */}
+      {/* ── Basic ── */}
       <Section title="Basic" description="Split button com acao principal e dropdown de itens.">
         <Row>
           <SgSplitButton
@@ -64,10 +62,22 @@ export default function SgSplitButtonShowcase() {
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-01.src")} />
+        <CodeBlock code={`import { Save, RefreshCw, Trash2, Home } from "lucide-react";
+import { SgSplitButton } from "@seedgrid/fe-components";
+
+<SgSplitButton
+  label="Save"
+  leftIcon={<Save className="size-4" />}
+  onClick={() => handleSave()}
+  items={[
+    { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => handleUpdate() },
+    { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => handleDelete() },
+    { label: "Homepage", icon: <Home className="size-4" />, onClick: () => navigate("/") },
+  ]}
+/>`} />
       </Section>
 
-      {/* â”€â”€ Severities â”€â”€ */}
+      {/* ── Severities ── */}
       <Section title="Severities" description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -80,10 +90,19 @@ export default function SgSplitButtonShowcase() {
             />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-02.src")} />
+        <CodeBlock code={`import { SgSplitButton } from "@seedgrid/fe-components";
+
+const items = [
+  { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+  { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+];
+
+<SgSplitButton label="Primary" severity="primary" onClick={() => {}} items={items} />
+<SgSplitButton label="Success" severity="success" onClick={() => {}} items={items} />
+<SgSplitButton label="Danger" severity="danger" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Outlined â”€â”€ */}
+      {/* ── Outlined ── */}
       <Section title="Outlined" description='appearance="outline" - bordas coloridas sem preenchimento.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -97,10 +116,11 @@ export default function SgSplitButtonShowcase() {
             />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-03.src")} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="outline" onClick={() => {}} items={items} />
+<SgSplitButton label="Success" severity="success" appearance="outline" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Ghost â”€â”€ */}
+      {/* ── Ghost ── */}
       <Section title="Ghost" description='appearance="ghost" - sem fundo, apenas texto colorido.'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -114,10 +134,11 @@ export default function SgSplitButtonShowcase() {
             />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-04.src")} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="ghost" onClick={() => {}} items={items} />
+<SgSplitButton label="Danger" severity="danger" appearance="ghost" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Raised â”€â”€ */}
+      {/* ── Raised ── */}
       <Section title="Elevated" description='appearance="solid" + elevation="sm".'>
         <Row>
           {SEVERITIES.map((s) => (
@@ -132,10 +153,10 @@ export default function SgSplitButtonShowcase() {
             />
           ))}
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-05.src")} />
+        <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="solid" elevation="sm" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Sizes â”€â”€ */}
+      {/* ── Sizes ── */}
       <Section title="Sizes" description='size="sm" | "md" | "lg"'>
         <Row>
           <SgSplitButton
@@ -160,10 +181,12 @@ export default function SgSplitButtonShowcase() {
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-06.src")} />
+        <CodeBlock code={`<SgSplitButton label="Small" size="sm" onClick={() => {}} items={items} />
+<SgSplitButton label="Medium" size="md" onClick={() => {}} items={items} />
+<SgSplitButton label="Large" size="lg" onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ With Icons â”€â”€ */}
+      {/* ── With Icons ── */}
       <Section title="With Icons" description="leftIcon na acao principal e icon nos itens do menu.">
         <Row>
           <SgSplitButton
@@ -191,10 +214,19 @@ export default function SgSplitButtonShowcase() {
             items={FILE_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-07.src")} />
+        <CodeBlock code={`<SgSplitButton
+  label="Save"
+  leftIcon={<Save className="size-4" />}
+  severity="primary"
+  onClick={() => handleSave()}
+  items={[
+    { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+    { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+  ]}
+/>`} />
       </Section>
 
-      {/* â”€â”€ Separators â”€â”€ */}
+      {/* ── Separators ── */}
       <Section title="Menu Separators" description="separator=true para dividir grupos de itens no menu.">
         <Row>
           <SgSplitButton
@@ -205,10 +237,21 @@ export default function SgSplitButtonShowcase() {
             items={FILE_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-08.src")} />
+        <CodeBlock code={`<SgSplitButton
+  label="File"
+  leftIcon={<FileText className="size-4" />}
+  severity="secondary"
+  onClick={() => console.log("File")}
+  items={[
+    { label: "Copy", icon: <Copy className="size-4" />, onClick: () => {} },
+    { label: "Print", icon: <Printer className="size-4" />, onClick: () => {} },
+    { separator: true, label: "Export as PDF", icon: <FileText className="size-4" />, onClick: () => {} },
+    { label: "Share via email", icon: <Mail className="size-4" />, onClick: () => {} },
+  ]}
+/>`} />
       </Section>
 
-      {/* â”€â”€ Disabled â”€â”€ */}
+      {/* ── Disabled ── */}
       <Section title="Disabled" description="disabled=true desabilita o split button inteiro.">
         <Row>
           <SgSplitButton
@@ -227,10 +270,10 @@ export default function SgSplitButtonShowcase() {
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-09.src")} />
+        <CodeBlock code={`<SgSplitButton label="Save" leftIcon={<Save className="size-4" />} disabled onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Loading â”€â”€ */}
+      {/* ── Loading ── */}
       <Section title="Loading" description="loading=true exibe spinner na acao principal e desabilita o menu.">
         <Row>
           <SgSplitButton
@@ -248,10 +291,10 @@ export default function SgSplitButtonShowcase() {
             items={BASIC_ITEMS}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-10.src")} />
+        <CodeBlock code={`<SgSplitButton label="Saving..." leftIcon={<Save className="size-4" />} loading onClick={() => {}} items={items} />`} />
       </Section>
 
-      {/* â”€â”€ Disabled Items â”€â”€ */}
+      {/* ── Disabled Items ── */}
       <Section title="Disabled Items" description="Itens individuais podem ser desabilitados.">
         <Row>
           <SgSplitButton
@@ -265,10 +308,17 @@ export default function SgSplitButtonShowcase() {
             ]}
           />
         </Row>
-        <CodeBlock code={loadSample("sg-split-button-example-11.src")} />
+        <CodeBlock code={`<SgSplitButton
+  label="Actions"
+  severity="primary"
+  onClick={() => {}}
+  items={[
+    { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+    { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {}, disabled: true },
+    { label: "Homepage", icon: <Home className="size-4" />, onClick: () => {} },
+  ]}
+/>`} />
       </Section>
     </div>
   );
 }
-
-

@@ -1,6 +1,0 @@
-<SgFloatActionButton
-  hint="Add new"
-  hintPosition="top"
-  hintDelay={300}
-  onClick={handleClick}
-/>

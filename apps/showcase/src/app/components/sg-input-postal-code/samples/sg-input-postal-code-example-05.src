@@ -1,7 +1,0 @@
-<SgInputPostalCode
-  id="cep"
-  label="CEP (Brasil)"
-  hintText="00000-000"
-  validation={(v) => (v.startsWith("00") ? "CEP nao pode iniciar com 00." : null)}
-  onValidation={(msg) => console.log(msg)}
-/>

@@ -1,7 +1,0 @@
-import { Bookmark, Search, Users, Bell, Heart, X, Check } from "lucide-react";
-import { SgButton } from "@seedgrid/fe-components";
-
-<SgButton severity="primary" shape="rounded" leftIcon={<Bookmark className="size-4" />} />
-<SgButton severity="secondary" shape="rounded" leftIcon={<Search className="size-4" />} />
-<SgButton severity="success" shape="rounded" leftIcon={<Users className="size-4" />} />
-<SgButton severity="danger" shape="rounded" leftIcon={<X className="size-4" />} />

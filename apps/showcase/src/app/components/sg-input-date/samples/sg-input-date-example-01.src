@@ -1,1 +1,0 @@
-<SgInputDate\n  id="data"\n  label="${t(i18n, "showcase.component.inputDate.labels.date")}"\n  hintText="${t(i18n, "showcase.component.inputDate.labels.dateHint")}"\n  onChange={(value) => console.log(value)}\n/>

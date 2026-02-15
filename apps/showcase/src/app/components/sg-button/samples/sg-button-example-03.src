@@ -1,9 +1,0 @@
-import { SgButton } from "@seedgrid/fe-components";
-
-<SgButton severity="primary">Primary</SgButton>
-<SgButton severity="secondary">Secondary</SgButton>
-<SgButton severity="success">Success</SgButton>
-<SgButton severity="info">Info</SgButton>
-<SgButton severity="warning">Warning</SgButton>
-<SgButton severity="help">Help</SgButton>
-<SgButton severity="danger">Danger</SgButton>

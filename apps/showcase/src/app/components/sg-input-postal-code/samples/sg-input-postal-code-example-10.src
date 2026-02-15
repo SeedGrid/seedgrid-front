@@ -1,2 +1,0 @@
-<SgInputPostalCode id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="00000-000" withBorder={false} name="noborder" register={register} />
-<SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="00000-000" filled name="filled" register={register} />

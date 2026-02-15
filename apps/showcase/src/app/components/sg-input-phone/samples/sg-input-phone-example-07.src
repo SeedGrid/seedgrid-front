@@ -1,1 +1,0 @@
-<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={200} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={300} borderRadius={20} />

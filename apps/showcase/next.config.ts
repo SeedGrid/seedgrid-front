@@ -1,15 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@seedgrid/fe-components", "@seedgrid/fe-theme"],
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.src$/,
-      type: "asset/source"
-    });
-    return config;
-  }
+  transpilePackages: ["@seedgrid/fe-components", "@seedgrid/fe-theme"]
 };
 
 export default nextConfig;

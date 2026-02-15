@@ -1,5 +1,0 @@
-<SgInputEmail
-  id="email"
-  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
-  blockFakeMail={false}
-/>

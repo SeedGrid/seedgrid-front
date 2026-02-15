@@ -1,1 +1,0 @@
-<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" withBorder={false} inputProps={{}} />\n<SgInputCNPJ id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" filled inputProps={{}} />

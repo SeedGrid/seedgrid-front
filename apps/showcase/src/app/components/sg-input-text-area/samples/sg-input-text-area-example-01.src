@@ -1,1 +1,0 @@
-<SgInputTextArea\n  id="descricao"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.description")}"\n  onChange={(value) => console.log(value)}\n/>

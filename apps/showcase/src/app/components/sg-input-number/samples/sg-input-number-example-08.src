@@ -1,8 +1,0 @@
-<SgInputNumber
-  id="demo-no-negative"
-  label="${t(i18n, "showcase.component.inputNumber.labels.positiveOnly")}"
-  name="positivo"
-  register={register}
-  allowNegative={false}
-  decimals={2}
-/>

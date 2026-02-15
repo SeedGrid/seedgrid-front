@@ -1,2 +1,0 @@
-<SgInputNumber id="demo-w200" label="${t(i18n, "showcase.component.inputNumber.labels.width200")}" width={200} name="w200" register={register} decimals={2} />
-<SgInputNumber id="demo-w300" label="${t(i18n, "showcase.component.inputNumber.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} decimals={2} />

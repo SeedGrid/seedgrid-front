@@ -1,7 +1,0 @@
-<SgButton severity="primary" appearance="solid" elevation="sm">Primary</SgButton>
-<SgButton severity="secondary" appearance="solid" elevation="sm">Secondary</SgButton>
-<SgButton severity="success" appearance="solid" elevation="sm">Success</SgButton>
-<SgButton severity="info" appearance="solid" elevation="sm">Info</SgButton>
-<SgButton severity="warning" appearance="solid" elevation="sm">Warning</SgButton>
-<SgButton severity="help" appearance="solid" elevation="sm">Help</SgButton>
-<SgButton severity="danger" appearance="solid" elevation="sm">Danger</SgButton>

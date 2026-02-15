@@ -1,5 +1,0 @@
-<SgFloatActionButton animation="scale" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="fade" animationOn="mount" severity="danger" />
-<SgFloatActionButton animation="slide" animationOn="mount" severity="danger" />
-<SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />

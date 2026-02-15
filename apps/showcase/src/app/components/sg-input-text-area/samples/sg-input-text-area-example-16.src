@@ -1,8 +1,0 @@
-<SgInputTextArea
-  id="sem-numeros"
-  label="Sem numeros"
-  validation={(v) =>
-    /\d/.test(v) ? "Nao use numeros." : null
-  }
-  onValidation={(msg) => console.log(msg)}
-/>

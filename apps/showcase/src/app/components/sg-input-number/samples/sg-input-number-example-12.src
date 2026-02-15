@@ -1,2 +1,0 @@
-<SgInputNumber id="demo-noborder" label="${t(i18n, "showcase.component.inputNumber.labels.noBorder")}" withBorder={false} name="noborder" register={register} decimals={2} />
-<SgInputNumber id="demo-filled" label="${t(i18n, "showcase.component.inputNumber.labels.filled")}" filled name="filled" register={register} decimals={2} />

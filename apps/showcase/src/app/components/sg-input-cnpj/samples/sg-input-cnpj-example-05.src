@@ -1,1 +1,0 @@
-<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cnpj.messages.required")}"\n  inputProps={{}}\n/>

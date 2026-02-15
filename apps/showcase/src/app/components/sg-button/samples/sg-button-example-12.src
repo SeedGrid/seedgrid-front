@@ -1,8 +1,0 @@
-<SgButton size="sm">Small</SgButton>
-<SgButton size="md">Medium</SgButton>
-<SgButton size="lg">Large</SgButton>
-
-// Icon buttons in different sizes
-<SgButton size="sm" shape="rounded" leftIcon={<Check className="size-4" />} />
-<SgButton size="md" shape="rounded" leftIcon={<Check className="size-4" />} />
-<SgButton size="lg" shape="rounded" leftIcon={<Check className="size-4" />} />

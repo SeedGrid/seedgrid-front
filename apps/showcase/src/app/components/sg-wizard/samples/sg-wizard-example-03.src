@@ -1,8 +1,0 @@
-import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
-
-<SgWizard stepper="numbered" onFinish={() => {}}>
-  <SgWizardPage title="Introducao">...</SgWizardPage>
-  <SgWizardPage title="Detalhes">...</SgWizardPage>
-  <SgWizardPage title="Revisao">...</SgWizardPage>
-  <SgWizardPage title="Confirmacao">...</SgWizardPage>
-</SgWizard>

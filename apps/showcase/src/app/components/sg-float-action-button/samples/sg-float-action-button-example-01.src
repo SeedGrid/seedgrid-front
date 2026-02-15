@@ -1,8 +1,0 @@
-<SgFloatActionButton position="left-top" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-top" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-top" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-center" size="sm" severity="warning" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-center" size="sm" severity="danger" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-bottom" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-bottom" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />

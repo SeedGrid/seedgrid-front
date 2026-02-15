@@ -1,11 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgInputPassword } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -20,7 +18,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -80,7 +78,7 @@ export default function SgInputPasswordPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-01.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.password")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.passwordHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
       <Section
@@ -104,7 +102,7 @@ export default function SgInputPasswordPage() {
             requiredMessage={t(i18n, "showcase.component.inputPassword.messages.required")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-02.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.requiredPassword")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputPassword.messages.required")}"\n/>`} />
       </Section>
 
       <Section
@@ -126,7 +124,7 @@ export default function SgInputPasswordPage() {
             {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-03.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.min8")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.min8Hint")}"\n  validation={(v) =>\n    v.length < 8 ? "${t(i18n, "showcase.component.inputPassword.messages.min8")}" : null\n  }\n  onValidation={(msg) => console.log(msg)}\n/>`} />
       </Section>
 
       <Section
@@ -148,7 +146,7 @@ export default function SgInputPasswordPage() {
             minSize={4}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-04.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.simple")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.simpleHint")}"\n  upperRequired={false}\n  lowerRequired={false}\n  numberRequired={false}\n  specialCharacterRequired={false}\n  prohibitsRepeatedCharactersInSequence={false}\n  prohibitsSequentialAscCharacters={false}\n  prohibitsSequentialDescCharacters={false}\n  minSize={4}\n/>`} />
       </Section>
 
       <Section
@@ -163,7 +161,7 @@ export default function SgInputPasswordPage() {
             commonPasswordCheck
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-05.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.common")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.commonHint")}"\n  commonPasswordCheck\n/>`} />
       </Section>
 
       <Section
@@ -180,7 +178,7 @@ export default function SgInputPasswordPage() {
             showStrengthBar
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-06.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.strong")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.generateHint")}"\n  createNewPasswordButton\n  minSize={10}\n  showStrengthBar\n/>`} />
       </Section>
 
       <Section
@@ -196,7 +194,7 @@ export default function SgInputPasswordPage() {
             showCharCounter
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-07.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="senha"\n  label="${t(i18n, "showcase.component.inputPassword.labels.max12")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.max12Hint")}"\n  maxLength={12}\n  showCharCounter\n/>`} />
       </Section>
 
       <Section
@@ -219,7 +217,7 @@ export default function SgInputPasswordPage() {
             filled
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-08.src")} />
+        <CodeBlock code={`<SgInputPassword id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" withBorder={false} />\n<SgInputPassword id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" filled />`} />
       </Section>
 
       <Section
@@ -234,7 +232,7 @@ export default function SgInputPasswordPage() {
             clearButton={false}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-09.src")} />
+        <CodeBlock code={`<SgInputPassword id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" clearButton={false} />`} />
       </Section>
 
       <Section
@@ -256,7 +254,7 @@ export default function SgInputPasswordPage() {
             borderRadius={20}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-10.src")} />
+        <CodeBlock code={`<SgInputPassword id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" width={200} />\n<SgInputPassword id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" width={300} borderRadius={20} />`} />
       </Section>
 
       <Section
@@ -272,7 +270,7 @@ export default function SgInputPasswordPage() {
             inputProps={{ defaultValue: t(i18n, "showcase.common.labels.notEditable") }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-11.src")} />
+        <CodeBlock code={`<SgInputPassword id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}" enabled={false} />`} />
       </Section>
 
       <Section
@@ -305,10 +303,8 @@ export default function SgInputPasswordPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={loadSample("sg-input-password-example-12.src")} />
+        <CodeBlock code={`<SgInputPassword\n  id="eventos"\n  label="${t(i18n, "showcase.common.labels.typeAndLog")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onEnter")}")}\n  onExit={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onExit")}")}\n  onClear={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onClear")}")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
     </div>
   );
 }
-
-

@@ -1,17 +1,13 @@
-"use client";
+﻿"use client";
 
 import React from "react";
-import Link from "next/link";
-import { SgInputCPF, SgButton, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
+import { SgInputCPF } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
 
-import { loadSample } from "./samples/loadSample";
-
-function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="rounded-lg border border-border p-6">
+    <section className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -22,7 +18,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -57,39 +53,16 @@ export default function SgInputCPFPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
-  const sectionLinks = [
-    { href: "#section-basic", label: "1) Básico" },
-    { href: "#section-required", label: "2) Required" },
-    { href: "#section-length", label: "3) Length" },
-    { href: "#section-invalid", label: "4) Invalid" },
-    { href: "#section-validation", label: "5) Validation" },
-    { href: "#section-visual", label: "6) Visual" },
-    { href: "#section-no-clear", label: "7) No Clear" },
-    { href: "#section-size-border", label: "8) Size/Border" },
-    { href: "#section-disabled", label: "9) Disabled" },
-    { href: "#section-events", label: "10) Events" }
-  ];
-
   return (
-    <SgStack className="w-full" gap={32}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-8">
+      <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cpf.title")}</h1>
-        <p className="text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.cpf.subtitle")}
         </p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+      </div>
 
       <Section
-        id="section-basic"
         title={t(i18n, "showcase.component.cpf.sections.basic.title")}
         description={t(i18n, "showcase.component.cpf.sections.basic.description")}
       >
@@ -105,11 +78,10 @@ export default function SgInputCPFPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: `\"${basicValue}\"` })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-01.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
       <Section
-        id="section-required"
         title={t(i18n, "showcase.component.cpf.sections.required.title")}
         description={t(i18n, "showcase.component.cpf.sections.required.description")}
       >
@@ -132,11 +104,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-02.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cpf.messages.required")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="section-length"
         title={t(i18n, "showcase.component.cpf.sections.length.title")}
         description={t(i18n, "showcase.component.cpf.sections.length.description")}
       >
@@ -149,11 +120,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-03.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  lengthMessage="${t(i18n, "showcase.component.cpf.messages.length")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="section-invalid"
         title={t(i18n, "showcase.component.cpf.sections.invalid.title")}
         description={t(i18n, "showcase.component.cpf.sections.invalid.description")}
       >
@@ -166,11 +136,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-04.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  invalidMessage="${t(i18n, "showcase.component.cpf.messages.invalid")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="section-validation"
         title={t(i18n, "showcase.component.cpf.sections.validation.title")}
         description={t(i18n, "showcase.component.cpf.sections.validation.description")}
       >
@@ -189,11 +158,10 @@ export default function SgInputCPFPage() {
               : `\"${validationMsg}\"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-05.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpfHint")}"\n  validation={(v) => (v.startsWith("123") ? "${t(i18n, "showcase.component.cpf.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="section-visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -215,11 +183,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-06.src")} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" withBorder={false} inputProps={{}} />\n<SgInputCPF id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" filled inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="section-no-clear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -232,11 +199,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-07.src")} />
+        <CodeBlock code={`<SgInputCPF id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" clearButton={false} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="section-size-border"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -257,11 +223,10 @@ export default function SgInputCPFPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-08.src")} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={200} inputProps={{}} />\n<SgInputCPF id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" width={300} borderRadius={20} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="section-disabled"
         title={t(i18n, "showcase.common.sections.disabled.title")}
         description={t(i18n, "showcase.common.sections.disabled.description")}
       >
@@ -274,11 +239,10 @@ export default function SgInputCPFPage() {
             inputProps={{ defaultValue: "000.000.000-00" }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-09.src")} />
+        <CodeBlock code={`<SgInputCPF id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}" enabled={false} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="section-events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -303,11 +267,8 @@ export default function SgInputCPFPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={loadSample("sg-input-cpf-example-10.src")} />
+        <CodeBlock code={`<SgInputCPF\n  id="eventos"\n  label="${t(i18n, "showcase.component.cpf.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
-
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+    </div>
   );
 }
-

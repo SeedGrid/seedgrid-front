@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
 import { t, useShowcaseI18n } from "../i18n";
-import SgCodeBlockBase from "./components/others/SgCodeBlockBase";
+import CodeBlockBase from "./components/CodeBlockBase";
 
 const COMPONENTS = [
   {
@@ -54,12 +54,6 @@ const COMPONENTS = [
     items: [
       { slug: "sg-wizard", name: "SgWizard", desc: "Formulario multi-etapas com navegacao e callback async" }
     ]
-  },
-  {
-    categoryKey: "showcase.nav.others",
-    items: [
-      { slug: "sg-code-block-base", name: "SgCodeBlockBase", desc: "Bloco de codigo readonly/interativo com editor e preview" }
-    ]
   }
 ];
 
@@ -104,7 +98,7 @@ export default function HomePage() {
             control: <code className="rounded bg-muted px-1">control</code>
           })}
         </p>
-        <SgCodeBlockBase code={`import { useForm } from "react-hook-form";
+        <CodeBlockBase code={`import { useForm } from "react-hook-form";
 import { SgInputText, SgInputEmail } from "@seedgrid/fe-components";
 
 const { register, handleSubmit } = useForm({
@@ -141,7 +135,7 @@ const { register, handleSubmit } = useForm({
         <p className="mt-2 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p2")}
         </p>
-        <SgCodeBlockBase code={`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
+        <CodeBlockBase code={`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
 
 const messagesEn = {
   "components.inputs.required": "Required field.",
@@ -162,7 +156,7 @@ export default function RootLayout({ children }) {
         <p className="mt-3 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p3")}
         </p>
-        <SgCodeBlockBase code={`import { setComponentsI18n } from "@seedgrid/fe-components";
+        <CodeBlockBase code={`import { setComponentsI18n } from "@seedgrid/fe-components";
 
 setComponentsI18n({
   locale: "en-US",
@@ -195,11 +189,9 @@ setComponentsI18n({
 
       <section className="mt-12 rounded-lg bg-muted/50 p-6">
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.home.install.title")}</h2>
-        <SgCodeBlockBase code={`import { SgInputText } from "@seedgrid/fe-components";
+        <CodeBlockBase code={`import { SgInputText } from "@seedgrid/fe-components";
 import type { SgInputTextProps } from "@seedgrid/fe-components";`} />
       </section>
     </div>
   );
 }
-
-

@@ -1,17 +1,13 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import Link from "next/link";
-import { SgButton, SgInputBirthDate, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import { SgInputBirthDate } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
-import { loadSample } from "./samples/loadSample";
-
-function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="rounded-lg border border-border p-6">
+    <section className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -22,7 +18,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -67,32 +63,16 @@ export default function SgInputBirthDatePage() {
   const i18n = useShowcaseI18n();
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
 
-  const sectionLinks = [
-    { href: "#basic", label: t(i18n, "showcase.component.inputBirthDate.sections.basic.title") },
-    { href: "#required", label: t(i18n, "showcase.component.inputBirthDate.sections.required.title") },
-    { href: "#range", label: t(i18n, "showcase.component.inputBirthDate.sections.range.title") }
-  ];
-
   return (
-    <SgStack className="w-full" gap={32}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-8">
+      <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputBirthDate.title")}</h1>
-        <p className="text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.inputBirthDate.subtitle")}
         </p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+      </div>
 
       <Section
-        id="basic"
         title={t(i18n, "showcase.component.inputBirthDate.sections.basic.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.basic.description")}
       >
@@ -109,11 +89,15 @@ export default function SgInputBirthDatePage() {
               : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-birth-date-example-01.src")} />
+        <CodeBlock code={`<SgInputBirthDate
+  id="nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
+  minAge={18}
+  onValidation={(msg) => console.log(msg)}
+/>`} />
       </Section>
 
       <Section
-        id="required"
         title={t(i18n, "showcase.component.inputBirthDate.sections.required.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.required.description")}
       >
@@ -126,11 +110,16 @@ export default function SgInputBirthDatePage() {
             requiredMessage={t(i18n, "showcase.component.inputBirthDate.messages.required")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-birth-date-example-02.src")} />
+        <CodeBlock code={`<SgInputBirthDate
+  id="nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
+  minAge={18}
+  required
+  requiredMessage="${t(i18n, "showcase.component.inputBirthDate.messages.required")}"
+/>`} />
       </Section>
 
       <Section
-        id="range"
         title={t(i18n, "showcase.component.inputBirthDate.sections.range.title")}
         description={t(i18n, "showcase.component.inputBirthDate.sections.range.description")}
       >
@@ -142,11 +131,13 @@ export default function SgInputBirthDatePage() {
             maxAge={80}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-birth-date-example-03.src")} />
+        <CodeBlock code={`<SgInputBirthDate
+  id="nascimento"
+  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"
+  minAge={12}
+  maxAge={80}
+/>`} />
       </Section>
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+    </div>
   );
 }
-
-

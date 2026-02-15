@@ -1,17 +1,13 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import Link from "next/link";
-import { DEFAULT_BLOCKED_EMAIL_DOMAINS, SgInputEmail, SgButton, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import { DEFAULT_BLOCKED_EMAIL_DOMAINS, SgInputEmail } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
 
-import { loadSample } from "./samples/loadSample";
-
-function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="rounded-lg border border-border p-6">
+    <section className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -22,7 +18,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -72,41 +68,16 @@ export default function SgInputEmailPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
-  const sectionLinks = [
-    { href: "#section-basic", label: "1) Básico" },
-    { href: "#section-required", label: "2) Required" },
-    { href: "#section-invalid", label: "3) Mensagem Inválida" },
-    { href: "#section-blocked", label: "4) Bloqueio de Domínios" },
-    { href: "#section-validation", label: "5) Validação Customizada" },
-    { href: "#section-blocked-list", label: "6) Lista de Bloqueados" },
-    { href: "#section-json", label: "7) Uso com JSON" },
-    { href: "#section-visual", label: "8) Variações Visuais" },
-    { href: "#section-noclear", label: "9) Sem Clear Button" },
-    { href: "#section-size", label: "10) Width/Border Radius" },
-    { href: "#section-disabled", label: "11) Disabled" },
-    { href: "#section-events", label: "12) Events" }
-  ];
-
   return (
-    <SgStack className="w-full" gap={32}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-8">
+      <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputEmail.title")}</h1>
-        <p className="text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.inputEmail.subtitle")}
         </p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+      </div>
 
       <Section
-        id="section-basic"
         title={t(i18n, "showcase.component.inputEmail.sections.basic.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.basic.description")}
       >
@@ -121,11 +92,15 @@ export default function SgInputEmailPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: basicValue })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-01.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
+  onChange={(value) => console.log(value)}
+/>`} />
       </Section>
 
       <Section
-        id="section-required"
         title={t(i18n, "showcase.component.inputEmail.sections.required.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.required.description")}
       >
@@ -146,11 +121,16 @@ export default function SgInputEmailPage() {
             requiredMessage={t(i18n, "showcase.component.inputEmail.messages.required")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-02.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.required")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.requiredHint")}"
+  required
+  requiredMessage="${t(i18n, "showcase.component.inputEmail.messages.required")}"
+/>`} />
       </Section>
 
       <Section
-        id="section-invalid"
         title={t(i18n, "showcase.component.inputEmail.sections.invalid.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.invalid.description")}
       >
@@ -162,11 +142,15 @@ export default function SgInputEmailPage() {
             invalidMessage={t(i18n, "showcase.component.inputEmail.messages.invalid")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-03.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.emailHint")}"
+  invalidMessage="${t(i18n, "showcase.component.inputEmail.messages.invalid")}"
+/>`} />
       </Section>
 
       <Section
-        id="section-blocked"
         title={t(i18n, "showcase.component.inputEmail.sections.blocked.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.blocked.description")}
       >
@@ -185,11 +169,14 @@ export default function SgInputEmailPage() {
             blockFakeMail={false}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-04.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  blockFakeMail={false}
+/>`} />
       </Section>
 
       <Section
-        id="section-validation"
         title={t(i18n, "showcase.component.inputEmail.sections.validation.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.validation.description")}
       >
@@ -208,11 +195,16 @@ export default function SgInputEmailPage() {
             {validationMsg === null ? t(i18n, "showcase.common.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-05.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="email"
+  label="${t(i18n, "showcase.component.inputEmail.labels.onlyCom")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.domainHint")}"
+  validation={(v) => (v.endsWith(".com") ? null : "${t(i18n, "showcase.component.inputEmail.messages.onlyCom")}")}
+  onValidation={(msg) => console.log(msg)}
+/>`} />
       </Section>
 
       <Section
-        id="section-blocked-list"
         title={t(i18n, "showcase.component.inputEmail.sections.blockedList.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.blockedList.description")}
       >
@@ -222,17 +214,25 @@ export default function SgInputEmailPage() {
       </Section>
 
       <Section
-        id="section-json"
         title={t(i18n, "showcase.component.inputEmail.sections.json.title")}
         description={t(i18n, "showcase.component.inputEmail.sections.json.description")}
       >
         <CodeBlock
-          code={loadSample("sg-input-email-example-06.src")}
+          code={`// 1) Coloque o arquivo em public/seedgrid-blocked-email-domains.json
+// {
+//   "blockedEmailDomains": ["exemplo.com", "teste.com"]
+// }
+//
+// 2) No startup da app:
+fetch("/seedgrid-blocked-email-domains.json")
+  .then((res) => res.json())
+  .then((data) => {
+    window.__seedgridBlockedEmailDomains = data.blockedEmailDomains ?? [];
+  });`}
         />
       </Section>
 
       <Section
-        id="section-visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -252,11 +252,11 @@ export default function SgInputEmailPage() {
             filled
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-07.src")} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" withBorder={false} />
+<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" filled />`} />
       </Section>
 
       <Section
-        id="section-noclear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -269,12 +269,11 @@ export default function SgInputEmailPage() {
           />
         </div>
         <CodeBlock
-          code={loadSample("sg-input-email-example-08.src")}
+          code={`<SgInputEmail id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" clearButton={false} />`}
         />
       </Section>
 
       <Section
-        id="section-size"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -293,11 +292,11 @@ export default function SgInputEmailPage() {
             borderRadius={20}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-09.src")} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={200} />
+<SgInputEmail id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" width={300} borderRadius={20} />`} />
       </Section>
 
       <Section
-        id="section-disabled"
         title={t(i18n, "showcase.common.sections.disabled.title")}
         description={t(i18n, "showcase.common.sections.disabled.description")}
       >
@@ -310,11 +309,10 @@ export default function SgInputEmailPage() {
             inputProps={{ defaultValue: t(i18n, "showcase.common.labels.notEditable") }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-10.src")} />
+        <CodeBlock code={`<SgInputEmail id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}" enabled={false} />`} />
       </Section>
 
       <Section
-        id="section-events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -340,15 +338,21 @@ export default function SgInputEmailPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={loadSample("sg-input-email-example-11.src")} />
+        <CodeBlock code={`<SgInputEmail
+  id="eventos"
+  label="${t(i18n, "showcase.common.labels.typeAndLog")}"
+  hintText="${t(i18n, "showcase.component.inputEmail.labels.email")}"
+  required
+  onChange={(v) => console.log("onChange:", v)}
+  onEnter={() => console.log("focus")}
+  onExit={() => console.log("blur")}
+  onClear={() => console.log("cleared")}
+  onValidation={(msg) => console.log("validation:", msg)}
+/>`} />
       </Section>
-
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+    </div>
   );
 }
-
-
 
 
 

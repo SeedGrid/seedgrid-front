@@ -1,4 +1,0 @@
-<SgStack direction="row" gap={8}>
-  <SgButton severity="primary">Primary</SgButton>
-  <SgButton appearance="outline">Outline</SgButton>
-</SgStack>

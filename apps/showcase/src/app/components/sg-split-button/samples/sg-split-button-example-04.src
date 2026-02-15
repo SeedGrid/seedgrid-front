@@ -1,2 +1,0 @@
-<SgSplitButton label="Primary" severity="primary" appearance="ghost" onClick={() => {}} items={items} />
-<SgSplitButton label="Danger" severity="danger" appearance="ghost" onClick={() => {}} items={items} />

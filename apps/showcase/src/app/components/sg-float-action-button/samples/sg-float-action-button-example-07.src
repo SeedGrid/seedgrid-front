@@ -1,6 +1,0 @@
-<SgFloatActionButton
-  actions={actions}
-  type="circle"
-  radius={120}
-  severity="secondary"
-/>

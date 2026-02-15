@@ -1,1 +1,0 @@
-<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.required")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputPhone.messages.required")}"\n/>

@@ -1,6 +1,0 @@
-<SgInputPostalCode
-  id="postal"
-  label="Codigo postal obrigatorio"
-  required
-  requiredMessage="Informe o codigo postal."
-/>

@@ -1,3 +1,0 @@
-<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.classNameTitle")}" className="bg-foreground/5 p-2 rounded-xl">
-  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
-</SgGroupBox>

@@ -1,1 +1,0 @@
-<SgInputPhone id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" clearButton={false} />

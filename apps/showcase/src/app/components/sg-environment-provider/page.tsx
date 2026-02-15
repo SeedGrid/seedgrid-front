@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import {
@@ -10,10 +10,8 @@ import {
   createApiPersistenceStrategy,
   createCompositePersistenceStrategy
 } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -26,7 +24,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+  return <CodeBlockBase code={props.code} />;
 }
 
 function EnvInfo(props: { baseKey: string }) {
@@ -76,7 +74,16 @@ export default function SgEnvironmentProviderPage() {
           <EnvInfo baseKey="fab:theme" />
         </div>
         <CodeBlock
-          code={loadSample("sg-environment-provider-example-01.src")}
+          code={`import React from "react";
+import { buildSgPersistenceKey, useSgEnvironment } from "@seedgrid/fe-components";
+
+function Example() {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
+
+  return <div>fullKey: {fullKey ?? "null"}</div>;
+}`}
         />
       </Section>
 
@@ -100,7 +107,32 @@ export default function SgEnvironmentProviderPage() {
           </SgEnvironmentProvider>
         </div>
         <CodeBlock
-          code={loadSample("sg-environment-provider-example-02.src")}
+          code={`import React from "react";
+import {
+  SgEnvironmentProvider,
+  buildSgPersistenceKey,
+  useSgEnvironment
+} from "@seedgrid/fe-components";
+
+function EnvInfo() {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
+  return <div>fullKey: {fullKey ?? "null"}</div>;
+}
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:123" },
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
+      }}
+    >
+      <EnvInfo />
+    </SgEnvironmentProvider>
+  );
+}`}
         />
       </Section>
 
@@ -110,7 +142,40 @@ export default function SgEnvironmentProviderPage() {
       >
         <div className="w-full">
           <CodeBlock
-            code={loadSample("sg-environment-provider-example-03.src")}
+            code={`import React from "react";
+import {
+  SgEnvironmentProvider,
+  createApiPersistenceStrategy,
+  createCompositePersistenceStrategy,
+  createLocalStorageStrategy
+} from "@seedgrid/fe-components";
+
+const api = createApiPersistenceStrategy({
+  baseUrl: "https://api.seedgrid.com",
+  scope: "app:crm",
+  stateVersion: 1
+});
+
+const local = createLocalStorageStrategy();
+const persistence = createCompositePersistenceStrategy({
+  mode: "fallback",
+  primary: api,
+  secondary: local
+});
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:123" },
+        persistenceStrategy: persistence,
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
+      }}
+    >
+      {/* componentes persistentes */}
+    </SgEnvironmentProvider>
+  );
+}`}
           />
         </div>
       </Section>
@@ -121,12 +186,43 @@ export default function SgEnvironmentProviderPage() {
       >
         <div className="w-full">
           <CodeBlock
-            code={loadSample("sg-environment-provider-example-04.src")}
+            code={`import React from "react";
+import {
+  SgEnvironmentProvider,
+  createApiPersistenceStrategy,
+  createCompositePersistenceStrategy,
+  createLocalStorageStrategy
+} from "@seedgrid/fe-components";
+
+const api = createApiPersistenceStrategy({
+  baseUrl: "https://api.seedgrid.com",
+  scope: "app:crm",
+  stateVersion: 1
+});
+
+const local = createLocalStorageStrategy();
+const persistence = createCompositePersistenceStrategy({
+  mode: "mirror",
+  primary: api,
+  secondary: local
+});
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:123" },
+        persistenceStrategy: persistence,
+        persistence: { scope: "app:crm", mode: "mirror", stateVersion: 1 }
+      }}
+    >
+      {/* componentes persistentes */}
+    </SgEnvironmentProvider>
+  );
+}`}
           />
         </div>
       </Section>
     </div>
   );
 }
-
-

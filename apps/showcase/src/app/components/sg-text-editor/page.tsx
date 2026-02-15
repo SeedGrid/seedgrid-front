@@ -1,11 +1,9 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgTextEditor } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -18,7 +16,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+  return <CodeBlockBase code={props.code} />;
 }
 
 export default function SgTextEditorPage() {
@@ -56,11 +54,27 @@ export default function SgTextEditorPage() {
           onSave={(file) => onSave(file)}
         />
         <CodeBlock
-          code={loadSample("sg-text-editor-example-01.src")}
+          code={`import React from "react";
+import { SgTextEditor } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [htmlBody, setHtmlBody] = React.useState("<p><strong>SeedGrid</strong> editor</p>");
+  const [cssText, setCssText] = React.useState("body { font-family: Arial; }");
+
+  return (
+    <SgTextEditor
+      id="sg-text-editor"
+      valueHtml={htmlBody}
+      onChangeHtml={setHtmlBody}
+      cssText={cssText}
+      onCssTextChange={setCssText}
+      showCssEditor
+      onSave={(file) => console.log(file)}
+    />
+  );
+}`}
         />
       </Section>
     </div>
   );
 }
-
-

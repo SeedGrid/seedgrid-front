@@ -1,9 +1,0 @@
-<SgInputPostalCode
-  id="cep"
-  label="CEP (Brasil)"
-  hintText="00000-000"
-  country="BR"
-  validateWithViaCep
-  viaCepErrorMessage="CEP invalido."
-  onViaCepResult={(data) => console.log(data)}
-/>

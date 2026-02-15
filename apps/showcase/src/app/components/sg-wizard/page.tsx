@@ -3,10 +3,8 @@
 import React from "react";
 import { User, Mail, Phone, MapPin, Tag, Send, CheckCircle } from "lucide-react";
 import { SgInputEmail, SgInputPhone, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -19,7 +17,7 @@ function Section(props: { title: string; description?: string; children: React.R
 }
 
 function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+  return <CodeBlockBase code={props.code} />;
 }
 
 export default function SgWizardPageDemo() {
@@ -130,7 +128,70 @@ export default function SgWizardPageDemo() {
             <pre className="whitespace-pre-wrap">{JSON.stringify(submitted, null, 2)}</pre>
           </div>
         ) : null}
-        <CodeBlock code={loadSample("sg-wizard-example-01.src")} />
+        <CodeBlock code={`import React from "react";
+import { SgInputText, SgInputEmail, SgInputPhone, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+const [submitted, setSubmitted] = React.useState<Record<string, string> | null>(null);
+const [formValues, setFormValues] = React.useState({
+  name: "",
+  email: "",
+  phone: ""
+});
+
+<SgWizard
+  stepper="numbered"
+  onFinish={async () => {
+    setSubmitted(null);
+    await new Promise((r) => setTimeout(r, 800));
+    setSubmitted({ ...formValues });
+  }}
+>
+  <SgWizardPage title="${t(i18n, "showcase.component.wizard.labels.step1Title")}">
+    <SgInputText
+      id="wizard-name"
+      label="${t(i18n, "showcase.component.wizard.labels.name")}"
+      required
+      requiredMessage="${t(i18n, "showcase.component.wizard.messages.requiredName")}"
+      inputProps={{
+        value: formValues.name,
+        onChange: (e) => setFormValues((prev) => ({ ...prev, name: e.target.value }))
+      }}
+    />
+    <SgInputEmail
+      id="wizard-email"
+      label="${t(i18n, "showcase.component.wizard.labels.email")}"
+      required
+      requiredMessage="${t(i18n, "showcase.component.wizard.messages.requiredEmail")}"
+      invalidMessage="${t(i18n, "showcase.component.wizard.messages.invalidEmail")}"
+      inputProps={{
+        value: formValues.email,
+        onChange: (e) => setFormValues((prev) => ({ ...prev, email: e.target.value }))
+      }}
+    />
+  </SgWizardPage>
+  <SgWizardPage title="${t(i18n, "showcase.component.wizard.labels.step2Title")}">
+    <SgInputPhone
+      id="wizard-phone"
+      label="${t(i18n, "showcase.component.wizard.labels.phone")}"
+      required
+      requiredMessage="${t(i18n, "showcase.component.wizard.messages.requiredPhone")}"
+      lengthMessage="${t(i18n, "showcase.component.wizard.messages.invalidPhone")}"
+      inputProps={{
+        value: formValues.phone,
+        onChange: (e) => setFormValues((prev) => ({ ...prev, phone: e.target.value }))
+      }}
+    />
+  </SgWizardPage>
+  <SgWizardPage title="${t(i18n, "showcase.component.wizard.labels.step3Title")}">
+    <div>${t(i18n, "showcase.component.wizard.labels.name")}: {formValues.name}</div>
+    <div>${t(i18n, "showcase.component.wizard.labels.email")}: {formValues.email}</div>
+    <div>${t(i18n, "showcase.component.wizard.labels.phone")}: {formValues.phone}</div>
+  </SgWizardPage>
+</SgWizard>
+
+{submitted && (
+  <pre>{JSON.stringify(submitted, null, 2)}</pre>
+)}`} />
       </Section>
 
       <Section
@@ -160,7 +221,20 @@ export default function SgWizardPageDemo() {
             </div>
           </SgWizardPage>
         </SgWizard>
-        <CodeBlock code={loadSample("sg-wizard-example-02.src")} />
+        <CodeBlock code={`import { MapPin, Tag, Send } from "lucide-react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+<SgWizard stepper="icons" onFinish={() => {}}>
+  <SgWizardPage title="Posicao" icon={<MapPin className="size-5" />}>
+    ...
+  </SgWizardPage>
+  <SgWizardPage title="Categoria" icon={<Tag className="size-5" />}>
+    ...
+  </SgWizardPage>
+  <SgWizardPage title="Enviar" icon={<Send className="size-5" />}>
+    ...
+  </SgWizardPage>
+</SgWizard>`} />
       </Section>
 
       <Section
@@ -196,7 +270,14 @@ export default function SgWizardPageDemo() {
             </div>
           </SgWizardPage>
         </SgWizard>
-        <CodeBlock code={loadSample("sg-wizard-example-03.src")} />
+        <CodeBlock code={`import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+<SgWizard stepper="numbered" onFinish={() => {}}>
+  <SgWizardPage title="Introducao">...</SgWizardPage>
+  <SgWizardPage title="Detalhes">...</SgWizardPage>
+  <SgWizardPage title="Revisao">...</SgWizardPage>
+  <SgWizardPage title="Confirmacao">...</SgWizardPage>
+</SgWizard>`} />
       </Section>
 
       <Section
@@ -224,7 +305,17 @@ export default function SgWizardPageDemo() {
             </div>
           </SgWizardPage>
         </SgWizard>
-        <CodeBlock code={loadSample("sg-wizard-example-04.src")} />
+        <CodeBlock code={`<SgWizard
+  labels={{ next: "${t(i18n, "showcase.component.wizard.labels.next")}", previous: "${t(i18n, "showcase.component.wizard.labels.previous")}", finish: "${t(i18n, "showcase.component.wizard.labels.finish")}" }}
+  onFinish={() => {}}
+>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.customStep1")}</div>
+  </SgWizardPage>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.customStep2")}</div>
+  </SgWizardPage>
+</SgWizard>`} />
       </Section>
 
       <Section
@@ -253,7 +344,22 @@ export default function SgWizardPageDemo() {
             </div>
           </SgWizardPage>
         </SgWizard>
-        <CodeBlock code={loadSample("sg-wizard-example-05.src")} />
+        <CodeBlock code={`<SgWizard
+  onBeforeNext={async () => {
+    // ${t(i18n, "showcase.component.wizard.labels.beforeNextComment")}\n    await new Promise((r) => setTimeout(r, 600));
+    return true; // ${t(i18n, "showcase.component.wizard.labels.beforeNextReturn")}
+  }}
+  onFinish={async () => {
+    await new Promise((r) => setTimeout(r, 400));
+  }}
+>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep1")}</div>
+  </SgWizardPage>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep2")}</div>
+  </SgWizardPage>
+</SgWizard>`} />
       </Section>
 
       <Section
@@ -284,10 +390,28 @@ export default function SgWizardPageDemo() {
             </div>
           </SgWizardPage>
         </SgWizard>
-        <CodeBlock code={loadSample("sg-wizard-example-06.src")} />
+        <CodeBlock code={`// ${t(i18n, "showcase.component.wizard.labels.validateStepComment1")}
+// ${t(i18n, "showcase.component.wizard.labels.validateStepComment2")}
+
+const [formValues, setFormValues] = React.useState({ name: "", email: "" });
+
+<SgWizard
+  validateStep={(index) => {
+    if (index === 0) {
+      return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
+    }
+    return true;
+  }}
+  onFinish={() => {}}
+>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.validateStep1")}</div>
+  </SgWizardPage>
+  <SgWizardPage>
+    <div>${t(i18n, "showcase.component.wizard.labels.validateStep2")}</div>
+  </SgWizardPage>
+</SgWizard>`} />
       </Section>
     </div>
   );
 }
-
-

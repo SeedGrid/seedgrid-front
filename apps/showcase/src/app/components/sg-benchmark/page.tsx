@@ -1,9 +1,8 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgInputText } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-import { loadSample } from "./samples/loadSample";
+import CodeBlockBase from "../CodeBlockBase";
 
 const FIELD_COUNT = 60;
 const UPDATES = 200;
@@ -46,6 +45,60 @@ function UncontrolledSgBenchmark() {
     setIsRunning(false);
   };
 
+  const code = `const FIELD_COUNT = 60;
+const UPDATES = 200;
+const nativeValueSetter =
+  typeof window !== "undefined"
+    ? Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
+    : undefined;
+
+const setInputValue = (input: HTMLInputElement, next: string) => {
+  if (nativeValueSetter) nativeValueSetter.call(input, next);
+  else input.value = next;
+};
+
+function UncontrolledSgBenchmark() {
+  const [lastMs, setLastMs] = useState<number | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  const run = () => {
+    if (isRunning) return;
+    setIsRunning(true);
+    const start = performance.now();
+    for (let i = 0; i < UPDATES; i += 1) {
+      const idx = i % FIELD_COUNT;
+      const input = inputsRef.current[idx];
+      if (input) {
+        setInputValue(input, input.value + "a");
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+    const end = performance.now();
+    setLastMs(end - start);
+    setIsRunning(false);
+  };
+
+  return (
+    <section>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {Array.from({ length: FIELD_COUNT }).map((_, idx) => (
+          <SgInputText
+            key={idx}
+            id={\`sg-\${idx}\`}
+            label={\`Campo \${idx + 1}\`}
+            inputProps={{ ref: (node) => (inputsRef.current[idx] = node) }}
+          />
+        ))}
+      </div>
+      <button type="button" onClick={run} disabled={isRunning}>
+        {isRunning ? "Rodando..." : "Rodar benchmark"}
+      </button>
+      <span>Tempo: {lastMs ? \`\${lastMs.toFixed(1)}ms\` : "-"}</span>
+    </section>
+  );
+}`;
+
   return (
     <section className="rounded-lg border border-border p-6">
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -83,7 +136,7 @@ function UncontrolledSgBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <SgCodeBlockBase code={loadSample("sg-benchmark-example-sg-input-text.src")} />
+            <CodeBlockBase code={code} />
           </div>
         </div>
       </div>
@@ -114,6 +167,57 @@ function UncontrolledNativeBenchmark() {
     setLastMs(end - start);
     setIsRunning(false);
   };
+
+  const code = `const FIELD_COUNT = 60;
+const UPDATES = 200;
+const nativeValueSetter =
+  typeof window !== "undefined"
+    ? Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
+    : undefined;
+
+const setInputValue = (input: HTMLInputElement, next: string) => {
+  if (nativeValueSetter) nativeValueSetter.call(input, next);
+  else input.value = next;
+};
+
+function UncontrolledNativeBenchmark() {
+  const [lastMs, setLastMs] = useState<number | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  const run = () => {
+    if (isRunning) return;
+    setIsRunning(true);
+    const start = performance.now();
+    for (let i = 0; i < UPDATES; i += 1) {
+      const idx = i % FIELD_COUNT;
+      const input = inputsRef.current[idx];
+      if (input) {
+        setInputValue(input, input.value + "a");
+      }
+    }
+    const end = performance.now();
+    setLastMs(end - start);
+    setIsRunning(false);
+  };
+
+  return (
+    <section>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {Array.from({ length: FIELD_COUNT }).map((_, idx) => (
+          <input
+            key={idx}
+            ref={(node) => (inputsRef.current[idx] = node)}
+          />
+        ))}
+      </div>
+      <button type="button" onClick={run} disabled={isRunning}>
+        {isRunning ? "Rodando..." : "Rodar benchmark"}
+      </button>
+      <span>Tempo: {lastMs ? \`\${lastMs.toFixed(1)}ms\` : "-"}</span>
+    </section>
+  );
+}`;
 
   return (
     <section className="rounded-lg border border-border p-6">
@@ -151,7 +255,7 @@ function UncontrolledNativeBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <SgCodeBlockBase code={loadSample("sg-benchmark-example-native-input.src")} />
+            <CodeBlockBase code={code} />
           </div>
         </div>
       </div>
@@ -174,5 +278,3 @@ export default function BenchmarkPage() {
     </div>
   );
 }
-
-

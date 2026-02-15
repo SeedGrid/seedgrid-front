@@ -1,10 +1,8 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgGrid, SgPanel, SgStack } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-
-import { loadSample } from "./samples/loadSample";
+import CodeBlockBase from "../CodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -57,8 +55,12 @@ export default function SgGridPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <SgCodeBlockBase
-            code={loadSample("sg-grid-example-01.src")}
+          <CodeBlockBase
+            code={`<SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
+  <SgPanel>Card 1</SgPanel>
+  <SgPanel>Card 2</SgPanel>
+  <SgPanel span={2}>Card 3 (span 2)</SgPanel>
+</SgGrid>`}
           />
         </SgStack>
       </Section>
@@ -84,14 +86,16 @@ export default function SgGridPage() {
         </SgGrid>
 
         <SgStack className="mt-6">
-          <SgCodeBlockBase
-            code={loadSample("sg-grid-example-02.src")}
+          <CodeBlockBase
+            code={`<SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
+  <SgPanel>Card A</SgPanel>
+  <SgPanel rowSpan={2}>Card B</SgPanel>
+  <SgPanel span={2}>Card C</SgPanel>
+</SgGrid>`}
           />
         </SgStack>
       </Section>
     </SgStack>
   );
 }
-
-
 

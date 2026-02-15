@@ -1,1 +1,0 @@
-<SgInputTextArea\n  id="notas"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.notes")}"\n  prefixIcon={<PencilIcon />}\n/>

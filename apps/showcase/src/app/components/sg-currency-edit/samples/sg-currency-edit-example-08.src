@@ -1,8 +1,0 @@
-<SgCurrencyEdit
-  id="demo-no-negative"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.positiveOnly")}"
-  name="positivo"
-  register={register}
-  allowNegative={false}
-  currency="BRL"
-/>

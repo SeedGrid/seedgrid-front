@@ -1,17 +1,13 @@
 ﻿"use client";
 
 import React from "react";
-import Link from "next/link";
-import { SgButton, SgInputCNPJ, SgStack } from "@seedgrid/fe-components";
+import { SgInputCNPJ } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../i18n";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
-import BackToTopFab from "../sg-code-block-base/BackToTopFab";
+import CodeBlockBase from "../CodeBlockBase";
 
-import { loadSample } from "./samples/loadSample";
-
-function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section id={props.id} className="rounded-lg border border-border p-6">
+    <section className="rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -22,7 +18,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -59,30 +55,14 @@ export default function SgInputCNPJPage() {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
-  const sectionLinks = [
-    { href: "#basic", label: t(i18n, "showcase.component.cnpj.sections.basic.title") },
-    { href: "#alnum", label: t(i18n, "showcase.component.cnpj.sections.alnum.title") },
-    { href: "#alnumList", label: t(i18n, "showcase.component.cnpj.sections.alnumList.title") },
-    { href: "#publica", label: t(i18n, "showcase.component.cnpj.sections.publica.title") },
-    { href: "#required", label: t(i18n, "showcase.component.cnpj.sections.required.title") },
-    { href: "#length", label: t(i18n, "showcase.component.cnpj.sections.length.title") },
-    { href: "#invalid", label: t(i18n, "showcase.component.cnpj.sections.invalid.title") },
-    { href: "#validation", label: t(i18n, "showcase.component.cnpj.sections.validation.title") },
-    { href: "#visual", label: t(i18n, "showcase.common.sections.visual.title") },
-    { href: "#noClear", label: t(i18n, "showcase.common.sections.noClear.title") },
-    { href: "#sizeBorder", label: t(i18n, "showcase.common.sections.sizeBorder.title") },
-    { href: "#disabled", label: t(i18n, "showcase.common.sections.disabled.title") },
-    { href: "#events", label: t(i18n, "showcase.common.sections.events.title") }
-  ];
-
   return (
-    <SgStack className="w-full" gap={32}>
-      <SgStack id="examples-top" gap={8}>
+    <div className="max-w-4xl space-y-8">
+      <div>
         <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.cnpj.title")}</h1>
-        <p className="text-muted-foreground">
+        <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.cnpj.subtitle")}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           {t(i18n, "showcase.component.cnpj.i18nNote").split("\n").map((part, idx, arr) => (
             <span key={idx}>
               {part}
@@ -90,19 +70,9 @@ export default function SgInputCNPJPage() {
             </span>
           ))}
         </p>
-        <SgStack direction="row" gap={8} wrap>
-          {sectionLinks.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <SgButton appearance="outline" size="sm">
-                {item.label}
-              </SgButton>
-            </Link>
-          ))}
-        </SgStack>
-      </SgStack>
+      </div>
 
       <Section
-        id="basic"
         title={t(i18n, "showcase.component.cnpj.sections.basic.title")}
         description={t(i18n, "showcase.component.cnpj.sections.basic.description")}
       >
@@ -118,11 +88,10 @@ export default function SgInputCNPJPage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: `\"${basicValue}\"` })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-01.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  inputProps={{}}\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
       <Section
-        id="alnum"
         title={t(i18n, "showcase.component.cnpj.sections.alnum.title")}
         description={t(i18n, "showcase.component.cnpj.sections.alnum.description")}
       >
@@ -134,21 +103,39 @@ export default function SgInputCNPJPage() {
             inputProps={{ defaultValue: "AB.12C.345/0001-40" }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-02.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.alnum")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.alnumHint")}"\n  inputProps={{ defaultValue: "AB.12C.345/0001-40" }}\n/>`} />
       </Section>
 
       <Section
-        id="alnumList"
         title={t(i18n, "showcase.component.cnpj.sections.alnumList.title")}
         description={t(i18n, "showcase.component.cnpj.sections.alnumList.description")}
       >
         <CodeBlock
-          code={loadSample("sg-input-cnpj-example-03.src")}
+          code={`// Filial 0001
+9H.SD1.NFA/0001-01  (raw: 9HSD1NFA000101)
+LJ.AUX.GU2/0001-40  (raw: LJAUXGU2000140)
+GK.1EK.OFE/0001-58  (raw: GK1EKOFE000158)
+QF.18A.388/0001-00  (raw: QF18A388000100)
+KF.TG0.Z4P/0001-90  (raw: KFTG0Z4P000190)
+9P.UO0.1W2/0001-07  (raw: 9PUO01W2000107)
+GK.IPC.PIK/0001-52  (raw: GKIPCPIK000152)
+11.TYE.JIE/0001-68  (raw: 11TYEJIE000168)
+J1.KBD.U64/0001-09  (raw: J1KBDU64000109)
+L2.WTW.2N8/0001-06  (raw: L2WTW2N8000106)
+J0.KBM.EUL/0001-05  (raw: J0KBMEUL000105)
+ZQ.V25.1CK/0001-33  (raw: ZQV251CK000133)
+
+// Filial 0002
+B4.TMM.Q8D/0002-24  (raw: B4TMMQ8D000224)
+79.B4O.GMG/0002-50  (raw: 79B4OGMG000250)
+DN.FP6.V2Z/0002-05  (raw: DNFP6V2Z000205)
+RY.JCA.S6R/0002-68  (raw: RYJCAS6R000268)
+IW.UJ6.3BG/0002-46  (raw: IWUJ63BG000246)
+OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
         />
       </Section>
 
       <Section
-        id="publica"
         title={t(i18n, "showcase.component.cnpj.sections.publica.title")}
         description={t(i18n, "showcase.component.cnpj.sections.publica.description")}
       >
@@ -167,7 +154,7 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-04.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  validateWithPublicaCnpj\n  publicaCnpjErrorMessage="${t(i18n, "showcase.component.cnpj.messages.publicaNotFound")}"\n  onPublicaCnpjResult={(data) => console.log(data)}\n  onPublicaCnpjError={(error) => console.log(error)}\n  inputProps={{}}\n/>`} />
         {publicaResult ? (
           <div className="mt-3 w-full rounded border border-border bg-foreground/5 p-3 text-xs">
             <div className="mb-2 text-sm font-semibold">{t(i18n, "showcase.component.cnpj.labels.publicaResult")}</div>
@@ -183,7 +170,6 @@ export default function SgInputCNPJPage() {
       </Section>
 
       <Section
-        id="required"
         title={t(i18n, "showcase.component.cnpj.sections.required.title")}
         description={t(i18n, "showcase.component.cnpj.sections.required.description")}
       >
@@ -206,11 +192,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-05.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cnpj.messages.required")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="length"
         title={t(i18n, "showcase.component.cnpj.sections.length.title")}
         description={t(i18n, "showcase.component.cnpj.sections.length.description")}
       >
@@ -223,11 +208,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-06.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  lengthMessage="${t(i18n, "showcase.component.cnpj.messages.length")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="invalid"
         title={t(i18n, "showcase.component.cnpj.sections.invalid.title")}
         description={t(i18n, "showcase.component.cnpj.sections.invalid.description")}
       >
@@ -240,11 +224,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-07.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  invalidMessage="${t(i18n, "showcase.component.cnpj.messages.invalid")}"\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="validation"
         title={t(i18n, "showcase.component.cnpj.sections.validation.title")}
         description={t(i18n, "showcase.component.cnpj.sections.validation.description")}
       >
@@ -263,11 +246,10 @@ export default function SgInputCNPJPage() {
               : `\"${validationMsg}\"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-08.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="cnpj"\n  label="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpjHint")}"\n  validation={(v) => (v.startsWith("00") ? "${t(i18n, "showcase.component.cnpj.messages.cannotStart")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n  inputProps={{}}\n/>`} />
       </Section>
 
       <Section
-        id="visual"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -289,11 +271,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-09.src")} />
+        <CodeBlock code={`<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" withBorder={false} inputProps={{}} />\n<SgInputCNPJ id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" filled inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="noClear"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -306,11 +287,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-10.src")} />
+        <CodeBlock code={`<SgInputCNPJ id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" clearButton={false} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="sizeBorder"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -331,11 +311,10 @@ export default function SgInputCNPJPage() {
             inputProps={{}}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-11.src")} />
+        <CodeBlock code={`<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" width={200} inputProps={{}} />\n<SgInputCNPJ id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" width={300} borderRadius={20} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="disabled"
         title={t(i18n, "showcase.common.sections.disabled.title")}
         description={t(i18n, "showcase.common.sections.disabled.description")}
       >
@@ -348,11 +327,10 @@ export default function SgInputCNPJPage() {
             inputProps={{ defaultValue: "00.000.000/0000-00" }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-12.src")} />
+        <CodeBlock code={`<SgInputCNPJ id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}" enabled={false} inputProps={{}} />`} />
       </Section>
 
       <Section
-        id="events"
         title={t(i18n, "showcase.common.sections.events.title")}
         description={t(i18n, "showcase.common.sections.events.description")}
       >
@@ -377,11 +355,8 @@ export default function SgInputCNPJPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={loadSample("sg-input-cnpj-example-13.src")} />
+        <CodeBlock code={`<SgInputCNPJ\n  id="eventos"\n  label="${t(i18n, "showcase.component.cnpj.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
-      <BackToTopFab targetId="examples-top" />
-    </SgStack>
+    </div>
   );
 }
-
-

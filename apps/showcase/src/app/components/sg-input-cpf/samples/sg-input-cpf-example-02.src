@@ -1,1 +1,0 @@
-<SgInputCPF\n  id="cpf"\n  label="${t(i18n, "showcase.component.cpf.labels.required")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.cpf.messages.required")}"\n  inputProps={{}}\n/>

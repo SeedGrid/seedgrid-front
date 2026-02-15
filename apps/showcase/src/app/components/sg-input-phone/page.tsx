@@ -2,10 +2,8 @@
 
 import React from "react";
 import { SgInputPhone } from "@seedgrid/fe-components";
-import SgCodeBlockBase from "../others/SgCodeBlockBase";
+import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
-
-import { loadSample } from "./samples/loadSample";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -20,7 +18,7 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   const trimmed = props.code.trimStart();
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <SgCodeBlockBase code={content} />;
+  return <CodeBlockBase code={content} />;
 }
 
 function indentCode(source: string, spaces: number) {
@@ -79,7 +77,7 @@ export default function SgInputPhonePage() {
             {t(i18n, "showcase.common.labels.currentValue", { value: `"${basicValue}"` })}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-01.src")} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  onChange={(value) => console.log(value)}\n/>`} />
       </Section>
 
       <Section
@@ -103,7 +101,7 @@ export default function SgInputPhonePage() {
             requiredMessage={t(i18n, "showcase.component.inputPhone.messages.required")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-02.src")} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.required")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.requiredHint")}"\n  required\n  requiredMessage="${t(i18n, "showcase.component.inputPhone.messages.required")}"\n/>`} />
       </Section>
 
       <Section
@@ -118,7 +116,7 @@ export default function SgInputPhonePage() {
             invalidMessage={t(i18n, "showcase.component.inputPhone.messages.invalid")}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-03.src")} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  invalidMessage="${t(i18n, "showcase.component.inputPhone.messages.invalid")}"\n/>`} />
       </Section>
 
       <Section
@@ -139,7 +137,7 @@ export default function SgInputPhonePage() {
               : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-04.src")} />
+        <CodeBlock code={`<SgInputPhone\n  id="telefone"\n  label="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phoneHint")}"\n  validation={(v) => (v.startsWith("(00)") ? "${t(i18n, "showcase.component.inputPhone.messages.dddInvalid")}" : null)}\n  onValidation={(msg) => console.log(msg)}\n/>`} />
       </Section>
 
       <Section
@@ -162,7 +160,7 @@ export default function SgInputPhonePage() {
             filled
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-05.src")} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.noBorder")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" withBorder={false} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" filled />`} />
       </Section>
 
       <Section
@@ -177,7 +175,7 @@ export default function SgInputPhonePage() {
             clearButton={false}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-06.src")} />
+        <CodeBlock code={`<SgInputPhone id="x" label="${t(i18n, "showcase.common.labels.noClear")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" clearButton={false} />`} />
       </Section>
 
       <Section
@@ -199,7 +197,7 @@ export default function SgInputPhonePage() {
             borderRadius={20}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-07.src")} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.width200")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={200} />\n<SgInputPhone id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" width={300} borderRadius={20} />`} />
       </Section>
 
       <Section
@@ -215,7 +213,7 @@ export default function SgInputPhonePage() {
             inputProps={{ defaultValue: "(11) 99999-0000" }}
           />
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-08.src")} />
+        <CodeBlock code={`<SgInputPhone id="a" label="${t(i18n, "showcase.common.labels.disabled")}" hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}" enabled={false} />`} />
       </Section>
 
       <Section
@@ -242,10 +240,8 @@ export default function SgInputPhonePage() {
             )}
           </div>
         </div>
-        <CodeBlock code={loadSample("sg-input-phone-example-09.src")} />
+        <CodeBlock code={`<SgInputPhone\n  id="eventos"\n  label="${t(i18n, "showcase.component.inputPhone.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.inputPhone.labels.phone")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
     </div>
   );
 }
-
-
