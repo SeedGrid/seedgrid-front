@@ -72,6 +72,30 @@ const THEME_ITEMS = [
   { slug: "theme", label: "Theme System", isTheme: true }
 ];
 
+const SIDEBAR_THEME_VARS = {
+  "--primary": "27 62% 47%",
+  "--primary-foreground": "0 0% 100%",
+  "--muted": "35 55% 94%",
+  "--muted-foreground": "28 30% 36%",
+  "--border": "32 42% 83%",
+  "--input": "32 42% 83%",
+  "--ring": "27 62% 47%",
+  "--sg-bg": "247 243 238",
+  "--sg-surface": "255 250 245",
+  "--sg-muted-surface": "242 233 223",
+  "--sg-border": "226 206 188",
+  "--sg-ring": "197 106 45",
+  "--sg-text": "43 31 20",
+  "--sg-muted": "126 95 70",
+  "--sg-primary-500": "197 106 45",
+  "--sg-primary-600": "168 87 38",
+  "--sg-primary-hover": "168 87 38",
+  "--sg-primary-active": "147 74 32",
+  "--sg-on-primary": "255 255 255",
+  "--sg-link": "197 106 45",
+  "--sg-link-hover": "168 87 38"
+} as React.CSSProperties;
+
 const LOCALES: Array<{ value: ShowcaseLocale; label: string }> = [
   { value: "pt-BR", label: "pt-BR (Portugues do Brasil)" },
   { value: "pt-PT", label: "pt-PT (Portugues de Portugal)" },
@@ -98,10 +122,10 @@ function LocaleSwitcher(props: {
   onChange: (next: ShowcaseLocale) => void;
 }) {
   return (
-    <label className="flex items-center gap-2 text-xs text-muted-foreground">
+    <label className="flex items-center gap-2 text-xs text-[#7e5f46]">
       <span>Idioma</span>
       <select
-        className="rounded border border-border bg-white px-2 py-1 text-xs"
+        className="rounded border border-[#d7b79a] bg-[#fffaf4] px-2 py-1 text-xs text-[#5b3b23] outline-none transition-colors focus:border-[#c56a2d] focus:ring-2 focus:ring-[#c56a2d]/25"
         value={props.value}
         onChange={(event) => {
           const next = event.target.value as ShowcaseLocale;
@@ -173,10 +197,17 @@ export default function ShowcaseShell(props: {
         messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr}
       >
         <div className="flex min-h-screen">
-          <aside className="w-72 shrink-0 border-r border-border bg-muted/30 p-4 overflow-y-auto overflow-x-hidden sticky top-0 h-screen">
-            <Link href="/" className="block mb-6">
-              <span className="text-lg font-bold text-primary">{t({ locale, messages }, "showcase.app.brand")}</span>
-              <span className="block text-xs text-muted-foreground">
+          <aside
+            className="w-72 shrink-0 border-r border-[#e2cebc] bg-[#f7f3ee] p-4 text-[#2b1f14] overflow-y-auto overflow-x-hidden sticky top-0 h-screen"
+            style={SIDEBAR_THEME_VARS}
+          >
+            <Link href="/" className="mb-6 block rounded-md px-1 py-1 transition-colors hover:bg-[#efe3d8]/80">
+              <img
+                src="/logo-seedgrid.svg"
+                alt={t({ locale, messages }, "showcase.app.brand")}
+                className="h-8 w-auto max-w-[160px]"
+              />
+              <span className="block text-xs text-[#8b6344]">
                 {t({ locale, messages }, "showcase.app.subtitle")}
               </span>
             </Link>
@@ -236,25 +267,25 @@ export default function ShowcaseShell(props: {
                 <Link
                   key={c.slug}
                   href={`/${c.slug}`}
-                  className="rounded-md px-3 py-2 text-sm hover:bg-primary/10 transition-colors font-semibold"
+                  className="rounded-md px-3 py-2 text-sm font-semibold text-[#3a2517] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
                 >
                   {c.label}
                 </Link>
               ))}
-              <div className="border-t border-border my-2" />
+              <div className="my-2 border-t border-[#dcc6b2]" />
               {(["Inputs", "Buttons", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
                 const items = COMPONENTS.filter((c) => c.group === group);
                 if (items.length === 0) return null;
                 return (
                   <div key={group} className="mb-2 flex flex-col gap-0.5">
-                    <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#a86a3f]">
                       {group}
                     </div>
                     {items.map((c) => (
                       <Link
                         key={c.slug}
                         href={`/components/${c.slug}`}
-                        className="rounded-md px-3 py-2 text-sm hover:bg-primary/10 transition-colors"
+                        className="rounded-md px-3 py-2 text-sm text-[#4b3221] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
                       >
                         {c.label}
                       </Link>

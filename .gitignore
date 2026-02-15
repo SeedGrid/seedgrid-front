@@ -7,3 +7,4 @@ dist/
 
 # Build output in app templates
 .next/
+.turbo/
