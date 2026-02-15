@@ -64,6 +64,7 @@ const COMPONENTS = [
   { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
   { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
+  { group: "Utils", slug: "sg-toaster", label: "SgToaster" },
   { group: "Utils", slug: "sg-playground", label: "SgPlayground" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];
