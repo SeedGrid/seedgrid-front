@@ -12,6 +12,7 @@ const COMPONENTS = [
       { slug: "sg-input-text", name: "SgInputText", desc: "Input de texto base com floating label, validacao, contador e botao limpar" },
       { slug: "sg-input-text-area", name: "SgInputTextArea", desc: "Input multi-linha com contagem de palavras e linhas" },
       { slug: "sg-input-password", name: "SgInputPassword", desc: "Input de senha com toggle de visibilidade, validacao e botao limpar" },
+      { slug: "sg-input-otp", name: "SgInputOTP", desc: "Input OTP com digitos separados, colagem e mascara customizavel (# e 9)" },
       { slug: "sg-input-select", name: "SgInputSelect", desc: "Dropdown select com floating label" },
       { slug: "sg-input-date", name: "SgInputDate", desc: "Seletor de data com restricoes min/max" },
       { slug: "sg-input-birth-date", name: "SgInputBirthDate", desc: "Data de nascimento com validacao de idade minima/maxima" },

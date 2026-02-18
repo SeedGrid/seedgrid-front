@@ -20,6 +20,8 @@ export { SgInputPhone } from "./inputs/SgInputPhone";
 export type { SgInputPhoneProps } from "./inputs/SgInputPhone";
 export { SgInputEmail } from "./inputs/SgInputEmail";
 export { SgInputPassword } from "./inputs/SgInputPassword";
+export { SgInputOTP } from "./inputs/SgInputOTP";
+export type { SgInputOTPProps, SgInputOTPRef } from "./inputs/SgInputOTP";
 export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
 export { SgAutocomplete } from "./inputs/SgAutocomplete";

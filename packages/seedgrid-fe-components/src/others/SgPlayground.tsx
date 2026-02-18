@@ -40,6 +40,7 @@ export type SgPlaygroundProps = {
 
 const DEFAULT_SEEDGRID_DEPENDENCY = "0.2.6";
 const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
+  "@codesandbox/sandpack-react": "^2.20.0",
   "react-hook-form": "^7.0.0",
   "lucide-react": "^0.468.0",
   "@tiptap/react": "^2.9.1",

@@ -32,6 +32,7 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-currency-edit", label: "SgCurrencyEdit" },
   { group: "Inputs", slug: "sg-input-text-area", label: "SgInputTextArea" },
   { group: "Inputs", slug: "sg-input-password", label: "SgInputPassword" },
+  { group: "Inputs", slug: "sg-input-otp", label: "SgInputOTP" },
   { group: "Inputs", slug: "sg-input-select", label: "SgInputSelect" },
   { group: "Inputs", slug: "sg-input-date", label: "SgInputDate" },
   { group: "Inputs", slug: "sg-input-birth-date", label: "SgInputBirthDate" },
