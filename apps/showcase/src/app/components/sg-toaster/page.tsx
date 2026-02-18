@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { SgButton, SgPlayground, toast, type SgToastId } from "@seedgrid/fe-components";
+import {
+  SgButton,
+  SgPlayground,
+  toast,
+  type SgToastId,
+  type SgToastType,
+  type SgToastOptions
+} from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -16,6 +23,28 @@ function Section(props: { title: string; description?: string; children: React.R
 
 function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
+}
+
+const TOAST_TITLES_BY_TYPE: Record<SgToastType, string> = {
+  default: "Mensagem padrao",
+  success: "Tudo certo!",
+  info: "Informacao importante",
+  warning: "Atencao!",
+  error: "Falhou!",
+  loading: "Carregando..."
+};
+
+function emitToastByType(type: SgToastType, options?: SgToastOptions) {
+  const title = TOAST_TITLES_BY_TYPE[type];
+  if (type === "default") return toast.message(title, options);
+  if (type === "success") return toast.success(title, options);
+  if (type === "info") return toast.info(title, options);
+  if (type === "warning") return toast.warning(title, options);
+  if (type === "error") return toast.error(title, options);
+  return toast.loading(title, {
+    duration: options?.duration ?? 2500,
+    ...options
+  });
 }
 
 const SETUP_CODE = `import { SgToaster } from "@seedgrid/fe-components";
@@ -90,6 +119,32 @@ const OPTIONS_CODE = `toast.info("Toast com opcoes", {
   }
 });`;
 
+const TOASTER_TRANSPARENCY_CODE = `import { SgToaster, toast } from "@seedgrid/fe-components";
+
+<SgToaster transparency={80} />;
+
+toast.success("Tudo certo!");
+toast.warning("Atencao!");
+toast.error("Falhou!");
+`;
+
+const TOASTER_CUSTOM_COLORS_CODE = `import { SgToaster, toast } from "@seedgrid/fe-components";
+
+<SgToaster
+  customColors={{
+    default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
+    success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
+    info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
+    warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
+    error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
+    loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
+  }}
+/>;
+
+toast.message("Mensagem padrao");
+toast.warning("Atencao!");
+`;
+
 const PLAYGROUND_APP_FILE = `import * as React from "react";
 import { SgButton, SgStack, SgToaster, toast } from "@seedgrid/fe-components";
 
@@ -108,6 +163,32 @@ export default function App() {
   const [visibleToasts, setVisibleToasts] = React.useState(4);
   const [closeButton, setCloseButton] = React.useState(true);
   const [richColors, setRichColors] = React.useState(true);
+  const [transparency, setTransparency] = React.useState(0);
+  const [customPalette, setCustomPalette] = React.useState(false);
+
+  const toasterCustomColors = customPalette
+    ? {
+        default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
+        success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
+        info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
+        warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
+        error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
+        loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
+      }
+    : undefined;
+
+  const resolveToastVisual = (type) => {
+    const alpha = 1 - Math.max(0, Math.min(100, transparency)) / 100;
+    const colors = toasterCustomColors?.[type];
+    const style = {};
+
+    if (alpha < 1) style.opacity = alpha;
+    if (colors?.bg) style.backgroundColor = colors.bg;
+    if (colors?.fg) style.color = colors.fg;
+    if (colors?.border) style.borderColor = colors.border;
+
+    return Object.keys(style).length > 0 ? { style } : {};
+  };
 
   return (
     <div className="space-y-3">
@@ -117,6 +198,8 @@ export default function App() {
         visibleToasts={visibleToasts}
         closeButton={closeButton}
         richColors={richColors}
+        transparency={transparency}
+        customColors={toasterCustomColors}
       />
 
       <SgStack direction="row" wrap gap={8} align="center">
@@ -176,13 +259,38 @@ export default function App() {
           />
           richColors
         </label>
+
+        <label className="text-sm">
+          Transparency:
+          <input
+            className="ml-2 w-20 rounded border px-2 py-1 text-xs"
+            type="number"
+            min={0}
+            max={90}
+            step={5}
+            value={transparency}
+            onChange={(e) => setTransparency(Number(e.target.value))}
+          />
+        </label>
+
+        <label className="text-sm">
+          <input
+            className="mr-1"
+            type="checkbox"
+            checked={customPalette}
+            onChange={(e) => setCustomPalette(e.target.checked)}
+          />
+          customColors
+        </label>
       </SgStack>
 
       <SgStack direction="row" wrap gap={8}>
-        <SgButton onClick={() => toast.message("Mensagem padrao")}>Message</SgButton>
-        <SgButton severity="success" onClick={() => toast.success("Tudo certo!")}>Success</SgButton>
-        <SgButton severity="warning" onClick={() => toast.warning("Atenção!")}>Warning</SgButton>
-        <SgButton severity="danger" onClick={() => toast.error("Falhou!")}>Error</SgButton>
+        <SgButton onClick={() => toast.message("Mensagem padrao", resolveToastVisual("default"))}>Message</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("Tudo certo!", resolveToastVisual("success"))}>Success</SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Informacao", resolveToastVisual("info"))}>Info</SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Atencao!", resolveToastVisual("warning"))}>Warning</SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Falhou!", resolveToastVisual("error"))}>Error</SgButton>
+        <SgButton appearance="outline" onClick={() => toast.loading("Carregando...", { duration: 2500, ...resolveToastVisual("loading") })}>Loading</SgButton>
         <SgButton appearance="outline" onClick={() => toast.dismiss()}>Dismiss all</SgButton>
       </SgStack>
     </div>
@@ -287,6 +395,36 @@ export default function SgToasterPage() {
       }
     });
   }, []);
+
+  const transparencyLevel = 80;
+  const transparencyOptions = React.useMemo<SgToastOptions>(
+    () => ({
+      style: {
+        opacity: 1 - transparencyLevel / 100
+      }
+    }),
+    [transparencyLevel]
+  );
+
+  const customColorStyles = React.useMemo<Record<SgToastType, React.CSSProperties>>(
+    () => ({
+      default: { backgroundColor: "#1f2937", color: "#f9fafb", borderColor: "#6b7280" },
+      success: { backgroundColor: "#065f46", color: "#ecfeff", borderColor: "#10b981" },
+      info: { backgroundColor: "#1e3a8a", color: "#dbeafe", borderColor: "#60a5fa" },
+      warning: { backgroundColor: "#78350f", color: "#fef3c7", borderColor: "#f59e0b" },
+      error: { backgroundColor: "#7f1d1d", color: "#fee2e2", borderColor: "#ef4444" },
+      loading: { backgroundColor: "#312e81", color: "#e0e7ff", borderColor: "#818cf8" }
+    }),
+    []
+  );
+
+  const runTransparencyByType = React.useCallback((type: SgToastType) => {
+    emitToastByType(type, transparencyOptions);
+  }, [transparencyOptions]);
+
+  const runCustomColorsByType = React.useCallback((type: SgToastType) => {
+    emitToastByType(type, { style: customColorStyles[type] });
+  }, [customColorStyles]);
 
   return (
     <div className="max-w-5xl space-y-8">
@@ -396,8 +534,40 @@ export default function SgToasterPage() {
       </Section>
 
       <Section
-        title="7) Playground isolado do SgToaster"
-        description="Aqui voce altera props do SgToaster (position, duration, visibleToasts, closeButton, richColors) em tempo real."
+        title="7) Transparencia"
+        description="Exemplo focado apenas em transparencia (80%)."
+      >
+        <div className="flex flex-wrap gap-2">
+          <SgButton onClick={() => runTransparencyByType("default")}>default</SgButton>
+          <SgButton severity="success" onClick={() => runTransparencyByType("success")}>success</SgButton>
+          <SgButton severity="info" onClick={() => runTransparencyByType("info")}>info</SgButton>
+          <SgButton severity="warning" onClick={() => runTransparencyByType("warning")}>warning</SgButton>
+          <SgButton severity="danger" onClick={() => runTransparencyByType("error")}>error</SgButton>
+          <SgButton appearance="outline" onClick={() => runTransparencyByType("loading")}>loading</SgButton>
+          <SgButton appearance="outline" onClick={() => toast.dismiss()}>dismiss all</SgButton>
+        </div>
+        <CodeBlock code={TOASTER_TRANSPARENCY_CODE} />
+      </Section>
+
+      <Section
+        title="8) Custom Colors"
+        description="Exemplo focado somente em cores customizadas por tipo."
+      >
+        <div className="flex flex-wrap gap-2">
+          <SgButton onClick={() => runCustomColorsByType("default")}>default</SgButton>
+          <SgButton severity="success" onClick={() => runCustomColorsByType("success")}>success</SgButton>
+          <SgButton severity="info" onClick={() => runCustomColorsByType("info")}>info</SgButton>
+          <SgButton severity="warning" onClick={() => runCustomColorsByType("warning")}>warning</SgButton>
+          <SgButton severity="danger" onClick={() => runCustomColorsByType("error")}>error</SgButton>
+          <SgButton appearance="outline" onClick={() => runCustomColorsByType("loading")}>loading</SgButton>
+          <SgButton appearance="outline" onClick={() => toast.dismiss()}>dismiss all</SgButton>
+        </div>
+        <CodeBlock code={TOASTER_CUSTOM_COLORS_CODE} />
+      </Section>
+
+      <Section
+        title="9) Playground isolado do SgToaster"
+        description="Aqui voce altera todas as props em tempo real (position, duration, visibleToasts, closeButton, richColors, transparency e customColors)."
       >
         <SgPlayground
           title="SgToaster Playground"
@@ -409,7 +579,7 @@ export default function SgToasterPage() {
         />
       </Section>
 
-      <Section title="8) Props de referencia">
+      <Section title="10) Props de referencia">
         <div className="overflow-x-auto rounded-md border border-border">
           <table className="w-full text-sm">
             <thead className="bg-muted/40">
@@ -426,6 +596,8 @@ export default function SgToasterPage() {
               <tr><td className="px-3 py-2 font-mono text-xs">visibleToasts</td><td className="px-3 py-2">number</td><td className="px-3 py-2">6</td><td className="px-3 py-2">Quantidade maxima exibida simultaneamente.</td></tr>
               <tr><td className="px-3 py-2 font-mono text-xs">closeButton</td><td className="px-3 py-2">boolean</td><td className="px-3 py-2">true</td><td className="px-3 py-2">Mostra botao de fechar nos toasts.</td></tr>
               <tr><td className="px-3 py-2 font-mono text-xs">richColors</td><td className="px-3 py-2">boolean</td><td className="px-3 py-2">true</td><td className="px-3 py-2">Usa paleta forte por severidade.</td></tr>
+              <tr><td className="px-3 py-2 font-mono text-xs">transparency</td><td className="px-3 py-2">number (0-100)</td><td className="px-3 py-2">0</td><td className="px-3 py-2">Nivel de transparencia aplicado aos toasts (0 = opaco).</td></tr>
+              <tr><td className="px-3 py-2 font-mono text-xs">customColors</td><td className="px-3 py-2">Partial&lt;Record&lt;SgToastType, SgToasterTypeColors&gt;&gt;</td><td className="px-3 py-2">-</td><td className="px-3 py-2">Permite sobrescrever bg/fg/border por tipo (default, success, info, warning, error, loading).</td></tr>
             </tbody>
           </table>
         </div>
@@ -433,4 +605,3 @@ export default function SgToasterPage() {
     </div>
   );
 }
-

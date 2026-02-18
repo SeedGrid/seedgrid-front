@@ -38,7 +38,12 @@ export type {
   FABPosition, FABSeverity, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger, FABLayoutType
 } from "./buttons/SgFloatActionButton";
 export { SgToaster } from "./commons/SgToaster";
-export type { SgToasterProps } from "./commons/SgToaster";
+export type {
+  SgToasterProps,
+  SgToasterPosition,
+  SgToasterTypeColors,
+  SgToasterCustomColors
+} from "./commons/SgToaster";
 export { SgPopup } from "./overlay/SgPopup";
 export type {
   SgPopupProps,

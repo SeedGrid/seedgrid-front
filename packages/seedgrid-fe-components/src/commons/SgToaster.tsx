@@ -15,12 +15,24 @@ export type SgToasterPosition =
   | "bottom-left"
   | "bottom-center";
 
+export type SgToasterTypeColors = {
+  bg?: string;
+  fg?: string;
+  border?: string;
+};
+
+export type SgToasterCustomColors = Partial<
+  Record<SgToastRecord["type"], SgToasterTypeColors>
+>;
+
 export type SgToasterProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children"> & {
   position?: SgToasterPosition;
   duration?: number;
   visibleToasts?: number;
   closeButton?: boolean;
   richColors?: boolean;
+  transparency?: number;
+  customColors?: SgToasterCustomColors;
 };
 
 const POSITION_CLASS: Record<SgToasterPosition, string> = {
@@ -32,23 +44,90 @@ const POSITION_CLASS: Record<SgToasterPosition, string> = {
   "bottom-center": "bottom-4 left-1/2 -translate-x-1/2 items-center"
 };
 
-const RICH_TYPE_CLASS: Record<SgToastRecord["type"], string> = {
-  default: "border-border bg-background text-foreground",
-  success: "border-green-500 bg-green-600 text-white",
-  info: "border-sky-500 bg-sky-600 text-white",
-  warning: "border-amber-500 bg-amber-500 text-black",
-  error: "border-red-500 bg-red-600 text-white",
-  loading: "border-blue-500 bg-blue-600 text-white"
+const RICH_TYPE_COLORS: Record<SgToastRecord["type"], Required<SgToasterTypeColors>> = {
+  default: {
+    border: "hsl(var(--border))",
+    bg: "hsl(var(--background))",
+    fg: "hsl(var(--foreground))"
+  },
+  success: {
+    border: "#22c55e",
+    bg: "#16a34a",
+    fg: "#ffffff"
+  },
+  info: {
+    border: "#0ea5e9",
+    bg: "#0284c7",
+    fg: "#ffffff"
+  },
+  warning: {
+    border: "#f59e0b",
+    bg: "#f59e0b",
+    fg: "#000000"
+  },
+  error: {
+    border: "#ef4444",
+    bg: "#dc2626",
+    fg: "#ffffff"
+  },
+  loading: {
+    border: "#3b82f6",
+    bg: "#2563eb",
+    fg: "#ffffff"
+  }
 };
 
-const SOFT_TYPE_CLASS: Record<SgToastRecord["type"], string> = {
-  default: "border-border bg-background text-foreground",
-  success: "border-green-300 bg-green-50 text-green-900",
-  info: "border-sky-300 bg-sky-50 text-sky-900",
-  warning: "border-amber-300 bg-amber-50 text-amber-900",
-  error: "border-red-300 bg-red-50 text-red-900",
-  loading: "border-blue-300 bg-blue-50 text-blue-900"
+const SOFT_TYPE_COLORS: Record<SgToastRecord["type"], Required<SgToasterTypeColors>> = {
+  default: {
+    border: "hsl(var(--border))",
+    bg: "hsl(var(--background))",
+    fg: "hsl(var(--foreground))"
+  },
+  success: {
+    border: "#86efac",
+    bg: "#f0fdf4",
+    fg: "#14532d"
+  },
+  info: {
+    border: "#7dd3fc",
+    bg: "#f0f9ff",
+    fg: "#0c4a6e"
+  },
+  warning: {
+    border: "#fcd34d",
+    bg: "#fffbeb",
+    fg: "#78350f"
+  },
+  error: {
+    border: "#fca5a5",
+    bg: "#fef2f2",
+    fg: "#7f1d1d"
+  },
+  loading: {
+    border: "#93c5fd",
+    bg: "#eff6ff",
+    fg: "#1e3a8a"
+  }
 };
+
+function clampTransparency(value: number | undefined) {
+  if (value === undefined || Number.isNaN(value)) return 0;
+  return Math.max(0, Math.min(100, value));
+}
+
+function resolveToastColors(
+  type: SgToastRecord["type"],
+  richColors: boolean,
+  customColors?: SgToasterCustomColors
+): Required<SgToasterTypeColors> {
+  const base = richColors ? RICH_TYPE_COLORS[type] : SOFT_TYPE_COLORS[type];
+  const custom = customColors?.[type];
+  return {
+    border: custom?.border ?? base.border,
+    bg: custom?.bg ?? base.bg,
+    fg: custom?.fg ?? base.fg
+  };
+}
 
 export function SgToaster(props: SgToasterProps) {
   const {
@@ -57,6 +136,8 @@ export function SgToaster(props: SgToasterProps) {
     visibleToasts = 6,
     closeButton = true,
     richColors = true,
+    transparency = 0,
+    customColors,
     className,
     style,
     ...rest
@@ -116,6 +197,8 @@ export function SgToaster(props: SgToasterProps) {
     };
   }, []);
 
+  const toastOpacity = 1 - clampTransparency(transparency) / 100;
+
   return (
     <div
       className={cn("pointer-events-none fixed z-[1100] flex max-h-screen w-full flex-col gap-2 p-4 sm:w-auto", POSITION_CLASS[position], className)}
@@ -123,7 +206,7 @@ export function SgToaster(props: SgToasterProps) {
       {...rest}
     >
       {visible.map((toast) => {
-        const typeClass = richColors ? RICH_TYPE_CLASS[toast.type] : SOFT_TYPE_CLASS[toast.type];
+        const typeColors = resolveToastColors(toast.type, richColors, customColors);
         const canClose = toast.closeButton ?? closeButton;
 
         return (
@@ -131,10 +214,15 @@ export function SgToaster(props: SgToasterProps) {
             key={toast.id}
             className={cn(
               "pointer-events-auto flex min-w-[260px] max-w-[420px] items-start gap-3 rounded-md border px-3 py-2 shadow-lg",
-              typeClass,
               toast.className
             )}
-            style={toast.style}
+            style={{
+              borderColor: typeColors.border,
+              backgroundColor: typeColors.bg,
+              color: typeColors.fg,
+              opacity: toastOpacity,
+              ...toast.style
+            }}
             role="status"
             aria-live="polite"
           >
