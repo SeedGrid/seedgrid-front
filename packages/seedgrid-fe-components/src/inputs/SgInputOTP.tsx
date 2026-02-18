@@ -598,7 +598,7 @@ const SgInputOTPBase = React.forwardRef<SgInputOTPRef, SgInputOTPBaseProps>(func
   const isDisabled = enabled === false || Boolean(inputDisabled);
   const isReadOnly = readOnly || Boolean(inputReadOnly);
   const mergedSlotClass = [
-    "h-12 w-11 rounded-md border bg-white px-0 text-center text-base font-medium shadow-sm outline-none transition-all",
+    "h-12 w-11 border bg-white px-0 text-center text-base font-medium shadow-sm outline-none transition-all",
     hasError
       ? "border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
       : "border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]",
@@ -682,6 +682,15 @@ const SgInputOTPBase = React.forwardRef<SgInputOTPRef, SgInputOTPBaseProps>(func
               ? "[0-9]*"
               : slotPattern ?? "[A-Za-z0-9]*";
 
+          const slotShapeClass =
+            slotCount === 1
+              ? "rounded-2xl"
+              : slotIndex === 0
+                ? "rounded-l-2xl rounded-r-md"
+                : slotIndex === slotCount - 1
+                  ? "rounded-r-2xl rounded-l-md"
+                  : "rounded-md";
+
           return (
             <input
               {...restSlotInputProps}
@@ -694,7 +703,7 @@ const SgInputOTPBase = React.forwardRef<SgInputOTPRef, SgInputOTPBaseProps>(func
               autoFocus={slotIndex === 0 ? slotAutoFocus : false}
               inputMode={computedInputMode}
               pattern={computedPattern}
-              className={mergedSlotClass}
+              className={`${mergedSlotClass} ${slotShapeClass}`}
               disabled={isDisabled}
               readOnly={isReadOnly}
               aria-label={labelText ? `${labelText} ${slotIndex + 1}` : `OTP ${slotIndex + 1}`}
