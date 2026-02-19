@@ -66,6 +66,7 @@ export type {
 } from "./overlay/SgDialog";
 export { SgBadge } from "./commons/SgBadge";
 export { SgBadgeOverlay } from "./commons/SgBadgeOverlay";
+export { SgSkeleton } from "./commons/SgSkeleton";
 export type {
   SgBadgeProps,
   SgBadgeSeverity,
@@ -75,6 +76,7 @@ export type {
   SgBadgePartsClassName
 } from "./commons/SgBadge";
 export type { SgBadgeOverlayProps, SgBadgeOverlayPlacement } from "./commons/SgBadgeOverlay";
+export type { SgSkeletonProps, SgSkeletonAnimation, SgSkeletonShape } from "./commons/SgSkeleton";
 export { toast } from "./commons/SgToast";
 export type {
   SgToastFn,

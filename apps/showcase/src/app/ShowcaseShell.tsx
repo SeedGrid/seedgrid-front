@@ -52,6 +52,7 @@ const COMPONENTS = [
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },
+  { group: "Layout", slug: "sg-skeleton", label: "SgSkeleton" },
   { group: "Layout", slug: "sg-screen", label: "SgScreen" },
   { group: "Layout", slug: "sg-main-panel", label: "SgMainPanel" },
   { group: "Layout", slug: "sg-panel", label: "SgPanel" },

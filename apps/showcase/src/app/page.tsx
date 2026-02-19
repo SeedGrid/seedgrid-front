@@ -33,6 +33,7 @@ const COMPONENTS = [
     items: [
       { slug: "sg-group-box", name: "SgGroupBox", desc: "Container agrupado com legenda (fieldset/legend)" },
       { slug: "sg-card", name: "SgCard", desc: "Card com header, leading/trailing, variants e collapse" },
+      { slug: "sg-skeleton", name: "SgSkeleton", desc: "Placeholder visual para estados de carregamento" },
       { slug: "sg-screen", name: "SgScreen", desc: "Container raiz de viewport para telas e layouts complexos" },
       { slug: "sg-main-panel", name: "SgMainPanel", desc: "Layout dock estilo Delphi com top/left/right/bottom/client" },
       { slug: "sg-panel", name: "SgPanel", desc: "Container visual com borderStyle, padding, scroll e props de layout" },
