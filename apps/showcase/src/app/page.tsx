@@ -48,7 +48,8 @@ const COMPONENTS = [
   {
     categoryKey: "showcase.nav.gadgets",
     items: [
-      { slug: "gadgets/sg-clock", name: "SgClock", desc: "Relogio digital e analogico com themes" }
+      { slug: "gadgets/sg-clock", name: "SgClock", desc: "Relogio digital e analogico com themes" },
+      { slug: "gadgets/sg-qr-code", name: "SgQRCode", desc: "QR Code com valor dinamico e logo central" }
     ]
   },
   {

@@ -65,6 +65,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-tree-view", label: "SgTreeView" },
   { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
   { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
+  { group: "Gadgets", slug: "gadgets/sg-qr-code", label: "SgQRCode" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-toaster", label: "SgToaster" },
   { group: "Utils", slug: "sg-playground", label: "SgPlayground" },

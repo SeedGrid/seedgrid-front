@@ -163,6 +163,8 @@ export type { SgTimeContextValue } from "./gadgets/clock/SgTimeProvider";
 export type { SgClockProps } from "./gadgets/clock/SgClock";
 export { SgFlipDigit } from "./gadgets/flip-digit";
 export type { SgFlipDigitProps } from "./gadgets/flip-digit";
+export { SgQRCode } from "./gadgets/qr-code";
+export type { SgQRCodeProps, SgQRCodeErrorCorrectionLevel } from "./gadgets/qr-code";
 export {
   registerTheme,
   registerThemes,
