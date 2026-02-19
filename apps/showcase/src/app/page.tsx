@@ -23,6 +23,7 @@ const COMPONENTS = [
       { slug: "sg-input-postal-code", name: "SgInputPostalCode", desc: "Input de codigo postal com mascara por pais (BR, PT, US, ES, UY, AR, PY)" },
       { slug: "sg-input-phone", name: "SgInputPhone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" },
       { slug: "sg-autocomplete", name: "SgAutocomplete", desc: "Autocomplete com busca, agrupamento e render custom" },
+      { slug: "sg-combobox", name: "SgCombobox", desc: "Combobox estilo select com source de objetos e onSelect(value)" },
       { slug: "sg-text-editor", name: "SgTextEditor", desc: "Editor rico HTML com save/load" }
     ]
   },

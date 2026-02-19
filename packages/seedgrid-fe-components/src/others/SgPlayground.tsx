@@ -38,7 +38,7 @@ export type SgPlaygroundProps = {
   cardId?: string;
 };
 
-const DEFAULT_SEEDGRID_DEPENDENCY = "0.2.6";
+const DEFAULT_SEEDGRID_DEPENDENCY = "0.2.9";
 const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
   "@codesandbox/sandpack-react": "^2.20.0",
   "react-hook-form": "^7.0.0",
