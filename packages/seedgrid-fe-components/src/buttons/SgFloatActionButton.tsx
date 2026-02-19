@@ -291,6 +291,13 @@ function slideInit(pos: FABPosition): string {
   return "translateX(24px)";
 }
 
+function slideNudge(pos: FABPosition, dist = 10): string {
+  if (pos.endsWith("bottom")) return `translateY(${dist}px)`;
+  if (pos.endsWith("top")) return `translateY(-${dist}px)`;
+  if (pos.startsWith("left")) return `translateX(-${dist}px)`;
+  return `translateX(${dist}px)`;
+}
+
 /* ── component ── */
 
 export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
@@ -569,12 +576,16 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   } else if (animationOn === "hover") {
     switch (animation) {
       case "scale": anim.transform = hovered ? "scale(1.1)" : "scale(1)"; break;
+      case "fade": anim.opacity = hovered ? 0.62 : 1; break;
+      case "slide": anim.transform = hovered ? slideNudge(position, 10) : "translate(0,0)"; break;
       case "rotate": anim.transform = hovered ? "rotate(15deg)" : "rotate(0deg)"; break;
       case "pulse": if (hovered) anim.animation = "sg-fab-pulse 0.8s ease-in-out infinite"; break;
     }
   } else if (animationOn === "click") {
     switch (animation) {
       case "scale": anim.transform = clicked ? "scale(0.9)" : "scale(1)"; break;
+      case "fade": anim.opacity = clicked ? 0.52 : 1; break;
+      case "slide": anim.transform = clicked ? slideNudge(position, 14) : "translate(0,0)"; break;
       case "rotate": anim.transform = clicked ? "rotate(90deg)" : "rotate(0deg)"; break;
     }
   }

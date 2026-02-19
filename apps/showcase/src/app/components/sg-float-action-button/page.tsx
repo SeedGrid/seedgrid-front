@@ -438,7 +438,7 @@ export default function SgFloatActionButtonPage() {
       >
         <div className="flex gap-6 items-center flex-wrap">
           {(["scale", "fade", "rotate", "slide", "pulse", "none"] as const).map((anim) => {
-            const animationOn = anim === "fade" || anim === "slide" ? "mount" : "hover";
+            const animationOn = "hover";
             return (
             <div key={anim} className="flex flex-col items-center gap-2">
               <SgFloatActionButton
@@ -455,8 +455,8 @@ export default function SgFloatActionButtonPage() {
           )})}
         </div>
         <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="fade" animationOn="mount" severity="danger" />
-<SgFloatActionButton animation="slide" animationOn="mount" severity="danger" />
+<SgFloatActionButton animation="fade" animationOn="hover" severity="danger" />
+<SgFloatActionButton animation="slide" animationOn="hover" severity="danger" />
 <SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
 <SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
       </Section>
