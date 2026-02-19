@@ -36,6 +36,7 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-select", label: "SgInputSelect" },
   { group: "Inputs", slug: "sg-input-date", label: "SgInputDate" },
   { group: "Inputs", slug: "sg-input-birth-date", label: "SgInputBirthDate" },
+  { group: "Inputs", slug: "sg-toggle-switch", label: "SgToggleSwitch" },
   { group: "Inputs", slug: "sg-input-email", label: "SgInputEmail" },
   { group: "Inputs", slug: "sg-input-cpf", label: "SgInputCPF" },
   { group: "Inputs", slug: "sg-input-cnpj", label: "SgInputCNPJ" },

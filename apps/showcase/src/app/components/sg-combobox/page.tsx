@@ -270,10 +270,12 @@ export default function SgComboboxPage() {
           </div>
         </div>
         <CodeBlockBase
-          code={`<SgCombobox<Country>
+          code={`const [selectedCountry, setSelectedCountry] = React.useState<Country | null>(null);
+
+<SgCombobox<Country>
   id="cb-basic"
   label="Pais"
-  source={countries}
+  source={COUNTRIES}
   openOnFocus
   grouped
   mapItem={(raw) => ({
@@ -282,8 +284,12 @@ export default function SgComboboxPage() {
     value: raw.code,
     group: raw.region
   })}
-  onSelect={(value) => console.log(value)}
-/>`}
+  onSelect={setSelectedCountry}
+/>
+
+<div>
+  {selectedCountry ? JSON.stringify(selectedCountry, null, 2) : "Nenhum item selecionado"}
+</div>`}
         />
       </Section>
 
@@ -331,20 +337,39 @@ export default function SgComboboxPage() {
           </div>
         </div>
         <CodeBlockBase
-          code={`const [value, setValue] = React.useState<string | number | null>(null);
+          code={`const [selectedId, setSelectedId] = React.useState<string | number | null>(null);
+const [selectedControlled, setSelectedControlled] = React.useState<Country | null>(null);
+const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(selectedId ?? "")) ?? null;
 
 <SgCombobox<Country>
   id="cb-controlled"
-  label="Pais"
-  value={value}
-  source={countries}
-  onValueChange={setValue}
-  onSelect={(item) => console.log(item)}
+  label="Pais (controlado)"
+  value={selectedId}
+  source={COUNTRIES}
+  openOnFocus
+  mapItem={(raw) => ({
+    id: raw.id,
+    label: \`\${raw.description} (\${raw.code})\`,
+    value: raw.code,
+    group: raw.region
+  })}
+  onValueChange={setSelectedId}
+  onSelect={setSelectedControlled}
 />
 
-<SgButton onClick={() => setValue(5)}>Setar Germany</SgButton>
-<SgButton onClick={() => setValue(9)}>Setar Japan</SgButton>
-<SgButton onClick={() => setValue(null)}>Limpar</SgButton>`}
+<SgButton onClick={() => setSelectedId(5)}>Setar Germany (id 5)</SgButton>
+<SgButton onClick={() => setSelectedId(9)}>Setar Japan (id 9)</SgButton>
+<SgButton onClick={() => setSelectedId(null)}>Limpar value</SgButton>
+
+<div>
+  <div>value: {selectedId == null || selectedId === "" ? "(vazio)" : String(selectedId)}</div>
+  <div>
+    resolvido pelo value: {selectedByValue ? \`\${selectedByValue.description} (\${selectedByValue.code})\` : "(nenhum)"}
+  </div>
+  <div>
+    ultimo onSelect: {selectedControlled ? \`\${selectedControlled.description} (\${selectedControlled.code})\` : "(nenhum)"}
+  </div>
+</div>`}
         />
       </Section>
 
@@ -388,21 +413,42 @@ export default function SgComboboxPage() {
         <CodeBlockBase
           code={`const source = async () => {
   await new Promise((r) => setTimeout(r, 300));
-  return countries;
+  return COUNTRIES;
 };
+const [selectedAsync, setSelectedAsync] = React.useState<Country | null>(null);
 
 <SgCombobox<Country>
   id="cb-async"
-  label="Pais"
+  label="Pais (async)"
   source={source}
+  openOnFocus
   grouped
-  loadingText="Carregando..."
-  renderItem={(item) => <span>{item.label}</span>}
-  renderGroupHeader={(group) => <strong>{group}</strong>}
-  renderFooter={(_, hasResults) => <span>{hasResults ? "ok" : "vazio"}</span>}
-  itemTooltip={(item) => <span>{item.value}</span>}
-  onSelect={(value) => console.log(value)}
-/>`}
+  loadingText="Carregando paises..."
+  mapItem={(raw) => ({
+    id: raw.id,
+    label: raw.description,
+    value: raw.code,
+    group: raw.region
+  })}
+  renderGroupHeader={(group) => <span className="uppercase tracking-wide">{group}</span>}
+  renderItem={(item) => (
+    <div className="flex items-center gap-2">
+      <span className="text-xs font-semibold">{item.value}</span>
+      <span>{item.label}</span>
+    </div>
+  )}
+  itemTooltip={(item) => <span>{item.label}</span>}
+  renderFooter={(_, hasResults) => (
+    <span className="text-xs text-muted-foreground">
+      {hasResults ? "Selecione um item da lista." : "Sem registros."}
+    </span>
+  )}
+  onSelect={setSelectedAsync}
+/>
+
+<div>
+  {selectedAsync ? \`Selecionado: \${selectedAsync.description} (\${selectedAsync.code})\` : "Nenhum item selecionado"}
+</div>`}
         />
       </Section>
 

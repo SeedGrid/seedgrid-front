@@ -24,6 +24,8 @@ export { SgInputOTP } from "./inputs/SgInputOTP";
 export type { SgInputOTPProps, SgInputOTPRef } from "./inputs/SgInputOTP";
 export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
+export { SgToggleSwitch, SgSwitch } from "./inputs/SgToggleSwitch";
+export type { SgToggleSwitchProps, SgSwitchProps } from "./inputs/SgToggleSwitch";
 export { SgAutocomplete } from "./inputs/SgAutocomplete";
 export type { SgAutocompleteItem, SgAutocompleteProps } from "./inputs/SgAutocomplete";
 export { SgCombobox } from "./inputs/SgCombobox";

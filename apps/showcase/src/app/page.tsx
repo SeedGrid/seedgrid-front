@@ -16,6 +16,7 @@ const COMPONENTS = [
       { slug: "sg-input-select", name: "SgInputSelect", desc: "Dropdown select com floating label" },
       { slug: "sg-input-date", name: "SgInputDate", desc: "Seletor de data com restricoes min/max" },
       { slug: "sg-input-birth-date", name: "SgInputBirthDate", desc: "Data de nascimento com validacao de idade minima/maxima" },
+      { slug: "sg-toggle-switch", name: "SgToggleSwitch", desc: "Switch booleano com suporte a icones, estados e RHF" },
       { slug: "sg-input-email", name: "SgInputEmail", desc: "Input de email com validacao integrada e bloqueio de temporarios" },
       { slug: "sg-input-cpf", name: "SgInputCPF", desc: "Input de CPF com mascara e validacao de digitos" },
       { slug: "sg-input-cnpj", name: "SgInputCNPJ", desc: "Input de CNPJ com mascara e validacao de digitos" },

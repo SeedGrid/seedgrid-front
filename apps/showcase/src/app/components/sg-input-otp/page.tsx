@@ -305,14 +305,19 @@ const [raw, setRaw] = React.useState("");
         </div>
         <div className="w-full max-w-2xl">
           <CodeBlockBase
-            code={`<SgInputOTP
+            code={`const [masked, setMasked] = React.useState("");
+const [raw, setRaw] = React.useState("");
+
+<SgInputOTP
   id="otp-mask"
   label="Token de acesso"
   hintText="Formato: ###-###-99"
   mask="###-###-99"
-  onChange={(masked) => console.log(masked)}
-  onRawChange={(raw) => console.log(raw)}
-/>`}
+  onChange={setMasked}
+  onRawChange={setRaw}
+/>
+
+<ValuePanel masked={masked} raw={raw} expectedLength={8} />`}
           />
         </div>
       </Section>
@@ -334,12 +339,19 @@ const [raw, setRaw] = React.useState("");
         </div>
         <div className="w-full max-w-2xl">
           <CodeBlockBase
-            code={`<SgInputOTP
+            code={`const [masked, setMasked] = React.useState("");
+const [raw, setRaw] = React.useState("");
+
+<SgInputOTP
   id="otp-paste"
   label="Cole o codigo"
   hintText='Teste colando: "AB1-CD2-34"'
   mask="###-###-99"
-/>`}
+  onChange={setMasked}
+  onRawChange={setRaw}
+/>
+
+<ValuePanel masked={masked} raw={raw} expectedLength={8} />`}
           />
         </div>
       </Section>
@@ -384,13 +396,23 @@ const [raw, setRaw] = React.useState("");
         <div className="w-full max-w-2xl">
           <CodeBlockBase
             code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);
+const [readout, setReadout] = React.useState('Clique em "Ler conteudo".');
 
 <SgInputOTP id="otp-ref" mask="###-###-99" ref={otpRef} />
 
-otpRef.current?.focus();
-otpRef.current?.clear();
-otpRef.current?.getRawValue();
-otpRef.current?.getMaskedValue();`}
+<SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>
+<SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>
+<SgButton
+  onClick={() => {
+    const masked = otpRef.current?.getMaskedValue() ?? "";
+    const raw = otpRef.current?.getRawValue() ?? "";
+    setReadout(\`masked="\${masked || "(vazio)"}" | raw="\${raw || "(vazio)"}"\`);
+  }}
+>
+  Ler conteudo
+</SgButton>
+
+<div>saida: {readout}</div>`}
           />
         </div>
       </Section>
