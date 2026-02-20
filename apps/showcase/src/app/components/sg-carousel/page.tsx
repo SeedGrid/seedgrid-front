@@ -1,8 +1,13 @@
 ﻿"use client";
 
-import React from "react";
-import { SgCarousel, SgGrid, SgPlayground } from "@seedgrid/fe-components";
+import * as React from "react";
+import {
+  SgCarousel,
+  SgGrid,
+  SgPlayground
+} from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -105,7 +110,13 @@ ${args.snippet}
 }
 
 const CAROUSEL_PLAYGROUND_APP_FILE = `import * as React from "react";
-import { SgCarousel, SgGrid } from "@seedgrid/fe-components";
+import {
+  SgButton,
+  SgCarousel,
+  SgGrid,
+  SgInputSelect,
+  SgToggleSwitch
+} from "@seedgrid/fe-components";
 
 const images = Array.from({ length: 6 }, (_, index) => ({
   id: index + 1,
@@ -138,56 +149,119 @@ export default function App() {
   const [gap, setGap] = React.useState(16);
 
   const isVertical = orientation === "vertical";
+  const visibleOptions = [1, 2, 3, 4, 5].map((value) => ({ value: String(value), label: String(value) }));
+  const scrollOptions = [1, 2, 3].map((value) => ({ value: String(value), label: String(value) }));
+  const orientationOptions = [
+    { value: "horizontal", label: "Horizontal" },
+    { value: "vertical", label: "Vertical" }
+  ];
+  const autoPlayOptions = [1000, 2000, 3000, 5000, 8000, 10000].map((value) => ({
+    value: String(value),
+    label: value + " ms"
+  }));
+  const gapOptions = [0, 8, 16, 24, 32, 48, 64].map((value) => ({
+    value: String(value),
+    label: value + " px"
+  }));
 
   return (
     <div className="space-y-4 p-2">
       <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={12}>
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">numVisible: {numVisible}</span>
-          <input type="range" min={1} max={5} value={numVisible} onChange={(e) => setNumVisible(Number(e.target.value))} className="w-full" />
-        </label>
+        <SgInputSelect
+          id="pg-num-visible"
+          label={"numVisible (" + numVisible + ")"}
+          options={visibleOptions}
+          selectProps={{
+            value: String(numVisible),
+            onChange: (event) => setNumVisible(Number(event.target.value))
+          }}
+        />
 
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">numScroll: {numScroll}</span>
-          <input type="range" min={1} max={3} value={numScroll} onChange={(e) => setNumScroll(Number(e.target.value))} className="w-full" />
-        </label>
+        <SgInputSelect
+          id="pg-num-scroll"
+          label={"numScroll (" + numScroll + ")"}
+          options={scrollOptions}
+          selectProps={{
+            value: String(numScroll),
+            onChange: (event) => setNumScroll(Number(event.target.value))
+          }}
+        />
 
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">orientation</span>
-          <select value={orientation} onChange={(e) => setOrientation(e.target.value as "horizontal" | "vertical")} className="w-full rounded border border-slate-300 px-2 py-1">
-            <option value="horizontal">horizontal</option>
-            <option value="vertical">vertical</option>
-          </select>
-        </label>
+        <SgInputSelect
+          id="pg-orientation"
+          label="orientation"
+          options={orientationOptions}
+          selectProps={{
+            value: orientation,
+            onChange: (event) => setOrientation(event.target.value as "horizontal" | "vertical")
+          }}
+        />
 
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">autoPlayInterval: {autoPlayInterval}ms</span>
-          <input type="range" min={1000} max={10000} step={500} value={autoPlayInterval} onChange={(e) => setAutoPlayInterval(Number(e.target.value))} className="w-full" />
-        </label>
+        <SgInputSelect
+          id="pg-autoplay-interval"
+          label={"autoPlayInterval (" + autoPlayInterval + " ms)"}
+          options={autoPlayOptions}
+          selectProps={{
+            value: String(autoPlayInterval),
+            onChange: (event) => setAutoPlayInterval(Number(event.target.value))
+          }}
+        />
 
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">gap: {gap}px</span>
-          <input type="range" min={0} max={64} value={gap} onChange={(e) => setGap(Number(e.target.value))} className="w-full" />
-        </label>
+        <SgInputSelect
+          id="pg-gap"
+          label={"gap (" + gap + " px)"}
+          options={gapOptions}
+          selectProps={{
+            value: String(gap),
+            onChange: (event) => setGap(Number(event.target.value))
+          }}
+        />
       </SgGrid>
 
-      <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8}>
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={circular} onChange={(e) => setCircular(e.target.checked)} />
-          circular
-        </label>
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={autoPlay} onChange={(e) => setAutoPlay(e.target.checked)} />
-          autoPlay
-        </label>
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={showNavigators} onChange={(e) => setShowNavigators(e.target.checked)} />
-          showNavigators
-        </label>
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={showIndicators} onChange={(e) => setShowIndicators(e.target.checked)} />
-          showIndicators
-        </label>
+      <SgGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={8}>
+        <SgToggleSwitch id="pg-circular" label="circular" checked={circular} onChange={setCircular} />
+        <SgToggleSwitch id="pg-autoplay" label="autoPlay" checked={autoPlay} onChange={setAutoPlay} />
+        <SgToggleSwitch
+          id="pg-show-navigators"
+          label="showNavigators"
+          checked={showNavigators}
+          onChange={setShowNavigators}
+        />
+        <SgToggleSwitch
+          id="pg-show-indicators"
+          label="showIndicators"
+          checked={showIndicators}
+          onChange={setShowIndicators}
+        />
+      </SgGrid>
+
+      <SgGrid columns={{ base: 1, sm: 2, lg: 4 }} gap={8}>
+        <SgButton
+          size="sm"
+          appearance="outline"
+          onClick={() => {
+            setNumVisible(1);
+            setNumScroll(1);
+            setOrientation("horizontal");
+            setCircular(true);
+            setAutoPlay(false);
+            setAutoPlayInterval(3000);
+            setShowNavigators(true);
+            setShowIndicators(true);
+            setGap(16);
+          }}
+        >
+          Resetar
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOrientation("vertical")}>
+          Vertical
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOrientation("horizontal")}>
+          Horizontal
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAutoPlay((prev) => !prev)}>
+          Toggle AutoPlay
+        </SgButton>
       </SgGrid>
 
       <div className={isVertical ? "mx-auto h-96 w-80" : "h-64 w-full"}>
@@ -219,7 +293,8 @@ export default function SgCarouselPage() {
   };
 
   return (
-    <div className="max-w-7xl space-y-8">
+    <I18NReady>
+      <div className="max-w-7xl space-y-8">
       <div>
         <h1 className="text-3xl font-bold">SgCarousel</h1>
         <p className="mt-2 text-muted-foreground">
@@ -646,7 +721,7 @@ export default function SgCarouselPage() {
 
       {/* Playground */}
       <Section
-        title="🎮 Playground Interativo"
+        title="Playground Interativo"
         description="Brinque com as propriedades do carrossel e veja as mudanças em tempo real"
       >
         <SgPlayground
@@ -779,7 +854,8 @@ export default function SgCarouselPage() {
           </table>
         </div>
       </section>
-    </div>
+      </div>
+    </I18NReady>
   );
 }
 
