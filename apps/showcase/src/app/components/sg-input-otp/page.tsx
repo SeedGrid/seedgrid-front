@@ -2,239 +2,100 @@
 
 import React from "react";
 import Link from "next/link";
-import { SgButton, SgInputOTP, SgPlayground, type SgInputOTPRef } from "@seedgrid/fe-components";
+import { SgButton, SgGrid, SgInputOTP, SgPlayground, type SgInputOTPRef } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
-      <div className="mt-4 flex flex-wrap gap-6">{props.children}</div>
+      <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
     </section>
   );
 }
 
-function ValuePanel(props: { masked: string; raw: string; expectedLength: number }) {
+function CodeBlock(props: { code: string }) {
+  const trimmed = props.code.trimStart();
+  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
+  return <CodeBlockBase code={content} />;
+}
+
+function indentCode(source: string, spaces: number) {
+  const pad = " ".repeat(spaces);
+  return source
+    .split("\n")
+    .map((line) => (line.length ? `${pad}${line}` : line))
+    .join("\n");
+}
+
+function wrapFullExample(body: string) {
+  const imports = [
+    `import React from "react";`,
+    `import { SgButton, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";`
+  ].join("\n");
+  const bodyIndented = indentCode(body.trim(), 4);
+  return `${imports}\n\nexport default function Example() {\n${bodyIndented}\n}`;
+}
+
+function ValuePanel(props: { masked: string; raw: string; expectedLength: number; completeValue?: string }) {
   const complete = props.raw.length === props.expectedLength;
   return (
     <div className="rounded-md border border-border bg-foreground/5 p-3 text-xs">
-      <p>
-        <strong>masked:</strong> {props.masked || "(vazio)"}
-      </p>
-      <p>
-        <strong>raw:</strong> {props.raw || "(vazio)"}
-      </p>
-      <p>
-        <strong>completo:</strong> {complete ? "sim" : "nao"}
-      </p>
+      <p><strong>masked:</strong> {props.masked || "(vazio)"}</p>
+      <p><strong>raw:</strong> {props.raw || "(vazio)"}</p>
+      <p><strong>completo:</strong> {complete ? "sim" : "nao"}</p>
+      {props.completeValue ? (
+        <p><strong>onComplete:</strong> {props.completeValue}</p>
+      ) : null}
     </div>
   );
 }
 
-const OTP_PLAYGROUND_APP_FILE = `import * as React from "react";
-import { SgButton, SgInputOTP as SgInputOTPFromLib, SgStack } from "@seedgrid/fe-components";
-
-type SgInputOTPRef = {
-  focus: (slotIndex?: number) => void;
-  clear: () => void;
-  getRawValue: () => string;
-  getMaskedValue: () => string;
-};
-
-type LocalOtpFallbackProps = {
-  id?: string;
-  label?: string;
-  hintText?: string;
-  onChange?: (value: string) => void;
-  onRawChange?: (value: string) => void;
-};
-
-const SLOT_COUNT = 8;
-
-function toMasked(raw: string) {
-  const p1 = raw.slice(0, 3);
-  const p2 = raw.slice(3, 6);
-  const p3 = raw.slice(6, 8);
-  return [p1, p2, p3].filter(Boolean).join("-");
-}
-
-function isAccepted(index: number, char: string) {
-  if (index < 6) return /^[A-Za-z0-9]$/.test(char);
-  return /^[0-9]$/.test(char);
-}
-
-const LocalOtpFallback = React.forwardRef<SgInputOTPRef, LocalOtpFallbackProps>(function LocalOtpFallback(
-  props,
-  ref
-) {
-  const [parts, setParts] = React.useState<string[]>(() => Array.from({ length: SLOT_COUNT }, () => ""));
-  const refs = React.useRef<Array<HTMLInputElement | null>>([]);
-
-  const focusSlot = React.useCallback((index: number) => {
-    const safeIndex = Math.max(0, Math.min(SLOT_COUNT - 1, index));
-    const node = refs.current[safeIndex];
-    if (!node) return;
-    node.focus();
-    node.select();
-  }, []);
-
-  const commit = React.useCallback(
-    (next: string[]) => {
-      setParts(next);
-      const raw = next.join("");
-      props.onRawChange?.(raw);
-      props.onChange?.(toMasked(raw));
-    },
-    [props]
-  );
-
-  const applyFrom = React.useCallback(
-    (startIndex: number, text: string) => {
-      const next = [...parts];
-      let pointer = Math.max(0, Math.min(SLOT_COUNT - 1, startIndex));
-      for (const sourceChar of text) {
-        const char = sourceChar.toUpperCase();
-        while (pointer < SLOT_COUNT && !isAccepted(pointer, char)) {
-          pointer += 1;
-        }
-        if (pointer >= SLOT_COUNT) break;
-        next[pointer] = char;
-        pointer += 1;
-      }
-      commit(next);
-      focusSlot(pointer);
-    },
-    [commit, focusSlot, parts]
-  );
-
-  React.useImperativeHandle(
-    ref,
-    () => ({
-      focus: (slotIndex = 0) => {
-        focusSlot(slotIndex);
-      },
-      clear: () => {
-        commit(Array.from({ length: SLOT_COUNT }, () => ""));
-        focusSlot(0);
-      },
-      getRawValue: () => parts.join(""),
-      getMaskedValue: () => toMasked(parts.join(""))
-    }),
-    [commit, focusSlot, parts]
-  );
-
-  return (
-    <div className="space-y-2">
-      {props.label ? <div className="text-sm font-medium">{props.label}</div> : null}
-      <div className="inline-flex items-center gap-2">
-        {Array.from({ length: SLOT_COUNT }).map((_, index) => {
-          const value = parts[index] ?? "";
-          return (
-            <React.Fragment key={index}>
-              {index === 3 || index === 6 ? (
-                <span className="select-none px-1 text-lg text-foreground/60">-</span>
-              ) : null}
-              <input
-                className="h-11 w-10 rounded border border-border bg-white text-center text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                value={value}
-                maxLength={1}
-                inputMode={index < 6 ? "text" : "numeric"}
-                ref={(node) => {
-                  refs.current[index] = node;
-                }}
-                onFocus={(event) => event.currentTarget.select()}
-                onChange={(event) => {
-                  const typed = event.currentTarget.value ?? "";
-                  if (!typed) {
-                    const next = [...parts];
-                    next[index] = "";
-                    commit(next);
-                    return;
-                  }
-                  applyFrom(index, typed);
-                }}
-                onPaste={(event) => {
-                  event.preventDefault();
-                  const pasted = event.clipboardData.getData("text") ?? "";
-                  if (!pasted) return;
-                  applyFrom(index, pasted);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Backspace") {
-                    event.preventDefault();
-                    const next = [...parts];
-                    if (next[index]) {
-                      next[index] = "";
-                      commit(next);
-                      return;
-                    }
-                    if (index > 0) {
-                      next[index - 1] = "";
-                      commit(next);
-                      focusSlot(index - 1);
-                    }
-                  }
-                  if (event.key === "ArrowLeft") {
-                    event.preventDefault();
-                    focusSlot(index - 1);
-                  }
-                  if (event.key === "ArrowRight") {
-                    event.preventDefault();
-                    focusSlot(index + 1);
-                  }
-                }}
-              />
-            </React.Fragment>
-          );
-        })}
-      </div>
-      {props.hintText ? <div className="text-xs text-muted-foreground">{props.hintText}</div> : null}
-    </div>
-  );
-});
+const OTP_PLAYGROUND_CODE = `import * as React from "react";
+import { SgButton, SgGrid, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";
 
 export default function App() {
-  const hasOtp = typeof SgInputOTPFromLib === "function";
+  const otpRef = React.useRef<SgInputOTPRef | null>(null);
+  const [mask, setMask] = React.useState("###-###-99");
   const [masked, setMasked] = React.useState("");
   const [raw, setRaw] = React.useState("");
-  const otpRef = React.useRef<SgInputOTPRef | null>(null);
-  const OtpComponent = (hasOtp ? SgInputOTPFromLib : LocalOtpFallback) as React.ComponentType<any>;
 
   return (
     <div className="space-y-4 p-2">
-      {!hasOtp ? (
-        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgInputOTP ainda nao esta na versao publicada do pacote usada pelo Sandpack. Exibindo fallback local.
-        </div>
-      ) : null}
-
-      <OtpComponent
-        id="otp-playground"
-        label="OTP com mascara"
-        hintText="Cole ou digite"
-        mask="###-###-99"
-        onChange={setMasked}
-        onRawChange={setRaw}
-        ref={otpRef}
-      />
-
-      <div className="rounded border border-border bg-muted/40 p-2 text-xs">
-        <div><strong>masked:</strong> {masked || "(vazio)"}</div>
-        <div><strong>raw:</strong> {raw || "(vazio)"}</div>
-      </div>
-
-      <SgStack direction="row" gap={8}>
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance={mask === "###-###-99" ? "solid" : "outline"} onClick={() => setMask("###-###-99")}>
+          mask ###-###-99
+        </SgButton>
+        <SgButton size="sm" appearance={mask === "999999" ? "solid" : "outline"} onClick={() => setMask("999999")}>
+          mask 999999
+        </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>
           Focar
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>
           Limpar
         </SgButton>
-        <SgButton size="sm" severity="primary" onClick={() => alert(otpRef.current?.getMaskedValue() || "")}>
-          Ler conteudo
-        </SgButton>
-      </SgStack>
+      </SgGrid>
+
+      <SgInputOTP
+        id="playground-otp"
+        ref={otpRef}
+        label="SgInputOTP Playground"
+        hintText="Digite ou cole o código"
+        mask={mask}
+        onChange={setMasked}
+        onRawChange={setRaw}
+      />
+
+      <div className="rounded border border-border bg-muted/40 p-3 text-xs">
+        <div><strong>masked:</strong> {masked || "(vazio)"}</div>
+        <div><strong>raw:</strong> {raw || "(vazio)"}</div>
+      </div>
     </div>
   );
 }`;
@@ -247,235 +108,274 @@ export default function SgInputOTPPage() {
   const [maskRaw, setMaskRaw] = React.useState("");
   const [pasteMasked, setPasteMasked] = React.useState("");
   const [pasteRaw, setPasteRaw] = React.useState("");
-  const [refReadout, setRefReadout] = React.useState('Clique em "Ler conteudo".');
+  const [completeValue, setCompleteValue] = React.useState("");
+  const [refReadout, setRefReadout] = React.useState('Clique em "Ler conteúdo".');
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
+
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
+    };
+
+    updateAnchorOffset();
+    const resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) resizeObserver.observe(stickyHeaderRef.current);
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, []);
+
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      if ((overflowY === "auto" || overflowY === "scroll") && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback((anchorId: string) => {
+    const target = document.getElementById(anchorId);
+    if (!target) return;
+
+    const scrollContainer = findScrollContainer(target);
+    const extraTopGap = 12;
+    const titleEl = (target.querySelector("[data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+    const correctIfNeeded = () => {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const currentTop = titleEl.getBoundingClientRect().top;
+      const delta = currentTop - desiredTopNow;
+      if (Math.abs(delta) <= 1) return;
+
+      if (scrollContainer === window) {
+        window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: "auto" });
+        return;
+      }
+
+      const container = scrollContainer as HTMLElement;
+      container.scrollTo({ top: Math.max(0, container.scrollTop + delta), behavior: "auto" });
+    };
+
+    if (scrollContainer === window) {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+      window.scrollTo({ top: Math.max(0, titleTop - desiredTopNow), behavior: "auto" });
+    } else {
+      const container = scrollContainer as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopInContainer = stickyBottomNow + extraTopGap - containerRect.top;
+      const titleRect = titleEl.getBoundingClientRect();
+      const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+      container.scrollTo({ top: Math.max(0, titleTopInContainer - desiredTopInContainer), behavior: "auto" });
+    }
+
+    window.history.replaceState(null, "", `#${anchorId}`);
+    requestAnimationFrame(() => {
+      correctIfNeeded();
+      requestAnimationFrame(correctIfNeeded);
+    });
+    window.setTimeout(correctIfNeeded, 120);
+    window.setTimeout(correctIfNeeded, 260);
+  }, [findScrollContainer]);
+
+  const handleAnchorClick = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    navigateToAnchor(anchorId);
+  }, [navigateToAnchor]);
+
+  const navigateToAnchorRef = React.useRef(navigateToAnchor);
+  React.useEffect(() => {
+    navigateToAnchorRef.current = navigateToAnchor;
+  }, [navigateToAnchor]);
+
+  React.useEffect(() => {
+    const applyHashNavigation = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return;
+      navigateToAnchorRef.current(hash);
+    };
+
+    const timer = window.setTimeout(applyHashNavigation, 0);
+    window.addEventListener("hashchange", applyHashNavigation);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("hashchange", applyHashNavigation);
+    };
+  }, []);
+
+  const exampleLinks = React.useMemo(
+    () => [
+      { id: "exemplo-1", label: "1) Básico" },
+      { id: "exemplo-2", label: "2) Máscara customizada" },
+      { id: "exemplo-3", label: "3) Colagem + onComplete" },
+      { id: "exemplo-4", label: "4) Acesso por ref" },
+      { id: "exemplo-5", label: "5) Playground" }
+    ],
+    []
+  );
 
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgInputOTP</h1>
-        <p className="mt-2 text-muted-foreground">
-          Input OTP com digitos separados, suporte a colagem e mascara customizavel
-          usando <code>#</code> (alfanumerico) e <code>9</code> (numerico).
-        </p>
-        <div className="mt-3">
-          <Link
-            href="#props-reference"
-            className="inline-flex rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
-          >
-            Props Reference
-          </Link>
-        </div>
-      </div>
-
-      <Section
-        title="1) OTP basico (6 digitos)"
-        description="Mascara padrao: 999999."
+    <I18NReady>
+      <div
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
       >
-        <div className="w-full max-w-md space-y-3">
-          <SgInputOTP
-            id="otp-basic"
-            label="Codigo OTP"
-            hintText="Digite os 6 digitos"
-            onChange={setBasicMasked}
-            onRawChange={setBasicRaw}
-          />
-          <ValuePanel masked={basicMasked} raw={basicRaw} expectedLength={6} />
-        </div>
-        <div className="w-full max-w-2xl">
-          <CodeBlockBase
-            code={`const [masked, setMasked] = React.useState("");
-const [raw, setRaw] = React.useState("");
-
-<SgInputOTP
-  id="otp-basic"
-  label="Codigo OTP"
-  hintText="Digite os 6 digitos"
-  onChange={setMasked}
-  onRawChange={setRaw}
-/>`}
-          />
-        </div>
-      </Section>
-
-      <Section
-        title="2) Mascara customizada"
-        description='Exemplo: "###-###-99" onde # = alfanumerico e 9 = numero.'
-      >
-        <div className="w-full max-w-md space-y-3">
-          <SgInputOTP
-            id="otp-mask"
-            label="Token de acesso"
-            hintText="Formato: ###-###-99"
-            mask="###-###-99"
-            onChange={setMaskMasked}
-            onRawChange={setMaskRaw}
-          />
-          <ValuePanel masked={maskMasked} raw={maskRaw} expectedLength={8} />
-        </div>
-        <div className="w-full max-w-2xl">
-          <CodeBlockBase
-            code={`const [masked, setMasked] = React.useState("");
-const [raw, setRaw] = React.useState("");
-
-<SgInputOTP
-  id="otp-mask"
-  label="Token de acesso"
-  hintText="Formato: ###-###-99"
-  mask="###-###-99"
-  onChange={setMasked}
-  onRawChange={setRaw}
-/>
-
-<ValuePanel masked={masked} raw={raw} expectedLength={8} />`}
-          />
-        </div>
-      </Section>
-
-      <Section
-        title="3) Colagem de OTP"
-        description='Cole um texto como "AB1-CD2-34" ou "AB1CD234". O componente distribui automaticamente nas caixas.'
-      >
-        <div className="w-full max-w-md space-y-3">
-          <SgInputOTP
-            id="otp-paste"
-            label="Cole o codigo"
-            hintText='Teste colando: "AB1-CD2-34"'
-            mask="###-###-99"
-            onChange={setPasteMasked}
-            onRawChange={setPasteRaw}
-          />
-          <ValuePanel masked={pasteMasked} raw={pasteRaw} expectedLength={8} />
-        </div>
-        <div className="w-full max-w-2xl">
-          <CodeBlockBase
-            code={`const [masked, setMasked] = React.useState("");
-const [raw, setRaw] = React.useState("");
-
-<SgInputOTP
-  id="otp-paste"
-  label="Cole o codigo"
-  hintText='Teste colando: "AB1-CD2-34"'
-  mask="###-###-99"
-  onChange={setMasked}
-  onRawChange={setRaw}
-/>
-
-<ValuePanel masked={masked} raw={raw} expectedLength={8} />`}
-          />
-        </div>
-      </Section>
-
-      <Section
-        title="4) Acesso ao conteudo via ref"
-        description="Use o ref para focar, limpar e ler o valor atual (raw/masked)."
-      >
-        <div className="w-full max-w-md space-y-3">
-          <SgInputOTP
-            id="otp-ref"
-            label="OTP controlado por ref"
-            hintText="Clique nos botoes abaixo"
-            mask="###-###-99"
-            ref={otpRef}
-          />
-
-          <div className="flex flex-wrap gap-2">
-            <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>
-              Focar
-            </SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>
-              Limpar
-            </SgButton>
-            <SgButton
-              size="sm"
-              severity="primary"
-              onClick={() => {
-                const masked = otpRef.current?.getMaskedValue() ?? "";
-                const raw = otpRef.current?.getRawValue() ?? "";
-                setRefReadout(`masked="${masked || "(vazio)"}" | raw="${raw || "(vazio)"}"`);
-              }}
-            >
-              Ler conteudo
-            </SgButton>
-          </div>
-
-          <div className="rounded-md border border-border bg-foreground/5 p-3 text-xs">
-            <strong>saida:</strong> {refReadout}
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">SgInputOTP</h1>
+            <p className="mt-2 text-muted-foreground">
+              Input OTP com dígitos separados, suporte a colagem e máscara configurável.
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {exampleLinks.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+              <Link
+                href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
+            </SgGrid>
           </div>
         </div>
-        <div className="w-full max-w-2xl">
-          <CodeBlockBase
-            code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);
-const [readout, setReadout] = React.useState('Clique em "Ler conteudo".');
 
-<SgInputOTP id="otp-ref" mask="###-###-99" ref={otpRef} />
+        <Section id="exemplo-1" title="1) Básico" description="Máscara padrão: 999999.">
+          <div className="w-full max-w-md space-y-3">
+            <SgInputOTP
+              id="otp-basic"
+              label="Código OTP"
+              hintText="Digite os 6 dígitos"
+              onChange={setBasicMasked}
+              onRawChange={setBasicRaw}
+            />
+            <ValuePanel masked={basicMasked} raw={basicRaw} expectedLength={6} />
+          </div>
+          <CodeBlock code={`const [masked, setMasked] = React.useState("");\nconst [raw, setRaw] = React.useState("");\n\nreturn (\n  <SgInputOTP\n    id="otp-basic"\n    label="Código OTP"\n    hintText="Digite os 6 dígitos"\n    onChange={setMasked}\n    onRawChange={setRaw}\n  />\n);`} />
+        </Section>
 
-<SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>
-<SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>
-<SgButton
-  onClick={() => {
-    const masked = otpRef.current?.getMaskedValue() ?? "";
-    const raw = otpRef.current?.getRawValue() ?? "";
-    setReadout(\`masked="\${masked || "(vazio)"}" | raw="\${raw || "(vazio)"}"\`);
-  }}
->
-  Ler conteudo
-</SgButton>
+        <Section id="exemplo-2" title="2) Máscara customizada" description='Exemplo: "###-###-99".'>
+          <div className="w-full max-w-md space-y-3">
+            <SgInputOTP
+              id="otp-mask"
+              label="Token de acesso"
+              hintText="Formato: ###-###-99"
+              mask="###-###-99"
+              onChange={setMaskMasked}
+              onRawChange={setMaskRaw}
+            />
+            <ValuePanel masked={maskMasked} raw={maskRaw} expectedLength={8} />
+          </div>
+          <CodeBlock code={`<SgInputOTP\n  id="otp-mask"\n  label="Token de acesso"\n  hintText="Formato: ###-###-99"\n  mask="###-###-99"\n  onChange={setMaskMasked}\n  onRawChange={setMaskRaw}\n/>`} />
+        </Section>
 
-<div>saida: {readout}</div>`}
-          />
-        </div>
-      </Section>
+        <Section id="exemplo-3" title="3) Colagem + onComplete" description="Cole um OTP e receba callback ao completar.">
+          <div className="w-full max-w-md space-y-3">
+            <SgInputOTP
+              id="otp-paste"
+              label="Cole o código"
+              hintText='Teste colando: "AB1-CD2-34"'
+              mask="###-###-99"
+              onChange={setPasteMasked}
+              onRawChange={setPasteRaw}
+              onComplete={(value) => setCompleteValue(value)}
+            />
+            <ValuePanel masked={pasteMasked} raw={pasteRaw} expectedLength={8} completeValue={completeValue} />
+          </div>
+          <CodeBlock code={`<SgInputOTP\n  id="otp-paste"\n  label="Cole o código"\n  hintText='Teste colando: "AB1-CD2-34"'\n  mask="###-###-99"\n  onChange={setPasteMasked}\n  onRawChange={setPasteRaw}\n  onComplete={(value) => setCompleteValue(value)}\n/>`} />
+        </Section>
 
-      <Section
-        title="5) Playground OTP (SgPlayground)"
-        description="Playground interativo para testar o OTP em tempo real."
-      >
-        <div className="w-full">
+        <Section id="exemplo-4" title="4) Acesso por ref" description="Focar, limpar e ler valores via API do ref.">
+          <div className="w-full max-w-md space-y-3">
+            <SgInputOTP id="otp-ref" ref={otpRef} label="OTP por ref" hintText="Use os botões abaixo" mask="###-###-99" />
+            <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+              <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>Focar</SgButton>
+              <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>Limpar</SgButton>
+              <SgButton
+                size="sm"
+                appearance="outline"
+                onClick={() => {
+                  const masked = otpRef.current?.getMaskedValue() ?? "";
+                  const raw = otpRef.current?.getRawValue() ?? "";
+                  setRefReadout(`masked="${masked || "(vazio)"}" | raw="${raw || "(vazio)"}"`);
+                }}
+              >
+                Ler conteúdo
+              </SgButton>
+            </SgGrid>
+            <div className="rounded-md border border-border bg-foreground/5 p-3 text-xs">
+              <strong>saida:</strong> {refReadout}
+            </div>
+          </div>
+          <CodeBlock code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);\n\nreturn (\n  <>\n    <SgInputOTP id="otp-ref" ref={otpRef} mask="###-###-99" />\n    <SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>\n    <SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>\n    <SgButton onClick={() => console.log(otpRef.current?.getMaskedValue())}>Ler conteúdo</SgButton>\n  </>\n);`} />
+        </Section>
+
+        <Section id="exemplo-5" title="5) Playground" description="Simule as principais props em tempo real.">
           <SgPlayground
             title="SgInputOTP Playground"
-            description="Edite e rode o exemplo."
             interactive
             codeContract="appFile"
-            code={OTP_PLAYGROUND_APP_FILE}
-            seedgridDependency="0.2.8"
-            height={500}
+            code={OTP_PLAYGROUND_CODE}
+            height={620}
+            defaultOpen
           />
-        </div>
-      </Section>
+        </Section>
 
-      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
-        <h2 className="text-lg font-semibold">Referência de Props</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Máscara (`#` alfanumérico e `9` numérico).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">value / defaultValue</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Valor externo controlado e inicial.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controla edição do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(maskedValue: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Retorna valor formatado pela máscara.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onRawChange</td><td className="py-2 pr-4">(rawValue: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Retorna somente os caracteres dos slots.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onComplete</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Dispara ao preencher todos os slots.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de foco e limpeza.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">fit-content</td><td className="py-2">Largura do componente.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customização visual via classes.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas aplicadas aos slots.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Métodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
+        <section
+          id="props-reference"
+          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+        >
+          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="pb-2 pr-4 font-semibold">Prop</th>
+                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                  <th className="pb-2 font-semibold">Descrição</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Máscara (`#` alfanumérico e `9` numérico).</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">value / defaultValue</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Modo controlado e valor inicial.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onRawChange / onComplete</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Retorno de valor formatado, bruto e completo.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de edição.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customização visual.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com RHF.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Métodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

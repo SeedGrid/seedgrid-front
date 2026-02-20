@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
-import { SgGrid, SgInputNumber } from "@seedgrid/fe-components";
+import { SgButton, SgGrid, SgInputNumber, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n } from "../../../i18n";
@@ -15,7 +15,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
       id={props.id}
       className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
     >
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
     </section>
@@ -40,7 +40,7 @@ function wrapFullExample(body: string) {
   const imports = [
     `import React from "react";`,
     `import { useForm } from "react-hook-form";`,
-    `import { SgInputNumber } from "@seedgrid/fe-components";`
+    `import { SgButton, SgGrid, SgInputNumber } from "@seedgrid/fe-components";`
   ].join("\n");
 
   const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
@@ -65,6 +65,79 @@ ${bodyIndented}
   );
 }`;
 }
+
+const INPUT_NUMBER_PLAYGROUND_CODE = `import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgButton, SgGrid, SgInputNumber } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { control, watch, setValue } = useForm({
+    defaultValues: {
+      amount: "1234.50"
+    }
+  });
+
+  const amount = watch("amount") ?? "";
+  const [allowNegative, setAllowNegative] = React.useState(true);
+  const [decimals, setDecimals] = React.useState(2);
+  const [filled, setFilled] = React.useState(false);
+  const [withBorder, setWithBorder] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance={allowNegative ? "solid" : "outline"} onClick={() => setAllowNegative((prev) => !prev)}>
+          allowNegative
+        </SgButton>
+        <SgButton size="sm" appearance={filled ? "solid" : "outline"} onClick={() => setFilled((prev) => !prev)}>
+          filled
+        </SgButton>
+        <SgButton size="sm" appearance={withBorder ? "solid" : "outline"} onClick={() => setWithBorder((prev) => !prev)}>
+          withBorder
+        </SgButton>
+        <SgButton
+          size="sm"
+          appearance="outline"
+          onClick={() => setDecimals((prev) => (prev === 0 ? 2 : prev === 2 ? 4 : 0))}
+        >
+          decimals: {decimals}
+        </SgButton>
+      </SgGrid>
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("amount", "12345.67")}>
+          Set API
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("amount", "0.00")}>
+          Zero
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("amount", "-250.90")}>
+          Negativo
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("amount", "")}>
+          Limpar
+        </SgButton>
+      </SgGrid>
+
+      <div className="rounded-md border border-border p-4">
+        <SgInputNumber
+          id="playground-input-number"
+          label="SgInputNumber Playground"
+          name="amount"
+          control={control}
+          decimals={decimals}
+          allowNegative={allowNegative}
+          filled={filled}
+          withBorder={withBorder}
+        />
+      </div>
+
+      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
+        Valor atual: <strong>{amount || "-"}</strong>
+      </div>
+    </div>
+  );
+}`;
 
 export default function SgInputNumberPage() {
   const i18n = useShowcaseI18n();
@@ -122,7 +195,7 @@ export default function SgInputNumberPage() {
   React.useEffect(() => {
     const updateAnchorOffset = () => {
       const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
-      setAnchorOffset(Math.max(220, Math.ceil(headerHeight + 24)));
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
     };
 
     updateAnchorOffset();
@@ -140,6 +213,103 @@ export default function SgInputNumberPage() {
     };
   }, [i18n.locale]);
 
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      const isScrollable = overflowY === "auto" || overflowY === "scroll";
+      if (isScrollable && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback(
+    (anchorId: string) => {
+      const target = document.getElementById(anchorId);
+      if (!target) return;
+
+      const scrollContainer = findScrollContainer(target);
+      const extraTopGap = 12;
+      const titleEl =
+        (target.querySelector("h1, h2, h3, [data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+      const correctIfNeeded = () => {
+        const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+        const desiredTopNow = stickyBottomNow + extraTopGap;
+        const currentTop = titleEl.getBoundingClientRect().top;
+        const delta = desiredTopNow - currentTop;
+        if (delta <= 0) return;
+
+        if (scrollContainer === window) {
+          const next = Math.max(0, window.scrollY - delta);
+          window.scrollTo({ top: next, behavior: "auto" });
+          return;
+        }
+
+        const container = scrollContainer as HTMLElement;
+        const next = Math.max(0, container.scrollTop - delta);
+        container.scrollTo({ top: next, behavior: "auto" });
+      };
+
+      if (scrollContainer === window) {
+        const targetTop = window.scrollY + target.getBoundingClientRect().top;
+        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        window.scrollTo({ top: destination, behavior: "auto" });
+      } else {
+        const container = scrollContainer as HTMLElement;
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const targetTop = container.scrollTop + (targetRect.top - containerRect.top);
+        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        container.scrollTo({ top: destination, behavior: "auto" });
+      }
+
+      window.history.replaceState(null, "", `#${anchorId}`);
+      requestAnimationFrame(() => {
+        correctIfNeeded();
+        requestAnimationFrame(correctIfNeeded);
+      });
+      window.setTimeout(correctIfNeeded, 120);
+      window.setTimeout(correctIfNeeded, 260);
+    },
+    [anchorOffset, findScrollContainer]
+  );
+
+  const handleAnchorClick = React.useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      navigateToAnchor(anchorId);
+    },
+    [navigateToAnchor]
+  );
+
+  const navigateToAnchorRef = React.useRef(navigateToAnchor);
+  React.useEffect(() => {
+    navigateToAnchorRef.current = navigateToAnchor;
+  }, [navigateToAnchor]);
+
+  React.useEffect(() => {
+    const applyHashNavigation = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return;
+      navigateToAnchorRef.current(hash);
+    };
+
+    const timer = window.setTimeout(applyHashNavigation, 0);
+    window.addEventListener("hashchange", applyHashNavigation);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("hashchange", applyHashNavigation);
+    };
+  }, []);
+
   const exampleLinks = React.useMemo(
     () => [
       { id: "exemplo-1", label: `1) ${t(i18n, "showcase.component.inputNumber.sections.basic.title")}` },
@@ -156,7 +326,8 @@ export default function SgInputNumberPage() {
       { id: "exemplo-12", label: `12) ${t(i18n, "showcase.component.inputNumber.sections.visual.title")}` },
       { id: "exemplo-13", label: `13) ${t(i18n, "showcase.component.inputNumber.sections.standalone.title")}` },
       { id: "exemplo-14", label: `14) ${t(i18n, "showcase.component.inputNumber.sections.events.title")}` },
-      { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}` }
+      { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}` },
+      { id: "exemplo-16", label: "16) Playground" }
     ],
     [i18n.locale]
   );
@@ -167,8 +338,8 @@ export default function SgInputNumberPage() {
         className="max-w-4xl space-y-8"
         style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
       >
-        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
-          <div ref={stickyHeaderRef} className="rounded-lg border border-border bg-background p-4 shadow-sm">
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputNumber.title")}</h1>
             <p className="mt-2 text-muted-foreground">
               {t(i18n, "showcase.component.inputNumber.subtitle")}
@@ -181,6 +352,7 @@ export default function SgInputNumberPage() {
                 <Link
                   key={example.id}
                   href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
                   className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
                 >
                   {example.label}
@@ -188,6 +360,7 @@ export default function SgInputNumberPage() {
               ))}
               <Link
                 href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
               >
                 Props Reference
@@ -209,9 +382,9 @@ export default function SgInputNumberPage() {
             register={register}
             decimals={2}
           />
-          <button type="submit" className="rounded border border-border px-3 py-1.5 text-xs hover:bg-black/5">
+          <SgButton type="submit" size="sm" appearance="outline">
             {t(i18n, "showcase.component.inputNumber.actions.submit")}
-          </button>
+          </SgButton>
           <p className="text-xs text-muted-foreground">
             {t(i18n, "showcase.component.inputNumber.labels.currentValue", { value: basicValue })}
           </p>
@@ -224,7 +397,9 @@ export default function SgInputNumberPage() {
   decimals={2}
 />
 
-<button type="submit">${t(i18n, "showcase.component.inputNumber.actions.submit")}</button>
+<SgButton type="submit" size="sm" appearance="outline">
+  ${t(i18n, "showcase.component.inputNumber.actions.submit")}
+</SgButton>
 
 <p>${t(i18n, "showcase.component.inputNumber.labels.currentValue", { value: watchValueSnippet })}</p>`} />
       </Section>
@@ -292,26 +467,22 @@ export default function SgInputNumberPage() {
             {t(i18n, "showcase.component.inputNumber.labels.currentState")}:{" "}
             <code className="rounded bg-muted px-1">&quot;{controlledValue}&quot;</code>
           </p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              className="rounded border border-primary bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/20"
-              onClick={() => setValue("controlled", "12345.00")}
-            >
+          <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+            <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "12345.00")}>
               {t(i18n, "showcase.component.inputNumber.actions.setApi")}
-            </button>
-            <button
-              className="rounded border px-3 py-1.5 text-sm hover:bg-muted"
-              onClick={() => setValue("controlled", "0.00")}
-            >
+            </SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "0.00")}>
               {t(i18n, "showcase.component.inputNumber.actions.reset")}
-            </button>
-            <button
-              className="rounded border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+            </SgButton>
+            <SgButton
+              size="sm"
+              appearance="outline"
+              severity="danger"
               onClick={() => setValue("controlled", "")}
             >
               {t(i18n, "showcase.component.inputNumber.actions.clear")}
-            </button>
-          </div>
+            </SgButton>
+          </SgGrid>
         </div>
         <CodeBlock code={`<SgInputNumber
   id="demo-controlled"
@@ -321,19 +492,21 @@ export default function SgInputNumberPage() {
   decimals={2}
 />
 
-<button type="button" onClick={() => setValue("controlled", "12345.00")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.setApi")}
-</button>
+<SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+  <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "12345.00")}>
+    ${t(i18n, "showcase.component.inputNumber.actions.setApi")}
+  </SgButton>
 
-<button type="button" onClick={() => setValue("controlled", "0.00")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.reset")}
-</button>
+  <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "0.00")}>
+    ${t(i18n, "showcase.component.inputNumber.actions.reset")}
+  </SgButton>
 
-<button type="button" onClick={() => setValue("controlled", "")}>
-  ${t(i18n, "showcase.component.inputNumber.actions.clear")}
-</button>
+  <SgButton size="sm" appearance="outline" severity="danger" onClick={() => setValue("controlled", "")}>
+    ${t(i18n, "showcase.component.inputNumber.actions.clear")}
+  </SgButton>
+</SgGrid>
 
-<p>${t(i18n, "showcase.component.inputNumber.labels.currentState")}: "{controlledValue}"</p>`} />
+<p>${t(i18n, "showcase.component.inputNumber.labels.currentState")}: "{watch("controlled")}"</p>`} />
       </Section>
 
       <Section
@@ -494,29 +667,37 @@ export default function SgInputNumberPage() {
             register={register}
             decimals={2}
             iconButtons={[
-              <button
+              <SgButton
                 key="copy"
                 type="button"
-                className="text-foreground/60 hover:text-primary"
+                iconOnly
+                size="sm"
+                appearance="ghost"
+                className="h-6 w-6 text-foreground/60 hover:text-primary"
                 title="Copiar valor"
                 onClick={() => {
                   navigator.clipboard.writeText(iconBtnValue ?? "");
                   setIconBtnLog((prev) => [`Copiado: "${iconBtnValue}"`, ...prev].slice(0, 5));
                 }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-              </button>,
-              <button
+                leftIcon={
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                }
+              />,
+              <SgButton
                 key="alert"
                 type="button"
-                className="text-foreground/60 hover:text-primary"
+                iconOnly
+                size="sm"
+                appearance="ghost"
+                className="h-6 w-6 text-foreground/60 hover:text-primary"
                 title="Exibir alerta"
                 onClick={() => {
                   setIconBtnLog((prev) => ["Alerta disparado!", ...prev].slice(0, 5));
                 }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-              </button>
+                leftIcon={
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                }
+              />
             ]}
           />
           <div className="h-24 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
@@ -536,12 +717,8 @@ export default function SgInputNumberPage() {
   register={register}
   decimals={2}
   iconButtons={[
-    <button key="copy" type="button" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")}>
-      Copiar
-    </button>,
-    <button key="alert" type="button" onClick={() => alert("ok")}>
-      Alerta
-    </button>
+    <SgButton key="copy" type="button" iconOnly size="sm" appearance="ghost" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")} leftIcon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>} />,
+    <SgButton key="alert" type="button" iconOnly size="sm" appearance="ghost" onClick={() => alert("ok")} leftIcon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>} />
   ]}
 />`} />
       </Section>
@@ -699,9 +876,10 @@ export default function SgInputNumberPage() {
             decimals={2}
             inputProps={{ ref: standaloneCRef }}
           />
-          <button
+          <SgButton
             type="button"
-            className="rounded border border-border px-3 py-1.5 text-xs hover:bg-black/5"
+            size="sm"
+            appearance="outline"
             onClick={() => {
               const payload = {
                 a: standaloneARef.current?.value ?? "",
@@ -712,14 +890,14 @@ export default function SgInputNumberPage() {
             }}
           >
             {t(i18n, "showcase.component.inputNumber.actions.save")}
-          </button>
+          </SgButton>
           <p className="text-xs text-muted-foreground">
             {t(i18n, "showcase.component.inputNumber.labels.result")}:{" "}
             {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
           </p>
         </div>
         <CodeBlock code={`import React from "react";
-import { SgInputNumber } from "@seedgrid/fe-components";
+import { SgButton, SgInputNumber } from "@seedgrid/fe-components";
 
 export default function Example() {
   const refA = React.useRef<HTMLInputElement | null>(null);
@@ -746,7 +924,9 @@ export default function Example() {
       <SgInputNumber id="a" label="${t(i18n, "showcase.component.inputNumber.labels.entry1")}" decimals={2} inputProps={{ ref: refA }} />
       <SgInputNumber id="b" label="${t(i18n, "showcase.component.inputNumber.labels.entry2")}" decimals={2} inputProps={{ ref: refB }} />
       <SgInputNumber id="c" label="${t(i18n, "showcase.component.inputNumber.labels.entry3")}" decimals={2} inputProps={{ ref: refC }} />
-      <button type="button" onClick={handleSave}>${t(i18n, "showcase.component.inputNumber.actions.save")}</button>
+      <SgButton type="button" size="sm" appearance="outline" onClick={handleSave}>
+        ${t(i18n, "showcase.component.inputNumber.actions.save")}
+      </SgButton>
     </div>
   );
 }`} />
@@ -820,11 +1000,26 @@ export default function Example() {
 <SgInputNumber id="demo-w300" label="${t(i18n, "showcase.component.inputNumber.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} decimals={2} />`} />
       </Section>
 
+      <Section
+        id="exemplo-16"
+        title="16) Playground"
+        description="Simule as principais props do SgInputNumber em tempo real."
+      >
+        <SgPlayground
+          title="SgInputNumber Playground"
+          interactive
+          codeContract="appFile"
+          code={INPUT_NUMBER_PLAYGROUND_CODE}
+          height={720}
+          defaultOpen
+        />
+      </Section>
+
       <section
         id="props-reference"
         className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
       >
-        <h2 className="text-lg font-semibold">Referencia de Props</h2>
+        <h2 data-anchor-title="true" className="text-lg font-semibold">Referencia de Props</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

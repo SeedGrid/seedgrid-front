@@ -33,7 +33,6 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-text-area", label: "SgInputTextArea" },
   { group: "Inputs", slug: "sg-input-password", label: "SgInputPassword" },
   { group: "Inputs", slug: "sg-input-otp", label: "SgInputOTP" },
-  { group: "Inputs", slug: "sg-input-select", label: "SgInputSelect" },
   { group: "Inputs", slug: "sg-input-date", label: "SgInputDate" },
   { group: "Inputs", slug: "sg-input-birth-date", label: "SgInputBirthDate" },
   { group: "Inputs", slug: "sg-toggle-switch", label: "SgToggleSwitch" },

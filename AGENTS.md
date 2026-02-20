@@ -47,6 +47,8 @@ Cada página de componente deve ter um cabeçalho fixo (sticky/freeze) no topo, 
 - Ao rolar a página, o cabeçalho permanece fixo e legível.
 - Ao clicar em qualquer link do cabeçalho, o título do exemplo destino fica visível (não coberto).
 - Ao clicar nos links em qualquer breakpoint (mobile/desktop), o título do exemplo deve ficar 100% visível com respiro mínimo abaixo do cabeçalho.
+- A navegação por link de exemplo deve acertar a posição já no primeiro clique (sem exigir segundo clique para corrigir).
 - Quantidade de links no cabeçalho = quantidade de exemplos da página.
 - O link `Props Reference` deve navegar corretamente para a seção de props, com título visível.
+- Ao clicar em `Props Reference`, não pode ficar nenhum trecho do exemplo anterior entre o cabeçalho e o título da seção de props.
 - O bloco de código de cada exemplo corresponde ao exemplo exibido na tela (1:1).
