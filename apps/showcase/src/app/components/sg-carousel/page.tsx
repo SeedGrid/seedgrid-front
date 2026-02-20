@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   SgCarousel,
   SgGrid,
@@ -9,9 +10,14 @@ import {
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: {
+  id?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="scroll-mt-72 rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
@@ -108,6 +114,21 @@ ${args.snippet}
 }
 `;
 }
+
+const EXAMPLE_LINKS = [
+  { id: "exemplo-1", label: "1) Básico - Horizontal" },
+  { id: "exemplo-2", label: "2) Múltiplos Items Visíveis" },
+  { id: "exemplo-3", label: "3) Auto Play" },
+  { id: "exemplo-4", label: "4) Orientação Vertical" },
+  { id: "exemplo-5", label: "5) Vertical - Múltiplos Items" },
+  { id: "exemplo-6", label: "6) Sem Modo Circular" },
+  { id: "exemplo-7", label: "7) Sem Indicadores" },
+  { id: "exemplo-8", label: "8) Sem Navegadores" },
+  { id: "exemplo-9", label: "9) Gap Customizado" },
+  { id: "exemplo-10", label: "10) Com Callbacks" },
+  { id: "exemplo-11", label: "11) Exemplo Responsivo" },
+  { id: "exemplo-12", label: "12) Playground Interativo" }
+];
 
 const CAROUSEL_PLAYGROUND_APP_FILE = `import * as React from "react";
 import {
@@ -295,15 +316,32 @@ export default function SgCarouselPage() {
   return (
     <I18NReady>
       <div className="max-w-7xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgCarousel</h1>
-        <p className="mt-2 text-muted-foreground">
-          Um componente de carrossel responsivo com navegação horizontal/vertical, autoplay e indicadores.
-        </p>
-      </div>
+        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">SgCarousel</h1>
+            <p className="mt-2 text-muted-foreground">
+              Um componente de carrossel responsivo com navegação horizontal/vertical, autoplay e indicadores.
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Exemplos
+            </p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {EXAMPLE_LINKS.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+            </SgGrid>
+          </div>
+        </div>
 
       {/* Basic Horizontal */}
       <Section
+        id="exemplo-1"
         title="Básico - Horizontal"
         description="Carrossel horizontal simples com um item visível por vez"
       >
@@ -331,6 +369,7 @@ export default function SgCarouselPage() {
 
       {/* Multiple Items Visible */}
       <Section
+        id="exemplo-2"
         title="Múltiplos Items Visíveis"
         description="Carrossel mostrando 3 items de uma vez"
       >
@@ -360,6 +399,7 @@ export default function SgCarouselPage() {
 
       {/* Auto Play */}
       <Section
+        id="exemplo-3"
         title="Auto Play"
         description="Carrossel com navegação automática (a cada 2 segundos)"
       >
@@ -391,6 +431,7 @@ export default function SgCarouselPage() {
 
       {/* Vertical Orientation */}
       <Section
+        id="exemplo-4"
         title="Orientação Vertical"
         description="Carrossel com navegação vertical"
       >
@@ -423,6 +464,7 @@ export default function SgCarouselPage() {
 
       {/* Vertical with Multiple Items */}
       <Section
+        id="exemplo-5"
         title="Vertical - Múltiplos Items"
         description="Carrossel vertical mostrando 3 items de uma vez"
       >
@@ -459,6 +501,7 @@ export default function SgCarouselPage() {
 
       {/* Without Circular */}
       <Section
+        id="exemplo-6"
         title="Sem Modo Circular"
         description="Carrossel que para no final (sem loop infinito)"
       >
@@ -488,6 +531,7 @@ export default function SgCarouselPage() {
 
       {/* Without Indicators */}
       <Section
+        id="exemplo-7"
         title="Sem Indicadores"
         description="Carrossel sem os indicadores (dots) na parte inferior"
       >
@@ -517,6 +561,7 @@ export default function SgCarouselPage() {
 
       {/* Without Navigators */}
       <Section
+        id="exemplo-8"
         title="Sem Navegadores"
         description="Carrossel sem os botões de navegação (apenas indicadores)"
       >
@@ -550,6 +595,7 @@ export default function SgCarouselPage() {
 
       {/* Custom Gap */}
       <Section
+        id="exemplo-9"
         title="Gap Customizado"
         description="Carrossel com espaçamento personalizado entre items (gap: 32px)"
       >
@@ -581,6 +627,7 @@ export default function SgCarouselPage() {
 
       {/* With Callbacks */}
       <Section
+        id="exemplo-10"
         title="Com Callbacks"
         description="Carrossel com evento de mudança de Índice"
       >
@@ -658,6 +705,7 @@ export default function SgCarouselPage() {
 
       {/* Responsive Example */}
       <Section
+        id="exemplo-11"
         title="Exemplo Responsivo"
         description="Carrossel que se adapta ao tamanho da tela mostrando diferentes quantidades de items"
       >
@@ -721,6 +769,7 @@ export default function SgCarouselPage() {
 
       {/* Playground */}
       <Section
+        id="exemplo-12"
         title="Playground Interativo"
         description="Brinque com as propriedades do carrossel e veja as mudanças em tempo real"
       >

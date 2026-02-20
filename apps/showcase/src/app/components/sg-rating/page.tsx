@@ -13,9 +13,14 @@ import {
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: {
+  id?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section id={props.id} className="scroll-mt-72 rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? (
         <p className="mt-1 text-sm text-muted-foreground">{props.description}</p>
@@ -57,6 +62,18 @@ const RATING_PROPS: PropRow[] = [
   { prop: "error", type: "string", defaultValue: "-", description: "Mensagem de erro externa." },
   { prop: "required", type: "boolean", defaultValue: "false", description: "Define o campo como obrigatório." },
   { prop: "requiredMessage", type: "string", defaultValue: "-", description: "Mensagem de validação para required." }
+];
+
+const EXAMPLE_LINKS = [
+  { id: "exemplo-1", label: "1) Basico" },
+  { id: "exemplo-2", label: "2) Meia estrela + tooltip" },
+  { id: "exemplo-3", label: "3) Somente leitura e desabilitado" },
+  { id: "exemplo-4", label: "4) Tamanhos e quantidade de estrelas" },
+  { id: "exemplo-5", label: "5) Cores e ícones customizados" },
+  { id: "exemplo-6", label: "6) Callbacks" },
+  { id: "exemplo-7", label: "7) React Hook Form" },
+  { id: "exemplo-8", label: "8) Campo obrigatório" },
+  { id: "exemplo-9", label: "9) Playground" }
 ];
 
 const BASIC_CODE = `import * as React from "react";
@@ -666,64 +683,108 @@ function RequiredExample() {
 
 export default function SgRatingPage() {
   return (
-    <div className="max-w-6xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgRating</h1>
-        <p className="mt-2 text-muted-foreground">
-          Componente de avaliacao com suporte a meia estrela, estados visuais, customizacao de icones e integracao com React Hook Form.
-        </p>
+    <I18NReady>
+      <div className="max-w-6xl space-y-8">
+        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">SgRating</h1>
+            <p className="mt-2 text-muted-foreground">
+              Componente de avaliação com suporte a meia estrela, estados visuais, customização de ícones e integração com React Hook Form.
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Exemplos
+            </p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {EXAMPLE_LINKS.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+            </SgGrid>
+          </div>
+        </div>
+
+        <Section id="exemplo-1" title="1) Basico" description="Exemplo controlado com estado React.">
+          <BasicExample />
+          <CodeBlockBase code={BASIC_CODE} />
+        </Section>
+
+        <Section id="exemplo-2" title="2) Meia estrela + tooltip" description="Permite clicar nas metades e exibir valor no hover.">
+          <HalfTooltipExample />
+          <CodeBlockBase code={HALF_TOOLTIP_CODE} />
+        </Section>
+
+        <Section id="exemplo-3" title="3) Somente leitura e desabilitado" description="Visualização sem interação e estado disabled.">
+          <ReadonlyDisabledExample />
+          <CodeBlockBase code={READONLY_DISABLED_CODE} />
+        </Section>
+
+        <Section id="exemplo-4" title="4) Tamanhos e quantidade de estrelas" description="Controle de size e stars.">
+          <SizeStarsExample />
+          <CodeBlockBase code={SIZE_STARS_CODE} />
+        </Section>
+
+        <Section id="exemplo-5" title="5) Cores e ícones customizados" description="Troca de cores e ícones de preenchido/vazio.">
+          <ColorsIconsExample />
+          <CodeBlockBase code={COLORS_ICONS_CODE} />
+        </Section>
+
+        <Section id="exemplo-6" title="6) Callbacks" description="Exemplo com onChange e onHover + log de eventos.">
+          <CallbackExample />
+          <CodeBlockBase code={CALLBACK_CODE} />
+        </Section>
+
+        <Section id="exemplo-7" title="7) React Hook Form" description="Uso com control/name e submit.">
+          <RhfExample />
+          <CodeBlockBase code={RHF_CODE} />
+        </Section>
+
+        <Section id="exemplo-8" title="8) Campo obrigatório" description="Exemplo com required e requiredMessage.">
+          <RequiredExample />
+          <CodeBlockBase code={REQUIRED_CODE} />
+        </Section>
+
+        <Section id="exemplo-9" title="9) Playground (SgPlayground)" description="Simule as props principais em tempo real.">
+          <SgPlayground
+            title="SgRating Playground"
+            interactive
+            codeContract="appFile"
+            code={PLAYGROUND_CODE}
+            height={660}
+            defaultOpen
+          />
+        </Section>
+
+        <section className="rounded-lg border border-border p-6">
+          <h2 className="text-lg font-semibold">Referência de Props</h2>
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="pb-2 pr-4 font-semibold">Prop</th>
+                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                  <th className="pb-2 font-semibold">Descrição</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {RATING_PROPS.map((row) => (
+                  <tr key={row.prop}>
+                    <td className="py-2 pr-4 font-mono text-xs">{row.prop}</td>
+                    <td className="py-2 pr-4">{row.type}</td>
+                    <td className="py-2 pr-4">{row.defaultValue}</td>
+                    <td className="py-2">{row.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
-
-      <Section title="1) Basico" description="Exemplo controlado com estado React.">
-        <BasicExample />
-        <CodeBlockBase code={BASIC_CODE} />
-      </Section>
-
-      <Section title="2) Meia estrela + tooltip" description="Permite clicar nas metades e exibir valor no hover.">
-        <HalfTooltipExample />
-        <CodeBlockBase code={HALF_TOOLTIP_CODE} />
-      </Section>
-
-      <Section title="3) Somente leitura e desabilitado" description="Visualizacao sem interacao e estado disabled.">
-        <ReadonlyDisabledExample />
-        <CodeBlockBase code={READONLY_DISABLED_CODE} />
-      </Section>
-
-      <Section title="4) Tamanhos e quantidade de estrelas" description="Controle de size e stars.">
-        <SizeStarsExample />
-        <CodeBlockBase code={SIZE_STARS_CODE} />
-      </Section>
-
-      <Section title="5) Cores e icones customizados" description="Troca de cores e icones de preenchido/vazio.">
-        <ColorsIconsExample />
-        <CodeBlockBase code={COLORS_ICONS_CODE} />
-      </Section>
-
-      <Section title="6) Callbacks" description="Exemplo com onChange e onHover + log de eventos.">
-        <CallbackExample />
-        <CodeBlockBase code={CALLBACK_CODE} />
-      </Section>
-
-      <Section title="7) React Hook Form" description="Uso com control/name e submit.">
-        <RhfExample />
-        <CodeBlockBase code={RHF_CODE} />
-      </Section>
-
-      <Section title="8) Campo obrigatorio" description="Exemplo com required e requiredMessage.">
-        <RequiredExample />
-        <CodeBlockBase code={REQUIRED_CODE} />
-      </Section>
-
-      <Section title="9) Playground (SgPlayground)" description="Simule as props principais em tempo real.">
-        <SgPlayground
-          title="SgRating Playground"
-          interactive
-          codeContract="appFile"
-          code={PLAYGROUND_CODE}
-          height={660}
-          defaultOpen
-        />
-      </Section>
-    </div>
+    </I18NReady>
   );
 }

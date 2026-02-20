@@ -1,65 +1,44 @@
-﻿# AGENTS.md  
+﻿# AGENTS.md
 
-## Conventions  
-Todo componente deve ter um showcase 
-O código exemplo do showcase deve refletir exatamente o exemplo de modo que eu copie e cole e obtenha o mesmo resultado  
-Todo showcase deve ter um sgPlayground para que o dev consiga simular o funcionamento  (tem de ficar 1:1)
-Os exemplos do showcase, devem sempre que possivel, utilizar componentes Sg ao invés de componentes nativos  
-Exemplo 
-    button -> sgButton 
-    div flex -> sgGrid
+## Conventions
+- Todo componente deve ter showcase.
+- O código de cada exemplo do showcase deve refletir exatamente o que está renderizado (copy/paste 1:1).
+- Todo showcase deve ter `SgPlayground`.
+- Sempre que possível, usar componentes SeedGrid no exemplo e no componente.
+  - Exemplo: `button` -> `SgButton`
+  - Exemplo: `div flex` -> `SgGrid`
+- Aplicar `I18NReady` nas páginas de showcase.
+- Arquivos devem estar em UTF-8 para não quebrar acentuação.
 
-dentro do componente, quando possivel utilize sempre os componentes sg em substituição aos componentes nativos,
-Sempre ajuste o ISO para nao quebrar a acentuação 
-Aplique no showcase o I18NReady 
+## Referência de Props
+- Criar uma seção "Referência de Props" com todas as propriedades públicas do componente.
+- A tabela deve conter: `Prop`, `Tipo`, `Padrão`, `Descrição`.
 
-criar uma "Referência de Props" com todas as propriedades exemplo:
+Exemplo de linha:
+- `id | string | - | Identificador único`
 
-exemplo:
-Referência de Props 
-Prop	Tipo	Padrão	Descrição
-id	string	-	Identificador único do carrossel
-items	ReactNode[]	-	Array de items a serem exibidos no carrossel (obrigatório)
-numVisible	number	1	Número de items visíveis ao mesmo tempo
-numScroll	number	1	Número de items que rolam por vez
-orientation	"horizontal" | "vertical"	"horizontal"	Orientação do carrossel
-circular	boolean	true	Ativa modo circular (loop infinito)
-autoPlay	boolean	false	Ativa navegação automática
-autoPlayInterval	number	3000	Intervalo de auto play em milissegundos
-showNavigators	boolean	true	Mostra botões de navegação
-showIndicators	boolean	true	Mostra indicadores (dots)
-className	string	-	Classe CSS customizada para o container
-itemClassName	string	-	Classe CSS customizada para os items
-width	number | string	"100%"	Largura do container do carrossel
-height	number | string	-	Altura do container do carrossel
-gap	number	16	Espaçamento entre items em pixels
-onIndexChange	(index: number) => void	-	Callback chamado quando o Índice ativo muda
-customNavigators	{ prev?: ReactNode; next?: ReactNode }	-	Botões de navegação customizados
+## Layout fixo do showcase (obrigatório)
+Cada página de componente deve ter um cabeçalho fixo (sticky/freeze) no topo, contendo:
+1. Nome do componente
+2. Descrição curta do objetivo e funcionalidades
+3. Links âncora para todos os exemplos da página (`#exemplo-1`, `#exemplo-2`, ..., `#exemplo-n`)
 
+## Regras técnicas obrigatórias para o cabeçalho fixo
+- O scroll da página deve ocorrer no container principal do conteúdo (não no `body`).
+- O cabeçalho sticky deve ter `z-index` alto e fundo opaco.
+- Não pode haver "vazamento" visual de exemplos por trás do cabeçalho durante o scroll.
+- Cada seção de exemplo deve ter `id="exemplo-N"` correspondente ao link.
+- Cada seção deve ter offset de ancoragem (`scroll-margin-top`) suficiente para não ficar escondida pelo cabeçalho sticky.
+- Deve existir exatamente 1 link no cabeçalho para cada exemplo renderizado.
 
+## Estrutura padrão do showcase
+1. Cabeçalho fixo (nome, descrição e links para exemplos)
+2. Exemplos numerados
+3. Playground (`SgPlayground`)
+4. Props Reference (Referência de Props)
 
-o showcase vai ficar sempre:
-
-[ essa parte nao scrola junto com a tela 
-<Nome do componente> 
-Explicação do objetivo e funcionalidades do componente 
-<Link href# para o exemplo> 
-]
-
-Exemplos 
-1) - <descricao do exemplo >
-exemplo executando 
-codigo 
-.
-.
-.
-
-N) - <descricao do exemplo >
-exemplo executando 
-codigo 
-
-Playground (usando o SgPlayground)
-
-
-props reference 
-
+## Critérios de aceite mínimos
+- Ao rolar a página, o cabeçalho permanece fixo e legível.
+- Ao clicar em qualquer link do cabeçalho, o título do exemplo destino fica visível (não coberto).
+- Quantidade de links no cabeçalho = quantidade de exemplos da página.
+- O bloco de código de cada exemplo corresponde ao exemplo exibido na tela (1:1).

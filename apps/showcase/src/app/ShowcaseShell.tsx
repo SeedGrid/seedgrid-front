@@ -207,7 +207,7 @@ export default function ShowcaseShell(props: {
         locale={locale}
         messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr}
       >
-        <div className="flex min-h-screen">
+        <div className="flex h-screen">
           <aside
             className="w-72 shrink-0 border-r border-[#e2cebc] bg-[#f7f3ee] p-4 text-[#2b1f14] overflow-y-auto overflow-x-hidden sticky top-0 h-screen"
             style={SIDEBAR_THEME_VARS}
@@ -306,7 +306,7 @@ export default function ShowcaseShell(props: {
               })}
             </nav>
           </aside>
-          <main className="flex-1 p-8 overflow-y-auto">{props.children}</main>
+          <main className="flex-1 overflow-y-auto p-8">{props.children}</main>
           <SgToaster />
           <ThemeEditor />
         </div>
