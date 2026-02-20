@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { SgButton, SgInputOTP, SgPlayground, type SgInputOTPRef } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 
@@ -256,6 +257,14 @@ export default function SgInputOTPPage() {
           Input OTP com digitos separados, suporte a colagem e mascara customizavel
           usando <code>#</code> (alfanumerico) e <code>9</code> (numerico).
         </p>
+        <div className="mt-3">
+          <Link
+            href="#props-reference"
+            className="inline-flex rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+          >
+            Props Reference
+          </Link>
+        </div>
       </div>
 
       <Section
@@ -433,6 +442,40 @@ const [readout, setReadout] = React.useState('Clique em "Ler conteudo".');
           />
         </div>
       </Section>
+
+      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
+        <h2 className="text-lg font-semibold">Referência de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                <th className="pb-2 font-semibold">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Máscara (`#` alfanumérico e `9` numérico).</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">value / defaultValue</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Valor externo controlado e inicial.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controla edição do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(maskedValue: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Retorna valor formatado pela máscara.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onRawChange</td><td className="py-2 pr-4">(rawValue: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Retorna somente os caracteres dos slots.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onComplete</td><td className="py-2 pr-4">(value: string) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Dispara ao preencher todos os slots.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de foco e limpeza.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">fit-content</td><td className="py-2">Largura do componente.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customização visual via classes.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas aplicadas aos slots.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Métodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { SgInputTextArea } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
@@ -68,6 +69,14 @@ export default function SgInputTextAreaPage() {
         <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.inputTextArea.subtitle")}
         </p>
+        <div className="mt-3">
+          <Link
+            href="#props-reference"
+            className="inline-flex rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+          >
+            Props Reference
+          </Link>
+        </div>
       </div>
 
       <Section
@@ -385,7 +394,7 @@ export default function SgInputTextAreaPage() {
         <CodeBlock code={`<SgInputTextArea\n  id="eventos"\n  label="${t(i18n, "showcase.component.inputTextArea.labels.withEvents")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onEnter")}")} \n  onExit={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onExit")}")} \n  onClear={() => console.log("${t(i18n, "showcase.component.inputTextArea.logs.onClear")}")} \n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
 
-      <section className="rounded-lg border border-border p-6">
+      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputTextArea.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">

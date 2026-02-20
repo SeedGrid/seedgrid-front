@@ -31,6 +31,9 @@ Cada página de componente deve ter um cabeçalho fixo (sticky/freeze) no topo, 
 - Cada seção de exemplo deve ter `id="exemplo-N"` correspondente ao link.
 - Cada seção deve ter offset de ancoragem (`scroll-margin-top`) suficiente para não ficar escondida pelo cabeçalho sticky.
 - O offset de ancoragem deve usar a altura real do cabeçalho sticky (valor dinâmico), com margem de segurança.
+- A medição da altura deve considerar o bloco sticky completo (container externo + paddings), não apenas o card interno.
+- A navegação por âncora deve aplicar respiro mínimo adicional (>= 12px) abaixo do cabeçalho para o título ficar totalmente visível.
+- Após o scroll para âncora, deve haver ajuste fino pela posição real renderizada do título da seção (correção pós-scroll) para garantir que nunca fique atrás do cabeçalho.
 - Deve existir exatamente 1 link no cabeçalho para cada exemplo renderizado.
 - A seção de props deve ter `id="props-reference"` e também ter offset de ancoragem.
 

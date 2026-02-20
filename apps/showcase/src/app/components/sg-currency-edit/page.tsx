@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { SgCurrencyEdit } from "@seedgrid/fe-components";
@@ -114,6 +115,14 @@ export default function SgCurrencyEditPage() {
         <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.currencyEdit.subtitle")}
         </p>
+        <div className="mt-3">
+          <Link
+            href="#props-reference"
+            className="inline-flex rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+          >
+            Props Reference
+          </Link>
+        </div>
       </div>
 
       <Section
@@ -729,6 +738,44 @@ export default function Example() {
         <CodeBlock code={`<SgCurrencyEdit id="demo-w200" label="${t(i18n, "showcase.component.currencyEdit.labels.width200")}" width={200} name="w200" register={register} currency="BRL" />
 <SgCurrencyEdit id="demo-w300" label="${t(i18n, "showcase.component.currencyEdit.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} currency="BRL" />`} />
       </Section>
+
+      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
+        <h2 className="text-lg font-semibold">Referência de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                <th className="pb-2 font-semibold">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Label exibido acima do input.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">currency</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"BRL"</td><td className="py-2">Moeda usada na exibição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">locale</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">i18n locale</td><td className="py-2">Localização para formatação.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">decimals</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">minor unit</td><td className="py-2">Casas decimais do valor.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">currencyDisplay</td><td className="py-2 pr-4">"symbol" | "code" | ...</td><td className="py-2 pr-4">"symbol"</td><td className="py-2">Formato do símbolo da moeda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">showCurrencySymbol</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe/oculta símbolo da moeda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">allowNegative</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Permite valores negativos.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minValue / maxValue</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limites numéricos aceitos.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Define o campo como obrigatório.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para validação required.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback de retorno da validação.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interação.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botão de limpar.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado habilitado e somente leitura.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Variações visuais do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

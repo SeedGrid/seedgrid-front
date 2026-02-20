@@ -168,7 +168,7 @@ export default function SgInputTextPage() {
   React.useEffect(() => {
     const updateAnchorOffset = () => {
       const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
-      setAnchorOffset(Math.max(220, Math.ceil(headerHeight + 24)));
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
     };
 
     updateAnchorOffset();
@@ -185,6 +185,87 @@ export default function SgInputTextPage() {
       window.removeEventListener("resize", updateAnchorOffset);
     };
   }, [i18n.locale]);
+
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      const isScrollable = overflowY === "auto" || overflowY === "scroll";
+      if (isScrollable && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback(
+    (anchorId: string, behavior: ScrollBehavior = "smooth") => {
+      const target = document.getElementById(anchorId);
+      if (!target) return;
+
+      const scrollContainer = findScrollContainer(target);
+      const extraTopGap = 12;
+      const stickyBottom = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTop = stickyBottom + extraTopGap;
+      const titleEl =
+        (target.querySelector("h1, h2, h3, [data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+      const correctIfNeeded = () => {
+        const currentTop = titleEl.getBoundingClientRect().top;
+        const delta = desiredTop - currentTop;
+        if (delta <= 0) return;
+
+        if (scrollContainer === window) {
+          const next = Math.max(0, window.scrollY - delta);
+          window.scrollTo({ top: next, behavior: "auto" });
+          return;
+        }
+
+        const container = scrollContainer as HTMLElement;
+        const next = Math.max(0, container.scrollTop - delta);
+        container.scrollTo({ top: next, behavior: "auto" });
+      };
+
+      if (scrollContainer === window) {
+        const targetTop = window.scrollY + target.getBoundingClientRect().top;
+        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        window.scrollTo({ top: destination, behavior });
+      } else {
+        const container = scrollContainer as HTMLElement;
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const targetTop = container.scrollTop + (targetRect.top - containerRect.top);
+        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        container.scrollTo({ top: destination, behavior });
+      }
+
+      window.history.replaceState(null, "", `#${anchorId}`);
+      requestAnimationFrame(correctIfNeeded);
+      window.setTimeout(correctIfNeeded, 120);
+      window.setTimeout(correctIfNeeded, 260);
+    },
+    [anchorOffset, findScrollContainer]
+  );
+
+  const handleAnchorClick = React.useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      navigateToAnchor(anchorId);
+    },
+    [navigateToAnchor]
+  );
+
+  React.useEffect(() => {
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) return;
+    const timer = window.setTimeout(() => navigateToAnchor(hash, "auto"), 0);
+    return () => window.clearTimeout(timer);
+  }, [navigateToAnchor]);
 
   const exampleLinks = React.useMemo(
     () => [
@@ -216,8 +297,8 @@ export default function SgInputTextPage() {
         className="max-w-6xl space-y-8"
         style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
       >
-        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
-          <div ref={stickyHeaderRef} className="rounded-lg border border-border bg-background p-4 shadow-sm">
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputText.title")}</h1>
             <p className="mt-2 text-muted-foreground">
               {t(i18n, "showcase.component.inputText.subtitle")}
@@ -230,6 +311,7 @@ export default function SgInputTextPage() {
                 <Link
                   key={example.id}
                   href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
                   className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
                 >
                   {example.label}
@@ -237,6 +319,7 @@ export default function SgInputTextPage() {
               ))}
               <Link
                 href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
               >
                 Props Reference

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { SgInputPassword } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
@@ -61,6 +62,14 @@ export default function SgInputPasswordPage() {
         <p className="mt-2 text-muted-foreground">
           {t(i18n, "showcase.component.inputPassword.subtitle")}
         </p>
+        <div className="mt-3">
+          <Link
+            href="#props-reference"
+            className="inline-flex rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+          >
+            Props Reference
+          </Link>
+        </div>
       </div>
 
       <Section
@@ -305,6 +314,41 @@ export default function SgInputPasswordPage() {
         </div>
         <CodeBlock code={`<SgInputPassword\n  id="eventos"\n  label="${t(i18n, "showcase.common.labels.typeAndLog")}"\n  hintText="${t(i18n, "showcase.component.inputPassword.labels.password")}"\n  required\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onEnter")}")}\n  onExit={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onExit")}")}\n  onClear={() => console.log("${t(i18n, "showcase.component.inputPassword.logs.onClear")}")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
+
+      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
+        <h2 className="text-lg font-semibold">Referência de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                <th className="pb-2 font-semibold">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação de campo obrigatório.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">maxLength</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limite de tamanho.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">hidePassword</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Define se inicia oculto.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">createNewPasswordButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe botão para gerar senha.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">showStrengthBar</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe barra de força.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">commonPasswordCheck</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Bloqueia senhas comuns.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">commonPasswordMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para senha comum.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minSize</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">8</td><td className="py-2">Tamanho mínimo da senha.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">upperRequired / lowerRequired / numberRequired / specialCharacterRequired</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Regras de composição da senha.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prohibitsRepeatedCharactersInSequence</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Bloqueia caracteres repetidos sequenciais.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prohibitsSequentialAscCharacters / prohibitsSequentialDescCharacters</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Bloqueia sequências crescentes/decrescentes.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton / enabled / readOnly / withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Controle visual e interação.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos do componente.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

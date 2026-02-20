@@ -1,15 +1,20 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
-import { SgInputNumber } from "@seedgrid/fe-components";
+import { SgGrid, SgInputNumber } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n } from "../../../i18n";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -98,6 +103,8 @@ export default function SgInputNumberPage() {
   const [standaloneSaveResult, setStandaloneSaveResult] = React.useState<string | null>(null);
   const [iconBtnLog, setIconBtnLog] = React.useState<string[]>([]);
   const [validationMsg, setValidationMsg] = React.useState<string | null>(null);
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
   const standaloneARef = React.useRef<HTMLInputElement | null>(null);
   const standaloneBRef = React.useRef<HTMLInputElement | null>(null);
   const standaloneCRef = React.useRef<HTMLInputElement | null>(null);
@@ -112,17 +119,86 @@ export default function SgInputNumberPage() {
     if (standaloneCRef.current) standaloneCRef.current.value = "980.00";
   }, []);
 
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(220, Math.ceil(headerHeight + 24)));
+    };
+
+    updateAnchorOffset();
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) {
+      resizeObserver.observe(stickyHeaderRef.current);
+    }
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, [i18n.locale]);
+
+  const exampleLinks = React.useMemo(
+    () => [
+      { id: "exemplo-1", label: `1) ${t(i18n, "showcase.component.inputNumber.sections.basic.title")}` },
+      { id: "exemplo-2", label: `2) ${t(i18n, "showcase.component.inputNumber.sections.required.title")}` },
+      { id: "exemplo-3", label: `3) ${t(i18n, "showcase.component.inputNumber.sections.controlled.title")}` },
+      { id: "exemplo-4", label: `4) ${t(i18n, "showcase.component.inputNumber.sections.validation.title")}` },
+      { id: "exemplo-5", label: `5) ${t(i18n, "showcase.component.inputNumber.sections.prefixIcon.title")}` },
+      { id: "exemplo-6", label: `6) ${t(i18n, "showcase.component.inputNumber.sections.prefixSuffix.title")}` },
+      { id: "exemplo-7", label: `7) ${t(i18n, "showcase.component.inputNumber.sections.iconButtons.title")}` },
+      { id: "exemplo-8", label: `8) ${t(i18n, "showcase.component.inputNumber.sections.noNegative.title")}` },
+      { id: "exemplo-9", label: `9) ${t(i18n, "showcase.component.inputNumber.sections.noDecimals.title")}` },
+      { id: "exemplo-10", label: `10) ${t(i18n, "showcase.component.inputNumber.sections.minMax.title")}` },
+      { id: "exemplo-11", label: `11) ${t(i18n, "showcase.component.inputNumber.sections.emptyValue.title")}` },
+      { id: "exemplo-12", label: `12) ${t(i18n, "showcase.component.inputNumber.sections.visual.title")}` },
+      { id: "exemplo-13", label: `13) ${t(i18n, "showcase.component.inputNumber.sections.standalone.title")}` },
+      { id: "exemplo-14", label: `14) ${t(i18n, "showcase.component.inputNumber.sections.events.title")}` },
+      { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}` }
+    ],
+    [i18n.locale]
+  );
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputNumber.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.inputNumber.subtitle")}
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div ref={stickyHeaderRef} className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputNumber.title")}</h1>
+            <p className="mt-2 text-muted-foreground">
+              {t(i18n, "showcase.component.inputNumber.subtitle")}
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Exemplos
+            </p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {exampleLinks.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+              <Link
+                href="#props-reference"
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
+            </SgGrid>
+          </div>
+        </div>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.basic.title")}
+        id="exemplo-1"
+        title={`1) ${t(i18n, "showcase.component.inputNumber.sections.basic.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.basic.description")}
       >
         <form onSubmit={handleSubmit((data) => console.log(data))} className="w-80 space-y-2">
@@ -154,7 +230,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.required.title")}
+        id="exemplo-2"
+        title={`2) ${t(i18n, "showcase.component.inputNumber.sections.required.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.required.description")}
       >
         <div className="w-80">
@@ -199,7 +276,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.controlled.title")}
+        id="exemplo-3"
+        title={`3) ${t(i18n, "showcase.component.inputNumber.sections.controlled.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.controlled.description")}
       >
         <div className="w-96 space-y-3">
@@ -259,7 +337,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.validation.title")}
+        id="exemplo-4"
+        title={`4) ${t(i18n, "showcase.component.inputNumber.sections.validation.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.validation.description")}
       >
         <div className="w-80">
@@ -297,7 +376,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.prefixIcon.title")}
+        id="exemplo-5"
+        title={`5) ${t(i18n, "showcase.component.inputNumber.sections.prefixIcon.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.prefixIcon.description")}
       >
         <div className="w-80">
@@ -325,7 +405,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.prefixSuffix.title")}
+        id="exemplo-6"
+        title={`6) ${t(i18n, "showcase.component.inputNumber.sections.prefixSuffix.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.prefixSuffix.description")}
       >
         <div className="w-80 space-y-2">
@@ -401,7 +482,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.iconButtons.title")}
+        id="exemplo-7"
+        title={`7) ${t(i18n, "showcase.component.inputNumber.sections.iconButtons.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.iconButtons.description")}
       >
         <div className="w-96 space-y-3">
@@ -465,7 +547,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.noNegative.title")}
+        id="exemplo-8"
+        title={`8) ${t(i18n, "showcase.component.inputNumber.sections.noNegative.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.noNegative.description")}
       >
         <div className="w-80">
@@ -489,7 +572,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.noDecimals.title")}
+        id="exemplo-9"
+        title={`9) ${t(i18n, "showcase.component.inputNumber.sections.noDecimals.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.noDecimals.description")}
       >
         <div className="w-80">
@@ -511,7 +595,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.minMax.title")}
+        id="exemplo-10"
+        title={`10) ${t(i18n, "showcase.component.inputNumber.sections.minMax.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.minMax.description")}
       >
         <div className="w-80">
@@ -537,7 +622,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.emptyValue.title")}
+        id="exemplo-11"
+        title={`11) ${t(i18n, "showcase.component.inputNumber.sections.emptyValue.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.emptyValue.description")}
       >
         <div className="w-80">
@@ -561,7 +647,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.visual.title")}
+        id="exemplo-12"
+        title={`12) ${t(i18n, "showcase.component.inputNumber.sections.visual.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.visual.description")}
       >
         <div className="w-80">
@@ -589,7 +676,8 @@ export default function SgInputNumberPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.standalone.title")}
+        id="exemplo-13"
+        title={`13) ${t(i18n, "showcase.component.inputNumber.sections.standalone.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.standalone.description")}
       >
         <div className="w-96 space-y-3">
@@ -665,7 +753,8 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.events.title")}
+        id="exemplo-14"
+        title={`14) ${t(i18n, "showcase.component.inputNumber.sections.events.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.events.description")}
       >
         <div className="w-80">
@@ -704,7 +793,8 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}
+        id="exemplo-15"
+        title={`15) ${t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}`}
         description={t(i18n, "showcase.component.inputNumber.sections.sizeBorder.description")}
       >
         <div className="flex gap-4">
@@ -729,6 +819,47 @@ export default function Example() {
         <CodeBlock code={`<SgInputNumber id="demo-w200" label="${t(i18n, "showcase.component.inputNumber.labels.width200")}" width={200} name="w200" register={register} decimals={2} />
 <SgInputNumber id="demo-w300" label="${t(i18n, "showcase.component.inputNumber.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} decimals={2} />`} />
       </Section>
-    </div>
+
+      <section
+        id="props-reference"
+        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+      >
+        <h2 className="text-lg font-semibold">Referencia de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrao</th>
+                <th className="pb-2 font-semibold">Descricao</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Label exibido acima do input.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">decimals</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">2</td><td className="py-2">Quantidade de casas decimais.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">allowNegative</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Permite valores negativos.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">emptyValue</td><td className="py-2 pr-4">"null" | "zero"</td><td className="py-2 pr-4">"zero"</td><td className="py-2">Comportamento quando vazio.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">prefixText / suffixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Prefixo e sufixo de texto.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">minValue / maxValue</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limites numericos aceitos.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Define o campo como obrigatorio.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para validacao required.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">Validacao customizada.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback de retorno da validacao.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interacao.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao de limpar.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado habilitado e somente leitura.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Variacoes visuais do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensao e borda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com React Hook Form.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      </div>
+    </I18NReady>
   );
 }
+
