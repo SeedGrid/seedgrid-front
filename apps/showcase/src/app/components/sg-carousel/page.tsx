@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgCarousel, SgGrid, SgPlayground } from "@seedgrid/fe-components";
@@ -507,7 +507,7 @@ export default function SgCarouselPage() {
       {/* With Callbacks */}
       <Section
         title="Com Callbacks"
-        description="Carrossel com evento de mudança de índice"
+        description="Carrossel com evento de mudança de Índice"
       >
         <div className="space-y-4">
           <div className="rounded bg-muted/40 p-3">
@@ -646,7 +646,7 @@ export default function SgCarouselPage() {
 
       {/* Playground */}
       <Section
-        title="?? Playground Interativo"
+        title="🎮 Playground Interativo"
         description="Brinque com as propriedades do carrossel e veja as mudanças em tempo real"
       >
         <SgPlayground
@@ -767,7 +767,7 @@ export default function SgCarouselPage() {
                 <td className="py-2 pr-4 font-mono text-xs">onIndexChange</td>
                 <td className="py-2 pr-4">(index: number) =&gt; void</td>
                 <td className="py-2 pr-4">-</td>
-                <td className="py-2">Callback chamado quando o índice ativo muda</td>
+                <td className="py-2">Callback chamado quando o Índice ativo muda</td>
               </tr>
               <tr>
                 <td className="py-2 pr-4 font-mono text-xs">customNavigators</td>
@@ -782,5 +782,8 @@ export default function SgCarouselPage() {
     </div>
   );
 }
+
+
+
 
 
