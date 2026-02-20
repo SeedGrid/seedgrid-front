@@ -70,8 +70,14 @@ export function SgCarousel(props: SgCarouselProps) {
   const [isHovered, setIsHovered] = React.useState(false);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const lastNotifiedIndexRef = React.useRef(activeIndex);
+  const [viewportSize, setViewportSize] = React.useState({ width: 0, height: 0 });
 
-  const totalPages = Math.ceil(items.length / numScroll);
+  const safeNumVisible = Math.max(1, numVisible);
+  const safeNumScroll = Math.max(1, numScroll);
+  const itemCount = items.length;
+  const maxStartIndex = Math.max(itemCount - safeNumVisible, 0);
+  const totalPages = itemCount === 0 ? 0 : Math.floor(maxStartIndex / safeNumScroll) + 1;
   const isHorizontal = orientation === "horizontal";
 
   // Auto play logic
@@ -89,44 +95,96 @@ export function SgCarousel(props: SgCarouselProps) {
     };
   }, [autoPlay, autoPlayInterval, isHovered, activeIndex]);
 
+  // Keep active index within bounds when props/items change.
+  React.useEffect(() => {
+    setActiveIndex((prev) => Math.min(Math.max(prev, 0), maxStartIndex));
+  }, [maxStartIndex]);
+
+  // Notify parent after the state is committed, avoiding setState during render warnings.
+  React.useEffect(() => {
+    if (lastNotifiedIndexRef.current === activeIndex) return;
+    lastNotifiedIndexRef.current = activeIndex;
+    onIndexChange?.(activeIndex);
+  }, [activeIndex, onIndexChange]);
+
+  React.useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const updateSize = () => {
+      const rect = element.getBoundingClientRect();
+      setViewportSize({ width: rect.width, height: rect.height });
+    };
+
+    updateSize();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateSize);
+      return () => {
+        window.removeEventListener("resize", updateSize);
+      };
+    }
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const handleNext = () => {
     setActiveIndex((prev) => {
-      const next = prev + numScroll;
-      if (next >= items.length) {
-        return circular ? 0 : prev;
+      if (itemCount === 0) return 0;
+      const next = prev + safeNumScroll;
+      if (next > maxStartIndex) {
+        return circular ? 0 : maxStartIndex;
       }
-      const newIndex = next;
-      onIndexChange?.(newIndex);
-      return newIndex;
+      return next;
     });
   };
 
   const handlePrev = () => {
     setActiveIndex((prev) => {
-      const next = prev - numScroll;
+      if (itemCount === 0) return 0;
+      const next = prev - safeNumScroll;
       if (next < 0) {
-        return circular ? Math.max(0, items.length - numScroll) : 0;
+        return circular ? maxStartIndex : 0;
       }
-      const newIndex = next;
-      onIndexChange?.(newIndex);
-      return newIndex;
+      return next;
     });
   };
 
   const handleIndicatorClick = (index: number) => {
-    setActiveIndex(index * numScroll);
-    onIndexChange?.(index * numScroll);
+    const next = Math.min(index * safeNumScroll, maxStartIndex);
+    setActiveIndex(next);
   };
 
-  const canGoPrev = circular || activeIndex > 0;
-  const canGoNext = circular || activeIndex + numVisible < items.length;
+  const canGoPrev = circular ? maxStartIndex > 0 : activeIndex > 0;
+  const canGoNext = circular ? maxStartIndex > 0 : activeIndex < maxStartIndex;
+  const itemPercent = 100 / safeNumVisible;
+  const gapPerItem = (gap * (safeNumVisible - 1)) / safeNumVisible;
+  const itemExtentCss = `calc(${itemPercent}% - ${gapPerItem}px)`;
 
   const getTransformValue = () => {
-    const itemSize = 100 / numVisible;
-    const offset = (activeIndex * itemSize);
+    const viewportExtent = isHorizontal ? viewportSize.width : viewportSize.height;
+
+    if (viewportExtent > 0) {
+      const itemExtent = Math.max(0, (viewportExtent - gap * (safeNumVisible - 1)) / safeNumVisible);
+      const step = itemExtent + gap;
+      const offsetPx = activeIndex * step;
+      return isHorizontal
+        ? `translate3d(-${offsetPx}px, 0, 0)`
+        : `translate3d(0, -${offsetPx}px, 0)`;
+    }
+
+    // Fallback before first measure.
+    const itemPercent = 100 / safeNumVisible;
+    const fallbackGap = (activeIndex * gap) / safeNumVisible;
+    const fallbackOffset = activeIndex * itemPercent;
     return isHorizontal
-      ? `translateX(-${offset}%)`
-      : `translateY(-${offset}%)`;
+      ? `translateX(calc(-${fallbackOffset}% - ${fallbackGap}px))`
+      : `translateY(calc(-${fallbackOffset}% - ${fallbackGap}px))`;
   };
 
   const NavButton = ({
@@ -156,7 +214,7 @@ export function SgCarousel(props: SgCarouselProps) {
             ${disabled ? "opacity-30 cursor-not-allowed" : "hover:opacity-100 cursor-pointer"}
             ${isHorizontal
               ? `top-1/2 -translate-y-1/2 ${isPrev ? "left-2" : "right-2"}`
-              : `left-1/2 -translate-x-1/2 ${isPrev ? "top-2" : "bottom-2"}`
+              : `left-1/2 -translate-x-1/2 ${isPrev ? "-top-5" : "-bottom-5"}`
             }
           `}
         >
@@ -176,7 +234,7 @@ export function SgCarousel(props: SgCarouselProps) {
           ${disabled ? "opacity-30 cursor-not-allowed" : "hover:opacity-100 hover:bg-white cursor-pointer"}
           ${isHorizontal
             ? `top-1/2 -translate-y-1/2 ${isPrev ? "left-2" : "right-2"}`
-            : `left-1/2 -translate-x-1/2 ${isPrev ? "top-2" : "bottom-2"}`
+            : `left-1/2 -translate-x-1/2 ${isPrev ? "-top-5" : "-bottom-5"}`
           }
         `}
       >
@@ -204,10 +262,7 @@ export function SgCarousel(props: SgCarouselProps) {
       {/* Carousel container */}
       <div
         ref={containerRef}
-        className={`
-          overflow-hidden rounded-lg
-          ${isHorizontal ? "h-full" : "w-full"}
-        `}
+        className="h-full w-full overflow-hidden rounded-lg"
       >
         <div
           className={`
@@ -216,7 +271,8 @@ export function SgCarousel(props: SgCarouselProps) {
           `}
           style={{
             transform: getTransformValue(),
-            gap: `${gap}px`
+            gap: `${gap}px`,
+            height: isHorizontal ? undefined : "100%"
           }}
         >
           {items.map((item, index) => (
@@ -227,8 +283,8 @@ export function SgCarousel(props: SgCarouselProps) {
                 ${itemClassName}
               `}
               style={{
-                width: isHorizontal ? `calc((100% - ${gap * (numVisible - 1)}px) / ${numVisible})` : "100%",
-                height: isHorizontal ? "100%" : `calc((100% - ${gap * (numVisible - 1)}px) / ${numVisible})`
+                width: isHorizontal ? itemExtentCss : "100%",
+                height: isHorizontal ? "100%" : itemExtentCss
               }}
             >
               {item}
@@ -244,12 +300,12 @@ export function SgCarousel(props: SgCarouselProps) {
             absolute flex gap-2 z-10
             ${isHorizontal
               ? "bottom-4 left-1/2 -translate-x-1/2 flex-row"
-              : "right-4 top-1/2 -translate-y-1/2 flex-col"
+              : "-right-6 top-1/2 -translate-y-1/2 flex-col"
             }
           `}
         >
           {Array.from({ length: totalPages }).map((_, index) => {
-            const isActive = Math.floor(activeIndex / numScroll) === index;
+            const isActive = Math.floor(activeIndex / safeNumScroll) === index;
             return (
               <button
                 key={index}

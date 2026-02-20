@@ -1,7 +1,7 @@
-﻿"use client";
+"use client";
 
 import React from "react";
-import { SgCarousel, SgPlayground } from "@seedgrid/fe-components";
+import { SgCarousel, SgGrid, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -18,51 +18,111 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
-// Sample items for the carousels
+// Sample items for the carousels (picsum.photos)
 const sampleImages = [
-  { id: 1, color: "bg-gradient-to-br from-blue-400 to-blue-600", title: "Item 1" },
-  { id: 2, color: "bg-gradient-to-br from-purple-400 to-purple-600", title: "Item 2" },
-  { id: 3, color: "bg-gradient-to-br from-pink-400 to-pink-600", title: "Item 3" },
-  { id: 4, color: "bg-gradient-to-br from-orange-400 to-orange-600", title: "Item 4" },
-  { id: 5, color: "bg-gradient-to-br from-green-400 to-green-600", title: "Item 5" },
-  { id: 6, color: "bg-gradient-to-br from-red-400 to-red-600", title: "Item 6" },
-  { id: 7, color: "bg-gradient-to-br from-indigo-400 to-indigo-600", title: "Item 7" },
-  { id: 8, color: "bg-gradient-to-br from-teal-400 to-teal-600", title: "Item 8" }
+  { id: 1, title: "Item 1", url: "https://picsum.photos/1200/700?random=101" },
+  { id: 2, title: "Item 2", url: "https://picsum.photos/1200/700?random=102" },
+  { id: 3, title: "Item 3", url: "https://picsum.photos/1200/700?random=103" },
+  { id: 4, title: "Item 4", url: "https://picsum.photos/1200/700?random=104" },
+  { id: 5, title: "Item 5", url: "https://picsum.photos/1200/700?random=105" },
+  { id: 6, title: "Item 6", url: "https://picsum.photos/1200/700?random=106" }
 ];
 
 const createCarouselItems = (items = sampleImages) =>
   items.map((item) => (
     <div
       key={item.id}
-      className={`${item.color} flex h-full items-center justify-center rounded-lg text-white shadow-lg`}
+      className="relative h-full overflow-hidden rounded-lg text-white shadow-lg"
     >
+      <img
+        src={item.url}
+        alt={item.title}
+        loading="lazy"
+        className="h-full w-full object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-black/35" />
+      <SgGrid columns={1} justify="center" align="center" className="absolute inset-0">
+        <div className="text-center">
+          <h3 className="text-3xl font-bold">{item.title}</h3>
+          <p className="mt-2 text-sm opacity-90">Slide {item.id}</p>
+        </div>
+      </SgGrid>
+    </div>
+  ));
+
+const CAROUSEL_EXAMPLE_SHARED_CODE = `const sampleImages = [
+  { id: 1, title: "Item 1", url: "https://picsum.photos/1200/700?random=101" },
+  { id: 2, title: "Item 2", url: "https://picsum.photos/1200/700?random=102" },
+  { id: 3, title: "Item 3", url: "https://picsum.photos/1200/700?random=103" },
+  { id: 4, title: "Item 4", url: "https://picsum.photos/1200/700?random=104" },
+  { id: 5, title: "Item 5", url: "https://picsum.photos/1200/700?random=105" },
+  { id: 6, title: "Item 6", url: "https://picsum.photos/1200/700?random=106" }
+];
+
+const createCarouselItems = (items = sampleImages) =>
+  items.map((item) => (
+    <div
+      key={item.id}
+      className="relative h-full overflow-hidden rounded-lg text-white shadow-lg"
+    >
+      <img
+        src={item.url}
+        alt={item.title}
+        loading="lazy"
+        className="h-full w-full object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-black/35" />
+      <SgGrid columns={1} justify="center" align="center" className="absolute inset-0">
+        <div className="text-center">
+          <h3 className="text-3xl font-bold">{item.title}</h3>
+          <p className="mt-2 text-sm opacity-90">Slide {item.id}</p>
+        </div>
+      </SgGrid>
+    </div>
+  ));
+`;
+
+function buildCarouselExampleCode(args: {
+  snippet: string;
+  useGrid?: boolean;
+  inFunctionCode?: string;
+}) {
+  const imports = 'import { SgCarousel, SgGrid } from "@seedgrid/fe-components";';
+
+  const inFunctionCode = args.inFunctionCode ? `${args.inFunctionCode}\n\n` : "";
+
+  return `import * as React from "react";
+${imports}
+
+${CAROUSEL_EXAMPLE_SHARED_CODE}
+
+export default function Example() {
+${inFunctionCode}  return (
+${args.snippet}
+  );
+}
+`;
+}
+
+const CAROUSEL_PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgCarousel, SgGrid } from "@seedgrid/fe-components";
+
+const images = Array.from({ length: 6 }, (_, index) => ({
+  id: index + 1,
+  title: "Item " + (index + 1),
+  url: "https://picsum.photos/1200/700?random=" + (200 + index)
+}));
+
+const items = images.map((item) => (
+  <div key={item.id} className="relative h-full overflow-hidden rounded-lg text-white shadow-lg">
+    <img src={item.url} alt={item.title} loading="lazy" className="h-full w-full object-cover" />
+    <div className="pointer-events-none absolute inset-0 bg-black/35" />
+    <SgGrid columns={1} justify="center" align="center" className="absolute inset-0">
       <div className="text-center">
         <h3 className="text-3xl font-bold">{item.title}</h3>
         <p className="mt-2 text-sm opacity-90">Slide {item.id}</p>
       </div>
-    </div>
-  ));
-
-const CAROUSEL_PLAYGROUND_APP_FILE = `import * as React from "react";
-import { SgCarousel } from "@seedgrid/fe-components";
-
-const palette = [
-  "bg-gradient-to-br from-blue-400 to-blue-600",
-  "bg-gradient-to-br from-purple-400 to-purple-600",
-  "bg-gradient-to-br from-pink-400 to-pink-600",
-  "bg-gradient-to-br from-orange-400 to-orange-600",
-  "bg-gradient-to-br from-green-400 to-green-600",
-  "bg-gradient-to-br from-red-400 to-red-600",
-  "bg-gradient-to-br from-indigo-400 to-indigo-600",
-  "bg-gradient-to-br from-teal-400 to-teal-600"
-];
-
-const items = palette.map((color, index) => (
-  <div key={index} className={color + " flex h-full items-center justify-center rounded-lg text-white shadow-lg"}>
-    <div className="text-center">
-      <h3 className="text-3xl font-bold">Item {index + 1}</h3>
-      <p className="mt-2 text-sm opacity-90">Slide {index + 1}</p>
-    </div>
+    </SgGrid>
   </div>
 ));
 
@@ -81,7 +141,7 @@ export default function App() {
 
   return (
     <div className="space-y-4 p-2">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={12}>
         <label className="text-xs">
           <span className="mb-1 block font-medium">numVisible: {numVisible}</span>
           <input type="range" min={1} max={5} value={numVisible} onChange={(e) => setNumVisible(Number(e.target.value))} className="w-full" />
@@ -109,9 +169,9 @@ export default function App() {
           <span className="mb-1 block font-medium">gap: {gap}px</span>
           <input type="range" min={0} max={64} value={gap} onChange={(e) => setGap(Number(e.target.value))} className="w-full" />
         </label>
-      </div>
+      </SgGrid>
 
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8}>
         <label className="flex items-center gap-2 text-xs">
           <input type="checkbox" checked={circular} onChange={(e) => setCircular(e.target.checked)} />
           circular
@@ -128,7 +188,7 @@ export default function App() {
           <input type="checkbox" checked={showIndicators} onChange={(e) => setShowIndicators(e.target.checked)} />
           showIndicators
         </label>
-      </div>
+      </SgGrid>
 
       <div className={isVertical ? "mx-auto h-96 w-80" : "h-64 w-full"}>
         <SgCarousel
@@ -181,12 +241,16 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={1}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -205,13 +269,17 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={3}
-  numScroll={1}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={3}
+        numScroll={1}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -222,7 +290,7 @@ export default function SgCarouselPage() {
       >
         <div className="h-64">
           <SgCarousel
-            items={createCarouselItems(sampleImages.slice(0, 5))}
+            items={createCarouselItems(sampleImages.slice(0, 6))}
             numVisible={1}
             autoPlay
             autoPlayInterval={2000}
@@ -231,14 +299,18 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  autoPlay
-  autoPlayInterval={2000}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems(sampleImages.slice(0, 6))}
+        numVisible={1}
+        autoPlay
+        autoPlayInterval={2000}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -247,23 +319,30 @@ export default function SgCarouselPage() {
         title="Orientação Vertical"
         description="Carrossel com navegação vertical"
       >
-        <div className="flex justify-center">
+        <SgGrid columns={1} justify="center">
           <div className="h-96 w-80">
             <SgCarousel
-              items={createCarouselItems(sampleImages.slice(0, 5))}
+              items={createCarouselItems(sampleImages.slice(0, 6))}
               numVisible={1}
               orientation="vertical"
               height="100%"
             />
           </div>
-        </div>
+        </SgGrid>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  orientation="vertical"
-  height="384px"
-/>`}
+          code={buildCarouselExampleCode({
+            useGrid: true,
+            snippet: `    <SgGrid columns={1} justify="center">
+      <div className="h-96 w-80">
+        <SgCarousel
+          items={createCarouselItems(sampleImages.slice(0, 6))}
+          numVisible={1}
+          orientation="vertical"
+          height="100%"
+        />
+      </div>
+    </SgGrid>`
+          })}
         />
       </Section>
 
@@ -272,7 +351,7 @@ export default function SgCarouselPage() {
         title="Vertical - Múltiplos Items"
         description="Carrossel vertical mostrando 3 items de uma vez"
       >
-        <div className="flex justify-center">
+        <SgGrid columns={1} justify="center">
           <div className="h-96 w-80">
             <SgCarousel
               items={createCarouselItems()}
@@ -283,16 +362,23 @@ export default function SgCarouselPage() {
               gap={8}
             />
           </div>
-        </div>
+        </SgGrid>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={3}
-  numScroll={1}
-  orientation="vertical"
-  height="384px"
-  gap={8}
-/>`}
+          code={buildCarouselExampleCode({
+            useGrid: true,
+            snippet: `    <SgGrid columns={1} justify="center">
+      <div className="h-96 w-80">
+        <SgCarousel
+          items={createCarouselItems()}
+          numVisible={3}
+          numScroll={1}
+          orientation="vertical"
+          height="100%"
+          gap={8}
+        />
+      </div>
+    </SgGrid>`
+          })}
         />
       </Section>
 
@@ -303,7 +389,7 @@ export default function SgCarouselPage() {
       >
         <div className="h-64">
           <SgCarousel
-            items={createCarouselItems(sampleImages.slice(0, 5))}
+            items={createCarouselItems(sampleImages.slice(0, 6))}
             numVisible={1}
             circular={false}
             orientation="horizontal"
@@ -311,13 +397,17 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  circular={false}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems(sampleImages.slice(0, 6))}
+        numVisible={1}
+        circular={false}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -328,7 +418,7 @@ export default function SgCarouselPage() {
       >
         <div className="h-64">
           <SgCarousel
-            items={createCarouselItems(sampleImages.slice(0, 5))}
+            items={createCarouselItems(sampleImages.slice(0, 6))}
             numVisible={1}
             showIndicators={false}
             orientation="horizontal"
@@ -336,13 +426,17 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  showIndicators={false}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems(sampleImages.slice(0, 6))}
+        numVisible={1}
+        showIndicators={false}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -353,7 +447,7 @@ export default function SgCarouselPage() {
       >
         <div className="h-64">
           <SgCarousel
-            items={createCarouselItems(sampleImages.slice(0, 5))}
+            items={createCarouselItems(sampleImages.slice(0, 6))}
             numVisible={1}
             showNavigators={false}
             autoPlay
@@ -363,15 +457,19 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  showNavigators={false}
-  autoPlay
-  autoPlayInterval={2500}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems(sampleImages.slice(0, 6))}
+        numVisible={1}
+        showNavigators={false}
+        autoPlay
+        autoPlayInterval={2500}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -391,14 +489,18 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`<SgCarousel
-  items={carouselItems}
-  numVisible={3}
-  numScroll={1}
-  gap={32}
-  orientation="horizontal"
-  height="256px"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={3}
+        numScroll={1}
+        gap={32}
+        orientation="horizontal"
+        height="100%"
+      />
+    </div>`
+          })}
         />
       </Section>
 
@@ -438,21 +540,44 @@ export default function SgCarouselPage() {
           </div>
         </div>
         <CodeBlock
-          code={`const [activeIndex, setActiveIndex] = React.useState(0);
+          code={buildCarouselExampleCode({
+            inFunctionCode: `  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [eventLog, setEventLog] = React.useState<string[]>([]);
 
-<SgCarousel
-  items={carouselItems}
-  numVisible={2}
-  numScroll={1}
-  orientation="horizontal"
-  height="256px"
-  onIndexChange={(index) => {
-    setActiveIndex(index);
-    console.log('Índice mudou para:', index);
-  }}
-/>
-
-<p>Índice Ativo: {activeIndex}</p>`}
+  const log = (message: string) => {
+    setEventLog((prev) => [\`[\${new Date().toLocaleTimeString()}] \${message}\`, ...prev].slice(0, 10));
+  };`,
+            snippet: `    <div className="space-y-4">
+      <div className="rounded bg-muted/40 p-3">
+        <p className="text-sm">
+          <span className="font-semibold">Índice Ativo:</span>{" "}
+          <code className="rounded bg-background px-2 py-1">{activeIndex}</code>
+        </p>
+      </div>
+      <div className="h-64">
+        <SgCarousel
+          items={createCarouselItems()}
+          numVisible={2}
+          numScroll={1}
+          orientation="horizontal"
+          height="100%"
+          onIndexChange={(index) => {
+            setActiveIndex(index);
+            log(\`Índice mudou para: \${index}\`);
+          }}
+        />
+      </div>
+      <div className="h-32 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
+        {eventLog.length === 0 ? (
+          <span className="text-muted-foreground">
+            Navegue pelo carrossel para ver os eventos...
+          </span>
+        ) : (
+          eventLog.map((entry, index) => <div key={index}>{entry}</div>)
+        )}
+      </div>
+    </div>`
+          })}
         />
       </Section>
 
@@ -488,35 +613,40 @@ export default function SgCarouselPage() {
           />
         </div>
         <CodeBlock
-          code={`{/* Desktop: 4 items */}
-<SgCarousel
-  items={carouselItems}
-  numVisible={4}
-  numScroll={2}
-  className="hidden lg:block"
-/>
-
-{/* Tablet: 2 items */}
-<SgCarousel
-  items={carouselItems}
-  numVisible={2}
-  numScroll={1}
-  className="hidden md:block lg:hidden"
-/>
-
-{/* Mobile: 1 item */}
-<SgCarousel
-  items={carouselItems}
-  numVisible={1}
-  numScroll={1}
-  className="block md:hidden"
-/>`}
+          code={buildCarouselExampleCode({
+            snippet: `    <div className="h-64">
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={4}
+        numScroll={2}
+        orientation="horizontal"
+        height="100%"
+        className="hidden lg:block"
+      />
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={2}
+        numScroll={1}
+        orientation="horizontal"
+        height="100%"
+        className="hidden md:block lg:hidden"
+      />
+      <SgCarousel
+        items={createCarouselItems()}
+        numVisible={1}
+        numScroll={1}
+        orientation="horizontal"
+        height="100%"
+        className="block md:hidden"
+      />
+    </div>`
+          })}
         />
       </Section>
 
       {/* Playground */}
       <Section
-        title="🎮 Playground Interativo"
+        title="?? Playground Interativo"
         description="Brinque com as propriedades do carrossel e veja as mudanças em tempo real"
       >
         <SgPlayground
@@ -652,4 +782,5 @@ export default function SgCarouselPage() {
     </div>
   );
 }
+
 
