@@ -1,14 +1,28 @@
-"use client";
+﻿"use client";
 
 import React from "react";
+import Link from "next/link";
 import { useForm, type FieldValues } from "react-hook-form";
-import { SgInputText } from "@seedgrid/fe-components";
+import {
+  SgGrid,
+  SgInputText,
+  SgPlayground
+} from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: {
+  id?: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
       <h2 className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
@@ -21,6 +35,73 @@ function CodeBlock(props: { code: string }) {
   const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
   return <CodeBlockBase code={content} />;
 }
+
+const INPUT_TEXT_PLAYGROUND_CODE = `import * as React from "react";
+import { useForm } from "react-hook-form";
+import { SgButton, SgGrid, SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const { control, watch, setValue } = useForm({
+    defaultValues: {
+      value: "SeedGrid"
+    }
+  });
+
+  const value = watch("value") ?? "";
+  const [required, setRequired] = React.useState(false);
+  const [showCharCounter, setShowCharCounter] = React.useState(false);
+  const [filled, setFilled] = React.useState(false);
+  const [withBorder, setWithBorder] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance={required ? "solid" : "outline"} onClick={() => setRequired((prev) => !prev)}>
+          required
+        </SgButton>
+        <SgButton size="sm" appearance={showCharCounter ? "solid" : "outline"} onClick={() => setShowCharCounter((prev) => !prev)}>
+          showCharCounter
+        </SgButton>
+        <SgButton size="sm" appearance={filled ? "solid" : "outline"} onClick={() => setFilled((prev) => !prev)}>
+          filled
+        </SgButton>
+        <SgButton size="sm" appearance={withBorder ? "solid" : "outline"} onClick={() => setWithBorder((prev) => !prev)}>
+          withBorder
+        </SgButton>
+      </SgGrid>
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("value", "Valor de API")}>
+          Set API
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("value", "Outro valor")}>
+          Set Outro
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("value", "")}>
+          Limpar
+        </SgButton>
+      </SgGrid>
+
+      <div className="rounded-md border border-border p-4">
+        <SgInputText
+          id="playground-input-text"
+          name="value"
+          label="SgInputText Playground"
+          control={control}
+          required={required}
+          showCharCounter={showCharCounter}
+          filled={filled}
+          withBorder={withBorder}
+          maxLength={40}
+        />
+      </div>
+
+      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
+        Valor atual: <strong>{value || "-"}</strong>
+      </div>
+    </div>
+  );
+}`;
 
 export default function SgInputTextPage() {
   const i18n = useShowcaseI18n();
@@ -67,6 +148,8 @@ export default function SgInputTextPage() {
   const prefixRaw = watch("prefix");
   const bothRaw = watch("both");
   const iconBtnValue = watch("iconbtns");
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
   const standaloneNomeRef = React.useRef<HTMLInputElement | null>(null);
   const standaloneEmailRef = React.useRef<HTMLInputElement | null>(null);
   const standaloneCpfRef = React.useRef<HTMLInputElement | null>(null);
@@ -82,17 +165,89 @@ export default function SgInputTextPage() {
     if (standaloneCpfRef.current) standaloneCpfRef.current.value = "12345678909";
   }, [defaultValues, i18n.locale, reset]);
 
-  return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputText.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.inputText.subtitle")}
-        </p>
-      </div>
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(220, Math.ceil(headerHeight + 24)));
+    };
 
-      {/* ── Basico ── */}
+    updateAnchorOffset();
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) {
+      resizeObserver.observe(stickyHeaderRef.current);
+    }
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, [i18n.locale]);
+
+  const exampleLinks = React.useMemo(
+    () => [
+      { id: "exemplo-1", label: `1) ${t(i18n, "showcase.component.inputText.sections.basic.title")}` },
+      { id: "exemplo-2", label: `2) ${t(i18n, "showcase.component.inputText.sections.required.title")}` },
+      { id: "exemplo-3", label: `3) ${t(i18n, "showcase.component.inputText.sections.controlled.title")}` },
+      { id: "exemplo-4", label: `4) ${t(i18n, "showcase.component.inputText.sections.counter.title")}` },
+      { id: "exemplo-5", label: `5) ${t(i18n, "showcase.component.inputText.sections.minLength.title")}` },
+      { id: "exemplo-6", label: `6) ${t(i18n, "showcase.component.inputText.sections.minWords.title")}` },
+      { id: "exemplo-7", label: `7) ${t(i18n, "showcase.component.inputText.sections.validation.title")}` },
+      { id: "exemplo-8", label: `8) ${t(i18n, "showcase.component.inputText.sections.prefixIcon.title")}` },
+      { id: "exemplo-9", label: `9) ${t(i18n, "showcase.component.inputText.sections.prefixSuffix.title")}` },
+      { id: "exemplo-10", label: `10) ${t(i18n, "showcase.component.inputText.sections.iconButtons.title")}` },
+      { id: "exemplo-11", label: `11) ${t(i18n, "showcase.common.sections.visual.title")}` },
+      { id: "exemplo-12", label: `12) ${t(i18n, "showcase.common.sections.noClear.title")}` },
+      { id: "exemplo-13", label: `13) ${t(i18n, "showcase.common.sections.sizeBorder.title")}` },
+      { id: "exemplo-14", label: `14) ${t(i18n, "showcase.component.inputText.sections.disabledReadonly.title")}` },
+      { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputText.sections.externalError.title")}` },
+      { id: "exemplo-16", label: `16) ${t(i18n, "showcase.component.inputText.sections.standalone.title")}` },
+      { id: "exemplo-17", label: `17) ${t(i18n, "showcase.component.inputText.sections.events.title")}` },
+      { id: "exemplo-18", label: "18) Playground" }
+    ],
+    [i18n.locale]
+  );
+
+  return (
+    <I18NReady>
+      <div
+        className="max-w-6xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div ref={stickyHeaderRef} className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputText.title")}</h1>
+            <p className="mt-2 text-muted-foreground">
+              {t(i18n, "showcase.component.inputText.subtitle")}
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Exemplos
+            </p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {exampleLinks.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+              <Link
+                href="#props-reference"
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
+            </SgGrid>
+          </div>
+        </div>
+
+      {/* â”€â”€ Basico â”€â”€ */}
       <Section
+        id="exemplo-1"
         title={t(i18n, "showcase.component.inputText.sections.basic.title")}
         description={t(i18n, "showcase.component.inputText.sections.basic.description")}
       >
@@ -127,8 +282,9 @@ export default function SgInputTextPage() {
 <p>${t(i18n, "showcase.common.labels.currentValue", { value: watch("nome") })}</p>`} />
       </Section>
 
-      {/* ── Required ── */}
+      {/* â”€â”€ Required â”€â”€ */}
       <Section
+        id="exemplo-2"
         title={t(i18n, "showcase.component.inputText.sections.required.title")}
         description={t(i18n, "showcase.component.inputText.sections.required.description")}
       >
@@ -169,8 +325,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Controlled ── */}
+      {/* â”€â”€ Controlled â”€â”€ */}
       <Section
+        id="exemplo-3"
         title={t(i18n, "showcase.component.inputText.sections.controlled.title")}
         description={t(i18n, "showcase.component.inputText.sections.controlled.description")}
       >
@@ -238,8 +395,9 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* ── MaxLength + Counter ── */}
+      {/* â”€â”€ MaxLength + Counter â”€â”€ */}
       <Section
+        id="exemplo-4"
         title={t(i18n, "showcase.component.inputText.sections.counter.title")}
         description={t(i18n, "showcase.component.inputText.sections.counter.description")}
       >
@@ -263,8 +421,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── MinLength ── */}
+      {/* â”€â”€ MinLength â”€â”€ */}
       <Section
+        id="exemplo-5"
         title={t(i18n, "showcase.component.inputText.sections.minLength.title")}
         description={t(i18n, "showcase.component.inputText.sections.minLength.description")}
       >
@@ -288,8 +447,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── MinNumberOfWords ── */}
+      {/* â”€â”€ MinNumberOfWords â”€â”€ */}
       <Section
+        id="exemplo-6"
         title={t(i18n, "showcase.component.inputText.sections.minWords.title")}
         description={t(i18n, "showcase.component.inputText.sections.minWords.description")}
       >
@@ -313,8 +473,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Custom Validation ── */}
+      {/* â”€â”€ Custom Validation â”€â”€ */}
       <Section
+        id="exemplo-7"
         title={t(i18n, "showcase.component.inputText.sections.validation.title")}
         description={t(i18n, "showcase.component.inputText.sections.validation.description")}
       >
@@ -323,7 +484,7 @@ export default function SgInputTextPage() {
             id="demo-validation"
             label={t(i18n, "showcase.component.inputText.labels.onlyLetters")}
             validation={(v) =>
-              /[^a-zA-ZÀ-ú\s]/.test(v)
+              /[^\p{L}\s]/u.test(v)
                 ? t(i18n, "showcase.component.inputText.messages.onlyLetters")
                 : null
             }
@@ -340,7 +501,7 @@ export default function SgInputTextPage() {
   id="demo-validation"
   label="${t(i18n, "showcase.component.inputText.labels.onlyLetters")}"
   validation={(v) =>
-    /[^a-zA-ZÀ-ú\s]/.test(v)
+    /[^\p{L}\s]/u.test(v)
       ? "${t(i18n, "showcase.component.inputText.messages.onlyLetters")}"
       : null
   }
@@ -350,8 +511,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Prefix Icon ── */}
+      {/* â”€â”€ Prefix Icon â”€â”€ */}
       <Section
+        id="exemplo-8"
         title={t(i18n, "showcase.component.inputText.sections.prefixIcon.title")}
         description={t(i18n, "showcase.component.inputText.sections.prefixIcon.description")}
       >
@@ -377,9 +539,10 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Icon Buttons ── */}
-      {/* â”€â”€ Prefixo / Sufixo â”€â”€ */}
+      {/* â”€â”€ Icon Buttons â”€â”€ */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Prefixo / Sufixo Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
+        id="exemplo-9"
         title={t(i18n, "showcase.component.inputText.sections.prefixSuffix.title")}
         description={t(i18n, "showcase.component.inputText.sections.prefixSuffix.description")}
       >
@@ -470,8 +633,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Icon Buttons â”€â”€ */}
+      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Icon Buttons Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
+        id="exemplo-10"
         title={t(i18n, "showcase.component.inputText.sections.iconButtons.title")}
         description={t(i18n, "showcase.component.inputText.sections.iconButtons.description")}
       >
@@ -564,8 +728,9 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* ── Sem borda / Filled ── */}
+      {/* â”€â”€ Sem borda / Filled â”€â”€ */}
       <Section
+        id="exemplo-11"
         title={t(i18n, "showcase.common.sections.visual.title")}
         description={t(i18n, "showcase.common.sections.visual.description")}
       >
@@ -591,8 +756,9 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-filled" label="${t(i18n, "showcase.common.labels.filled")}" filled name="filled" register={register} />`} />
       </Section>
 
-      {/* ── Sem clear button ── */}
+      {/* â”€â”€ Sem clear button â”€â”€ */}
       <Section
+        id="exemplo-12"
         title={t(i18n, "showcase.common.sections.noClear.title")}
         description={t(i18n, "showcase.common.sections.noClear.description")}
       >
@@ -608,8 +774,9 @@ export default function SgInputTextPage() {
         <CodeBlock code={`<SgInputText id="demo-noclear" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} name="noclear" register={register} />`} />
       </Section>
 
-      {/* ── Width / Border Radius ── */}
+      {/* â”€â”€ Width / Border Radius â”€â”€ */}
       <Section
+        id="exemplo-13"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
         description={t(i18n, "showcase.common.sections.sizeBorder.description")}
       >
@@ -634,8 +801,9 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-w300" label="${t(i18n, "showcase.common.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
-      {/* ── Disabled / ReadOnly ── */}
+      {/* â”€â”€ Disabled / ReadOnly â”€â”€ */}
       <Section
+        id="exemplo-14"
         title={t(i18n, "showcase.component.inputText.sections.disabledReadonly.title")}
         description={t(i18n, "showcase.component.inputText.sections.disabledReadonly.description")}
       >
@@ -674,8 +842,9 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* ── Erro externo ── */}
+      {/* â”€â”€ Erro externo â”€â”€ */}
       <Section
+        id="exemplo-15"
         title={t(i18n, "showcase.component.inputText.sections.externalError.title")}
         description={t(i18n, "showcase.component.inputText.sections.externalError.description")}
       >
@@ -699,6 +868,7 @@ export default function SgInputTextPage() {
 
       {/* ?? Standalone Form ?? */}
       <Section
+        id="exemplo-16"
         title={t(i18n, "showcase.component.inputText.sections.standalone.title")}
         description={t(i18n, "showcase.component.inputText.sections.standalone.description")}
       >
@@ -767,8 +937,9 @@ export default function Example() {
 }`} />
       </Section>
 
-      {/* ── Callbacks / Events ── */}
+      {/* â”€â”€ Callbacks / Events â”€â”€ */}
       <Section
+        id="exemplo-17"
         title={t(i18n, "showcase.component.inputText.sections.events.title")}
         description={t(i18n, "showcase.component.inputText.sections.events.description")}
       >
@@ -811,8 +982,26 @@ export default function Example() {
 />`} />
       </Section>
 
-      {/* ── Props Reference ── */}
-      <section className="rounded-lg border border-border p-6">
+      <Section
+        id="exemplo-18"
+        title="18) Playground"
+        description="Simule as principais props do SgInputText em tempo real."
+      >
+        <SgPlayground
+          title="SgInputText Playground"
+          interactive
+          codeContract="appFile"
+          code={INPUT_TEXT_PLAYGROUND_CODE}
+          height={720}
+          defaultOpen
+        />
+      </Section>
+
+      {/* â”€â”€ Props Reference â”€â”€ */}
+      <section
+        id="props-reference"
+        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+      >
         <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputText.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
@@ -861,7 +1050,8 @@ export default function Example() {
           </table>
         </div>
       </section>
-    </div>
+      </div>
+    </I18NReady>
   );
 }
 

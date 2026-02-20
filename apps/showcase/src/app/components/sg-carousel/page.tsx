@@ -335,6 +335,12 @@ export default function SgCarouselPage() {
                   {example.label}
                 </Link>
               ))}
+              <Link
+                href="#props-reference"
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
             </SgGrid>
           </div>
         </div>
@@ -784,7 +790,7 @@ export default function SgCarouselPage() {
       </Section>
 
       {/* Props Reference */}
-      <section className="rounded-lg border border-border p-6">
+      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
         <h2 className="text-lg font-semibold">Referência de Props</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
