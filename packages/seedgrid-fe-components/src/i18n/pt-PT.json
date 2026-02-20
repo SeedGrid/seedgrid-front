@@ -72,5 +72,12 @@
   "components.fab.resetConfirm": "Repor a posi\u00e7\u00e3o do bot\u00e3o?",
   "components.fab.resetPosition": "Repor posi\u00e7\u00e3o",
   "components.fab.yes": "Sim",
-  "components.fab.no": "N\u00e3o"
+  "components.fab.no": "N\u00e3o",
+  "components.dock.resetPosition": "Repor posi\u00e7\u00e3o",
+  "components.dock.resetConfirm": "Tem a certeza de que deseja repor a posi\u00e7\u00e3o do dock para o padr\u00e3o?",
+  "components.actions.cancel": "Cancelar",
+  "components.actions.confirm": "Confirmar",
+  "components.rating.required": "Por favor, forne\u00e7a uma avalia\u00e7\u00e3o",
+  "components.rating.cancel": "Cancelar avalia\u00e7\u00e3o",
+  "components.radiogroup.cancel": "Nenhuma op\u00e7\u00e3o"
 }

@@ -32,6 +32,10 @@ export { SgCombobox } from "./inputs/SgCombobox";
 export type { SgComboboxProps, SgComboboxSource } from "./inputs/SgCombobox";
 export { SgTextEditor } from "./inputs/SgTextEditor";
 export type { SgTextEditorProps, SgTextEditorSaveMeta } from "./inputs/SgTextEditor";
+export { SgRating } from "./inputs/SgRating";
+export type { SgRatingProps, SgRatingSize } from "./inputs/SgRating";
+export { SgRadioGroup } from "./inputs/SgRadioGroup";
+export type { SgRadioGroupProps, SgRadioGroupOption, SgRadioGroupOrientation } from "./inputs/SgRadioGroup";
 export { SgButton } from "./buttons/SgButton";
 export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
 export { SgSplitButton } from "./buttons/SgSplitButton";
@@ -41,6 +45,8 @@ export type {
   SgFloatActionButtonProps, SgFABAction,
   FABPosition, FABSeverity, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger, FABLayoutType
 } from "./buttons/SgFloatActionButton";
+export { SgDock } from "./menus/SgDock";
+export type { SgDockProps, SgDockItem, SgDockPosition, SgDockOrientation } from "./menus/SgDock";
 export { SgToaster } from "./commons/SgToaster";
 export type {
   SgToasterProps,
@@ -135,6 +141,10 @@ export { SgStack } from "./layout/SgStack";
 export type { SgStackProps } from "./layout/SgStack";
 export { SgCard } from "./layout/SgCard";
 export type { SgCardProps, SgCardVariant, SgCardSize } from "./layout/SgCard";
+export { SgAccordion } from "./layout/SgAccordion";
+export type { SgAccordionProps, SgAccordionItem, SgAccordionOrientation } from "./layout/SgAccordion";
+export { SgCarousel } from "./layout/SgCarousel";
+export type { SgCarouselProps, SgCarouselOrientation } from "./layout/SgCarousel";
 export { default as SgPlayground } from "./others/SgPlayground";
 export type { SgPlaygroundProps } from "./others/SgPlayground";
 export { SgToolBar, SgToolbarIconButton } from "./layout/SgToolBar";

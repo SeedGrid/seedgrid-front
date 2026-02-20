@@ -46,12 +46,17 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-autocomplete", label: "SgAutocomplete" },
   { group: "Inputs", slug: "sg-combobox", label: "SgCombobox" },
   { group: "Inputs", slug: "sg-text-editor", label: "SgTextEditor" },
+  { group: "Inputs", slug: "sg-rating", label: "SgRating" },
+  { group: "Inputs", slug: "sg-radio-group", label: "SgRadioGroup" },
   { group: "Buttons", slug: "sg-button", label: "SgButton" },
   { group: "Buttons", slug: "sg-split-button", label: "SgSplitButton" },
   { group: "Buttons", slug: "sg-float-action-button", label: "SgFloatActionButton" },
+  { group: "Menus", slug: "sg-dock", label: "SgDock" },
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },
+  { group: "Layout", slug: "sg-accordion", label: "SgAccordion" },
+  { group: "Layout", slug: "sg-carousel", label: "SgCarousel" },
   { group: "Layout", slug: "sg-skeleton", label: "SgSkeleton" },
   { group: "Layout", slug: "sg-screen", label: "SgScreen" },
   { group: "Layout", slug: "sg-main-panel", label: "SgMainPanel" },
@@ -279,7 +284,7 @@ export default function ShowcaseShell(props: {
                 </Link>
               ))}
               <div className="my-2 border-t border-[#dcc6b2]" />
-              {(["Inputs", "Buttons", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
+              {(["Inputs", "Buttons", "Menus", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
                 const items = COMPONENTS.filter((c) => c.group === group);
                 if (items.length === 0) return null;
                 return (

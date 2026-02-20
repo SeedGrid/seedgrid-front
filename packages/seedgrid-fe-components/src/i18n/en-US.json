@@ -72,5 +72,12 @@
   "components.fab.resetConfirm": "Reset the button position?",
   "components.fab.resetPosition": "Reset position",
   "components.fab.yes": "Yes",
-  "components.fab.no": "No"
+  "components.fab.no": "No",
+  "components.dock.resetPosition": "Reset position",
+  "components.dock.resetConfirm": "Are you sure you want to reset the dock position to default?",
+  "components.actions.cancel": "Cancel",
+  "components.actions.confirm": "Confirm",
+  "components.rating.required": "Please provide a rating",
+  "components.rating.cancel": "Cancel rating",
+  "components.radiogroup.cancel": "No option"
 }
