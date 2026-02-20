@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
 import { SgAccordion, SgButton, SgPlayground, type SgAccordionItem } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 
@@ -84,136 +85,264 @@ const CUSTOM_ITEMS: SgAccordionItem[] = [
   {
     id: "mail",
     title: "Email",
-    icon: <span aria-hidden="true">✉</span>,
+    icon: <Mail size={14} />,
     end: <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase">novo</span>,
+    headerBackgroundColor: "rgb(var(--sg-info-100, 224 242 254))",
     content: <p className="text-sm">Configuracoes de SMTP, remetente padrao e templates.</p>
   },
   {
     id: "lock",
     title: "Permissoes",
-    icon: <span aria-hidden="true">⚿</span>,
+    icon: <ShieldCheck size={14} />,
     content: <p className="text-sm">Controle de perfis, papeis e trilhas de auditoria.</p>
   },
   {
     id: "blocked",
     title: "Modulo indisponivel",
-    icon: <span aria-hidden="true">⚠</span>,
+    icon: <TriangleAlert size={14} />,
     disabled: true,
     content: <p className="text-sm">Conteudo bloqueado.</p>
   }
 ];
 
-const BASIC_CODE = `const items: SgAccordionItem[] = [
-  { id: "personal", title: "Dados pessoais", content: <p>Conteudo...</p> },
-  { id: "address", title: "Endereco", content: <p>Conteudo...</p> },
-  { id: "billing", title: "Faturamento", content: <p>Conteudo...</p> }
+const COLOR_EXAMPLE_ITEMS: SgAccordionItem[] = [
+  {
+    id: "general",
+    title: "Geral",
+    content: <p className="text-sm">Configuracoes gerais do modulo.</p>
+  },
+  {
+    id: "security",
+    title: "Seguranca",
+    content: <p className="text-sm">Politicas e regras de acesso.</p>
+  },
+  {
+    id: "billing",
+    title: "Faturamento (override por item)",
+    headerBackgroundColor: "rgb(var(--sg-warning-100, 254 249 195))",
+    content: <p className="text-sm">Este item ignora a cor global do header.</p>
+  }
 ];
 
-<SgAccordion items={items} />`;
+const BASIC_CODE = `import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
 
-const MULTIPLE_CODE = `const [open, setOpen] = React.useState<number[]>([0, 2]);
+const items: SgAccordionItem[] = [
+  {
+    id: "personal",
+    title: "Dados pessoais",
+    content: (
+      <div className="space-y-2 text-sm">
+        <p>Nome completo, email e telefone para contato.</p>
+        <p className="text-muted-foreground">Edite essas informacoes no perfil do usuario.</p>
+      </div>
+    )
+  },
+  {
+    id: "address",
+    title: "Endereco",
+    content: (
+      <div className="space-y-2 text-sm">
+        <p>Rua, numero, cidade, estado e CEP.</p>
+        <p className="text-muted-foreground">Utilizado para faturamento e entregas.</p>
+      </div>
+    )
+  },
+  {
+    id: "billing",
+    title: "Faturamento",
+    content: (
+      <div className="space-y-2 text-sm">
+        <p>Forma de pagamento, ciclo de cobranca e historico de notas.</p>
+        <p className="text-muted-foreground">Atualizacoes podem levar alguns minutos para refletir.</p>
+      </div>
+    )
+  }
+];
 
-<SgAccordion
-  items={items}
-  multiple
-  collapsible
-  activeIndex={open}
-  onActiveIndexChange={setOpen}
-/>`;
+export default function Example() {
+  return <SgAccordion items={items} />;
+}`;
 
-const HORIZONTAL_CODE = `<SgAccordion
-  items={items}
-  orientation="horizontal"
-  defaultActiveIndex={1}
-  horizontalHeaderWidth={56}
-  horizontalMinHeight={220}
-/>`;
+const MULTIPLE_CODE = `import * as React from "react";
+import { SgAccordion, SgButton, type SgAccordionItem } from "@seedgrid/fe-components";
 
-const CONTROLLED_CODE = `const [activeIndex, setActiveIndex] = React.useState<number[]>([0]);
+const items: SgAccordionItem[] = [
+  { id: "personal", title: "Dados pessoais", content: <p className="text-sm">Conteudo 1</p> },
+  { id: "address", title: "Endereco", content: <p className="text-sm">Conteudo 2</p> },
+  { id: "billing", title: "Faturamento", content: <p className="text-sm">Conteudo 3</p> }
+];
 
-<SgAccordion
-  items={items}
-  activeIndex={activeIndex}
-  onActiveIndexChange={setActiveIndex}
-/>
-
-<SgButton onClick={() => setActiveIndex([0])}>Abrir 1</SgButton>
-<SgButton onClick={() => setActiveIndex([1])}>Abrir 2</SgButton>
-<SgButton onClick={() => setActiveIndex([])}>Fechar todos</SgButton>`;
-
-const CUSTOM_CODE = `<SgAccordion
-  items={[
-    {
-      title: "Email",
-      icon: <span>✉</span>,
-      end: <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase">novo</span>,
-      content: <p>Configuracoes de SMTP...</p>
-    },
-    {
-      title: "Permissoes",
-      icon: <span>⚿</span>,
-      content: <p>Controle de perfis...</p>
-    },
-    {
-      title: "Modulo indisponivel",
-      disabled: true,
-      content: <p>Conteudo bloqueado</p>
-    }
-  ]}
-/>`;
-
-const PLAYGROUND_APP_FILE = `import * as React from "react";
-import * as SeedGrid from "@seedgrid/fe-components";
-
-const SgAccordionFromLib = (SeedGrid as Record<string, unknown>).SgAccordion as
-  | React.ComponentType<any>
-  | undefined;
-
-function LocalFallback(props: {
-  items: Array<{ title: string; content: string; disabled?: boolean }>;
-  active: number[];
-  onChange: (next: number[]) => void;
-  multiple: boolean;
-}) {
-  const toggle = (idx: number) => {
-    const item = props.items[idx];
-    if (!item || item.disabled) return;
-    const isOpen = props.active.includes(idx);
-    if (isOpen) {
-      props.onChange(props.active.filter((v) => v !== idx));
-      return;
-    }
-    props.onChange(props.multiple ? [...props.active, idx] : [idx]);
-  };
+export default function Example() {
+  const [open, setOpen] = React.useState<number[]>([0, 2]);
 
   return (
-    <div className="space-y-2">
-      {props.items.map((item, idx) => {
-        const isOpen = props.active.includes(idx);
-        return (
-          <div key={idx} className="overflow-hidden rounded border border-slate-300">
-            <button
-              type="button"
-              disabled={item.disabled}
-              className="w-full bg-white px-3 py-2 text-left text-sm disabled:opacity-50"
-              onClick={() => toggle(idx)}
-            >
-              {item.title}
-            </button>
-            {isOpen ? <div className="border-t border-slate-200 p-3 text-sm">{item.content}</div> : null}
-          </div>
-        );
-      })}
+    <div className="space-y-3">
+      <SgAccordion
+        items={items}
+        multiple
+        collapsible
+        activeIndex={open}
+        onActiveIndexChange={setOpen}
+      />
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([0])}>Apenas 1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([1, 2])}>2 e 3</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([0, 1, 2])}>Todos</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([])}>Nenhum</SgButton>
+      </div>
     </div>
   );
-}
+}`;
+
+const HORIZONTAL_CODE = `import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  {
+    id: "overview",
+    title: "Visao geral",
+    content: <p className="text-sm">Indicadores principais de utilizacao, consumo e disponibilidade.</p>
+  },
+  {
+    id: "security",
+    title: "Seguranca",
+    content: <p className="text-sm">Politicas de senha, MFA e tentativas de autenticacao.</p>
+  },
+  {
+    id: "integrations",
+    title: "Integracoes",
+    content: <p className="text-sm">Conexoes com APIs, webhooks e provedores externos.</p>
+  }
+];
+
+export default function Example() {
+  return (
+    <SgAccordion
+      items={items}
+      orientation="horizontal"
+      defaultActiveIndex={1}
+      horizontalHeaderWidth={56}
+      horizontalMinHeight={220}
+    />
+  );
+}`;
+
+const CONTROLLED_CODE = `import * as React from "react";
+import { SgAccordion, SgButton, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "personal", title: "Dados pessoais", content: <p className="text-sm">Conteudo 1</p> },
+  { id: "address", title: "Endereco", content: <p className="text-sm">Conteudo 2</p> },
+  { id: "billing", title: "Faturamento", content: <p className="text-sm">Conteudo 3</p> }
+];
+
+export default function Example() {
+  const [activeIndex, setActiveIndex] = React.useState<number[]>([0]);
+
+  return (
+    <div className="space-y-3">
+      <SgAccordion
+        items={items}
+        activeIndex={activeIndex}
+        onActiveIndexChange={setActiveIndex}
+      />
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([0])}>Abrir 1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([1])}>Abrir 2</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([2])}>Abrir 3</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([])}>Fechar todos</SgButton>
+      </div>
+    </div>
+  );
+}`;
+
+const CUSTOM_CODE = `import * as React from "react";
+import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  {
+    id: "mail",
+    title: "Email",
+    icon: <Mail size={14} />,
+    end: <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase">novo</span>,
+    headerBackgroundColor: "rgb(var(--sg-info-100, 224 242 254))",
+    content: <p className="text-sm">Configuracoes de SMTP, remetente padrao e templates.</p>
+  },
+  {
+    id: "lock",
+    title: "Permissoes",
+    icon: <ShieldCheck size={14} />,
+    content: <p className="text-sm">Controle de perfis, papeis e trilhas de auditoria.</p>
+  },
+  {
+    id: "blocked",
+    title: "Modulo indisponivel",
+    icon: <TriangleAlert size={14} />,
+    disabled: true,
+    content: <p className="text-sm">Conteudo bloqueado.</p>
+  }
+];
+
+export default function Example() {
+  return (
+    <SgAccordion
+      items={items}
+      defaultActiveIndex={0}
+      headerBackgroundColor="rgb(var(--sg-primary-50, 239 246 255))"
+    />
+  );
+}`;
+
+const COLOR_CUSTOMIZATION_CODE = `import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  {
+    id: "general",
+    title: "Geral",
+    content: <p className="text-sm">Configuracoes gerais do modulo.</p>
+  },
+  {
+    id: "security",
+    title: "Seguranca",
+    content: <p className="text-sm">Politicas e regras de acesso.</p>
+  },
+  {
+    id: "billing",
+    title: "Faturamento (override por item)",
+    headerBackgroundColor: "rgb(var(--sg-warning-100, 254 249 195))",
+    content: <p className="text-sm">Este item ignora a cor global do header.</p>
+  }
+];
+
+export default function Example() {
+  const [headerColor, setHeaderColor] = React.useState("rgb(var(--sg-primary-50, 239 246 255))");
+
+  return (
+    <div className="space-y-3">
+      <input
+        value={headerColor}
+        onChange={(e) => setHeaderColor(e.target.value)}
+        className="w-full rounded border border-border px-3 py-2 text-sm"
+      />
+      <SgAccordion items={items} defaultActiveIndex={0} headerBackgroundColor={headerColor} />
+    </div>
+  );
+}`;
+
+const PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgAccordion } from "@seedgrid/fe-components";
 
 export default function App() {
-  const hasAccordion = typeof SgAccordionFromLib === "function";
   const [orientation, setOrientation] = React.useState<"vertical" | "horizontal">("vertical");
   const [multiple, setMultiple] = React.useState(false);
   const [collapsible, setCollapsible] = React.useState(true);
   const [keepMounted, setKeepMounted] = React.useState(true);
+  const [headerBackgroundColor, setHeaderBackgroundColor] = React.useState(
+    "rgb(var(--sg-primary-50, 239 246 255))"
+  );
   const [active, setActive] = React.useState<number[]>([0]);
 
   const items = React.useMemo(
@@ -227,13 +356,7 @@ export default function App() {
 
   return (
     <div className="space-y-4 p-2">
-      {!hasAccordion ? (
-        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgAccordion ainda nao esta na versao publicada usada pelo Sandpack. Exibindo fallback.
-        </div>
-      ) : null}
-
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-3">
         <label className="text-xs">
           <span className="mb-1 block font-medium">Orientation</span>
           <select value={orientation} onChange={(e) => setOrientation(e.target.value as "vertical" | "horizontal")} className="w-full rounded border border-slate-300 px-2 py-1">
@@ -244,6 +367,15 @@ export default function App() {
         <label className="text-xs">
           <span className="mb-1 block font-medium">Active indexes</span>
           <div className="rounded border border-slate-300 bg-slate-50 px-2 py-1 text-[11px]">{active.length > 0 ? active.join(", ") : "(vazio)"}</div>
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Header background</span>
+          <input
+            value={headerBackgroundColor}
+            onChange={(e) => setHeaderBackgroundColor(e.target.value)}
+            className="w-full rounded border border-slate-300 px-2 py-1"
+            placeholder="Ex: #e0f2fe ou rgb(var(--sg-primary-50, 239 246 255))"
+          />
         </label>
       </div>
 
@@ -261,30 +393,18 @@ export default function App() {
         <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([])}>Fechar todos</button>
       </div>
 
-      {hasAccordion ? (
-        <SgAccordionFromLib
-          items={items}
-          orientation={orientation}
-          multiple={multiple}
-          collapsible={collapsible}
-          keepMounted={keepMounted}
-          activeIndex={active}
-          onActiveIndexChange={setActive}
-          horizontalHeaderWidth={56}
-          horizontalMinHeight={220}
-        />
-      ) : (
-        <LocalFallback
-          items={[
-            { title: "Painel 1", content: "Conteudo do primeiro painel." },
-            { title: "Painel 2", content: "Conteudo do segundo painel." },
-            { title: "Painel 3", content: "Conteudo do terceiro painel." }
-          ]}
-          active={active}
-          onChange={setActive}
-          multiple={multiple}
-        />
-      )}
+      <SgAccordion
+        items={items}
+        orientation={orientation}
+        multiple={multiple}
+        collapsible={collapsible}
+        keepMounted={keepMounted}
+        activeIndex={active}
+        onActiveIndexChange={setActive}
+        horizontalHeaderWidth={56}
+        horizontalMinHeight={220}
+        headerBackgroundColor={headerBackgroundColor}
+      />
     </div>
   );
 }`;
@@ -292,6 +412,7 @@ export default function App() {
 export default function SgAccordionPage() {
   const [controlled, setControlled] = React.useState<number[]>([0]);
   const [multiControlled, setMultiControlled] = React.useState<number[]>([0, 2]);
+  const [headerColorExample, setHeaderColorExample] = React.useState("#eff6ff");
 
   return (
     <div className="max-w-5xl space-y-8">
@@ -363,16 +484,51 @@ export default function SgAccordionPage() {
       </Section>
 
       <Section
-        title="5) Customizacao de itens"
-        description="Itens com icon, badge final e estado disabled."
+        title="5) Itens customizados + fundo do titulo"
+        description="Fundo do titulo usa primary-50 por padrao e pode ser customizado globalmente ou por item."
       >
-        <SgAccordion items={CUSTOM_ITEMS} defaultActiveIndex={0} />
+        <SgAccordion
+          items={CUSTOM_ITEMS}
+          defaultActiveIndex={0}
+          headerBackgroundColor="rgb(var(--sg-primary-50, 239 246 255))"
+        />
         <CodeBlockBase code={CUSTOM_CODE} />
       </Section>
 
       <Section
-        title="6) Playground (SgPlayground)"
-        description="Playground para o dev testar orientacao, modo multiple, estado controlado e outras opcoes."
+        title="6) Exemplo de customizacao de cor"
+        description="Customize a cor global do titulo e veja override por item no ultimo painel."
+      >
+        <div className="flex flex-wrap items-end gap-3">
+          <label className="space-y-1">
+            <span className="block text-xs font-medium">Color picker</span>
+            <input
+              type="color"
+              value={headerColorExample}
+              onChange={(e) => setHeaderColorExample(e.target.value)}
+              className="h-9 w-16 cursor-pointer rounded border border-border bg-background p-1"
+            />
+          </label>
+          <label className="min-w-[260px] flex-1 space-y-1">
+            <span className="block text-xs font-medium">Valor de cor</span>
+            <input
+              value={headerColorExample}
+              onChange={(e) => setHeaderColorExample(e.target.value)}
+              className="w-full rounded border border-border px-3 py-2 text-sm"
+            />
+          </label>
+        </div>
+        <SgAccordion
+          items={COLOR_EXAMPLE_ITEMS}
+          defaultActiveIndex={0}
+          headerBackgroundColor={headerColorExample}
+        />
+        <CodeBlockBase code={COLOR_CUSTOMIZATION_CODE} />
+      </Section>
+
+      <Section
+        title="7) Playground (SgPlayground)"
+        description="Playground para o dev testar orientacao, modo multiple, estado controlado e cores do titulo."
       >
         <SgPlayground
           title="SgAccordion Playground"
@@ -386,4 +542,3 @@ export default function SgAccordionPage() {
     </div>
   );
 }
-

@@ -133,6 +133,181 @@ export default function App() {
   );
 }`;
 
+const BASIC_SHOWCASE_CODE = `import * as React from "react";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(false);
+
+  return (
+    <div>
+      <SgToggleSwitch
+        id="demo-basic"
+        label="Ativar notificacoes"
+        checked={value}
+        onChange={setValue}
+      />
+      <p>Valor atual: {String(value)}</p>
+    </div>
+  );
+}`;
+
+const ICONS_SHOWCASE_CODE = `import * as React from "react";
+import { Check, X } from "lucide-react";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(true);
+
+  return (
+    <div>
+      <SgToggleSwitch
+        id="demo-icons"
+        label="Status da conta"
+        checked={value}
+        onChange={setValue}
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+      <p>Valor atual: {String(value)}</p>
+    </div>
+  );
+}`;
+
+const REMOTE_SHOWCASE_CODE = `import * as React from "react";
+import { Check, X } from "lucide-react";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [log, setLog] = React.useState<string[]>([]);
+
+  const handleRemoteToggle = (nextValue: boolean) => {
+    setValue(nextValue);
+    setLoading(true);
+    setTimeout(() => {
+      setLog((prev) => ["value=" + String(nextValue), ...prev].slice(0, 8));
+      setLoading(false);
+    }, 450);
+  };
+
+  return (
+    <div>
+      <SgToggleSwitch
+        id="demo-remote"
+        label={loading ? "Salvando..." : "Publicar automaticamente"}
+        checked={value}
+        onChange={handleRemoteToggle}
+        enabled={!loading}
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+      <div>{log.map((entry, index) => <div key={index}>{entry}</div>)}</div>
+    </div>
+  );
+}`;
+
+const EXTERNAL_SHOWCASE_CODE = `import * as React from "react";
+import { Check, X } from "lucide-react";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(false);
+  const [captured, setCaptured] = React.useState("(sem evento)");
+
+  return (
+    <div>
+      <SgToggleSwitch
+        id="demo-external"
+        label="Permitir sincronizacao"
+        checked={value}
+        onChange={(next) => {
+          setValue(next);
+          setCaptured("onChange -> " + String(next));
+        }}
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+
+      <button onClick={() => setValue(true)}>Setar true</button>
+      <button onClick={() => setValue(false)}>Setar false</button>
+      <button onClick={() => setValue((prev) => !prev)}>Toggle externo</button>
+      <button onClick={() => setCaptured("captura manual -> " + String(value))}>Capturar agora</button>
+
+      <p>capturado: {captured}</p>
+    </div>
+  );
+}`;
+
+const RHF_SHOWCASE_CODE = `import * as React from "react";
+import { Check, X } from "lucide-react";
+import { useForm, type FieldValues } from "react-hook-form";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [submitResult, setSubmitResult] = React.useState("-");
+  const { register, control, handleSubmit, watch } = useForm<FieldValues>({
+    defaultValues: {
+      notifications: false,
+      active: true
+    } as FieldValues
+  });
+
+  return (
+    <form onSubmit={handleSubmit((data) => setSubmitResult(JSON.stringify(data)))}>
+      <SgToggleSwitch
+        id="demo-rhf-register"
+        name="notifications"
+        label="Receber notificacoes por email"
+        register={register}
+      />
+
+      <SgToggleSwitch
+        id="demo-rhf-control"
+        name="active"
+        label="Conta ativa"
+        control={control}
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+
+      <button type="submit">Enviar</button>
+      <p>watch.notifications: {String(watch("notifications"))}</p>
+      <p>watch.active: {String(watch("active"))}</p>
+      <p>Ultimo submit: {submitResult}</p>
+    </form>
+  );
+}`;
+
+const DISABLED_READONLY_SHOWCASE_CODE = `import * as React from "react";
+import { Check, X } from "lucide-react";
+import { SgToggleSwitch } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div>
+      <SgToggleSwitch
+        id="demo-disabled"
+        label="Disabled"
+        checked
+        enabled={false}
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+
+      <SgToggleSwitch
+        id="demo-readonly"
+        label="ReadOnly"
+        checked={false}
+        readOnly
+        onIcon={<Check size={12} />}
+        offIcon={<X size={12} />}
+      />
+    </div>
+  );
+}`;
+
 export default function SgToggleSwitchPage() {
   const [basicValue, setBasicValue] = React.useState(false);
   const [iconValue, setIconValue] = React.useState(true);
@@ -198,16 +373,7 @@ export default function SgToggleSwitchPage() {
           </p>
         </div>
         <CodeBlockBase
-          code={`const [value, setValue] = React.useState(false);
-
-<SgToggleSwitch
-  id="demo-basic"
-  label="Ativar notificacoes"
-  checked={value}
-  onChange={setValue}
-/>
-
-<p>Valor atual: {String(value)}</p>`}
+          code={BASIC_SHOWCASE_CODE}
         />
       </Section>
 
@@ -229,18 +395,7 @@ export default function SgToggleSwitchPage() {
           </p>
         </div>
         <CodeBlockBase
-          code={`const [value, setValue] = React.useState(true);
-
-<SgToggleSwitch
-  id="demo-icons"
-  label="Status da conta"
-  checked={value}
-  onChange={setValue}
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>
-
-<p>Valor atual: {String(value)}</p>`}
+          code={ICONS_SHOWCASE_CODE}
         />
       </Section>
 
@@ -269,30 +424,7 @@ export default function SgToggleSwitchPage() {
           </div>
         </div>
         <CodeBlockBase
-          code={`const [value, setValue] = React.useState(false);
-const [loading, setLoading] = React.useState(false);
-const [log, setLog] = React.useState<string[]>([]);
-
-const handleRemoteToggle = (nextValue: boolean) => {
-  setValue(nextValue);
-  setLoading(true);
-  setTimeout(() => {
-    setLog((prev) => [\`value=\${String(nextValue)}\`, ...prev].slice(0, 8));
-    setLoading(false);
-  }, 450);
-};
-
-<SgToggleSwitch
-  id="demo-remote"
-  label={loading ? "Salvando..." : "Publicar automaticamente"}
-  checked={value}
-  onChange={handleRemoteToggle}
-  enabled={!loading}
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>
-
-<div>{log.map((entry) => <div key={entry}>{entry}</div>)}</div>`}
+          code={REMOTE_SHOWCASE_CODE}
         />
       </Section>
 
@@ -345,25 +477,7 @@ const handleRemoteToggle = (nextValue: boolean) => {
           </div>
         </div>
         <CodeBlockBase
-          code={`const [value, setValue] = React.useState(false);
-const [captured, setCaptured] = React.useState("(sem evento)");
-
-<SgToggleSwitch
-  id="demo-external"
-  label="Permitir sincronizacao"
-  checked={value}
-  onChange={(next) => {
-    setValue(next);
-    setCaptured("onChange -> " + String(next));
-  }}
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>
-
-<button onClick={() => setValue(true)}>Setar true</button>
-<button onClick={() => setValue(false)}>Setar false</button>
-<button onClick={() => setValue((prev) => !prev)}>Toggle externo</button>
-<button onClick={() => setCaptured("captura manual -> " + String(value))}>Capturar agora</button>`}
+          code={EXTERNAL_SHOWCASE_CODE}
         />
       </Section>
 
@@ -404,28 +518,7 @@ const [captured, setCaptured] = React.useState("(sem evento)");
           </p>
         </form>
         <CodeBlockBase
-          code={`const { register, control, handleSubmit } = useForm({
-  defaultValues: {
-    notifications: false,
-    active: true
-  }
-});
-
-<SgToggleSwitch
-  id="demo-rhf-register"
-  name="notifications"
-  label="Receber notificacoes por email"
-  register={register}
-/>
-
-<SgToggleSwitch
-  id="demo-rhf-control"
-  name="active"
-  label="Conta ativa"
-  control={control}
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>`}
+          code={RHF_SHOWCASE_CODE}
         />
       </Section>
 
@@ -452,23 +545,7 @@ const [captured, setCaptured] = React.useState("(sem evento)");
           />
         </div>
         <CodeBlockBase
-          code={`<SgToggleSwitch
-  id="demo-disabled"
-  label="Disabled"
-  checked
-  enabled={false}
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>
-
-<SgToggleSwitch
-  id="demo-readonly"
-  label="ReadOnly"
-  checked={false}
-  readOnly
-  onIcon={<Check size={12} />}
-  offIcon={<X size={12} />}
-/>`}
+          code={DISABLED_READONLY_SHOWCASE_CODE}
         />
       </Section>
 

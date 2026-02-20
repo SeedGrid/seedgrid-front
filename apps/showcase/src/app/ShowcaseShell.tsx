@@ -51,7 +51,7 @@ const COMPONENTS = [
   { group: "Buttons", slug: "sg-button", label: "SgButton" },
   { group: "Buttons", slug: "sg-split-button", label: "SgSplitButton" },
   { group: "Buttons", slug: "sg-float-action-button", label: "SgFloatActionButton" },
-  { group: "Menus", slug: "sg-dock", label: "SgDock" },
+  { group: "Menus", slug: "sg-dock-menu", label: "SgDockMenu" },
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },

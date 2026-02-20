@@ -45,8 +45,8 @@ export type {
   SgFloatActionButtonProps, SgFABAction,
   FABPosition, FABSeverity, FABVariant, FABSize, FABShape, FABElevation, FABAnimation, FABAnimationTrigger, FABLayoutType
 } from "./buttons/SgFloatActionButton";
-export { SgDock } from "./menus/SgDock";
-export type { SgDockProps, SgDockItem, SgDockPosition, SgDockOrientation } from "./menus/SgDock";
+export { SgDockMenu } from "./menus/SgDockMenu";
+export type { SgDockMenuProps, SgDockMenuItem, SgDockMenuPosition, SgDockMenuOrientation } from "./menus/SgDockMenu";
 export { SgToaster } from "./commons/SgToaster";
 export type {
   SgToasterProps,

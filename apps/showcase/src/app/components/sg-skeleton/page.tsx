@@ -14,57 +14,108 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-const SHAPES_CODE = `<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-  <SgSkeleton shape="text" />
-  <SgSkeleton shape="rectangle" height={48} />
-  <SgSkeleton shape="rounded" height={48} />
-  <SgSkeleton shape="square" size={56} />
-  <SgSkeleton shape="circle" size={56} />
-</div>`;
+const SHAPES_CODE = `import * as React from "react";
+import { SgSkeleton } from "@seedgrid/fe-components";
 
-const WIDTHS_CODE = `<div className="max-w-md space-y-2">
-  <SgSkeleton shape="text" width="100%" />
-  <SgSkeleton shape="text" width="86%" />
-  <SgSkeleton shape="text" width="72%" />
-  <SgSkeleton shape="text" width="52%" />
-</div>`;
-
-const ANIMATION_CODE = `<div className="grid gap-4 sm:grid-cols-3">
-  <SgSkeleton animation="wave" height={56} />
-  <SgSkeleton animation="pulse" height={56} />
-  <SgSkeleton animation="none" height={56} />
-</div>`;
-
-const CARD_CODE = `<div className="w-full max-w-sm rounded-xl border border-border p-4">
-  <SgSkeleton shape="rounded" height={160} />
-  <div className="mt-4 space-y-2">
-    <SgSkeleton shape="text" width="60%" />
-    <SgSkeleton shape="text" />
-    <SgSkeleton shape="text" width="82%" />
-  </div>
-</div>`;
-
-const LIST_TABLE_CODE = `<div className="grid gap-6 lg:grid-cols-2">
-  <div className="space-y-3">
-    {Array.from({ length: 5 }).map((_, idx) => (
-      <div key={idx} className="flex items-center gap-3">
-        <SgSkeleton shape="circle" size={40} />
-        <div className="flex-1 space-y-2">
-          <SgSkeleton shape="text" width="55%" />
-          <SgSkeleton shape="text" width="35%" />
-        </div>
-      </div>
-    ))}
-  </div>
-
-  <div className="overflow-hidden rounded-lg border border-border">
-    <div className="grid grid-cols-[1fr_120px_120px] gap-3 border-b border-border p-3">
-      <SgSkeleton shape="text" width="80%" />
-      <SgSkeleton shape="text" width="70%" />
-      <SgSkeleton shape="text" width="70%" />
+export default function Example() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <SgSkeleton shape="text" />
+      <SgSkeleton shape="rectangle" height={48} />
+      <SgSkeleton shape="rounded" height={48} />
+      <SgSkeleton shape="square" size={56} />
+      <SgSkeleton shape="circle" size={56} />
     </div>
-  </div>
-</div>`;
+  );
+}`;
+
+const WIDTHS_CODE = `import * as React from "react";
+import { SgSkeleton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="max-w-md space-y-2">
+      <SgSkeleton shape="text" width="100%" />
+      <SgSkeleton shape="text" width="86%" />
+      <SgSkeleton shape="text" width="72%" />
+      <SgSkeleton shape="text" width="52%" />
+    </div>
+  );
+}`;
+
+const ANIMATION_CODE = `import * as React from "react";
+import { SgSkeleton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">wave</p>
+        <SgSkeleton animation="wave" height={56} />
+      </div>
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">pulse</p>
+        <SgSkeleton animation="pulse" height={56} />
+      </div>
+      <div className="space-y-2">
+        <p className="text-xs text-muted-foreground">none</p>
+        <SgSkeleton animation="none" height={56} />
+      </div>
+    </div>
+  );
+}`;
+
+const CARD_CODE = `import * as React from "react";
+import { SgSkeleton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm rounded-xl border border-border p-4">
+      <SgSkeleton shape="rounded" height={160} />
+      <div className="mt-4 space-y-2">
+        <SgSkeleton shape="text" width="60%" />
+        <SgSkeleton shape="text" />
+        <SgSkeleton shape="text" width="82%" />
+      </div>
+    </div>
+  );
+}`;
+
+const LIST_TABLE_CODE = `import * as React from "react";
+import { SgSkeleton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="flex items-center gap-3">
+            <SgSkeleton shape="circle" size={40} />
+            <div className="flex-1 space-y-2">
+              <SgSkeleton shape="text" width="55%" />
+              <SgSkeleton shape="text" width="35%" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="grid grid-cols-[1fr_120px_120px] gap-3 border-b border-border p-3">
+          <SgSkeleton shape="text" width="80%" />
+          <SgSkeleton shape="text" width="70%" />
+          <SgSkeleton shape="text" width="70%" />
+        </div>
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <div key={idx} className="grid grid-cols-[1fr_120px_120px] gap-3 border-b border-border p-3 last:border-b-0">
+            <SgSkeleton shape="text" width={(60 + ((idx % 3) * 10)) + "%"} />
+            <SgSkeleton shape="text" width="55%" />
+            <SgSkeleton shape="text" width="45%" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}`;
 
 const SKELETON_PLAYGROUND_APP_FILE = `import * as React from "react";
 import * as SeedGrid from "@seedgrid/fe-components";
@@ -315,4 +366,3 @@ export default function SgSkeletonPage() {
     </div>
   );
 }
-

@@ -65,6 +65,7 @@ export type SgAccordionItem = {
   end?: React.ReactNode;
   className?: string;
   headerClassName?: string;
+  headerBackgroundColor?: string;
   contentClassName?: string;
 };
 
@@ -81,12 +82,16 @@ export type SgAccordionProps = Omit<React.HTMLAttributes<HTMLDivElement>, "onCha
   onItemToggle?: (index: number, isOpen: boolean) => void;
   panelClassName?: string;
   headerClassName?: string;
+  headerBackgroundColor?: string;
   contentClassName?: string;
   animationDuration?: number;
   horizontalHeaderWidth?: number | string;
   horizontalMinHeight?: number | string;
   keepMounted?: boolean;
 };
+
+const DEFAULT_HEADER_BACKGROUND =
+  "var(--sg-accordion-header-bg, rgb(var(--sg-primary-50, 239 246 255)))";
 
 export function SgAccordion(props: Readonly<SgAccordionProps>) {
   const {
@@ -102,6 +107,7 @@ export function SgAccordion(props: Readonly<SgAccordionProps>) {
     onItemToggle,
     panelClassName,
     headerClassName,
+    headerBackgroundColor,
     contentClassName,
     animationDuration = 220,
     horizontalHeaderWidth = 52,
@@ -185,11 +191,13 @@ export function SgAccordion(props: Readonly<SgAccordionProps>) {
         const panelId = `${baseId}-panel-${item.id ?? index}`;
         const headerId = `${baseId}-header-${item.id ?? index}`;
         const contentId = `${baseId}-content-${item.id ?? index}`;
+        const resolvedHeaderBackground =
+          item.headerBackgroundColor ?? headerBackgroundColor ?? DEFAULT_HEADER_BACKGROUND;
 
         const sharedButtonClasses = cn(
-          "inline-flex items-center gap-2 text-left font-medium transition-colors duration-150",
+          "inline-flex items-center gap-2 text-left font-medium transition-[filter,colors] duration-150",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-          item.disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:bg-muted/50"
+          item.disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:brightness-95"
         );
 
         return (
@@ -226,7 +234,16 @@ export function SgAccordion(props: Readonly<SgAccordionProps>) {
                 headerClassName,
                 item.headerClassName
               )}
-              style={isHorizontal ? { width: headerWidth } : undefined}
+              style={
+                isHorizontal
+                  ? {
+                      width: headerWidth,
+                      backgroundColor: resolvedHeaderBackground
+                    }
+                  : {
+                      backgroundColor: resolvedHeaderBackground
+                    }
+              }
               onClick={() => handleToggle(index)}
             >
               {isHorizontal ? (
@@ -287,4 +304,3 @@ export function SgAccordion(props: Readonly<SgAccordionProps>) {
 }
 
 SgAccordion.displayName = "SgAccordion";
-
