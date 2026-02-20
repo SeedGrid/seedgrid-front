@@ -82,6 +82,10 @@ export function useSgEnvironment(): SgEnvironmentValue {
   return React.useContext(SgEnvironmentContext) ?? defaultEnvironment;
 }
 
+export function useHasSgEnvironmentProvider(): boolean {
+  return React.useContext(SgEnvironmentContext) !== null;
+}
+
 export function useSgNamespaceProvider(): NamespaceProvider {
   return useSgEnvironment().namespaceProvider;
 }

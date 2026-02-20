@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { t, useComponentsI18n } from "../i18n";
+import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 /* ── types ── */
 
@@ -111,6 +112,32 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null {
+  const value = typeof raw === "string" ? (() => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  })() : raw;
+
+  if (
+    !value ||
+    typeof value !== "object" ||
+    typeof (value as { x?: unknown }).x !== "number" ||
+    typeof (value as { y?: unknown }).y !== "number" ||
+    !Number.isFinite((value as { x: number }).x) ||
+    !Number.isFinite((value as { y: number }).y)
+  ) {
+    return null;
+  }
+
+  return {
+    x: (value as { x: number }).x,
+    y: (value as { y: number }).y
+  };
+}
+
 /* ── orientation helper ── */
 
 function getOrientation(position: SgDockMenuPosition): SgDockMenuOrientation {
@@ -124,6 +151,8 @@ function getOrientation(position: SgDockMenuPosition): SgDockMenuOrientation {
 
 export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
   const i18n = useComponentsI18n();
+  const hasEnvironmentProvider = useHasSgEnvironmentProvider();
+  const { load: loadPersistedState, save: savePersistedState, clear: clearPersistedState } = useSgPersistence();
   const {
     id,
     items,
@@ -164,6 +193,76 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
     ? `sg-dockmenu-pos:${dragId}:${isAbsolutePosition ? "parent" : "viewport"}`
     : null;
 
+  const loadStoredPosition = React.useCallback(async (): Promise<{ x: number; y: number } | null> => {
+    if (!storageKey) return null;
+
+    if (hasEnvironmentProvider) {
+      try {
+        const loaded = await loadPersistedState(storageKey);
+        if (loaded === null || loaded === undefined) return null;
+        const parsed = parseStoredDragPosition(loaded);
+        if (!parsed) {
+          await clearPersistedState(storageKey);
+          return null;
+        }
+        return parsed;
+      } catch {
+        return null;
+      }
+    }
+
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return null;
+      const parsed = parseStoredDragPosition(raw);
+      if (!parsed) {
+        localStorage.removeItem(storageKey);
+        return null;
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
+  }, [clearPersistedState, hasEnvironmentProvider, loadPersistedState, storageKey]);
+
+  const saveStoredPosition = React.useCallback(async (nextPos: { x: number; y: number }) => {
+    if (!storageKey) return;
+
+    if (hasEnvironmentProvider) {
+      try {
+        await savePersistedState(storageKey, nextPos);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(nextPos));
+    } catch {
+      // ignore
+    }
+  }, [hasEnvironmentProvider, savePersistedState, storageKey]);
+
+  const clearStoredPosition = React.useCallback(async () => {
+    if (!storageKey) return;
+
+    if (hasEnvironmentProvider) {
+      try {
+        await clearPersistedState(storageKey);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {
+      // ignore
+    }
+  }, [clearPersistedState, hasEnvironmentProvider, storageKey]);
+
   const getDragBounds = React.useCallback(() => {
     if (!containerRef.current) return null;
 
@@ -198,20 +297,11 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
   React.useEffect(() => {
     if (!enableDragDrop || !storageKey) return;
     if (!containerRef.current) return;
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (!stored) return;
-      const parsed = JSON.parse(stored) as { x?: number; y?: number } | null;
-      if (
-        !parsed ||
-        typeof parsed.x !== "number" ||
-        typeof parsed.y !== "number" ||
-        !Number.isFinite(parsed.x) ||
-        !Number.isFinite(parsed.y)
-      ) {
-        localStorage.removeItem(storageKey);
-        return;
-      }
+
+    let alive = true;
+    (async () => {
+      const parsed = await loadStoredPosition();
+      if (!alive || !parsed) return;
       const bounds = getDragBounds();
       if (!bounds) return;
       const clamped = {
@@ -221,10 +311,12 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
       dragPosRef.current = clamped;
       setDragPos(clamped);
       hasStoredPosRef.current = true;
-    } catch {
-      // ignore
-    }
-  }, [enableDragDrop, getDragBounds, storageKey]);
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [enableDragDrop, getDragBounds, loadStoredPosition, storageKey]);
 
   React.useEffect(() => {
     if (!enableDragDrop || !isDragging) return;
@@ -277,11 +369,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
       setIsDragging(false);
       dragStart.current = null;
       if (enableDragDrop && storageKey && dragPosRef.current) {
-        try {
-          localStorage.setItem(storageKey, JSON.stringify(dragPosRef.current));
-        } catch {
-          // ignore
-        }
+        void saveStoredPosition(dragPosRef.current);
       }
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("pointerup", handleUp);
@@ -291,7 +379,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
     window.addEventListener("pointermove", handleMove);
     window.addEventListener("pointerup", handleUp);
     window.addEventListener("pointercancel", handleUp);
-  }, [enableDragDrop, getDragBounds, storageKey]);
+  }, [enableDragDrop, getDragBounds, saveStoredPosition, storageKey]);
 
   const handleContextMenu = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     if (!enableDragDrop || !dragId) return;
@@ -302,17 +390,13 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
 
   const handleResetPosition = React.useCallback(() => {
     if (!storageKey) return;
-    try {
-      localStorage.removeItem(storageKey);
-    } catch {
-      // ignore
-    }
+    void clearStoredPosition();
     dragPosRef.current = null;
     setDragPos(null);
     setMenuOpen(false);
     hasStoredPosRef.current = false;
     dragMoved.current = false;
-  }, [storageKey]);
+  }, [clearStoredPosition, storageKey]);
 
   const handleItemClick = React.useCallback((item: SgDockMenuItem) => {
     if (item.disabled) return;

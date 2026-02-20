@@ -3,11 +3,38 @@
 import * as React from "react";
 import { t, useComponentsI18n } from "../i18n";
 import { SgPopup } from "../overlay/SgPopup";
+import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 /* ── helpers ── */
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
+}
+
+function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null {
+  const value = typeof raw === "string" ? (() => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  })() : raw;
+
+  if (
+    !value ||
+    typeof value !== "object" ||
+    typeof (value as { x?: unknown }).x !== "number" ||
+    typeof (value as { y?: unknown }).y !== "number" ||
+    !Number.isFinite((value as { x: number }).x) ||
+    !Number.isFinite((value as { y: number }).y)
+  ) {
+    return null;
+  }
+
+  return {
+    x: (value as { x: number }).x,
+    y: (value as { y: number }).y
+  };
 }
 
 /* ── types ── */
@@ -302,6 +329,8 @@ function slideNudge(pos: FABPosition, dist = 10): string {
 
 export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const i18n = useComponentsI18n();
+  const hasEnvironmentProvider = useHasSgEnvironmentProvider();
+  const { load: loadPersistedState, save: savePersistedState, clear: clearPersistedState } = useSgPersistence();
   const {
     hint, hintDelay = 300, icon, activeIcon,
     position = "right-bottom", offset,
@@ -335,7 +364,79 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const fabBtnRef = React.useRef<HTMLButtonElement>(null);
   const hintTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragCleanupRef = React.useRef<(() => void) | null>(null);
   const isAbsolute = absolute === true;
+  const storageKey = dragId ? `sg-fab-pos:${dragId}` : null;
+
+  const loadStoredPosition = React.useCallback(async (): Promise<{ x: number; y: number } | null> => {
+    if (!storageKey) return null;
+
+    if (hasEnvironmentProvider) {
+      try {
+        const loaded = await loadPersistedState(storageKey);
+        if (loaded === null || loaded === undefined) return null;
+        const parsed = parseStoredDragPosition(loaded);
+        if (!parsed) {
+          await clearPersistedState(storageKey);
+          return null;
+        }
+        return parsed;
+      } catch {
+        return null;
+      }
+    }
+
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return null;
+      const parsed = parseStoredDragPosition(raw);
+      if (!parsed) {
+        localStorage.removeItem(storageKey);
+        return null;
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
+  }, [clearPersistedState, hasEnvironmentProvider, loadPersistedState, storageKey]);
+
+  const saveStoredPosition = React.useCallback(async (nextPos: { x: number; y: number }) => {
+    if (!storageKey) return;
+
+    if (hasEnvironmentProvider) {
+      try {
+        await savePersistedState(storageKey, nextPos);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(nextPos));
+    } catch {
+      // ignore
+    }
+  }, [hasEnvironmentProvider, savePersistedState, storageKey]);
+
+  const clearStoredPosition = React.useCallback(async () => {
+    if (!storageKey) return;
+
+    if (hasEnvironmentProvider) {
+      try {
+        await clearPersistedState(storageKey);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    try {
+      localStorage.removeItem(storageKey);
+    } catch {
+      // ignore
+    }
+  }, [clearPersistedState, hasEnvironmentProvider, storageKey]);
 
   React.useEffect(() => { const t = setTimeout(() => setMounted(true), 20); return () => clearTimeout(t); }, []);
 
@@ -362,20 +463,11 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
 
   React.useEffect(() => {
     if (!enableDragDrop || !dragId) return;
-    try {
-      const stored = localStorage.getItem(`sg-fab-pos:${dragId}`);
-      if (!stored) return;
-      const parsed = JSON.parse(stored) as { x?: number; y?: number } | null;
-      if (
-        !parsed ||
-        typeof parsed.x !== "number" ||
-        typeof parsed.y !== "number" ||
-        !Number.isFinite(parsed.x) ||
-        !Number.isFinite(parsed.y)
-      ) {
-        localStorage.removeItem(`sg-fab-pos:${dragId}`);
-        return;
-      }
+
+    let alive = true;
+    (async () => {
+      const parsed = await loadStoredPosition();
+      if (!alive || !parsed) return;
       const px = parsed.x;
       const py = parsed.y;
       const wh = BTN_WH[size];
@@ -396,10 +488,12 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       dragPosRef.current = clamped;
       setDragPos(clamped);
       hasStoredPosRef.current = true;
-    } catch {
-      // ignore
-    }
-  }, [enableDragDrop, dragId, size, isAbsolute]);
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [enableDragDrop, dragId, loadStoredPosition, size, isAbsolute]);
 
   React.useEffect(() => {
     if (!open) return;
@@ -411,6 +505,13 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     document.addEventListener("keydown", onKey);
     return () => { document.removeEventListener("mousedown", onMd); document.removeEventListener("keydown", onKey); };
   }, [open]);
+
+  React.useEffect(() => {
+    return () => {
+      dragCleanupRef.current?.();
+      dragCleanupRef.current = null;
+    };
+  }, []);
 
 
   const onEnter = React.useCallback(() => {
@@ -443,7 +544,14 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     if (event.button !== 0) return;
     if (!enableDragDrop || disabled || loading) return;
     if (!containerRef.current) return;
+
+    dragCleanupRef.current?.();
+    dragCleanupRef.current = null;
+
     event.preventDefault();
+    const doc = event.currentTarget.ownerDocument ?? document;
+    const view = doc.defaultView ?? window;
+
     const rect = containerRef.current.getBoundingClientRect();
     const parent = isAbsolute
       ? ((containerRef.current.offsetParent as HTMLElement | null)?.getBoundingClientRect() ?? {
@@ -476,25 +584,40 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       hasStoredPosRef.current = true;
     };
 
-    const handleUp = () => {
+    let finalized = false;
+    const finalizeDrag = () => {
+      if (finalized) return;
+      finalized = true;
       setIsDragging(false);
       dragStart.current = null;
       if (enableDragDrop && dragId && dragPosRef.current) {
-        try {
-          localStorage.setItem(`sg-fab-pos:${dragId}`, JSON.stringify(dragPosRef.current));
-        } catch {
-          // ignore
-        }
+        void saveStoredPosition(dragPosRef.current);
       }
-      window.removeEventListener("pointermove", handleMove);
-      window.removeEventListener("pointerup", handleUp);
-      window.removeEventListener("pointercancel", handleUp);
+      view.removeEventListener("pointermove", handleMove);
+      view.removeEventListener("pointerup", handleUp);
+      view.removeEventListener("pointercancel", handleUp);
+      view.removeEventListener("blur", handleUp);
+      doc.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (dragCleanupRef.current === finalizeDrag) {
+        dragCleanupRef.current = null;
+      }
     };
 
-    window.addEventListener("pointermove", handleMove);
-    window.addEventListener("pointerup", handleUp);
-    window.addEventListener("pointercancel", handleUp);
-  }, [enableDragDrop, disabled, loading, actions, dragId, isAbsolute]);
+    const handleUp = () => finalizeDrag();
+
+    const handleVisibilityChange = () => {
+      if (doc.visibilityState === "hidden") {
+        finalizeDrag();
+      }
+    };
+
+    dragCleanupRef.current = finalizeDrag;
+    view.addEventListener("pointermove", handleMove);
+    view.addEventListener("pointerup", handleUp);
+    view.addEventListener("pointercancel", handleUp);
+    view.addEventListener("blur", handleUp);
+    doc.addEventListener("visibilitychange", handleVisibilityChange);
+  }, [enableDragDrop, disabled, loading, actions, dragId, isAbsolute, saveStoredPosition]);
 
   const handleContextMenu = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     if (!enableDragDrop || !dragId) return;
@@ -509,18 +632,14 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       return;
     }
 
-    try {
-      localStorage.removeItem(`sg-fab-pos:${dragId}`);
-    } catch (error) {
-      // ignore
-    }
+    void clearStoredPosition();
     dragPosRef.current = null;
     setDragPos(null);
     setOpen(false);
     setMenuOpen(false);
     hasStoredPosRef.current = false;
     dragMoved.current = false;
-  }, [dragId]);
+  }, [clearStoredPosition, dragId]);
 
   /* colors */
   const resolvedSeverity = severity ?? variant ?? "primary";
