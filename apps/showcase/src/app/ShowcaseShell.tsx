@@ -208,102 +208,109 @@ export default function ShowcaseShell(props: {
       >
         <div className="flex h-screen">
           <aside
-            className="w-72 shrink-0 border-r border-[#e2cebc] bg-[#f7f3ee] p-4 text-[#2b1f14] overflow-y-auto overflow-x-hidden sticky top-0 h-screen"
+            className="sticky top-0 h-screen w-72 shrink-0 border-r border-[#e2cebc] bg-[#f7f3ee] text-[#2b1f14]"
             style={SIDEBAR_THEME_VARS}
           >
-            <Link href="/" className="mb-6 block rounded-md px-1 py-1 transition-colors hover:bg-[#efe3d8]/80">
-              <img
-                src="/logo-seedgrid.svg"
-                alt={t({ locale, messages }, "showcase.app.brand")}
-                className="h-8 w-auto max-w-[160px]"
-              />
-              <span className="block text-xs text-[#8b6344]">
-                {t({ locale, messages }, "showcase.app.subtitle")}
-              </span>
-            </Link>
-            <div className="mb-4">
-              <LocaleSwitcher
-                value={locale}
-                onChange={(next) => {
-                  const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
-                  setLocale(next);
-                  setMessages(nextMessages);
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <SgAutocomplete<SgAutocompleteItem>
-                id="nav-search"
-                label={t({ locale, messages }, "showcase.nav.search.label")}
-                placeholder={t({ locale, messages }, "showcase.nav.search.placeholder")}
-                openOnFocus={false}
-                showDropDownButton
-                minLengthForSearch={1}
-                grouped
-                clearOnSelect
-                source={(query) => {
-                  const q = (query ?? "").toLowerCase();
-                  const items: SgAutocompleteItem[] = [
-                    ...THEME_ITEMS.map((item) => ({
-                      id: item.slug,
-                      label: item.label,
-                      value: item.slug,
-                      group: "Theme",
-                      data: { slug: item.slug, path: `/${item.slug}` }
-                    })),
-                    ...COMPONENTS.map((item) => ({
-                      id: item.slug,
-                      label: item.label,
-                      value: item.slug,
-                      group: item.group,
-                      data: { slug: item.slug, path: `/components/${item.slug}` }
-                    }))
-                  ];
-                  if (!q) return items;
-                  return items.filter((item) =>
-                    item.label.toLowerCase().includes(q) ||
-                    item.value?.toLowerCase().includes(q) ||
-                    item.group?.toLowerCase().includes(q)
-                  );
-                }}
-                onSelect={(item) => {
-                  const path = (item.data as { path?: string } | undefined)?.path;
-                  if (path) router.push(path);
-                }}
-              />
-            </div>
-            <nav className="flex flex-col gap-0.5">
-              {THEME_ITEMS.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/${c.slug}`}
-                  className="rounded-md px-3 py-2 text-sm font-semibold text-[#3a2517] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                >
-                  {c.label}
+            <div className="flex h-full min-h-0 flex-col p-4">
+              <div className="shrink-0">
+                <Link href="/" className="mb-6 block rounded-md px-1 py-1 transition-colors hover:bg-[#efe3d8]/80">
+                  <img
+                    src="/logo-seedgrid.svg"
+                    alt={t({ locale, messages }, "showcase.app.brand")}
+                    className="h-8 w-auto max-w-[160px]"
+                  />
+                  <span className="block text-xs text-[#8b6344]">
+                    {t({ locale, messages }, "showcase.app.subtitle")}
+                  </span>
                 </Link>
-              ))}
-              <div className="my-2 border-t border-[#dcc6b2]" />
-              {(["Inputs", "Buttons", "Menus", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
-                const items = COMPONENTS.filter((c) => c.group === group);
-                if (items.length === 0) return null;
-                return (
-                  <div key={group} className="mb-2 flex flex-col gap-0.5">
-                    <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#a86a3f]">
-                      {group}
-                    </div>
-                    {items.map((c) => (
-                      <Link
-                        key={c.slug}
-                        href={`/components/${c.slug}`}
-                        className="rounded-md px-3 py-2 text-sm text-[#4b3221] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                      >
-                        {c.label}
-                      </Link>
-                    ))}
-                  </div>
-                );
-              })}
-            </nav>
+                <div className="mb-4">
+                  <LocaleSwitcher
+                    value={locale}
+                    onChange={(next) => {
+                      const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
+                      setLocale(next);
+                      setMessages(nextMessages);
+                    }}
+                  />
+                </div>
+                <div className="mb-4">
+                  <SgAutocomplete<SgAutocompleteItem>
+                    id="nav-search"
+                    label={t({ locale, messages }, "showcase.nav.search.label")}
+                    placeholder={t({ locale, messages }, "showcase.nav.search.placeholder")}
+                    openOnFocus={false}
+                    showDropDownButton
+                    minLengthForSearch={1}
+                    grouped
+                    clearOnSelect
+                    source={(query) => {
+                      const q = (query ?? "").toLowerCase();
+                      const items: SgAutocompleteItem[] = [
+                        ...THEME_ITEMS.map((item) => ({
+                          id: item.slug,
+                          label: item.label,
+                          value: item.slug,
+                          group: "Theme",
+                          data: { slug: item.slug, path: `/${item.slug}` }
+                        })),
+                        ...COMPONENTS.map((item) => ({
+                          id: item.slug,
+                          label: item.label,
+                          value: item.slug,
+                          group: item.group,
+                          data: { slug: item.slug, path: `/components/${item.slug}` }
+                        }))
+                      ];
+                      if (!q) return items;
+                      return items.filter((item) =>
+                        item.label.toLowerCase().includes(q) ||
+                        item.value?.toLowerCase().includes(q) ||
+                        item.group?.toLowerCase().includes(q)
+                      );
+                    }}
+                    onSelect={(item) => {
+                      const path = (item.data as { path?: string } | undefined)?.path;
+                      if (path) router.push(path);
+                    }}
+                  />
+                </div>
+                <div className="mb-2 border-t border-[#dcc6b2]" />
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+                <nav className="flex flex-col gap-0.5 pb-4">
+                  {THEME_ITEMS.map((c) => (
+                    <Link
+                      key={c.slug}
+                      href={`/${c.slug}`}
+                      className="rounded-md px-3 py-2 text-sm font-semibold text-[#3a2517] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                  <div className="my-2 border-t border-[#dcc6b2]" />
+                  {(["Inputs", "Buttons", "Menus", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
+                    const items = COMPONENTS.filter((c) => c.group === group);
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={group} className="mb-2 flex flex-col gap-0.5">
+                        <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#a86a3f]">
+                          {group}
+                        </div>
+                        {items.map((c) => (
+                          <Link
+                            key={c.slug}
+                            href={`/components/${c.slug}`}
+                            className="rounded-md px-3 py-2 text-sm text-[#4b3221] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
+                          >
+                            {c.label}
+                          </Link>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </nav>
+              </div>
+            </div>
           </aside>
           <main className="flex-1 overflow-y-auto p-8">{props.children}</main>
           <SgToaster />
