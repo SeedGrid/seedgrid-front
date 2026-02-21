@@ -3,11 +3,18 @@
 import * as React from "react";
 import { SgPlayground, SgSkeleton } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -232,15 +239,31 @@ export default function App() {
   );
 }`;
 
+const SKELETON_PROPS: ShowcasePropRow[] = [
+  { prop: "shape", type: "\"text\" | \"rectangle\" | \"rounded\" | \"square\" | \"circle\"", defaultValue: "text", description: "Forma base do placeholder." },
+  { prop: "animation", type: "\"wave\" | \"pulse\" | \"none\"", defaultValue: "wave", description: "Tipo de animação visual." },
+  { prop: "width / height", type: "number | string", defaultValue: "100% / 1rem", description: "Dimensões principais do skeleton." },
+  { prop: "size", type: "number | string", defaultValue: "-", description: "Atalho para largura e altura em shapes simétricos." },
+  { prop: "borderRadius", type: "number | string", defaultValue: "auto", description: "Raio de borda customizado." }
+];
+
 export default function SgSkeletonPage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgSkeleton</h1>
-        <p className="mt-2 text-muted-foreground">
-          Placeholder visual para estados de carregamento inspirado no Skeleton do PrimeFaces.
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgSkeleton"
+          subtitle="Placeholder visual para estados de carregamento inspirado no Skeleton do PrimeFaces."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title="1) Shapes basicos"
@@ -363,6 +386,10 @@ export default function SgSkeletonPage() {
           defaultOpen
         />
       </Section>
-    </div>
+
+        <ShowcasePropsReference rows={SKELETON_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

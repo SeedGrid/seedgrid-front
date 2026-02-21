@@ -6,19 +6,24 @@ import {
   buildSgPersistenceKey,
   useSgEnvironment,
   SgInputText,
-  createLocalStorageStrategy,
-  createApiPersistenceStrategy,
-  createCompositePersistenceStrategy
+  SgPlayground
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
-      <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
+      <div className="mt-4 space-y-4">{props.children}</div>
     </section>
   );
 }
@@ -26,6 +31,72 @@ function Section(props: { title: string; description?: string; children: React.R
 function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
+
+const ENVIRONMENT_PLAYGROUND_APP_FILE = `import * as React from "react";
+import {
+  SgEnvironmentProvider,
+  SgInputText,
+  buildSgPersistenceKey,
+  useSgEnvironment
+} from "@seedgrid/fe-components";
+
+function EnvInfo({ baseKey }: { baseKey: string }) {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey(baseKey, namespace, env.persistence.scope);
+
+  return (
+    <div className="space-y-1 rounded border border-border bg-white p-3 text-xs">
+      <div>namespace: <code>{namespace || "(vazio)"}</code></div>
+      <div>baseKey: <code>{baseKey}</code></div>
+      <div>fullKey: <code>{fullKey ?? "null"}</code></div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [namespace, setNamespace] = React.useState("u:123");
+  const [scope, setScope] = React.useState("app:crm");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-3 md:grid-cols-2">
+        <SgInputText
+          id="namespace"
+          label="Namespace"
+          inputProps={{
+            value: namespace,
+            onChange: (event) => setNamespace(event.currentTarget.value)
+          }}
+        />
+        <SgInputText
+          id="scope"
+          label="Scope"
+          inputProps={{
+            value: scope,
+            onChange: (event) => setScope(event.currentTarget.value)
+          }}
+        />
+      </div>
+
+      <SgEnvironmentProvider
+        value={{
+          namespaceProvider: { getNamespace: () => namespace },
+          persistence: { scope, mode: "fallback", stateVersion: 1 }
+        }}
+      >
+        <EnvInfo baseKey="fab:theme" />
+      </SgEnvironmentProvider>
+    </div>
+  );
+}`;
+
+const ENVIRONMENT_PROVIDER_PROPS: ShowcasePropRow[] = [
+  { prop: "value.namespaceProvider", type: "{ getNamespace: () => string }", defaultValue: "interno", description: "Fornecedor do namespace atual para isolamento dos dados." },
+  { prop: "value.persistence", type: "{ scope, mode, stateVersion }", defaultValue: "interno", description: "Config padrao de persistencia do contexto." },
+  { prop: "value.persistenceStrategy", type: "SgPersistenceStrategy", defaultValue: "-", description: "Estrategia de persistencia custom (API/local/composite)." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Arvore que vai consumir o ambiente via contexto." }
+];
 
 function EnvInfo(props: { baseKey: string }) {
   const i18n = useShowcaseI18n();
@@ -55,16 +126,23 @@ function EnvInfo(props: { baseKey: string }) {
 
 export default function SgEnvironmentProviderPage() {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [namespace, setNamespace] = React.useState("u:123");
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.environment.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.environment.subtitle")}
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title={t(i18n, "showcase.component.environment.title")}
+          subtitle={t(i18n, "showcase.component.environment.subtitle")}
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title={t(i18n, "showcase.component.environment.sections.default.title")}
@@ -223,6 +301,24 @@ export default function Example() {
           />
         </div>
       </Section>
+
+      <Section
+        title="Playground"
+        description="Simule namespace e scope para visualizar a chave final de persistencia."
+      >
+        <SgPlayground
+          title="SgEnvironmentProvider Playground"
+          interactive
+          codeContract="appFile"
+          code={ENVIRONMENT_PLAYGROUND_APP_FILE}
+          height={540}
+          defaultOpen
+        />
+      </Section>
+
+      <ShowcasePropsReference rows={ENVIRONMENT_PROVIDER_PROPS} />
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
     </div>
+  </I18NReady>
   );
 }

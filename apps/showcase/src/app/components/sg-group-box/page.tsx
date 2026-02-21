@@ -8,15 +8,23 @@ import {
   SgInputEmail,
   SgInputPassword,
   SgInputPhone,
-  SgInputText
+  SgInputText,
+  SgPlayground
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
     </section>
@@ -27,8 +35,52 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
+const GROUP_BOX_PLAYGROUND_CODE = `import * as React from "react";
+import { SgButton, SgGroupBox } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [title, setTitle] = React.useState("Dados pessoais");
+  const [width, setWidth] = React.useState(420);
+  const [height, setHeight] = React.useState(220);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setTitle((prev) => prev === "Dados pessoais" ? "Informações da conta" : "Dados pessoais")}>
+          trocar título
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setWidth((prev) => (prev === 420 ? 320 : 420))}>
+          width: {width}
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setHeight((prev) => (prev === 220 ? 180 : 220))}>
+          height: {height}
+        </SgButton>
+      </div>
+
+      <SgGroupBox title={title} width={width} height={height}>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <div className="rounded border border-border bg-muted/20 p-3 text-sm">Campo 1</div>
+          <div className="rounded border border-border bg-muted/20 p-3 text-sm">Campo 2</div>
+          <div className="rounded border border-border bg-muted/20 p-3 text-sm">Campo 3</div>
+          <div className="rounded border border-border bg-muted/20 p-3 text-sm">Campo 4</div>
+        </div>
+      </SgGroupBox>
+    </div>
+  );
+}`;
+
+const GROUP_BOX_PROPS: ShowcasePropRow[] = [
+  { prop: "title", type: "string", defaultValue: "-", description: "Título exibido no cabeçalho do group box." },
+  { prop: "width / height", type: "number", defaultValue: "auto", description: "Dimensões do container quando necessário." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteúdo interno do bloco." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes extras no container externo." }
+];
+
 export default function SgGroupBoxPage() {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
       name: "",
@@ -41,16 +93,22 @@ export default function SgGroupBoxPage() {
   const values = watch();
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.groupBox.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.groupBox.subtitle")}
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title={t(i18n, "showcase.component.groupBox.title")}
+          subtitle={t(i18n, "showcase.component.groupBox.subtitle")}
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
-        title={t(i18n, "showcase.component.groupBox.sections.basic.title")}
+        title={`1) ${t(i18n, "showcase.component.groupBox.sections.basic.title")}`}
         description={t(i18n, "showcase.component.groupBox.sections.basic.description")}
       >
         <div className="w-full">
@@ -74,7 +132,7 @@ export default function SgGroupBoxPage() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.groupBox.sections.form.title")}
+        title={`2) ${t(i18n, "showcase.component.groupBox.sections.form.title")}`}
         description={t(i18n, "showcase.component.groupBox.sections.form.description")}
       >
         <div className="w-full">
@@ -142,7 +200,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.groupBox.sections.size.title")}
+        title={`3) ${t(i18n, "showcase.component.groupBox.sections.size.title")}`}
         description={t(i18n, "showcase.component.groupBox.sections.size.description")}
       >
         <div className="w-full flex flex-wrap gap-4">
@@ -163,7 +221,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.groupBox.sections.className.title")}
+        title={`4) ${t(i18n, "showcase.component.groupBox.sections.className.title")}`}
         description={t(i18n, "showcase.component.groupBox.sections.className.description")}
       >
         <div className="w-full">
@@ -175,6 +233,21 @@ export default function Example() {
   <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
 </SgGroupBox>`} />
       </Section>
-    </div>
+
+        <Section title="5) Playground (SgPlayground)" description="Ajuste as principais props do SgGroupBox.">
+          <SgPlayground
+            title="SgGroupBox Playground"
+            interactive
+            codeContract="appFile"
+            code={GROUP_BOX_PLAYGROUND_CODE}
+            height={560}
+            defaultOpen
+          />
+        </Section>
+
+        <ShowcasePropsReference rows={GROUP_BOX_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

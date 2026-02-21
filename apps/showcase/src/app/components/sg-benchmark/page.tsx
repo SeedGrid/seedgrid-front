@@ -1,8 +1,12 @@
 "use client";
 
 import React from "react";
-import { SgInputText } from "@seedgrid/fe-components";
+import { SgInputText, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 const FIELD_COUNT = 60;
 const UPDATES = 200;
@@ -100,10 +104,13 @@ function UncontrolledSgBenchmark() {
 }`;
 
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <div>
-          <h2 className="text-lg font-semibold">SgInputText (uncontrolled)</h2>
+          <h2 data-anchor-title="true" className="text-lg font-semibold">SgInputText (uncontrolled)</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Atualiza direto no DOM. Mede tempo total para {UPDATES} updates.
           </p>
@@ -220,10 +227,13 @@ function UncontrolledNativeBenchmark() {
 }`;
 
   return (
-    <section className="rounded-lg border border-border p-6">
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <div>
-          <h2 className="text-lg font-semibold">Native input (uncontrolled)</h2>
+          <h2 data-anchor-title="true" className="text-lg font-semibold">Native input (uncontrolled)</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Atualiza direto no DOM (sem setState). Mede tempo total para {UPDATES} updates.
           </p>
@@ -263,18 +273,113 @@ function UncontrolledNativeBenchmark() {
   );
 }
 
-export default function BenchmarkPage() {
+const BENCHMARK_PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgButton, SgInputText } from "@seedgrid/fe-components";
+
+const FIELD_COUNT = 20;
+const UPDATES = 80;
+
+const nativeValueSetter =
+  typeof window !== "undefined"
+    ? Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
+    : undefined;
+
+const setInputValue = (input: HTMLInputElement, next: string) => {
+  if (nativeValueSetter) nativeValueSetter.call(input, next);
+  else input.value = next;
+};
+
+export default function App() {
+  const [lastMs, setLastMs] = React.useState<number | null>(null);
+  const [running, setRunning] = React.useState(false);
+  const refs = React.useRef<Array<HTMLInputElement | null>>([]);
+
+  const run = () => {
+    if (running) return;
+    setRunning(true);
+    const start = performance.now();
+    for (let i = 0; i < UPDATES; i += 1) {
+      const idx = i % FIELD_COUNT;
+      const input = refs.current[idx];
+      if (input) {
+        setInputValue(input, input.value + "a");
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+    setLastMs(performance.now() - start);
+    setRunning(false);
+  };
+
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Benchmark (Uncontrolled)</h1>
-        <p className="mt-2 text-muted-foreground">
-          Este teste compara o custo de updates em inputs uncontrolled do SgInputText vs input nativo.
-          Use como comparativo aproximado.
-        </p>
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-2">
+        {Array.from({ length: FIELD_COUNT }).map((_, idx) => (
+          <SgInputText
+            key={idx}
+            id={\`play-\${idx}\`}
+            label={\`Campo \${idx + 1}\`}
+            inputProps={{ ref: (node) => (refs.current[idx] = node) }}
+          />
+        ))}
       </div>
-      <UncontrolledSgBenchmark />
-      <UncontrolledNativeBenchmark />
+      <div className="flex items-center gap-3">
+        <SgButton onClick={run} disabled={running}>{running ? "Rodando..." : "Rodar benchmark"}</SgButton>
+        <span className="text-xs">Tempo: {lastMs ? \`\${lastMs.toFixed(1)}ms\` : "-"}</span>
+      </div>
     </div>
+  );
+}`;
+
+const BENCHMARK_PROPS: ShowcasePropRow[] = [
+  { prop: "FIELD_COUNT", type: "number", defaultValue: "60", description: "Quantidade de campos renderizados em cada cenario." },
+  { prop: "UPDATES", type: "number", defaultValue: "200", description: "Numero de atualizacoes executadas por rodada." },
+  { prop: "setInputValue", type: "(input, value) => void", defaultValue: "native setter", description: "Atualiza o valor do input sem re-render global." }
+];
+
+export default function BenchmarkPage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+
+  return (
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgBenchmark"
+          subtitle="Comparativo de custo de updates em inputs uncontrolled (SgInputText vs input nativo)."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
+
+        <UncontrolledSgBenchmark />
+        <UncontrolledNativeBenchmark />
+
+        <section
+          data-showcase-example="true"
+          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+        >
+          <h2 data-anchor-title="true" className="text-lg font-semibold">Playground</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Versao reduzida para testar benchmark rapido dentro do Sandpack.
+          </p>
+          <div className="mt-4">
+            <SgPlayground
+              title="SgBenchmark Playground"
+              interactive
+              codeContract="appFile"
+              code={BENCHMARK_PLAYGROUND_APP_FILE}
+              height={620}
+              defaultOpen
+            />
+          </div>
+        </section>
+
+        <ShowcasePropsReference rows={BENCHMARK_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

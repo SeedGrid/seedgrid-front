@@ -1,15 +1,22 @@
 ﻿"use client";
 
 import React from "react";
-import { User, Mail, Phone, MapPin, Tag, Send, CheckCircle } from "lucide-react";
-import { SgInputEmail, SgInputPhone, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+import { MapPin, Tag, Send } from "lucide-react";
+import { SgInputEmail, SgInputPhone, SgInputText, SgPlayground, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -20,8 +27,100 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
+const WIZARD_PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgInputEmail, SgInputPhone, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [payload, setPayload] = React.useState<Record<string, string> | null>(null);
+  const [formValues, setFormValues] = React.useState({
+    name: "",
+    email: "",
+    phone: ""
+  });
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgWizard
+        stepper="numbered"
+        labels={{ next: "Proximo", previous: "Voltar", finish: "Concluir" }}
+        validateStep={(index) => {
+          if (index !== 0) return true;
+          return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
+        }}
+        onFinish={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          setPayload({ ...formValues });
+        }}
+      >
+        <SgWizardPage title="Identificacao">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SgInputText
+              id="playground-name"
+              label="Nome"
+              required
+              requiredMessage="Nome obrigatorio"
+              inputProps={{
+                value: formValues.name,
+                onChange: (event) => setFormValues((prev) => ({ ...prev, name: event.target.value }))
+              }}
+            />
+            <SgInputEmail
+              id="playground-email"
+              label="Email"
+              required
+              requiredMessage="Email obrigatorio"
+              inputProps={{
+                value: formValues.email,
+                onChange: (event) => setFormValues((prev) => ({ ...prev, email: event.target.value }))
+              }}
+            />
+          </div>
+        </SgWizardPage>
+        <SgWizardPage title="Contato">
+          <SgInputPhone
+            id="playground-phone"
+            label="Telefone"
+            required
+            requiredMessage="Telefone obrigatorio"
+            inputProps={{
+              value: formValues.phone,
+              onChange: (event) => setFormValues((prev) => ({ ...prev, phone: event.target.value }))
+            }}
+          />
+        </SgWizardPage>
+        <SgWizardPage title="Resumo">
+          <div className="rounded border border-border bg-white p-3 text-sm">
+            <div>Nome: {formValues.name || "-"}</div>
+            <div>Email: {formValues.email || "-"}</div>
+            <div>Telefone: {formValues.phone || "-"}</div>
+          </div>
+        </SgWizardPage>
+      </SgWizard>
+
+      {payload ? (
+        <pre className="rounded border border-border bg-foreground/5 p-3 text-xs">
+          {JSON.stringify(payload, null, 2)}
+        </pre>
+      ) : null}
+    </div>
+  );
+}`;
+
+const WIZARD_PROPS: ShowcasePropRow[] = [
+  { prop: "children", type: "ReactNode (SgWizardPage[])", defaultValue: "-", description: "Paginas renderizadas em ordem dentro do wizard." },
+  { prop: "initialStep", type: "number", defaultValue: "0", description: "Indice inicial da etapa ativa." },
+  { prop: "stepper", type: "\"numbered\" | \"icons\" | \"none\"", defaultValue: "\"numbered\"", description: "Modo visual do stepper." },
+  { prop: "labels", type: "{ next, previous, finish }", defaultValue: "interno", description: "Override dos textos dos botoes de navegacao." },
+  { prop: "validateStep", type: "(stepIndex) => boolean", defaultValue: "-", description: "Valida uma etapa antes de avancar." },
+  { prop: "onBeforeNext", type: "(stepIndex) => boolean | Promise<boolean>", defaultValue: "-", description: "Hook antes de avancar para a proxima etapa." },
+  { prop: "onStepChange", type: "(stepIndex) => void", defaultValue: "-", description: "Callback ao trocar de etapa." },
+  { prop: "onFinish", type: "() => void | Promise<void>", defaultValue: "-", description: "Disparado quando o usuario conclui o wizard." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais do container." }
+];
+
 export default function SgWizardPageDemo() {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [submitted, setSubmitted] = React.useState<Record<string, string> | null>(null);
   const [step, setStep] = React.useState(0);
   const [formValues, setFormValues] = React.useState({
@@ -31,13 +130,19 @@ export default function SgWizardPageDemo() {
   });
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.wizard.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.wizard.subtitle")}
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title={t(i18n, "showcase.component.wizard.title")}
+          subtitle={t(i18n, "showcase.component.wizard.subtitle")}
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title={t(i18n, "showcase.component.wizard.sections.autoValidation.title")}
@@ -412,6 +517,23 @@ const [formValues, setFormValues] = React.useState({ name: "", email: "" });
   </SgWizardPage>
 </SgWizard>`} />
       </Section>
+      <Section
+        title="Playground"
+        description="Sandbox para simular validacao, navegacao e submit do wizard."
+      >
+        <SgPlayground
+          title="SgWizard Playground"
+          interactive
+          codeContract="appFile"
+          code={WIZARD_PLAYGROUND_APP_FILE}
+          height={640}
+          defaultOpen
+        />
+      </Section>
+
+      <ShowcasePropsReference rows={WIZARD_PROPS} />
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
     </div>
+  </I18NReady>
   );
 }

@@ -3,11 +3,18 @@
 import * as React from "react";
 import { SgButton, SgPlayground, SgQRCode } from "@seedgrid/fe-components";
 import CodeBlockBase from "../../CodeBlockBase";
+import I18NReady from "../../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../../useShowcaseAnchors";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -157,19 +164,37 @@ export default function App() {
   );
 }`;
 
+const QR_CODE_PROPS: ShowcasePropRow[] = [
+  { prop: "value", type: "string", defaultValue: "-", description: "Valor usado para gerar o QR Code." },
+  { prop: "size", type: "number", defaultValue: "220", description: "Tamanho em pixels." },
+  { prop: "logoSrc / logoAlt", type: "string / string", defaultValue: "- / -", description: "Logo opcional no centro." },
+  { prop: "margin", type: "number", defaultValue: "2", description: "Margem interna do QR Code." },
+  { prop: "fgColor / bgColor", type: "string / string", defaultValue: "#000000 / #FFFFFF", description: "Cores do QR." },
+  { prop: "errorCorrectionLevel", type: "\"L\" | \"M\" | \"Q\" | \"H\"", defaultValue: "H", description: "Nível de correção de erro." },
+  { prop: "emptyFallback", type: "ReactNode", defaultValue: "-", description: "Fallback quando value está vazio." },
+  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual." }
+];
+
 export default function SgQRCodePage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [value, setValue] = React.useState("https://seedgrid.com.br");
   const [logoSrc, setLogoSrc] = React.useState("/logo-seedgrid.svg");
   const [size, setSize] = React.useState(220);
 
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgQRCode</h1>
-        <p className="mt-2 text-muted-foreground">
-          Gera QR Code a partir de um valor e permite configurar um logo no centro.
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgQRCode"
+          subtitle="Gera QR Code a partir de um valor e permite configurar um logo no centro."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title="1) Exemplo interativo"
@@ -257,6 +282,10 @@ export default function SgQRCodePage() {
           defaultOpen
         />
       </Section>
-    </div>
+
+        <ShowcasePropsReference rows={QR_CODE_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

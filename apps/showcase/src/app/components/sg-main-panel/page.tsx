@@ -9,21 +9,31 @@ import {
   SgStack,
   SgButton,
   SgInputText,
-  SgBadge
+  SgBadge,
+  SgPlayground
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <SgPanel borderStyle="solid" className="rounded-lg border-border" padding={24}>
-      <SgStack gap={16}>
-        <SgStack gap={4}>
-          <h2 className="text-lg font-semibold">{props.title}</h2>
-          {props.description ? <p className="text-sm text-muted-foreground">{props.description}</p> : null}
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)]"
+    >
+      <SgPanel borderStyle="solid" className="rounded-lg border-border p-6" padding={24}>
+        <SgStack gap={16}>
+          <SgStack gap={4}>
+            <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
+            {props.description ? <p className="text-sm text-muted-foreground">{props.description}</p> : null}
+          </SgStack>
+          {props.children}
         </SgStack>
-        {props.children}
-      </SgStack>
-    </SgPanel>
+      </SgPanel>
+    </section>
   );
 }
 
@@ -43,22 +53,68 @@ function Card(props: { title: string; subtitle?: string }) {
   );
 }
 
+const MAIN_PANEL_PLAYGROUND_CODE = `import * as React from "react";
+import { SgMainPanel, SgPanel, SgScreen } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [gap, setGap] = React.useState(10);
+  const [padding, setPadding] = React.useState(10);
+
+  return (
+    <div className="space-y-3 p-2">
+      <div className="flex gap-2">
+        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setGap((prev) => (prev === 10 ? 16 : 10))}>
+          gap: {gap}
+        </button>
+        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPadding((prev) => (prev === 10 ? 14 : 10))}>
+          padding: {padding}
+        </button>
+      </div>
+
+      <SgPanel className="h-[360px] rounded-xl bg-muted/30" padding={10}>
+        <SgScreen fullscreen={false} padding={8} className="rounded-lg bg-zinc-100">
+          <SgMainPanel gap={gap} padding={padding}>
+            <SgPanel align="top" height={12} className="rounded-md p-3">Top</SgPanel>
+            <SgPanel align="left" width={22} className="rounded-md p-3">Left</SgPanel>
+            <SgPanel align="right" width={18} className="rounded-md p-3">Right</SgPanel>
+            <SgPanel align="bottom" height={10} className="rounded-md p-3">Bottom</SgPanel>
+            <SgPanel align="client" className="rounded-md p-3">Client</SgPanel>
+          </SgMainPanel>
+        </SgScreen>
+      </SgPanel>
+    </div>
+  );
+}`;
+
+const MAIN_PANEL_PROPS: ShowcasePropRow[] = [
+  { prop: "gap", type: "number", defaultValue: "0", description: "Espaçamento entre painéis filhos." },
+  { prop: "padding", type: "number", defaultValue: "0", description: "Padding interno do container." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Painéis alinhados (`top|left|right|bottom|client`)." },
+  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual e layout adicional." }
+];
+
 export default function SgMainPanelPage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [mode, setMode] = React.useState<"columns" | "autofit">("columns");
   const [search, setSearch] = React.useState("");
 
   return (
-    <SgStack className="max-w-7xl" gap={32}>
-      <SgStack gap={8}>
-        <h1 className="text-3xl font-bold">SgMainPanel</h1>
-        <p className="mt-2 text-muted-foreground">
-          Layout estilo Delphi com `align="top|left|bottom|right|client"`.
-          `width` e `height` em numero sao tratados como porcentagem.
-        </p>
-      </SgStack>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-7xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgMainPanel"
+          subtitle='Layout estilo Delphi com align="top|left|bottom|right|client". width e height numéricos viram porcentagem.'
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
-        title="Exemplo Completo"
+        title="1) Exemplo Completo"
         description="Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack em uma tela de dashboard."
       >
         <SgPanel className="h-[780px] rounded-xl bg-muted/30" padding={12}>
@@ -225,7 +281,22 @@ export default function Example() {
           />
         </SgStack>
       </Section>
-    </SgStack>
+
+        <Section title="2) Playground (SgPlayground)" description="Teste rápido das principais props do SgMainPanel.">
+          <SgPlayground
+            title="SgMainPanel Playground"
+            interactive
+            codeContract="appFile"
+            code={MAIN_PANEL_PLAYGROUND_CODE}
+            height={560}
+            defaultOpen
+          />
+        </Section>
+
+        <ShowcasePropsReference rows={MAIN_PANEL_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }
 

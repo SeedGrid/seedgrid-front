@@ -10,6 +10,10 @@ import {
   type SgDockMenuItem
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import {
   Bell,
   Bookmark,
@@ -28,8 +32,11 @@ import {
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 space-y-4">{props.children}</div>
     </section>
@@ -346,9 +353,22 @@ export default function App() {
   );
 }`;
 
+const DOCK_MENU_PROPS: ShowcasePropRow[] = [
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador do dock." },
+  { prop: "items", type: "SgDockMenuItem[]", defaultValue: "[]", description: "Itens exibidos no menu." },
+  { prop: "position", type: "SgDockMenuPosition", defaultValue: "center-bottom", description: "Posição do dock no container." },
+  { prop: "enableDragDrop / dragId", type: "boolean / string", defaultValue: "false / -", description: "Ativa arrastar e soltar com persistência." },
+  { prop: "itemSize / gap", type: "number", defaultValue: "48 / 12", description: "Tamanho dos itens e espaçamento." },
+  { prop: "showLabels / magnify / magnifyScale", type: "boolean / boolean / number", defaultValue: "true / true / 1.35", description: "Controla rótulos e efeito de ampliação." },
+  { prop: "backgroundColor / borderRadius / elevation", type: "string / number / token", defaultValue: "- / auto / md", description: "Ajustes visuais do dock." },
+  { prop: "offset / zIndex", type: "number / number", defaultValue: "16 / 10", description: "Distância da borda e camada de empilhamento." },
+  { prop: "className / itemClassName / style", type: "string / string / CSSProperties", defaultValue: "- / - / -", description: "Customização de estilos." }
+];
+
 export default function SgDockMenuPage() {
   const [eventLog, setEventLog] = React.useState<string[]>([]);
   const [externalBadges, setExternalBadges] = React.useState({ mail: 5, notifications: 12 });
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
 
   const basicItems: SgDockMenuItem[] = [
     { id: "home", icon: <Home size={24} />, label: "Home", onClick: () => toast.info("Home clicked") },
@@ -390,16 +410,22 @@ export default function SgDockMenuPage() {
   ];
 
   return (
-    <div className="max-w-7xl space-y-8 pb-32">
-      <div>
-        <h1 className="text-3xl font-bold">SgDockMenu</h1>
-        <p className="mt-2 text-muted-foreground">
-          Dock style macOS com posicoes, drag and drop, badges, labels e magnify.
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-7xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgDockMenu"
+          subtitle="Dock style macOS com posições, drag and drop, badges, labels e magnify."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
-        title="0) Como prender dentro da area"
+        title="1) Como prender dentro da área"
         description='Para ficar dentro do preview, use container com "relative" e no dock passe style={{ position: "absolute" }}.'
       >
         <div className="relative h-56 rounded-lg border-2 border-dashed border-border bg-muted/20">
@@ -414,14 +440,14 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={ANCHORED_IN_AREA_CODE} />
       </Section>
 
-      <Section title="1) Basico" description="Dock padrao no centro inferior com itens clicaveis.">
+      <Section title="2) Básico" description="Dock padrão no centro inferior com itens clicáveis.">
         <div className="relative h-64 rounded-lg border-2 border-dashed border-border bg-muted/20">
           <SgDockMenu id="basic-dock" items={basicItems} position="center-bottom" zIndex={10} style={{ position: "absolute" }} />
         </div>
         <CodeBlockBase code={BASIC_CODE} />
       </Section>
 
-      <Section title="2) Badge externo" description="Atualize o badge por estado externo e reflita no dock em tempo real.">
+      <Section title="3) Badge externo" description="Atualize o badge por estado externo e reflita no dock em tempo real.">
         <SgGrid columns={{ base: 2, sm: 4 }} gap={8}>
           <SgButton
             type="button"
@@ -468,7 +494,7 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={EXTERNAL_BADGE_CODE} />
       </Section>
 
-      <Section title="3) Todas as posicoes" description="Exibe as 8 posicoes suportadas em uma grade.">
+      <Section title="4) Todas as posições" description="Exibe as 8 posições suportadas em uma grade.">
         <div className="grid grid-cols-3 gap-4">
           <div className="relative h-40 rounded-lg border-2 border-dashed border-border bg-muted/20"><SgDockMenu id="dock-left-top" items={positionItems} position="left-top" itemSize={36} gap={8} zIndex={10} style={{ position: "absolute" }} /></div>
           <div className="relative h-40 rounded-lg border-2 border-dashed border-border bg-muted/20"><SgDockMenu id="dock-center-top" items={positionItems} position="center-top" itemSize={36} gap={8} zIndex={10} style={{ position: "absolute" }} /></div>
@@ -483,7 +509,7 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={POSITIONS_CODE} />
       </Section>
 
-      <Section title="4) Drag and drop" description="Permite arrastar e salvar a posicao do dock.">
+      <Section title="5) Drag and drop" description="Permite arrastar e salvar a posição do dock.">
         <div className="relative h-80 rounded-lg border-2 border-dashed border-border bg-muted/20">
           <SgDockMenu
             id="draggable-dock"
@@ -497,7 +523,7 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={DRAG_DROP_CODE} />
       </Section>
 
-      <Section title="5) Variantes visuais" description="Sem magnify, sem labels e com estilo customizado.">
+      <Section title="6) Variantes visuais" description="Sem magnify, sem labels e com estilo customizado.">
         <div className="space-y-4">
           <div className="relative h-48 rounded-lg border-2 border-dashed border-border bg-muted/20">
             <SgDockMenu id="dock-no-magnify" items={basicItems.slice(0, 4)} position="center-bottom" magnify={false} zIndex={10} style={{ position: "absolute" }} />
@@ -521,14 +547,14 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={VARIANTS_CODE} />
       </Section>
 
-      <Section title="6) Muitos itens" description="Exemplo com lista maior de itens.">
+      <Section title="7) Muitos itens" description="Exemplo com lista maior de itens.">
         <div className="relative h-64 rounded-lg border-2 border-dashed border-border bg-muted/20">
           <SgDockMenu id="many-items-dock" items={manyItems} position="center-bottom" itemSize={44} gap={10} zIndex={10} style={{ position: "absolute" }} />
         </div>
         <CodeBlockBase code={MANY_ITEMS_CODE} />
       </Section>
 
-      <Section title="7) Callbacks e disabled" description="Logs de click e item desabilitado no mesmo exemplo.">
+      <Section title="8) Callbacks e disabled" description="Logs de click e item desabilitado no mesmo exemplo.">
         <div className="space-y-4">
           <div className="relative h-64 rounded-lg border-2 border-dashed border-border bg-muted/20">
             <SgDockMenu id="callback-dock" items={callbackItems} position="center-bottom" zIndex={10} style={{ position: "absolute" }} />
@@ -547,7 +573,7 @@ export default function SgDockMenuPage() {
         <CodeBlockBase code={CALLBACKS_AND_DISABLED_CODE} />
       </Section>
 
-      <Section title="8) Playground (SgPlayground)" description="Simulacao interativa das props principais.">
+      <Section title="9) Playground (SgPlayground)" description="Simulação interativa das props principais.">
         <SgPlayground
           title="SgDockMenu Playground"
           interactive
@@ -557,6 +583,10 @@ export default function SgDockMenuPage() {
           defaultOpen
         />
       </Section>
-    </div>
+
+        <ShowcasePropsReference rows={DOCK_MENU_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

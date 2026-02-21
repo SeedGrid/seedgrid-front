@@ -1,465 +1,275 @@
 "use client";
 
-import React from "react";
-import { SgFlipDigit, SgButton } from "@seedgrid/fe-components";
+import * as React from "react";
+import { SgButton, SgFlipDigit, SgGrid, SgPlayground } from "@seedgrid/fe-components";
+import CodeBlockBase from "../../CodeBlockBase";
+import I18NReady from "../../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../../useShowcaseAnchors";
 
-// Componente de debug para mostrar frames individuais
-function DebugFlipDigit({
-  currentValue,
-  prevValue,
-  transform,
-  width = 120,
-  height = 180,
-  fontSize = 120
-}: {
-  currentValue: string;
-  prevValue: string;
-  transform: { type: 'top' | 'bottom'; rotation: number } | null;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-}) {
-  const panel =
-    "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
-  const seam = "absolute left-0 right-0 top-1/2 z-10 h-[3px] bg-gradient-to-b from-black/70 to-transparent shadow-[0_3px_8px_rgba(0,0,0,0.7),0_-2px_6px_rgba(255,255,255,0.25)]";
-  const half = "absolute left-0 w-full overflow-hidden";
-
+function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <div
-      className={panel}
-      style={{ width, height, transformStyle: "preserve-3d", perspective: "1000px" }}
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
     >
-      <div className={seam} />
-
-      {/* Top half - static */}
-      <div className={half + " top-0"} style={{ height: height / 2 }}>
-        <div
-          className="absolute font-bold font-mono"
-          style={{
-            fontSize,
-            lineHeight: `${height}px`,
-            width: "100%",
-            height: height,
-            top: 0,
-            left: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          {transform ? currentValue : prevValue}
-        </div>
-      </div>
-
-      {/* Bottom half - static */}
-      <div className={half + " bottom-0"} style={{ height: height / 2 }}>
-        <div
-          className="absolute font-bold font-mono"
-          style={{
-            fontSize,
-            lineHeight: `${height}px`,
-            width: "100%",
-            height: height,
-            top: -(height / 2),
-            left: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          {transform?.type === 'bottom' ? currentValue : prevValue}
-        </div>
-      </div>
-
-      {/* Animated layer */}
-      {transform && (
-        <>
-          {transform.type === 'top' && (
-            <div className="absolute left-0 top-0 z-20 w-full overflow-hidden rounded-t-lg" style={{ height: height / 2 }}>
-              <div
-                style={{
-                  transformOrigin: "center bottom",
-                  transform: `rotateX(${transform.rotation}deg)`,
-                  height: "100%",
-                  width: "100%",
-                  background: "#1a1a1a",
-                  borderRadius: "8px 8px 0 0",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2)",
-                  backfaceVisibility: "hidden",
-                  transformStyle: "preserve-3d"
-                }}
-              >
-                <div
-                  className="absolute font-bold font-mono"
-                  style={{
-                    fontSize,
-                    lineHeight: `${height}px`,
-                    width: "100%",
-                    height: height,
-                    top: 0,
-                    left: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  {prevValue}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {transform.type === 'bottom' && (
-            <div className="absolute bottom-0 left-0 z-20 w-full overflow-hidden rounded-b-lg" style={{ height: height / 2 }}>
-              <div
-                style={{
-                  transformOrigin: "center top",
-                  transform: `rotateX(${transform.rotation}deg)`,
-                  height: "100%",
-                  width: "100%",
-                  background: "#1a1a1a",
-                  borderRadius: "0 0 8px 8px",
-                  boxShadow: "0 -2px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2)",
-                  backfaceVisibility: "hidden",
-                  transformStyle: "preserve-3d"
-                }}
-              >
-                <div
-                  className="absolute font-bold font-mono"
-                  style={{
-                    fontSize,
-                    lineHeight: `${height}px`,
-                    width: "100%",
-                    height: height,
-                    top: -(height / 2),
-                    left: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  {currentValue}
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
+      {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
+      <div className="mt-4 space-y-4">{props.children}</div>
+    </section>
   );
 }
 
-export default function SgFlipDigitShowcase() {
-  const [digit, setDigit] = React.useState("0");
-  const [letter, setLetter] = React.useState("A");
+const BASIC_EXAMPLE_CODE = `const [digit, setDigit] = React.useState("0");
 
-  // Debug controls
-  const [debugDigit, setDebugDigit] = React.useState("0");
-  const [debugPrevDigit, setDebugPrevDigit] = React.useState("0");
-  const [animationStep, setAnimationStep] = React.useState(0);
-  // Steps: 0=static, 1=top-start, 2=top-25%, 3=top-50%, 4=top-75%, 5=top-end, 6=bottom-start, 7=bottom-50%, 8=bottom-end, 9=complete
-  const totalSteps = 9;
+const nextDigit = () => setDigit((prev) => String((Number(prev) + 1) % 10));
+const prevDigit = () => setDigit((prev) => String((Number(prev) - 1 + 10) % 10));
+const randomDigit = () => setDigit(String(Math.floor(Math.random() * 10)));
 
-  const nextDigit = () => {
-    const current = parseInt(digit, 10);
-    setDigit(String((current + 1) % 10));
-  };
+<div className="flex items-center gap-4">
+  <SgFlipDigit value={digit} />
+  <div className="flex flex-col gap-2">
+    <SgButton onClick={nextDigit} size="sm">Proximo (+1)</SgButton>
+    <SgButton onClick={prevDigit} size="sm" severity="secondary">Anterior (-1)</SgButton>
+    <SgButton onClick={randomDigit} size="sm" severity="info">Aleatorio</SgButton>
+  </div>
+</div>`;
 
-  const prevDigit = () => {
-    const current = parseInt(digit, 10);
-    setDigit(String((current - 1 + 10) % 10));
-  };
+const LETTER_EXAMPLE_CODE = `const [letter, setLetter] = React.useState("A");
 
-  const randomDigit = () => {
-    setDigit(String(Math.floor(Math.random() * 10)));
-  };
+const nextLetter = () => {
+  const current = letter.charCodeAt(0);
+  const next = current >= 90 ? 65 : current + 1;
+  setLetter(String.fromCharCode(next));
+};
 
-  const nextLetter = () => {
-    const current = letter.charCodeAt(0);
-    const next = current >= 90 ? 65 : current + 1; // A-Z loop
-    setLetter(String.fromCharCode(next));
-  };
+<div className="flex items-center gap-4">
+  <SgFlipDigit value={letter} />
+  <SgButton onClick={nextLetter} size="sm">Proxima letra</SgButton>
+</div>`;
 
-  // Controle manual de animação frame-by-frame
-  const nextStep = () => {
-    if (animationStep < totalSteps) {
-      setAnimationStep(animationStep + 1);
-    }
-  };
+const SIZE_EXAMPLE_CODE = `<div className="flex items-center gap-6">
+  <div className="text-center">
+    <p className="mb-2 text-xs text-muted-foreground">Pequeno</p>
+    <SgFlipDigit value={digit} width={50} height={75} fontSize={45} />
+  </div>
+  <div className="text-center">
+    <p className="mb-2 text-xs text-muted-foreground">Medio</p>
+    <SgFlipDigit value={digit} />
+  </div>
+  <div className="text-center">
+    <p className="mb-2 text-xs text-muted-foreground">Grande</p>
+    <SgFlipDigit value={digit} width={120} height={180} fontSize={120} />
+  </div>
+</div>`;
 
-  const prevStep = () => {
-    if (animationStep > 0) {
-      setAnimationStep(animationStep - 1);
-    }
-  };
+const SEQUENCE_EXAMPLE_CODE = `<div className="flex items-center gap-2">
+  <SgFlipDigit value={digit} />
+  <SgFlipDigit value={String((Number(digit) + 1) % 10)} />
+  <span className="mx-2 text-4xl font-bold">:</span>
+  <SgFlipDigit value={String((Number(digit) + 2) % 10)} />
+  <SgFlipDigit value={String((Number(digit) + 3) % 10)} />
+</div>`;
 
-  const resetAnimation = () => {
-    setAnimationStep(0);
-  };
+const AUTO_EXAMPLE_CODE = `const [running, setRunning] = React.useState(false);
+const [autoDigit, setAutoDigit] = React.useState("0");
 
-  const startNewFlip = (targetDigit: string) => {
-    setDebugPrevDigit(debugDigit);
-    setDebugDigit(targetDigit);
-    setAnimationStep(0);
-  };
+React.useEffect(() => {
+  if (!running) return;
+  const timer = window.setInterval(() => {
+    setAutoDigit((prev) => String((Number(prev) + 1) % 10));
+  }, 1300);
+  return () => window.clearInterval(timer);
+}, [running]);
 
-  // Calcula as transformações baseado no step atual
-  const getTransformForStep = (step: number): { type: "top" | "bottom"; rotation: number } | null => {
-    // Step 0: static (sem animação)
-    // Steps 1-5: top half flip (0deg -> -180deg)
-    // Steps 6-9: bottom half flip (180deg -> 0deg)
-    if (step === 0) return null;
+<div className="flex items-center gap-4">
+  <SgFlipDigit value={autoDigit} />
+  <SgButton onClick={() => setRunning((prev) => !prev)}>{running ? "Parar" : "Iniciar"}</SgButton>
+</div>`;
 
-    if (step >= 1 && step <= 5) {
-      // Top half animation
-      const progress = (step - 1) / 4; // 0, 0.25, 0.5, 0.75, 1
-      const rotation = progress * -180;
-      return { type: 'top' as const, rotation };
-    }
+const PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgButton, SgFlipDigit, SgGrid } from "@seedgrid/fe-components";
 
-    if (step >= 6 && step <= 9) {
-      // Bottom half animation
-      const progress = (step - 6) / 3; // 0, 0.33, 0.66, 1
-      const rotation = 180 - (progress * 180);
-      return { type: 'bottom' as const, rotation };
-    }
+export default function App() {
+  const [value, setValue] = React.useState("5");
+  const [width, setWidth] = React.useState(80);
+  const [height, setHeight] = React.useState(120);
+  const [fontSize, setFontSize] = React.useState(70);
 
-    return null;
-  };
-
-  const currentTransform = getTransformForStep(animationStep);
-
-  const getStepDescription = (step: number) => {
-    const descriptions = [
-      "Estático (inicial)",
-      "Top flip: início (0°)",
-      "Top flip: 25% (-45°)",
-      "Top flip: 50% (-90°)",
-      "Top flip: 75% (-135°)",
-      "Top flip: fim (-180°)",
-      "Bottom flip: início (180°)",
-      "Bottom flip: 50% (90°)",
-      "Bottom flip: 75% (45°)",
-      "Bottom flip: fim (0°) - Completo"
-    ];
-    return descriptions[step] || "";
-  };
+  const next = () => setValue((prev) => String((Number(prev) + 1) % 10));
+  const random = () => setValue(String(Math.floor(Math.random() * 10)));
 
   return (
-    <div className="min-h-screen bg-[rgb(var(--sg-bg))] p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-[rgb(var(--sg-text))] mb-2">
-            SgFlipDigit
-          </h1>
-          <p className="text-[rgb(var(--sg-muted))]">
-            Componente de flip animado para exibição de dígitos e caracteres únicos
-          </p>
-        </div>
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" onClick={next}>+1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={random}>Aleatorio</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("A")}>A</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("Z")}>Z</SgButton>
+      </SgGrid>
 
-        {/* Debug Section - Step by Step */}
-        <section className="bg-yellow-950/40 border-2 border-yellow-700 rounded-lg p-6 space-y-4">
-          <div>
-            <h2 className="text-xl font-semibold text-yellow-200 mb-2">
-              🐛 DEBUG: Animação Frame-by-Frame
-            </h2>
-            <p className="text-sm text-yellow-100">
-              Controle manual de cada frame da animação. Avance ou volte um passo por vez para capturar screenshots.
-            </p>
-          </div>
+      <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+        <label className="text-xs">
+          Width ({width})
+          <input className="mt-1 w-full" type="range" min={40} max={160} step={2} value={width} onChange={(e) => setWidth(Number(e.target.value))} />
+        </label>
+        <label className="text-xs">
+          Height ({height})
+          <input className="mt-1 w-full" type="range" min={60} max={220} step={2} value={height} onChange={(e) => setHeight(Number(e.target.value))} />
+        </label>
+        <label className="text-xs">
+          Font ({fontSize})
+          <input className="mt-1 w-full" type="range" min={30} max={150} step={2} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
+        </label>
+      </SgGrid>
 
-          <div className="flex items-start gap-6">
-            {/* Debug Digit Display */}
-            <div className="flex flex-col items-center gap-3">
-              <div className="text-sm text-yellow-100 font-mono space-y-1">
-                <div>Anterior: <span className="font-bold text-white">{debugPrevDigit}</span></div>
-                <div>Atual: <span className="font-bold text-lg text-white">{debugDigit}</span></div>
-                <div className="text-xs text-yellow-200">
-                  Step {animationStep} de {totalSteps}
-                </div>
-              </div>
+      <div className="rounded border border-border p-4">
+        <SgFlipDigit value={value} width={width} height={height} fontSize={fontSize} />
+      </div>
+    </div>
+  );
+}`;
 
-              <DebugFlipDigit
-                currentValue={debugDigit}
-                prevValue={debugPrevDigit}
-                transform={currentTransform}
-                width={120}
-                height={180}
-                fontSize={120}
-              />
+const FLIP_DIGIT_PROPS: ShowcasePropRow[] = [
+  { prop: "value", type: "string", defaultValue: "-", description: "Caractere exibido no card flip (1 char recomendado)." },
+  { prop: "width", type: "number", defaultValue: "80", description: "Largura do card em pixels." },
+  { prop: "height", type: "number", defaultValue: "120", description: "Altura do card em pixels." },
+  { prop: "fontSize", type: "number", defaultValue: "70", description: "Tamanho da fonte em pixels." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no container." }
+];
 
-              <div className="text-xs text-yellow-100 text-center max-w-[120px]">
-                {getStepDescription(animationStep)}
-              </div>
-            </div>
+export default function SgFlipDigitShowcase() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const [digit, setDigit] = React.useState("0");
+  const [letter, setLetter] = React.useState("A");
+  const [running, setRunning] = React.useState(false);
+  const [autoDigit, setAutoDigit] = React.useState("0");
 
-            {/* Controls */}
-            <div className="flex-1 space-y-4">
-              {/* Frame controls */}
-              <div>
-                <p className="text-sm text-yellow-100 mb-2 font-semibold">Controle de Frames:</p>
-                <div className="flex gap-2">
-                  <SgButton
-                    onClick={prevStep}
-                    disabled={animationStep === 0}
-                    severity="secondary"
-                    size="sm"
-                  >
-                    ◀️ Frame Anterior
-                  </SgButton>
-                  <SgButton
-                    onClick={nextStep}
-                    disabled={animationStep >= totalSteps}
-                    severity="warning"
-                    size="sm"
-                  >
-                    ▶️ Próximo Frame
-                  </SgButton>
-                  <SgButton
-                    onClick={resetAnimation}
-                    severity="info"
-                    size="sm"
-                  >
-                    🔄 Reset
-                  </SgButton>
-                </div>
-              </div>
+  const nextDigit = React.useCallback(() => setDigit((prev) => String((Number(prev) + 1) % 10)), []);
+  const prevDigit = React.useCallback(() => setDigit((prev) => String((Number(prev) - 1 + 10) % 10)), []);
+  const randomDigit = React.useCallback(() => setDigit(String(Math.floor(Math.random() * 10))), []);
 
-              {/* Jump to specific number */}
-              <div>
-                <p className="text-sm text-yellow-100 mb-2 font-semibold">
-                  Iniciar nova animação para número:
-                </p>
-                <div className="grid grid-cols-5 gap-2">
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <SgButton
-                      key={num}
-                      onClick={() => startNewFlip(String(num))}
-                      disabled={debugDigit === String(num)}
-                      severity={debugDigit === String(num) ? "success" : "secondary"}
-                      size="sm"
-                    >
-                      {num}
-                    </SgButton>
-                  ))}
-                </div>
-              </div>
+  const nextLetter = React.useCallback(() => {
+    const current = letter.charCodeAt(0);
+    const next = current >= 90 ? 65 : current + 1;
+    setLetter(String.fromCharCode(next));
+  }, [letter]);
 
-              {/* Instructions */}
-              <div className="mt-4 p-3 bg-yellow-950/70 rounded border border-yellow-600">
-                <p className="text-xs text-yellow-50">
-                  <strong>Como usar:</strong><br/>
-                  1. Escolha um número destino (ex: clicar em "5")<br/>
-                  2. Use "Próximo Frame" para avançar passo a passo<br/>
-                  3. Cada frame fica PARADO até você clicar<br/>
-                  4. Capture screenshot em cada passo<br/>
-                  5. Use "Frame Anterior" para voltar se necessário<br/>
-                  6. "Reset" volta ao frame 0 (estático)
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+  React.useEffect(() => {
+    if (!running) return;
+    const timer = window.setInterval(() => {
+      setAutoDigit((prev) => String((Number(prev) + 1) % 10));
+    }, 1300);
+    return () => window.clearInterval(timer);
+  }, [running]);
 
-        {/* Teste básico - Dígitos */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-[rgb(var(--sg-text))]">
-            Teste com Dígitos (0-9)
-          </h2>
+  return (
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgFlipDigit"
+          subtitle="Componente de flip animado para exibicao de digitos e caracteres unicos."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
+
+        <Section
+          title="Basico (0-9)"
+          description="Incremento, decremento e valor aleatorio."
+        >
           <div className="flex items-center gap-4">
             <SgFlipDigit value={digit} />
             <div className="flex flex-col gap-2">
-              <SgButton onClick={nextDigit} size="sm">
-                Próximo (+1)
-              </SgButton>
-              <SgButton onClick={prevDigit} size="sm" severity="secondary">
-                Anterior (-1)
-              </SgButton>
-              <SgButton onClick={randomDigit} size="sm" severity="info">
-                Aleatório
-              </SgButton>
+              <SgButton onClick={nextDigit} size="sm">Proximo (+1)</SgButton>
+              <SgButton onClick={prevDigit} size="sm" severity="secondary">Anterior (-1)</SgButton>
+              <SgButton onClick={randomDigit} size="sm" severity="info">Aleatorio</SgButton>
             </div>
           </div>
-        </section>
+          <CodeBlockBase code={BASIC_EXAMPLE_CODE} />
+        </Section>
 
-        {/* Teste com Letras */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-[rgb(var(--sg-text))]">
-            Teste com Letras (A-Z)
-          </h2>
+        <Section
+          title="Letras (A-Z)"
+          description="Tambem aceita caracteres alfabeticos."
+        >
           <div className="flex items-center gap-4">
             <SgFlipDigit value={letter} />
-            <div className="flex flex-col gap-2">
-              <SgButton onClick={nextLetter} size="sm">
-                Próxima Letra
-              </SgButton>
-            </div>
+            <SgButton onClick={nextLetter} size="sm">Proxima letra</SgButton>
           </div>
-        </section>
+          <CodeBlockBase code={LETTER_EXAMPLE_CODE} />
+        </Section>
 
-        {/* Diferentes tamanhos */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-[rgb(var(--sg-text))]">
-            Diferentes Tamanhos
-          </h2>
-          <div className="flex items-center gap-4">
+        <Section
+          title="Variacoes de tamanho"
+          description="Ajuste de width, height e fontSize."
+        >
+          <div className="flex items-center gap-6">
             <div className="text-center">
-              <p className="text-xs text-[rgb(var(--sg-muted))] mb-2">Pequeno</p>
+              <p className="mb-2 text-xs text-muted-foreground">Pequeno</p>
               <SgFlipDigit value={digit} width={50} height={75} fontSize={45} />
             </div>
             <div className="text-center">
-              <p className="text-xs text-[rgb(var(--sg-muted))] mb-2">Médio (padrão)</p>
+              <p className="mb-2 text-xs text-muted-foreground">Medio</p>
               <SgFlipDigit value={digit} />
             </div>
             <div className="text-center">
-              <p className="text-xs text-[rgb(var(--sg-muted))] mb-2">Grande</p>
+              <p className="mb-2 text-xs text-muted-foreground">Grande</p>
               <SgFlipDigit value={digit} width={120} height={180} fontSize={120} />
             </div>
           </div>
-        </section>
+          <CodeBlockBase code={SIZE_EXAMPLE_CODE} />
+        </Section>
 
-        {/* Sequência de dígitos */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-[rgb(var(--sg-text))]">
-            Sequência (simulando relógio)
-          </h2>
+        <Section
+          title="Sequencia estilo relogio"
+          description="Composicao de varios SgFlipDigit em linha."
+        >
           <div className="flex items-center gap-2">
             <SgFlipDigit value={digit} />
-            <SgFlipDigit value={String((parseInt(digit) + 1) % 10)} />
-            <span className="text-4xl font-bold text-white mx-2">:</span>
-            <SgFlipDigit value={String((parseInt(digit) + 2) % 10)} />
-            <SgFlipDigit value={String((parseInt(digit) + 3) % 10)} />
+            <SgFlipDigit value={String((Number(digit) + 1) % 10)} />
+            <span className="mx-2 text-4xl font-bold">:</span>
+            <SgFlipDigit value={String((Number(digit) + 2) % 10)} />
+            <SgFlipDigit value={String((Number(digit) + 3) % 10)} />
           </div>
-        </section>
+          <CodeBlockBase code={SEQUENCE_EXAMPLE_CODE} />
+        </Section>
 
-        {/* Info de uso */}
-        <section className="bg-[rgb(var(--sg-surface))] border border-[rgb(var(--sg-border))] rounded-lg p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-[rgb(var(--sg-text))]">
-            Como usar
-          </h3>
-          <div className="space-y-2 text-sm text-[rgb(var(--sg-muted))]">
-            <p><strong>Básico:</strong></p>
-            <code className="block bg-[rgb(var(--sg-muted-surface))] p-2 rounded">
-              {`<SgFlipDigit value="5" />`}
-            </code>
-
-            <p className="mt-4"><strong>Com tamanhos personalizados:</strong></p>
-            <code className="block bg-[rgb(var(--sg-muted-surface))] p-2 rounded">
-              {`<SgFlipDigit value="5" width={100} height={150} fontSize={90} />`}
-            </code>
-
-            <p className="mt-4"><strong>Props:</strong></p>
-            <ul className="list-disc list-inside space-y-1">
-              <li><code>value</code>: string - O caractere a exibir (obrigatório)</li>
-              <li><code>width</code>: number - Largura em pixels (padrão: 80)</li>
-              <li><code>height</code>: number - Altura em pixels (padrão: 120)</li>
-              <li><code>fontSize</code>: number - Tamanho da fonte em pixels (padrão: 70)</li>
-              <li><code>className</code>: string - Classes CSS adicionais</li>
-            </ul>
+        <Section
+          title="Auto increment"
+          description="Atualizacao automatica para validar transicao continua."
+        >
+          <div className="flex items-center gap-4">
+            <SgFlipDigit value={autoDigit} />
+            <SgButton onClick={() => setRunning((prev) => !prev)}>
+              {running ? "Parar" : "Iniciar"}
+            </SgButton>
           </div>
-        </section>
+          <CodeBlockBase code={AUTO_EXAMPLE_CODE} />
+        </Section>
+
+        <Section
+          title="Playground"
+          description="Teste as props principais em tempo real."
+        >
+          <SgPlayground
+            title="SgFlipDigit Playground"
+            interactive
+            codeContract="appFile"
+            code={PLAYGROUND_APP_FILE}
+            height={560}
+            defaultOpen
+          />
+        </Section>
+
+        <ShowcasePropsReference rows={FLIP_DIGIT_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
-    </div>
+    </I18NReady>
   );
 }

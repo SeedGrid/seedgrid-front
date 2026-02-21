@@ -216,39 +216,43 @@ export default function SgInputTextPage() {
 
       const correctIfNeeded = () => {
         const currentTop = titleEl.getBoundingClientRect().top;
-        const delta = desiredTop - currentTop;
-        if (delta <= 0) return;
+        const delta = currentTop - desiredTop;
+        if (Math.abs(delta) <= 1) return;
 
         if (scrollContainer === window) {
-          const next = Math.max(0, window.scrollY - delta);
+          const next = Math.max(0, window.scrollY + delta);
           window.scrollTo({ top: next, behavior: "auto" });
           return;
         }
 
         const container = scrollContainer as HTMLElement;
-        const next = Math.max(0, container.scrollTop - delta);
+        const next = Math.max(0, container.scrollTop + delta);
         container.scrollTo({ top: next, behavior: "auto" });
       };
 
       if (scrollContainer === window) {
-        const targetTop = window.scrollY + target.getBoundingClientRect().top;
-        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+        const destination = Math.max(0, titleTop - desiredTop);
         window.scrollTo({ top: destination, behavior });
       } else {
         const container = scrollContainer as HTMLElement;
         const containerRect = container.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const targetTop = container.scrollTop + (targetRect.top - containerRect.top);
-        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
+        const desiredTopInContainer = desiredTop - containerRect.top;
+        const titleRect = titleEl.getBoundingClientRect();
+        const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+        const destination = Math.max(0, titleTopInContainer - desiredTopInContainer);
         container.scrollTo({ top: destination, behavior });
       }
 
       window.history.replaceState(null, "", `#${anchorId}`);
-      requestAnimationFrame(correctIfNeeded);
+      requestAnimationFrame(() => {
+        correctIfNeeded();
+        requestAnimationFrame(correctIfNeeded);
+      });
       window.setTimeout(correctIfNeeded, 120);
       window.setTimeout(correctIfNeeded, 260);
     },
-    [anchorOffset, findScrollContainer]
+    [findScrollContainer]
   );
 
   const handleAnchorClick = React.useCallback(
@@ -1080,12 +1084,14 @@ export default function Example() {
         />
       </Section>
 
-      {/* â”€â”€ Props Reference â”€â”€ */}
+      {/* Props Reference */}
       <section
         id="props-reference"
         className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
       >
-        <h2 className="text-lg font-semibold">{t(i18n, "showcase.component.inputText.props.title")}</h2>
+        <h2 data-anchor-title="true" className="text-lg font-semibold">
+          {t(i18n, "showcase.component.inputText.props.title")}
+        </h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -1133,6 +1139,7 @@ export default function Example() {
           </table>
         </div>
       </section>
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );

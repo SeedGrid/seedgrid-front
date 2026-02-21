@@ -10,11 +10,18 @@ import {
   type SgToastOptions
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 space-y-4">{props.children}</div>
     </section>
@@ -297,7 +304,28 @@ export default function App() {
   );
 }`;
 
+const TOASTER_PROPS: ShowcasePropRow[] = [
+  {
+    prop: "position",
+    type: "\"top-right\" | \"top-left\" | \"top-center\" | \"bottom-right\" | \"bottom-left\" | \"bottom-center\"",
+    defaultValue: "\"top-right\"",
+    description: "Posicao do container de toasts."
+  },
+  { prop: "duration", type: "number", defaultValue: "4000", description: "Duracao padrao em ms para auto-close." },
+  { prop: "visibleToasts", type: "number", defaultValue: "6", description: "Quantidade maxima visivel simultaneamente." },
+  { prop: "closeButton", type: "boolean", defaultValue: "true", description: "Exibe botao de fechar em cada toast." },
+  { prop: "richColors", type: "boolean", defaultValue: "true", description: "Usa paleta forte por severidade." },
+  { prop: "transparency", type: "number (0-100)", defaultValue: "0", description: "Nivel de transparencia aplicado aos toasts." },
+  {
+    prop: "customColors",
+    type: "Partial<Record<SgToastType, SgToasterTypeColors>>",
+    defaultValue: "-",
+    description: "Sobrescreve bg/fg/border por tipo."
+  }
+];
+
 export default function SgToasterPage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [loadingId, setLoadingId] = React.useState<SgToastId | null>(null);
 
   const startLoading = React.useCallback(() => {
@@ -427,13 +455,19 @@ export default function SgToasterPage() {
   }, [customColorStyles]);
 
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgToaster</h1>
-        <p className="mt-2 text-muted-foreground">
-          Sistema de notificacao com API imperativa (`toast`) + renderer (`SgToaster`).
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgToaster"
+          subtitle="Sistema de notificacao com API imperativa (toast) e renderer (SgToaster)."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title="1) Setup base"
@@ -579,29 +613,9 @@ export default function SgToasterPage() {
         />
       </Section>
 
-      <Section title="10) Props de referencia">
-        <div className="overflow-x-auto rounded-md border border-border">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40">
-              <tr className="text-left">
-                <th className="px-3 py-2">Prop</th>
-                <th className="px-3 py-2">Tipo</th>
-                <th className="px-3 py-2">Default</th>
-                <th className="px-3 py-2">Descricao</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="px-3 py-2 font-mono text-xs">position</td><td className="px-3 py-2">"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"</td><td className="px-3 py-2">"top-right"</td><td className="px-3 py-2">Posicao do container de toasts.</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">duration</td><td className="px-3 py-2">number</td><td className="px-3 py-2">4000</td><td className="px-3 py-2">Duracao padrao (ms) para auto-close.</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">visibleToasts</td><td className="px-3 py-2">number</td><td className="px-3 py-2">6</td><td className="px-3 py-2">Quantidade maxima exibida simultaneamente.</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">closeButton</td><td className="px-3 py-2">boolean</td><td className="px-3 py-2">true</td><td className="px-3 py-2">Mostra botao de fechar nos toasts.</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">richColors</td><td className="px-3 py-2">boolean</td><td className="px-3 py-2">true</td><td className="px-3 py-2">Usa paleta forte por severidade.</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">transparency</td><td className="px-3 py-2">number (0-100)</td><td className="px-3 py-2">0</td><td className="px-3 py-2">Nivel de transparencia aplicado aos toasts (0 = opaco).</td></tr>
-              <tr><td className="px-3 py-2 font-mono text-xs">customColors</td><td className="px-3 py-2">Partial&lt;Record&lt;SgToastType, SgToasterTypeColors&gt;&gt;</td><td className="px-3 py-2">-</td><td className="px-3 py-2">Permite sobrescrever bg/fg/border por tipo (default, success, info, warning, error, loading).</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </Section>
-    </div>
+        <ShowcasePropsReference rows={TOASTER_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

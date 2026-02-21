@@ -17,8 +17,11 @@ function Section(props: {
   children: React.ReactNode;
 }) {
   return (
-    <section id={props.id} className="scroll-mt-72 rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -308,15 +311,129 @@ export default function App() {
 export default function SgCarouselPage() {
   const [activeIndex1, setActiveIndex1] = React.useState(0);
   const [eventLog, setEventLog] = React.useState<string[]>([]);
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
 
   const log = (msg: string) => {
     setEventLog((prev) => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
   };
 
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
+    };
+
+    updateAnchorOffset();
+    const resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) {
+      resizeObserver.observe(stickyHeaderRef.current);
+    }
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, []);
+
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      if ((overflowY === "auto" || overflowY === "scroll") && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback((anchorId: string) => {
+    const target = document.getElementById(anchorId);
+    if (!target) return;
+
+    const scrollContainer = findScrollContainer(target);
+    const extraTopGap = 12;
+    const titleEl =
+      (target.querySelector("h1, h2, h3, [data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+    const correctIfNeeded = () => {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const currentTop = titleEl.getBoundingClientRect().top;
+      const delta = currentTop - desiredTopNow;
+      if (Math.abs(delta) <= 1) return;
+
+      if (scrollContainer === window) {
+        const next = Math.max(0, window.scrollY + delta);
+        window.scrollTo({ top: next, behavior: "auto" });
+        return;
+      }
+
+      const container = scrollContainer as HTMLElement;
+      const next = Math.max(0, container.scrollTop + delta);
+      container.scrollTo({ top: next, behavior: "auto" });
+    };
+
+    if (scrollContainer === window) {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+      window.scrollTo({ top: Math.max(0, titleTop - desiredTopNow), behavior: "auto" });
+    } else {
+      const container = scrollContainer as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopInContainer = stickyBottomNow + extraTopGap - containerRect.top;
+      const titleRect = titleEl.getBoundingClientRect();
+      const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+      container.scrollTo({ top: Math.max(0, titleTopInContainer - desiredTopInContainer), behavior: "auto" });
+    }
+
+    window.history.replaceState(null, "", `#${anchorId}`);
+    requestAnimationFrame(() => {
+      correctIfNeeded();
+      requestAnimationFrame(correctIfNeeded);
+    });
+    window.setTimeout(correctIfNeeded, 120);
+    window.setTimeout(correctIfNeeded, 260);
+  }, [findScrollContainer]);
+
+  const handleAnchorClick = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    navigateToAnchor(anchorId);
+  }, [navigateToAnchor]);
+
+  const navigateToAnchorRef = React.useRef(navigateToAnchor);
+  React.useEffect(() => {
+    navigateToAnchorRef.current = navigateToAnchor;
+  }, [navigateToAnchor]);
+
+  React.useEffect(() => {
+    const applyHashNavigation = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return;
+      navigateToAnchorRef.current(hash);
+    };
+
+    const timer = window.setTimeout(applyHashNavigation, 0);
+    window.addEventListener("hashchange", applyHashNavigation);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("hashchange", applyHashNavigation);
+    };
+  }, []);
+
   return (
     <I18NReady>
-      <div className="max-w-7xl space-y-8">
-        <div className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+      <div
+        className="max-w-7xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">SgCarousel</h1>
             <p className="mt-2 text-muted-foreground">
@@ -330,6 +447,7 @@ export default function SgCarouselPage() {
                 <Link
                   key={example.id}
                   href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
                   className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
                 >
                   {example.label}
@@ -337,6 +455,7 @@ export default function SgCarouselPage() {
               ))}
               <Link
                 href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
               >
                 Props Reference
@@ -790,8 +909,11 @@ export default function SgCarouselPage() {
       </Section>
 
       {/* Props Reference */}
-      <section id="props-reference" className="scroll-mt-72 rounded-lg border border-border p-6">
-        <h2 className="text-lg font-semibold">Referência de Props</h2>
+      <section
+        id="props-reference"
+        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+      >
+        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -909,6 +1031,7 @@ export default function SgCarouselPage() {
           </table>
         </div>
       </section>
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );

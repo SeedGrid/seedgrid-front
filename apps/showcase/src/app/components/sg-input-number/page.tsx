@@ -243,31 +243,33 @@ export default function SgInputNumberPage() {
         const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
         const desiredTopNow = stickyBottomNow + extraTopGap;
         const currentTop = titleEl.getBoundingClientRect().top;
-        const delta = desiredTopNow - currentTop;
-        if (delta <= 0) return;
+        const delta = currentTop - desiredTopNow;
+        if (Math.abs(delta) <= 1) return;
 
         if (scrollContainer === window) {
-          const next = Math.max(0, window.scrollY - delta);
+          const next = Math.max(0, window.scrollY + delta);
           window.scrollTo({ top: next, behavior: "auto" });
           return;
         }
 
         const container = scrollContainer as HTMLElement;
-        const next = Math.max(0, container.scrollTop - delta);
+        const next = Math.max(0, container.scrollTop + delta);
         container.scrollTo({ top: next, behavior: "auto" });
       };
 
       if (scrollContainer === window) {
-        const targetTop = window.scrollY + target.getBoundingClientRect().top;
-        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
-        window.scrollTo({ top: destination, behavior: "auto" });
+        const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+        const desiredTopNow = stickyBottomNow + extraTopGap;
+        const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+        window.scrollTo({ top: Math.max(0, titleTop - desiredTopNow), behavior: "auto" });
       } else {
         const container = scrollContainer as HTMLElement;
         const containerRect = container.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const targetTop = container.scrollTop + (targetRect.top - containerRect.top);
-        const destination = Math.max(0, targetTop - anchorOffset + extraTopGap);
-        container.scrollTo({ top: destination, behavior: "auto" });
+        const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+        const desiredTopInContainer = stickyBottomNow + extraTopGap - containerRect.top;
+        const titleRect = titleEl.getBoundingClientRect();
+        const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+        container.scrollTo({ top: Math.max(0, titleTopInContainer - desiredTopInContainer), behavior: "auto" });
       }
 
       window.history.replaceState(null, "", `#${anchorId}`);
@@ -278,7 +280,7 @@ export default function SgInputNumberPage() {
       window.setTimeout(correctIfNeeded, 120);
       window.setTimeout(correctIfNeeded, 260);
     },
-    [anchorOffset, findScrollContainer]
+    [findScrollContainer]
   );
 
   const handleAnchorClick = React.useCallback(
@@ -1053,6 +1055,7 @@ export default function Example() {
           </table>
         </div>
       </section>
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );

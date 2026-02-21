@@ -2,14 +2,21 @@
 
 import React from "react";
 import { Check, X } from "lucide-react";
-import { SgButton, SgPopup, type SgPopupAction } from "@seedgrid/fe-components";
+import { SgButton, SgPlayground, SgPopup, type SgPopupAction } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
     </section>
@@ -20,8 +27,62 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
+const POPUP_PLAYGROUND_CODE = `import * as React from "react";
+import { SgButton, SgPopup } from "@seedgrid/fe-components";
+
+export default function App() {
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const [placement, setPlacement] = React.useState<"auto" | "top" | "right" | "bottom" | "left">("auto");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-5">
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("auto")}>auto</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("top")}>top</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("right")}>right</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("bottom")}>bottom</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("left")}>left</SgButton>
+      </div>
+
+      <SgButton ref={anchorRef} onClick={() => setOpen(true)}>
+        Abrir popup
+      </SgButton>
+
+      <SgPopup
+        title="Configuracao"
+        subtitle="Exemplo interativo"
+        open={open}
+        onOpenChange={setOpen}
+        anchorRef={anchorRef as React.RefObject<HTMLElement>}
+        placement={placement}
+        align="start"
+        actions={[
+          { label: "Confirmar", onClick: () => setOpen(false) },
+          { label: "Cancelar", onClick: () => setOpen(false) }
+        ]}
+      />
+    </div>
+  );
+}`;
+
+const POPUP_PROPS: ShowcasePropRow[] = [
+  { prop: "anchorRef", type: "RefObject<HTMLElement>", defaultValue: "-", description: "Elemento ancora obrigatorio." },
+  { prop: "open / defaultOpen / onOpenChange", type: "boolean / boolean / callback", defaultValue: "controlado / false / -", description: "Controle de visibilidade." },
+  { prop: "title / subtitle / children", type: "string / string / ReactNode", defaultValue: "- / - / -", description: "Conteudo textual e corpo customizado." },
+  { prop: "placement / preferPlacement / align", type: "tokens", defaultValue: "auto / right / start", description: "Posicionamento e alinhamento do popup." },
+  { prop: "offset / padding", type: "number", defaultValue: "8 / 8", description: "Distancia e margem de viewport." },
+  { prop: "closeOnOutsideClick / closeOnEscape", type: "boolean", defaultValue: "true / true", description: "Regras de fechamento." },
+  { prop: "actions", type: "SgPopupAction[]", defaultValue: "[]", description: "Acoes do rodape." },
+  { prop: "className / style / zIndex / minWidth", type: "string / CSSProperties / number / number|string", defaultValue: "- / - / 1000 / -", description: "Customizacoes visuais." },
+  { prop: "onOpen / onClose", type: "callbacks", defaultValue: "-", description: "Eventos de ciclo de abertura." }
+];
+
 export default function SgPopupPage() {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
   const btnRef = React.useRef<HTMLButtonElement>(null);
   const iconBtnRef = React.useRef<HTMLButtonElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -53,16 +114,22 @@ export default function SgPopupPage() {
   ];
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.popup.title")}</h1>
-        <p className="mt-2 text-muted-foreground">
-          {t(i18n, "showcase.component.popup.subtitle")}
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title={t(i18n, "showcase.component.popup.title")}
+          subtitle={t(i18n, "showcase.component.popup.subtitle")}
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
-        title={t(i18n, "showcase.component.popup.sections.basic.title")}
+        title={`1) ${t(i18n, "showcase.component.popup.sections.basic.title")}`}
         description={t(i18n, "showcase.component.popup.sections.basic.description")}
       >
         <div className="w-full flex items-center gap-3">
@@ -115,7 +182,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.popup.sections.iconHint.title")}
+        title={`2) ${t(i18n, "showcase.component.popup.sections.iconHint.title")}`}
         description={t(i18n, "showcase.component.popup.sections.iconHint.description")}
       >
         <div className="w-full flex items-center gap-3">
@@ -175,7 +242,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.popup.sections.custom.title")}
+        title={`3) ${t(i18n, "showcase.component.popup.sections.custom.title")}`}
         description={t(i18n, "showcase.component.popup.sections.custom.description")}
       >
         <div className="w-full">
@@ -195,6 +262,21 @@ export default function Example() {
           />
         </div>
       </Section>
-    </div>
+
+        <Section title="4) Playground (SgPlayground)" description="Teste interativo das principais props do SgPopup.">
+          <SgPlayground
+            title="SgPopup Playground"
+            interactive
+            codeContract="appFile"
+            code={POPUP_PLAYGROUND_CODE}
+            height={520}
+            defaultOpen
+          />
+        </Section>
+
+        <ShowcasePropsReference rows={POPUP_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

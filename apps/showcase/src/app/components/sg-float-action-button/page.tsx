@@ -1,14 +1,19 @@
 "use client";
 
 import React from "react";
-import { SgFloatActionButton, type SgFABAction } from "@seedgrid/fe-components";
+import Link from "next/link";
+import { SgFloatActionButton, SgGrid, SgPlayground, type SgFABAction } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n } from "../../../i18n";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap gap-4">{props.children}</div>
     </section>
@@ -51,6 +56,81 @@ function DemoBox(props: { children: React.ReactNode; className?: string; height?
   );
 }
 
+const FAB_EXAMPLE_LINKS = [
+  { id: "exemplo-1", label: "1) Positions" },
+  { id: "exemplo-2", label: "2) Variants" },
+  { id: "exemplo-3", label: "3) Shapes & Sizes" },
+  { id: "exemplo-4", label: "4) Elevation" },
+  { id: "exemplo-5", label: "5) Hint" },
+  { id: "exemplo-6", label: "6) Actions - Linear Layout" },
+  { id: "exemplo-7", label: "7) Circle Layout" },
+  { id: "exemplo-8", label: "8) Semi-Circle Layout" },
+  { id: "exemplo-9", label: "9) Quarter-Circle Layout" },
+  { id: "exemplo-10", label: "10) Active Icon" },
+  { id: "exemplo-11", label: "11) Animations" },
+  { id: "exemplo-12", label: "12) Custom Color" },
+  { id: "exemplo-13", label: "13) Disabled & Loading" },
+  { id: "exemplo-14", label: "14) Drag & Drop" },
+  { id: "exemplo-15", label: "15) Playground" }
+];
+
+const FAB_PLAYGROUND_CODE = `import * as React from "react";
+import { Heart, Plus, Star } from "lucide-react";
+import { SgButton, SgGrid, SgFloatActionButton } from "@seedgrid/fe-components";
+
+const actions = [
+  { icon: <Plus className="size-4" />, label: "Novo", onClick: () => {} },
+  { icon: <Star className="size-4" />, label: "Favorito", onClick: () => {} },
+];
+
+export default function App() {
+  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "danger">("primary");
+  const [shape, setShape] = React.useState<"circle" | "rounded" | "square">("circle");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [type, setType] = React.useState<"none" | "linear" | "circle" | "semi-circle" | "quarter-circle">("linear");
+  const [direction, setDirection] = React.useState<"up" | "down" | "left" | "right">("up");
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("secondary")}>secondary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("circle")}>circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("rounded")}>rounded</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("square")}>square</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize(size === "sm" ? "md" : size === "md" ? "lg" : "sm")}>
+          size: {size}
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("linear")}>linear</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("circle")}>circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("semi-circle")}>semi-circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("quarter-circle")}>quarter-circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("up")}>up</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("down")}>down</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("left")}>left</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("right")}>right</SgButton>
+      </SgGrid>
+
+      <div className="relative h-72 rounded border border-dashed border-border bg-muted/20">
+        <SgFloatActionButton
+          absolute
+          position="right-bottom"
+          severity={severity}
+          shape={shape}
+          size={size}
+          icon={<Heart className="size-4" />}
+          actions={actions}
+          type={type}
+          direction={direction}
+          onClick={() => {}}
+        />
+      </div>
+    </div>
+  );
+}`;
+
 export default function SgFloatActionButtonPage() {
   const i18n = useShowcaseI18n();
 
@@ -62,16 +142,153 @@ export default function SgFloatActionButtonPage() {
 
   const actionsNoLabel: SgFABAction[] = actions.map(({ label: _, ...rest }) => rest);
 
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
+
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
+    };
+
+    updateAnchorOffset();
+    const resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) resizeObserver.observe(stickyHeaderRef.current);
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, [i18n.locale]);
+
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      if ((overflowY === "auto" || overflowY === "scroll") && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback((anchorId: string) => {
+    const target = document.getElementById(anchorId);
+    if (!target) return;
+
+    const scrollContainer = findScrollContainer(target);
+    const extraTopGap = 12;
+    const titleEl =
+      (target.querySelector("h1, h2, h3, [data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+    const correctIfNeeded = () => {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const currentTop = titleEl.getBoundingClientRect().top;
+      const delta = currentTop - desiredTopNow;
+      if (Math.abs(delta) <= 1) return;
+
+      if (scrollContainer === window) {
+        const next = Math.max(0, window.scrollY + delta);
+        window.scrollTo({ top: next, behavior: "auto" });
+        return;
+      }
+
+      const container = scrollContainer as HTMLElement;
+      const next = Math.max(0, container.scrollTop + delta);
+      container.scrollTo({ top: next, behavior: "auto" });
+    };
+
+    if (scrollContainer === window) {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+      window.scrollTo({ top: Math.max(0, titleTop - desiredTopNow), behavior: "auto" });
+    } else {
+      const container = scrollContainer as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopInContainer = stickyBottomNow + extraTopGap - containerRect.top;
+      const titleRect = titleEl.getBoundingClientRect();
+      const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+      container.scrollTo({ top: Math.max(0, titleTopInContainer - desiredTopInContainer), behavior: "auto" });
+    }
+
+    window.history.replaceState(null, "", `#${anchorId}`);
+    requestAnimationFrame(() => {
+      correctIfNeeded();
+      requestAnimationFrame(correctIfNeeded);
+    });
+    window.setTimeout(correctIfNeeded, 120);
+    window.setTimeout(correctIfNeeded, 260);
+  }, [findScrollContainer]);
+
+  const handleAnchorClick = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    navigateToAnchor(anchorId);
+  }, [navigateToAnchor]);
+
+  const navigateToAnchorRef = React.useRef(navigateToAnchor);
+  React.useEffect(() => {
+    navigateToAnchorRef.current = navigateToAnchor;
+  }, [navigateToAnchor]);
+
+  React.useEffect(() => {
+    const applyHashNavigation = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return;
+      navigateToAnchorRef.current(hash);
+    };
+
+    const timer = window.setTimeout(applyHashNavigation, 0);
+    window.addEventListener("hashchange", applyHashNavigation);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("hashchange", applyHashNavigation);
+    };
+  }, []);
+
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.fab.title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.fab.subtitle")}</p>
-      </div>
+    <I18NReady>
+      <div
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.fab.title")}</h1>
+            <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.fab.subtitle")}</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {FAB_EXAMPLE_LINKS.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+              <Link
+                href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
+            </SgGrid>
+          </div>
+        </div>
 
       {/* ── Positions ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.positions.title")}
+        id="exemplo-1"
+        title={`1) ${t(i18n, "showcase.component.fab.sections.positions.title")}`}
         description={t(i18n, "showcase.component.fab.sections.positions.description")}
       >
         <DemoBox height="h-72">
@@ -99,7 +316,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Variants ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.variants.title")}
+        id="exemplo-2"
+        title={`2) ${t(i18n, "showcase.component.fab.sections.variants.title")}`}
         description={t(i18n, "showcase.component.fab.sections.variants.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
@@ -122,7 +340,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Shapes & Sizes ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.shapesAndSizes.title")}
+        id="exemplo-3"
+        title={`3) ${t(i18n, "showcase.component.fab.sections.shapesAndSizes.title")}`}
         description={t(i18n, "showcase.component.fab.sections.shapesAndSizes.description")}
       >
         <div className="grid grid-cols-3 gap-6 w-full">
@@ -150,7 +369,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Elevation ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.elevation.title")}
+        id="exemplo-4"
+        title={`4) ${t(i18n, "showcase.component.fab.sections.elevation.title")}`}
         description={t(i18n, "showcase.component.fab.sections.elevation.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
@@ -169,7 +389,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Hint ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.hint.title")}
+        id="exemplo-5"
+        title={`5) ${t(i18n, "showcase.component.fab.sections.hint.title")}`}
         description={t(i18n, "showcase.component.fab.sections.hint.description")}
       >
         <div className="flex gap-8 items-center flex-wrap py-4">
@@ -196,7 +417,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Actions - Linear Layout ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.actions.title")}
+        id="exemplo-6"
+        title={`6) ${t(i18n, "showcase.component.fab.sections.actions.title")}`}
         description={t(i18n, "showcase.component.fab.sections.actions.description")}
       >
         <div className="grid grid-cols-2 gap-8 w-full">
@@ -231,7 +453,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Circle Layout ── */}
       <Section
-        title="Circle Layout"
+        id="exemplo-7"
+        title="7) Circle Layout"
         description="Actions arranged in a full circle around the button"
       >
         <DemoBox height="h-96" className="flex items-center justify-center">
@@ -255,7 +478,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Semi-Circle Layout ── */}
       <Section
-        title="Semi-Circle Layout"
+        id="exemplo-8"
+        title="8) Semi-Circle Layout"
         description="Actions arranged in a semi-circle (180°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
@@ -330,7 +554,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Quarter-Circle Layout ── */}
       <Section
-        title="Quarter-Circle Layout"
+        id="exemplo-9"
+        title="9) Quarter-Circle Layout"
         description="Actions arranged in a quarter circle (90°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
@@ -407,7 +632,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Active Icon ── */}
       <Section
-        title="Active Icon"
+        id="exemplo-10"
+        title="10) Active Icon"
         description="Show a different icon when the menu is open"
       >
         <DemoBox height="h-72" className="flex items-end justify-center">
@@ -433,7 +659,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Animations ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.animations.title")}
+        id="exemplo-11"
+        title={`11) ${t(i18n, "showcase.component.fab.sections.animations.title")}`}
         description={t(i18n, "showcase.component.fab.sections.animations.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
@@ -463,7 +690,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Custom Color ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.customColor.title")}
+        id="exemplo-12"
+        title={`12) ${t(i18n, "showcase.component.fab.sections.customColor.title")}`}
         description={t(i18n, "showcase.component.fab.sections.customColor.description")}
       >
         <div className="flex gap-6 items-center flex-wrap">
@@ -487,7 +715,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Disabled & Loading ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.disabled.title")}
+        id="exemplo-13"
+        title={`13) ${t(i18n, "showcase.component.fab.sections.disabled.title")}`}
         description={t(i18n, "showcase.component.fab.sections.disabled.description")}
       >
         <div className="flex gap-6 items-center">
@@ -506,7 +735,8 @@ export default function SgFloatActionButtonPage() {
 
       {/* ── Drag & Drop ── */}
       <Section
-        title={t(i18n, "showcase.component.fab.sections.dragDrop.title")}
+        id="exemplo-14"
+        title={`14) ${t(i18n, "showcase.component.fab.sections.dragDrop.title")}`}
         description={t(i18n, "showcase.component.fab.sections.dragDrop.description")}
       >
         <DemoBox height="h-64" className="flex items-center justify-center">
@@ -532,6 +762,55 @@ export default function SgFloatActionButtonPage() {
   position="right-bottom"
 />`} />
       </Section>
-    </div>
+
+      <Section id="exemplo-15" title="15) Playground" description="Ajuste as principais props do FAB em tempo real.">
+        <SgPlayground
+          title="SgFloatActionButton Playground"
+          interactive
+          codeContract="appFile"
+          code={FAB_PLAYGROUND_CODE}
+          height={700}
+          defaultOpen
+        />
+      </Section>
+
+      <section
+        id="props-reference"
+        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+      >
+        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                <th className="pb-2 font-semibold">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">icon / activeIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">default / -</td><td className="py-2">Icone principal e icone alternativo quando aberto.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">actions</td><td className="py-2 pr-4">SgFABAction[]</td><td className="py-2 pr-4">[]</td><td className="py-2">Lista de acoes expandidas.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">type</td><td className="py-2 pr-4">"none" | "linear" | "circle" | "semi-circle" | "quarter-circle"</td><td className="py-2 pr-4">"none"</td><td className="py-2">Tipo de distribuicao das acoes.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">direction</td><td className="py-2 pr-4">"up" | "down" | "left" | "right"</td><td className="py-2 pr-4">"up"</td><td className="py-2">Direcao usada em layouts lineares/parciais.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">radius</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">96</td><td className="py-2">Raio para layouts circulares.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">severity / color</td><td className="py-2 pr-4">token / string</td><td className="py-2 pr-4">primary / -</td><td className="py-2">Tema pronto ou cor customizada.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">shape</td><td className="py-2 pr-4">"circle" | "rounded" | "square"</td><td className="py-2 pr-4">"circle"</td><td className="py-2">Formato do botao.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">size</td><td className="py-2 pr-4">"sm" | "md" | "lg"</td><td className="py-2 pr-4">"md"</td><td className="py-2">Tamanho do FAB.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">position / absolute</td><td className="py-2 pr-4">position token / boolean</td><td className="py-2 pr-4">right-bottom / false</td><td className="py-2">Posicionamento no container.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"md"</td><td className="py-2">Intensidade da sombra.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">hint / hintPosition / hintDelay</td><td className="py-2 pr-4">string / token / number</td><td className="py-2 pr-4">- / top / 300</td><td className="py-2">Tooltip de ajuda.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">animation / animationOn</td><td className="py-2 pr-4">token / "hover" | "always"</td><td className="py-2 pr-4">scale / hover</td><td className="py-2">Animacao visual do botao.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">disabled / loading</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Estados de interacao.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enableDragDrop / dragId</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / -</td><td className="py-2">Ativa arrastar e soltar.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onClick</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Acao principal do FAB.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

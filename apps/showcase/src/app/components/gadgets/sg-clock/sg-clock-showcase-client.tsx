@@ -6,19 +6,27 @@ import {
   SgClockThemePicker,
   SgClockThemeProvider,
   SgButton,
+  SgPlayground,
   SgTimeProvider,
   registerThemes,
   sgClockThemesBuiltIn
 } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../../i18n";
 import CodeBlockBase from "../../CodeBlockBase";
+import I18NReady from "../../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../../useShowcaseAnchors";
 
 let themesRegistered = false;
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -143,8 +151,76 @@ export default function Example({ initialServerTime }) {
   );
 }
 
+const CLOCK_PLAYGROUND_APP_FILE = `import * as React from "react";
+import { SgButton, SgClock, SgClockThemeProvider, SgGrid, SgTimeProvider } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
+  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment" | "roller3d" | "flip">("default");
+
+  return (
+    <SgTimeProvider initialServerTime={new Date().toISOString()}>
+      <SgClockThemeProvider value={{ mode: "fallback", fallbackThemeId: "classic" }}>
+        <div className="space-y-4 p-2">
+          <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+            <SgButton size="sm" appearance={showSeconds ? "solid" : "outline"} onClick={() => setShowSeconds((prev) => !prev)}>
+              seconds
+            </SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setFormat((prev) => (prev === "24h" ? "12h" : "24h"))}>
+              {format}
+            </SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => (prev === "default" ? "segment" : "default"))}>
+              {digitalStyle}
+            </SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setTimezone((prev) => (prev === "America/Sao_Paulo" ? "Europe/Lisbon" : "America/Sao_Paulo"))}>
+              {timezone === "America/Sao_Paulo" ? "Sao Paulo" : "Lisbon"}
+            </SgButton>
+          </SgGrid>
+
+          <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
+            <div className="rounded border border-border bg-background p-4">
+              <SgClock
+                variant="digital"
+                size="lg"
+                timezone={timezone}
+                format={format}
+                showSeconds={showSeconds}
+                digitalStyle={digitalStyle}
+              />
+            </div>
+            <div className="rounded border border-border bg-background p-4">
+              <SgClock
+                variant="analog"
+                size={220}
+                showSeconds={showSeconds}
+                secondHandMode="smooth"
+                timezone={timezone}
+              />
+            </div>
+          </SgGrid>
+        </div>
+      </SgClockThemeProvider>
+    </SgTimeProvider>
+  );
+}`;
+
+const CLOCK_PROPS: ShowcasePropRow[] = [
+  { prop: "variant", type: "\"analog\" | \"digital\"", defaultValue: "\"analog\"", description: "Seleciona o modo de renderizacao do relogio." },
+  { prop: "size", type: "number | \"sm\" | \"md\" | \"lg\"", defaultValue: "260 / \"md\"", description: "Define o tamanho do relogio analogico ou digital." },
+  { prop: "timezone", type: "string", defaultValue: "timezone local", description: "Fuso usado para calcular a hora exibida." },
+  { prop: "format", type: "\"12h\" | \"24h\"", defaultValue: "\"24h\"", description: "Formato de hora para o modo digital." },
+  { prop: "showSeconds", type: "boolean", defaultValue: "true", description: "Exibe ou oculta os segundos." },
+  { prop: "digitalStyle", type: "\"default\" | \"segment\" | \"roller3d\" | \"flip\"", defaultValue: "\"default\"", description: "Estilo visual do relogio digital." },
+  { prop: "secondHandMode", type: "\"step\" | \"smooth\"", defaultValue: "\"step\"", description: "Comportamento do ponteiro de segundos no analogico." },
+  { prop: "themeId / theme", type: "string / SgClockTheme", defaultValue: "- / -", description: "Seleciona tema registrado ou tema inline para o analogico." },
+  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customizacao visual adicional do container." }
+];
+
 export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime: string }) {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
   const [themeId, setThemeId] = React.useState("seedgrid");
   const [secondMode, setSecondMode] = React.useState<"step" | "smooth">("step");
   const [showSeconds, setShowSeconds] = React.useState(true);
@@ -158,23 +234,31 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
   }
 
   return (
-    <SgTimeProvider initialServerTime={initialServerTime}>
-      <SgClockThemeProvider
-        value={{
-          mode: "fallback",
-          fallbackThemeId: "classic"
-        }}
-      >
-        <div className="max-w-5xl space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.clock.title")}</h1>
-            <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.clock.subtitle")}</p>
-          </div>
-
-          <Section
-            title={t(i18n, "showcase.component.clock.sections.analog.title")}
-            description={t(i18n, "showcase.component.clock.sections.analog.description")}
+    <I18NReady>
+      <SgTimeProvider initialServerTime={initialServerTime}>
+        <SgClockThemeProvider
+          value={{
+            mode: "fallback",
+            fallbackThemeId: "classic"
+          }}
+        >
+          <div
+            ref={pageRef}
+            className="max-w-5xl space-y-8"
+            style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
           >
+            <ShowcaseStickyHeader
+              stickyHeaderRef={stickyHeaderRef}
+              title={t(i18n, "showcase.component.clock.title")}
+              subtitle={t(i18n, "showcase.component.clock.subtitle")}
+              exampleLinks={exampleLinks}
+              onAnchorClick={handleAnchorClick}
+            />
+
+            <Section
+              title={t(i18n, "showcase.component.clock.sections.analog.title")}
+              description={t(i18n, "showcase.component.clock.sections.analog.description")}
+            >
             <div className="grid gap-6 md:grid-cols-[260px_1fr]">
               <div className="space-y-3">
                 <SgClockThemePicker
@@ -263,12 +347,12 @@ export default function SgClockShowcaseClient({ initialServerTime }) {
               />
             </div>
 
-          </Section>
+            </Section>
 
-          <Section
-            title={t(i18n, "showcase.component.clock.sections.inlineTheme.title")}
-            description={t(i18n, "showcase.component.clock.sections.inlineTheme.description")}
-          >
+            <Section
+              title={t(i18n, "showcase.component.clock.sections.inlineTheme.title")}
+              description={t(i18n, "showcase.component.clock.sections.inlineTheme.description")}
+            >
             <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
               <SgClock
                 variant="analog"
@@ -322,12 +406,12 @@ export default function Example({ initialServerTime }) {
 }`}
               />
             </div>
-          </Section>
+            </Section>
 
-          <Section
-            title={t(i18n, "showcase.component.clock.sections.digital.title")}
-            description={t(i18n, "showcase.component.clock.sections.digital.description")}
-          >
+            <Section
+              title={t(i18n, "showcase.component.clock.sections.digital.title")}
+              description={t(i18n, "showcase.component.clock.sections.digital.description")}
+            >
             <div className="mb-3 flex flex-wrap items-center gap-2">
               <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
                 {digitalStyle === "default"
@@ -385,21 +469,20 @@ export default function Example({ initialServerTime }) {
 }`}
               />
             </div>
-          </Section>
+            </Section>
 
-          <Section title="Roller 3D" description="Rolos 3D com AM/PM opcional e segundos sob demanda.">
-            <RollerShowcase timezone={timezone} />
-          </Section>
+            <Section title="Roller 3D" description="Rolos 3D com AM/PM opcional e segundos sob demanda.">
+              <RollerShowcase timezone={timezone} />
+            </Section>
 
-          <Section title="Flip" description="Flip clock em duas folhas, com segundos e 12/24h.">
-            <FlipShowcase timezone={timezone} />
-          </Section>
+            <Section title="Flip" description="Flip clock em duas folhas, com segundos e 12/24h.">
+              <FlipShowcase timezone={timezone} />
+            </Section>
 
-
-          <Section
-            title={t(i18n, "showcase.component.clock.sections.timezone.title")}
-            description={t(i18n, "showcase.component.clock.sections.timezone.description")}
-          >
+            <Section
+              title={t(i18n, "showcase.component.clock.sections.timezone.title")}
+              description={t(i18n, "showcase.component.clock.sections.timezone.description")}
+            >
             <div className="flex flex-wrap gap-2">
               <SgButton onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</SgButton>
               <SgButton onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</SgButton>
@@ -445,9 +528,27 @@ export default function Example({ initialServerTime }) {
 }`}
               />
             </div>
-          </Section>
-        </div>
-      </SgClockThemeProvider>
-    </SgTimeProvider>
+            </Section>
+
+            <Section
+              title="Playground"
+              description="Controle props principais do SgClock em tempo real."
+            >
+              <SgPlayground
+                title="SgClock Playground"
+                interactive
+                codeContract="appFile"
+                code={CLOCK_PLAYGROUND_APP_FILE}
+                height={620}
+                defaultOpen
+              />
+            </Section>
+
+            <ShowcasePropsReference rows={CLOCK_PROPS} />
+            <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+          </div>
+        </SgClockThemeProvider>
+      </SgTimeProvider>
+    </I18NReady>
   );
 }

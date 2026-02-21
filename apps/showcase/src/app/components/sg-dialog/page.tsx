@@ -1,14 +1,21 @@
 "use client";
 
 import React from "react";
-import { SgButton, SgDialog } from "@seedgrid/fe-components";
+import { SgButton, SgDialog, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4 flex flex-wrap items-center gap-4">{props.children}</div>
     </section>
@@ -19,8 +26,66 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
+const DIALOG_PLAYGROUND_CODE = `import * as React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [open, setOpen] = React.useState(false);
+  const [severity, setSeverity] = React.useState<"plain" | "primary" | "secondary" | "success" | "warning" | "danger">("plain");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg" | "xl">("md");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("plain")}>plain</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("sm")}>sm</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("md")}>md</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("lg")}>lg</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("xl")}>xl</SgButton>
+      </div>
+
+      <SgButton onClick={() => setOpen(true)}>Abrir dialog</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        severity={severity}
+        size={size}
+        title="Configuração"
+        subtitle="Exemplo interativo"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>Cancelar</SgButton>
+            <SgButton onClick={() => setOpen(false)}>Confirmar</SgButton>
+          </>
+        }
+      >
+        <div className="text-sm text-muted-foreground">Conteúdo do diálogo.</div>
+      </SgDialog>
+    </div>
+  );
+}`;
+
+const DIALOG_PROPS: ShowcasePropRow[] = [
+  { prop: "open / defaultOpen / onOpenChange", type: "boolean / boolean / callback", defaultValue: "controlado / false / -", description: "Controle de abertura." },
+  { prop: "title / subtitle / children / footer", type: "ReactNode", defaultValue: "-", description: "Estrutura principal do conteúdo." },
+  { prop: "size", type: "\"sm\" | \"md\" | \"lg\" | \"xl\" | \"full\"", defaultValue: "md", description: "Largura do diálogo." },
+  { prop: "severity", type: "token", defaultValue: "plain", description: "Acento visual do diálogo." },
+  { prop: "animation / transitionMs", type: "token / number", defaultValue: "zoom / 160", description: "Animação e duração da transição." },
+  { prop: "autoCloseMs", type: "number", defaultValue: "-", description: "Fecha automaticamente após o tempo informado." },
+  { prop: "closeable / closeOnOverlayClick / closeOnEsc", type: "boolean", defaultValue: "true / true / true", description: "Regras de fechamento." },
+  { prop: "lockBodyScroll / restoreFocus", type: "boolean", defaultValue: "true / true", description: "Acessibilidade e foco." },
+  { prop: "onClose / initialFocusRef / ariaLabel", type: "callback / ref / string", defaultValue: "-", description: "Controle avançado de fechamento e foco." },
+  { prop: "className / overlayClassName / contentClassName / headerClassName / bodyClassName / footerClassName", type: "string", defaultValue: "-", description: "Customização de estilos por seção." }
+];
+
 export default function SgDialogPage() {
   const i18n = useShowcaseI18n();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
   const [openBasic, setOpenBasic] = React.useState(false);
   const [openSeverity, setOpenSeverity] = React.useState(false);
   const [openNoClose, setOpenNoClose] = React.useState(false);
@@ -28,14 +93,22 @@ export default function SgDialogPage() {
   const [openAutoClose, setOpenAutoClose] = React.useState(false);
 
   return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.dialog.title")}</h1>
-        <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.dialog.subtitle")}</p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-4xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title={t(i18n, "showcase.component.dialog.title")}
+          subtitle={t(i18n, "showcase.component.dialog.subtitle")}
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
-        title={t(i18n, "showcase.component.dialog.sections.basic.title")}
+        title={`1) ${t(i18n, "showcase.component.dialog.sections.basic.title")}`}
         description={t(i18n, "showcase.component.dialog.sections.basic.description")}
       >
         <SgButton onClick={() => setOpenBasic(true)}>
@@ -46,7 +119,7 @@ export default function SgDialogPage() {
           onOpenChange={setOpenBasic}
           title={t(i18n, "showcase.component.dialog.labels.title")}
           subtitle={t(i18n, "showcase.component.dialog.labels.subtitle")}
-          leading={<span className="text-primary">◎</span>}
+          leading={<span className="text-primary">O</span>}
           trailing={<span className="text-xs text-muted-foreground">ID: 428</span>}
           footer={
             <>
@@ -82,7 +155,7 @@ export default function Example() {
         onOpenChange={setOpen}
         title="${t(i18n, "showcase.component.dialog.labels.title")}"
         subtitle="${t(i18n, "showcase.component.dialog.labels.subtitle")}"
-        leading={<span>◎</span>}
+        leading={<span>O</span>}
         trailing={<span>ID: 428</span>}
         footer={
           <>
@@ -100,7 +173,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.dialog.sections.severity.title")}
+        title={`2) ${t(i18n, "showcase.component.dialog.sections.severity.title")}`}
         description={t(i18n, "showcase.component.dialog.sections.severity.description")}
       >
         <SgButton severity="danger" onClick={() => setOpenSeverity(true)}>
@@ -158,7 +231,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.dialog.sections.noClose.title")}
+        title={`3) ${t(i18n, "showcase.component.dialog.sections.noClose.title")}`}
         description={t(i18n, "showcase.component.dialog.sections.noClose.description")}
       >
         <SgButton appearance="outline" onClick={() => setOpenNoClose(true)}>
@@ -216,7 +289,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.dialog.sections.strict.title")}
+        title={`4) ${t(i18n, "showcase.component.dialog.sections.strict.title")}`}
         description={t(i18n, "showcase.component.dialog.sections.strict.description")}
       >
         <SgButton appearance="outline" onClick={() => setOpenStrict(true)}>
@@ -278,7 +351,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title={t(i18n, "showcase.component.dialog.sections.autoClose.title")}
+        title={`5) ${t(i18n, "showcase.component.dialog.sections.autoClose.title")}`}
         description={t(i18n, "showcase.component.dialog.sections.autoClose.description")}
       >
         <SgButton appearance="outline" onClick={() => setOpenAutoClose(true)}>
@@ -318,6 +391,21 @@ export default function Example() {
 }`}
         />
       </Section>
-    </div>
+
+        <Section title="6) Playground (SgPlayground)" description="Teste interativo das principais props do SgDialog.">
+          <SgPlayground
+            title="SgDialog Playground"
+            interactive
+            codeContract="appFile"
+            code={DIALOG_PLAYGROUND_CODE}
+            height={560}
+            defaultOpen
+          />
+        </Section>
+
+        <ShowcasePropsReference rows={DIALOG_PROPS} />
+        <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }

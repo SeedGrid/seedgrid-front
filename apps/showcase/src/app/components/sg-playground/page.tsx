@@ -2,11 +2,18 @@
 
 import React from "react";
 import { SgCard, SgPlayground } from "@seedgrid/fe-components";
+import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
+import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      data-showcase-example="true"
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? <p className="mt-1 text-sm text-muted-foreground">{props.description}</p> : null}
       <div className="mt-4">{props.children}</div>
     </section>
@@ -102,15 +109,36 @@ const VISUAL_VARIANTS_EXAMPLE_IMPL = `<SgPlayground
 />;
 `;
 
+const SG_PLAYGROUND_PROPS: ShowcasePropRow[] = [
+  { prop: "title / description", type: "string", defaultValue: "- / -", description: "Cabecalho exibido no card do playground." },
+  { prop: "interactive", type: "boolean", defaultValue: "false", description: "Liga editor + preview executavel." },
+  { prop: "code", type: "string", defaultValue: "-", description: "Codigo inicial exibido no editor/bloco." },
+  { prop: "codeContract", type: "\"renderBody\" | \"appFile\"", defaultValue: "\"renderBody\"", description: "Contrato do codigo interpretado no sandbox." },
+  { prop: "defaultImports", type: "string", defaultValue: "-", description: "Imports injetados automaticamente no modo renderBody." },
+  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Define estado inicial expandido." },
+  { prop: "height", type: "number", defaultValue: "420", description: "Altura da area de preview/editor." },
+  { prop: "withCard", type: "boolean", defaultValue: "true", description: "Renderiza ou nao card externo." },
+  { prop: "expandable / resizable", type: "boolean / boolean", defaultValue: "true / true", description: "Controla expansao e resize da UI." },
+  { prop: "previewPadding", type: "number", defaultValue: "24", description: "Padding aplicado no iframe/preview." }
+];
+
 export default function SgPlaygroundPage() {
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgPlayground</h1>
-        <p className="mt-2 text-muted-foreground">
-          Playground com editor de codigo + preview, suporte a snippet (`renderBody`) e arquivo completo (`appFile`).
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        ref={pageRef}
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <ShowcaseStickyHeader
+          stickyHeaderRef={stickyHeaderRef}
+          title="SgPlayground"
+          subtitle="Playground com editor de codigo + preview, com suporte a renderBody e appFile."
+          exampleLinks={exampleLinks}
+          onAnchorClick={handleAnchorClick}
+        />
 
       <Section
         title="1) Modo leitura (somente codigo)"
@@ -178,6 +206,10 @@ export default function SgPlaygroundPage() {
           <ExampleCodeCard code={VISUAL_VARIANTS_EXAMPLE_IMPL} />
         </div>
       </Section>
+
+      <ShowcasePropsReference rows={SG_PLAYGROUND_PROPS} />
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
     </div>
+  </I18NReady>
   );
 }
