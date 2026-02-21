@@ -331,13 +331,22 @@ import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
 
 <SgWizard stepper="icons" onFinish={() => {}}>
   <SgWizardPage title="Posicao" icon={<MapPin className="size-5" />}>
-    ...
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">Passo 1 - Posicao</div>
+      <p className="mt-1 text-sm text-muted-foreground">Selecione a posicao desejada.</p>
+    </div>
   </SgWizardPage>
   <SgWizardPage title="Categoria" icon={<Tag className="size-5" />}>
-    ...
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">Passo 2 - Categoria</div>
+      <p className="mt-1 text-sm text-muted-foreground">Escolha a categoria.</p>
+    </div>
   </SgWizardPage>
   <SgWizardPage title="Enviar" icon={<Send className="size-5" />}>
-    ...
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">Passo 3 - Enviar</div>
+      <p className="mt-1 text-sm text-muted-foreground">Revise e envie.</p>
+    </div>
   </SgWizardPage>
 </SgWizard>`} />
       </Section>
@@ -378,10 +387,30 @@ import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
         <CodeBlock code={`import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
 
 <SgWizard stepper="numbered" onFinish={() => {}}>
-  <SgWizardPage title="Introducao">...</SgWizardPage>
-  <SgWizardPage title="Detalhes">...</SgWizardPage>
-  <SgWizardPage title="Revisao">...</SgWizardPage>
-  <SgWizardPage title="Confirmacao">...</SgWizardPage>
+  <SgWizardPage title="Introducao">
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">1. Introducao</div>
+      <p className="mt-1 text-sm text-muted-foreground">Conteudo introdutorio.</p>
+    </div>
+  </SgWizardPage>
+  <SgWizardPage title="Detalhes">
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">2. Detalhes</div>
+      <p className="mt-1 text-sm text-muted-foreground">Preencha os detalhes.</p>
+    </div>
+  </SgWizardPage>
+  <SgWizardPage title="Revisao">
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">3. Revisao</div>
+      <p className="mt-1 text-sm text-muted-foreground">Revise as informacoes.</p>
+    </div>
+  </SgWizardPage>
+  <SgWizardPage title="Confirmacao">
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">4. Confirmacao</div>
+      <p className="mt-1 text-sm text-muted-foreground">Confirme e finalize.</p>
+    </div>
+  </SgWizardPage>
 </SgWizard>`} />
       </Section>
 
@@ -415,10 +444,16 @@ import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
   onFinish={() => {}}
 >
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.customStep1")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.customStep1")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.customStep1Desc")}</p>
+    </div>
   </SgWizardPage>
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.customStep2")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.customStep2")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.customStep2Desc")}</p>
+    </div>
   </SgWizardPage>
 </SgWizard>`} />
       </Section>
@@ -459,10 +494,16 @@ import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
   }}
 >
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep1")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.beforeNextStep1")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.beforeNextStep1Desc")}</p>
+    </div>
   </SgWizardPage>
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.beforeNextStep2")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.beforeNextStep2")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.beforeNextStep2Desc")}</p>
+    </div>
   </SgWizardPage>
 </SgWizard>`} />
       </Section>
@@ -510,10 +551,16 @@ const [formValues, setFormValues] = React.useState({ name: "", email: "" });
   onFinish={() => {}}
 >
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.validateStep1")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.validateStep1")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.validateStep1Desc")}</p>
+    </div>
   </SgWizardPage>
   <SgWizardPage>
-    <div>${t(i18n, "showcase.component.wizard.labels.validateStep2")}</div>
+    <div className="rounded border border-border bg-foreground/5 p-4">
+      <div className="text-sm font-semibold">${t(i18n, "showcase.component.wizard.labels.validateStep2")}</div>
+      <p className="mt-1 text-sm text-muted-foreground">${t(i18n, "showcase.component.wizard.labels.validateStep2Desc")}</p>
+    </div>
   </SgWizardPage>
 </SgWizard>`} />
       </Section>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { UseFormRegister, FieldValues, Controller } from "react-hook-form";
-import { SgGroupBox } from "../layout/SgGroupBox";
+import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgRadioGroupOrientation = "horizontal" | "vertical";
@@ -37,7 +37,7 @@ export interface SgRadioGroupProps {
   // Styling
   className?: string;
   optionClassName?: string;
-  groupBoxProps?: any;
+  groupBoxProps?: Omit<Partial<SgGroupBoxProps>, "children" | "title"> & { title?: string };
 }
 
 export function SgRadioGroup(props: SgRadioGroupProps) {
@@ -64,6 +64,12 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
     optionClassName = "",
     groupBoxProps = {}
   } = props;
+
+  const resolvedGroupBoxTitle = (() => {
+    const baseTitle = groupBoxProps.title ?? title ?? "";
+    if (!required || !baseTitle.trim()) return baseTitle;
+    return baseTitle.includes("*") ? baseTitle : `${baseTitle} *`;
+  })();
 
   const [internalValue, setInternalValue] = React.useState<string | number | null>(
     controlledValue ?? null
@@ -152,15 +158,9 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
 
   const content = (
     <div className={className}>
-      {title && (
-        <div className="mb-2 text-sm font-medium text-[rgb(var(--sg-text))]">
-          {title}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </div>
-      )}
-
       <SgGroupBox
         {...groupBoxProps}
+        title={resolvedGroupBoxTitle || " "}
         className={groupBoxProps.className || ""}
       >
         <div
@@ -212,14 +212,7 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
 
     return (
       <div className={className}>
-        {title && (
-          <div className="mb-2 text-sm font-medium text-[rgb(var(--sg-text))]">
-            {title}
-            {required && <span className="text-red-500 ml-1">*</span>}
-          </div>
-        )}
-
-        <SgGroupBox {...groupBoxProps}>
+        <SgGroupBox {...groupBoxProps} title={resolvedGroupBoxTitle || " "}>
           <div
             className={`
               flex gap-4

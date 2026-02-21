@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import {
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
-import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: {
   id?: string;
@@ -31,9 +31,7 @@ function Section(props: {
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 const INPUT_TEXT_PLAYGROUND_CODE = `import * as React from "react";
@@ -332,7 +330,6 @@ export default function SgInputTextPage() {
           </div>
         </div>
 
-      {/* â”€â”€ Basico â”€â”€ */}
       <Section
         id="exemplo-1"
         title={t(i18n, "showcase.component.inputText.sections.basic.title")}
@@ -369,7 +366,6 @@ export default function SgInputTextPage() {
 <p>${t(i18n, "showcase.common.labels.currentValue", { value: watch("nome") })}</p>`} />
       </Section>
 
-      {/* â”€â”€ Required â”€â”€ */}
       <Section
         id="exemplo-2"
         title={t(i18n, "showcase.component.inputText.sections.required.title")}
@@ -412,7 +408,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Controlled â”€â”€ */}
       <Section
         id="exemplo-3"
         title={t(i18n, "showcase.component.inputText.sections.controlled.title")}
@@ -482,7 +477,6 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* â”€â”€ MaxLength + Counter â”€â”€ */}
       <Section
         id="exemplo-4"
         title={t(i18n, "showcase.component.inputText.sections.counter.title")}
@@ -508,7 +502,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ MinLength â”€â”€ */}
       <Section
         id="exemplo-5"
         title={t(i18n, "showcase.component.inputText.sections.minLength.title")}
@@ -534,7 +527,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ MinNumberOfWords â”€â”€ */}
       <Section
         id="exemplo-6"
         title={t(i18n, "showcase.component.inputText.sections.minWords.title")}
@@ -560,7 +552,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Custom Validation â”€â”€ */}
       <Section
         id="exemplo-7"
         title={t(i18n, "showcase.component.inputText.sections.validation.title")}
@@ -598,7 +589,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Prefix Icon â”€â”€ */}
       <Section
         id="exemplo-8"
         title={t(i18n, "showcase.component.inputText.sections.prefixIcon.title")}
@@ -626,8 +616,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Icon Buttons â”€â”€ */}
-      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Prefixo / Sufixo Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
         id="exemplo-9"
         title={t(i18n, "showcase.component.inputText.sections.prefixSuffix.title")}
@@ -720,7 +708,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* Ã¢â€â‚¬Ã¢â€â‚¬ Icon Buttons Ã¢â€â‚¬Ã¢â€â‚¬ */}
       <Section
         id="exemplo-10"
         title={t(i18n, "showcase.component.inputText.sections.iconButtons.title")}
@@ -815,7 +802,6 @@ export default function SgInputTextPage() {
         </div>
       </Section>
 
-      {/* â”€â”€ Sem borda / Filled â”€â”€ */}
       <Section
         id="exemplo-11"
         title={t(i18n, "showcase.common.sections.visual.title")}
@@ -843,7 +829,6 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-filled" label="${t(i18n, "showcase.common.labels.filled")}" filled name="filled" register={register} />`} />
       </Section>
 
-      {/* â”€â”€ Sem clear button â”€â”€ */}
       <Section
         id="exemplo-12"
         title={t(i18n, "showcase.common.sections.noClear.title")}
@@ -861,7 +846,6 @@ export default function SgInputTextPage() {
         <CodeBlock code={`<SgInputText id="demo-noclear" label="${t(i18n, "showcase.common.labels.noClear")}" clearButton={false} name="noclear" register={register} />`} />
       </Section>
 
-      {/* â”€â”€ Width / Border Radius â”€â”€ */}
       <Section
         id="exemplo-13"
         title={t(i18n, "showcase.common.sections.sizeBorder.title")}
@@ -888,7 +872,6 @@ export default function SgInputTextPage() {
 <SgInputText id="demo-w300" label="${t(i18n, "showcase.common.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
-      {/* â”€â”€ Disabled / ReadOnly â”€â”€ */}
       <Section
         id="exemplo-14"
         title={t(i18n, "showcase.component.inputText.sections.disabledReadonly.title")}
@@ -929,7 +912,6 @@ export default function SgInputTextPage() {
 />`} />
       </Section>
 
-      {/* â”€â”€ Erro externo â”€â”€ */}
       <Section
         id="exemplo-15"
         title={t(i18n, "showcase.component.inputText.sections.externalError.title")}
@@ -1024,7 +1006,6 @@ export default function Example() {
 }`} />
       </Section>
 
-      {/* â”€â”€ Callbacks / Events â”€â”€ */}
       <Section
         id="exemplo-17"
         title={t(i18n, "showcase.component.inputText.sections.events.title")}
@@ -1143,58 +1124,4 @@ export default function Example() {
       </div>
     </I18NReady>
   );
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const i18n = getShowcaseI18n();
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: {
-      nome: "",
-      required: "",
-      requiredCustom: "",
-      counter: "",
-      minlength: "",
-      words: "",
-      validation: "",
-      controlled: "${t(i18n, "showcase.component.inputText.defaults.controlled")}",
-      suffix: "${t(i18n, "showcase.component.inputText.defaults.suffix")}",
-      prefix: "${t(i18n, "showcase.component.inputText.defaults.prefix")}",
-      both: "${t(i18n, "showcase.component.inputText.defaults.both")}",
-      iconbtns: ""
-    }
-  });
-
-  const controlledValue = watch("controlled");
-  const iconBtnValue = watch("iconbtns");
-  const log = (msg: string) => console.log(msg);
-  const [iconBtnLog, setIconBtnLog] = React.useState<string[]>([]);
-  const [validationMsg, setValidationMsg] = React.useState<string | null>(null);`;
-
-  const imports = [
-    `import React from "react";`,
-    `import { useForm } from "react-hook-form";`,
-    `import { SgInputText } from "@seedgrid/fe-components";`
-  ].join("\n");
-
-  const bodyIndented = indentCode(body.trim(), 6);
-
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
 }

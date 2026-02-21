@@ -20,26 +20,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const imports = [
-    `import React from "react";`,
-    `import { SgButton, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";`
-  ].join("\n");
-  const bodyIndented = indentCode(body.trim(), 4);
-  return `${imports}\n\nexport default function Example() {\n${bodyIndented}\n}`;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 function ValuePanel(props: { masked: string; raw: string; expectedLength: number; completeValue?: string }) {

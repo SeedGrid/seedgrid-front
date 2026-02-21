@@ -443,7 +443,6 @@ import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 export default function Example({ initialServerTime }) {
   const [digitalStyle, setDigitalStyle] = React.useState("default");
   const [format, setFormat] = React.useState("24h");
-  const [format, setFormat] = React.useState("24h");
 
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>

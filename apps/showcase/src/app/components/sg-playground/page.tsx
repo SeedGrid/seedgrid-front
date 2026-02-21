@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { SgCard, SgPlayground } from "@seedgrid/fe-components";
+import { SgPlayground } from "@seedgrid/fe-components";
+import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
@@ -22,17 +23,9 @@ function Section(props: { title: string; description?: string; children: React.R
 
 function ExampleCodeCard(props: { code: string }) {
   return (
-    <SgCard
-      title="Codigo do exemplo"
-      description="JSX usado para montar este playground."
-      collapsible
-      defaultOpen={false}
-      className="mt-4"
-    >
-      <pre className="overflow-auto rounded-md bg-foreground/5 p-4 text-xs leading-relaxed">
-        <code>{props.code}</code>
-      </pre>
-    </SgCard>
+    <div className="mt-4">
+      <CodeBlockBase code={props.code} />
+    </div>
   );
 }
 

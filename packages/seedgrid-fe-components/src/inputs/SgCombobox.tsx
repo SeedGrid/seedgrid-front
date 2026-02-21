@@ -109,6 +109,7 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
     itemTooltip,
     inputProps,
     enabled,
+    borderRadius,
     ...rest
   } = props;
 
@@ -132,6 +133,10 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const [internalValue, setInternalValue] = React.useState<ComboboxValue>(null);
   const [lastSelectedLabel, setLastSelectedLabel] = React.useState("");
+  const resolvedBorderRadius = React.useMemo(() => {
+    if (borderRadius === undefined) return undefined;
+    return typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius;
+  }, [borderRadius]);
 
   const resolvedValue = isControlled ? value : internalValue;
   const isDisabled = enabled === false;
@@ -368,6 +373,7 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
       <SgInputText
         {...rest}
         enabled={enabled}
+        borderRadius={borderRadius}
         clearButton={false}
         readOnly
         iconButtons={[dropdownButton]}
@@ -457,7 +463,10 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
       />
 
       {open && !isDisabled ? (
-        <div className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-white shadow-lg">
+        <div
+          className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-white shadow-lg"
+          style={resolvedBorderRadius ? { borderRadius: resolvedBorderRadius } : undefined}
+        >
           <div className="max-h-64 overflow-auto">
             {loading ? (
               <div className="px-3 py-2 text-sm text-muted-foreground">{loadingText}</div>

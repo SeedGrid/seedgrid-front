@@ -23,45 +23,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const imports = [
-    `import React from "react";`,
-    `import { useForm } from "react-hook-form";`,
-    `import { SgInputPostalCode } from "@seedgrid/fe-components";`
-  ].join("\n");
-
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: { cep: "", controlled: "01001-000" }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
-
-  const bodyIndented = indentCode(body.trim(), 6);
-
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 const COUNTRIES: PostalCodeCountry[] = ["BR", "PT", "US", "ES", "UY", "AR", "PY"];
@@ -344,7 +306,6 @@ export default function SgInputPostalCodePage() {
           </div>
         </div>
 
-      {/* ── Basico ── */}
       <Section
         id="exemplo-1"
         title={`1) ${t(i18n, "showcase.component.inputPostalCode.sections.basic.title")}`}
@@ -371,7 +332,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Paises ── */}
       <Section
         id="exemplo-2"
         title={`2) ${t(i18n, "showcase.component.inputPostalCode.sections.countries.title")}`}
@@ -399,7 +359,6 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="py" country="PY" label="Codigo postal (Paraguai)" hintText="000000" />`} />
       </Section>
 
-      {/* ── Required ── */}
       <Section
         id="exemplo-3"
         title={`3) ${t(i18n, "showcase.component.inputPostalCode.sections.required.title")}`}
@@ -430,7 +389,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Controlado (setValue / clear) ── */}
       <Section
         id="exemplo-4"
         title={`4) ${t(i18n, "showcase.component.inputPostalCode.sections.controlled.title")}`}
@@ -492,7 +450,6 @@ export default function SgInputPostalCodePage() {
 <p>${t(i18n, "showcase.common.labels.currentState")}: "{controlledValue}"</p>`} />
       </Section>
 
-      {/* ── Validacao customizada ── */}
       <Section
         id="exemplo-5"
         title={`5) ${t(i18n, "showcase.component.inputPostalCode.sections.validation.title")}`}
@@ -521,7 +478,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── ViaCEP (BR only) ── */}
       <Section
         id="exemplo-6"
         title={`6) ${t(i18n, "showcase.component.inputPostalCode.sections.viacep.title")}`}
@@ -558,7 +514,6 @@ export default function SgInputPostalCodePage() {
         </p>
       </Section>
 
-      {/* ── Icone prefixo ── */}
       <Section
         id="exemplo-7"
         title={`7) ${t(i18n, "showcase.component.inputPostalCode.sections.prefixIcon.title")}`}
@@ -588,7 +543,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Prefixo e sufixo ── */}
       <Section
         id="exemplo-8"
         title={`8) ${t(i18n, "showcase.component.inputPostalCode.sections.prefixSuffix.title")}`}
@@ -633,7 +587,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Botoes de icone ── */}
       <Section
         id="exemplo-9"
         title={`9) ${t(i18n, "showcase.component.inputPostalCode.sections.iconButtons.title")}`}
@@ -705,7 +658,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Variacoes visuais ── */}
       <Section
         id="exemplo-10"
         title={`10) ${t(i18n, "showcase.common.sections.visual.title")}`}
@@ -735,7 +687,6 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.filled")}" hintText="00000-000" filled name="filled" register={register} />`} />
       </Section>
 
-      {/* ── Largura e borda ── */}
       <Section
         id="exemplo-11"
         title={`11) ${t(i18n, "showcase.common.sections.sizeBorder.title")}`}
@@ -764,7 +715,6 @@ export default function SgInputPostalCodePage() {
 <SgInputPostalCode id="b" label="${t(i18n, "showcase.common.labels.width300Rounded")}" hintText="00000-000" width={300} borderRadius={20} name="w300" register={register} />`} />
       </Section>
 
-      {/* ── Desabilitado e somente leitura ── */}
       <Section
         id="exemplo-12"
         title={`12) ${t(i18n, "showcase.component.inputPostalCode.sections.disabledReadonly.title")}`}
@@ -809,7 +759,6 @@ export default function SgInputPostalCodePage() {
 />`} />
       </Section>
 
-      {/* ── Standalone Form ── */}
       <Section
         id="exemplo-13"
         title={`13) ${t(i18n, "showcase.component.inputPostalCode.sections.standalone.title")}`}
@@ -887,7 +836,6 @@ export default function Example() {
 }`} />
       </Section>
 
-      {/* ── Eventos standalone ── */}
       <Section
         id="exemplo-14"
         title={`14) ${t(i18n, "showcase.common.sections.events.title")}`}

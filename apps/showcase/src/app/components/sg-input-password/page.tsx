@@ -5,7 +5,7 @@ import Link from "next/link";
 import { SgGrid, SgInputPassword, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
-import { getShowcaseI18n, t, useShowcaseI18n } from "../../../i18n";
+import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -21,30 +21,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const i18n = getShowcaseI18n();
-  const imports = [
-    `import React from "react";`,
-    `import { SgInputPassword } from "@seedgrid/fe-components";`
-  ].join("\n");
-
-  const setup = `const [value, setValue] = React.useState("");\nconst label = "${t(i18n, "showcase.component.inputPassword.labels.password")}";`;
-  const bodyIndented = indentCode(body.trim(), 4);
-
-  return `${imports}\n\nexport default function Example() {\n  ${setup}\n\n  return (\n${bodyIndented}\n  );\n}`;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 const PLAYGROUND_CODE = `import * as React from "react";

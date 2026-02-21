@@ -27,22 +27,66 @@ const [size, setSize] = React.useState(220);
 
 <div className="grid gap-6 md:grid-cols-[1fr_auto]">
   <div className="space-y-4">
-    <textarea value={value} onChange={(event) => setValue(event.target.value)} />
-    <input value={logoSrc} onChange={(event) => setLogoSrc(event.target.value)} />
-    <input type="range" min={140} max={360} step={4} value={size} onChange={(event) => setSize(Number(event.target.value))} />
+    <label className="block space-y-1">
+      <span className="text-sm font-medium">Valor do QR Code</span>
+      <textarea
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        rows={3}
+        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-primary"
+        placeholder="Digite texto, URL ou payload PIX"
+      />
+    </label>
 
-    <SgButton onClick={() => setValue("https://seedgrid.com.br")}>URL</SgButton>
-    <SgButton onClick={() => setValue("00020126580014BR.GOV.BCB.PIX0136contato@seedgrid.com.br5204000053039865802BR5922SEEDGRID TECNOLOGIA6009SAO PAULO62140510SEEDGRID1236304ABCD")}>Exemplo PIX</SgButton>
-    <SgButton onClick={() => setLogoSrc("")}>Sem logo</SgButton>
+    <label className="block space-y-1">
+      <span className="text-sm font-medium">Logo central (URL)</span>
+      <input
+        type="text"
+        value={logoSrc}
+        onChange={(event) => setLogoSrc(event.target.value)}
+        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-primary"
+        placeholder="https://exemplo.com/logo.png"
+      />
+    </label>
+
+    <label className="block space-y-1">
+      <span className="text-sm font-medium">Tamanho: {size}px</span>
+      <input
+        type="range"
+        min={140}
+        max={360}
+        step={4}
+        value={size}
+        onChange={(event) => setSize(Number(event.target.value))}
+        className="w-full"
+      />
+    </label>
+
+    <div className="flex flex-wrap gap-2">
+      <SgButton onClick={() => setValue("https://seedgrid.com.br")}>URL</SgButton>
+      <SgButton
+        severity="secondary"
+        onClick={() =>
+          setValue(
+            "00020126580014BR.GOV.BCB.PIX0136contato@seedgrid.com.br5204000053039865802BR5922SEEDGRID TECNOLOGIA6009SAO PAULO62140510SEEDGRID1236304ABCD"
+          )
+        }
+      >
+        Exemplo PIX
+      </SgButton>
+      <SgButton severity="warning" onClick={() => setLogoSrc("")}>Sem logo</SgButton>
+    </div>
   </div>
 
-  <SgQRCode
-    value={value}
-    size={size}
-    logoSrc={logoSrc || undefined}
-    logoAlt="Logo SeedGrid"
-    emptyFallback={<span>Informe um valor</span>}
-  />
+  <div className="inline-flex h-fit rounded-xl border border-border bg-white p-4 shadow-sm">
+    <SgQRCode
+      value={value}
+      size={size}
+      logoSrc={logoSrc || undefined}
+      logoAlt="Logo SeedGrid"
+      emptyFallback={<span className="text-sm text-muted-foreground">Informe um valor</span>}
+    />
+  </div>
 </div>`;
 
 const QRCODE_PLAYGROUND_APP_FILE = `import * as React from "react";

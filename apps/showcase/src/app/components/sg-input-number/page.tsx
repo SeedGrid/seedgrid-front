@@ -23,47 +23,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const imports = [
-    `import React from "react";`,
-    `import { useForm } from "react-hook-form";`,
-    `import { SgButton, SgGrid, SgInputNumber } from "@seedgrid/fe-components";`
-  ].join("\n");
-
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: {
-      valor: "0.00"
-    }
-  });
-
-  const log = (msg: string) => console.log(msg);`;
-
-  const bodyIndented = indentCode(body.trim(), 6);
-
-  return `${imports}
-
-export default function Example() {
-  ${indentCode(setup, 2)}
-
-  return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-${bodyIndented}
-    </form>
-  );
-}`;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 const INPUT_NUMBER_PLAYGROUND_CODE = `import * as React from "react";
@@ -1060,4 +1020,3 @@ export default function Example() {
     </I18NReady>
   );
 }
-

@@ -36,6 +36,7 @@ export type SgTextEditorProps = {
   height?: number;
   placeholder?: string;
   disabled?: boolean;
+  borderRadius?: number | string;
 
   showCssEditor?: boolean;
   cssEditorLabel?: string;
@@ -114,10 +115,15 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
     height = 320,
     placeholder = "Type here...",
     disabled,
+    borderRadius,
     showCssEditor = false,
     cssEditorLabel = "Embedded CSS",
     className
   } = props;
+  const resolvedBorderRadius = React.useMemo(() => {
+    if (borderRadius === undefined) return undefined;
+    return typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius;
+  }, [borderRadius]);
 
   const isControlled = typeof valueHtml === "string";
   const editor = useEditor({
@@ -192,10 +198,24 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
   };
 
   const active = (name: string, attrs?: any) => !!editor?.isActive(name as any, attrs);
+  const toolbarStyle = resolvedBorderRadius
+    ? ({ borderTopLeftRadius: resolvedBorderRadius, borderTopRightRadius: resolvedBorderRadius } as React.CSSProperties)
+    : undefined;
+  const editorContainerStyle: React.CSSProperties = { height };
+  if (resolvedBorderRadius) {
+    editorContainerStyle.borderBottomLeftRadius = resolvedBorderRadius;
+    editorContainerStyle.borderBottomRightRadius = resolvedBorderRadius;
+  }
+  const cssTextareaStyle = resolvedBorderRadius
+    ? ({ borderRadius: resolvedBorderRadius } as React.CSSProperties)
+    : undefined;
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 bg-background p-2">
+      <div
+        className="flex flex-wrap items-center gap-2 rounded-t-lg border border-b-0 bg-background p-2"
+        style={toolbarStyle}
+      >
         <select
           className="h-9 rounded-md border px-2 text-sm bg-background"
           disabled={!editor || disabled}
@@ -463,7 +483,7 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
         </div>
       </div>
 
-      <div className="rounded-b-lg border bg-background" style={{ height }}>
+      <div className="rounded-b-lg border bg-background" style={editorContainerStyle}>
         <div className="h-full overflow-auto p-3">
           <EditorContent editor={editor} />
         </div>
@@ -476,6 +496,7 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
             value={cssText}
             onChange={(e) => onCssTextChange?.(e.target.value)}
             className="min-h-[160px] w-full rounded-lg border p-2 font-mono text-xs"
+            style={cssTextareaStyle}
           />
           <p className="mt-1 text-xs text-muted-foreground">
             CSS is embedded inside the saved HTML document.

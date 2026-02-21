@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -21,31 +21,7 @@ function Section(props: { id?: string; title: string; description?: string; chil
 }
 
 function CodeBlock(props: { code: string }) {
-  const trimmed = props.code.trimStart();
-  const content = trimmed.startsWith("import ") ? props.code : wrapFullExample(props.code);
-  return <CodeBlockBase code={content} />;
-}
-
-function indentCode(source: string, spaces: number) {
-  const pad = " ".repeat(spaces);
-  return source
-    .split("\n")
-    .map((line) => (line.length ? `${pad}${line}` : line))
-    .join("\n");
-}
-
-function wrapFullExample(body: string) {
-  const imports = [
-    `import React from "react";`,
-    `import { useForm } from "react-hook-form";`,
-    `import { SgButton, SgGrid, SgInputTextArea } from "@seedgrid/fe-components";`
-  ].join("\n");
-
-  const setup = `const { register, control, handleSubmit, watch, setValue } = useForm({\n    defaultValues: { }\n  });\n\n  const log = (msg: string) => console.log(msg);`;
-
-  const bodyIndented = indentCode(body.trim(), 6);
-
-  return `${imports}\n\nexport default function Example() {\n  ${indentCode(setup, 2)}\n\n  return (\n    <form onSubmit={handleSubmit((data) => console.log(data))}>\n${bodyIndented}\n    </form>\n  );\n}`;
+  return <CodeBlockBase code={props.code.trimStart()} />;
 }
 
 const INPUT_TEXTAREA_PLAYGROUND_CODE = `import * as React from "react";
@@ -768,4 +744,3 @@ export default function Example() {
     </I18NReady>
   );
 }
-

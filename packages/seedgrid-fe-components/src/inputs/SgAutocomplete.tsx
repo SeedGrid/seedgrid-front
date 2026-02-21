@@ -113,6 +113,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
     iconButtons,
     enabled,
     readOnly,
+    borderRadius,
     ...rest
   } = props;
 
@@ -132,6 +133,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
   const requestIdRef = React.useRef(0);
   const openRef = React.useRef(false);
   openRef.current = open;
+  const resolvedBorderRadius = React.useMemo(() => {
+    if (borderRadius === undefined) return undefined;
+    return typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius;
+  }, [borderRadius]);
 
   React.useEffect(() => {
     if (value === undefined) return;
@@ -383,6 +388,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
         {...rest}
         enabled={enabled}
         readOnly={readOnly}
+        borderRadius={borderRadius}
         iconButtons={mergedIconButtons}
         inputProps={{
           ...inputProps,
@@ -403,7 +409,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
         }}
       />
       {open && !(enabled === false || readOnly) ? (
-        <div className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-white shadow-lg">
+        <div
+          className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-white shadow-lg"
+          style={resolvedBorderRadius ? { borderRadius: resolvedBorderRadius } : undefined}
+        >
           <div className="max-h-64 overflow-auto">
             {listContent()}
           </div>
