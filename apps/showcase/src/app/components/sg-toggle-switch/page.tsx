@@ -1,16 +1,21 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
-import { SgPlayground, SgToggleSwitch } from "@seedgrid/fe-components";
+import { SgGrid, SgPlayground, SgToggleSwitch } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
+import I18NReady from "../I18NReady";
 
-function Section(props: { title: string; description?: string; children: React.ReactNode }) {
+function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border p-6">
-      <h2 className="text-lg font-semibold">{props.title}</h2>
+    <section
+      id={props.id}
+      className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+    >
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       {props.description ? (
         <p className="mt-1 text-sm text-muted-foreground">{props.description}</p>
       ) : null}
@@ -317,6 +322,8 @@ export default function SgToggleSwitchPage() {
   const [remoteLoading, setRemoteLoading] = React.useState(false);
   const [remoteLog, setRemoteLog] = React.useState<string[]>([]);
   const [submitResult, setSubmitResult] = React.useState<string>("-");
+  const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorOffset, setAnchorOffset] = React.useState(320);
 
   const { register, control, handleSubmit, watch } = useForm<FieldValues>({
     defaultValues: {
@@ -347,18 +354,164 @@ export default function SgToggleSwitchPage() {
     setCapturedValue(`onChange -> ${String(nextValue)}`);
   }, []);
 
+  React.useEffect(() => {
+    const updateAnchorOffset = () => {
+      const headerHeight = stickyHeaderRef.current?.getBoundingClientRect().height ?? 0;
+      setAnchorOffset(Math.max(240, Math.ceil(headerHeight + 40)));
+    };
+
+    updateAnchorOffset();
+    const resizeObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateAnchorOffset) : null;
+    if (resizeObserver && stickyHeaderRef.current) resizeObserver.observe(stickyHeaderRef.current);
+
+    window.addEventListener("resize", updateAnchorOffset);
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", updateAnchorOffset);
+    };
+  }, []);
+
+  const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
+    let current = element?.parentElement ?? null;
+    while (current) {
+      const style = window.getComputedStyle(current);
+      const overflowY = style.overflowY;
+      if ((overflowY === "auto" || overflowY === "scroll") && current.scrollHeight > current.clientHeight) {
+        return current;
+      }
+      current = current.parentElement;
+    }
+    return window;
+  }, []);
+
+  const navigateToAnchor = React.useCallback((anchorId: string) => {
+    const target = document.getElementById(anchorId);
+    if (!target) return;
+
+    const scrollContainer = findScrollContainer(target);
+    const extraTopGap = 12;
+    const titleEl = (target.querySelector("[data-anchor-title='true']") as HTMLElement | null) ?? target;
+
+    const correctIfNeeded = () => {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const currentTop = titleEl.getBoundingClientRect().top;
+      const delta = currentTop - desiredTopNow;
+      if (Math.abs(delta) <= 1) return;
+
+      if (scrollContainer === window) {
+        const next = Math.max(0, window.scrollY + delta);
+        window.scrollTo({ top: next, behavior: "auto" });
+        return;
+      }
+
+      const container = scrollContainer as HTMLElement;
+      const next = Math.max(0, container.scrollTop + delta);
+      container.scrollTo({ top: next, behavior: "auto" });
+    };
+
+    if (scrollContainer === window) {
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopNow = stickyBottomNow + extraTopGap;
+      const titleTop = window.scrollY + titleEl.getBoundingClientRect().top;
+      window.scrollTo({ top: Math.max(0, titleTop - desiredTopNow), behavior: "auto" });
+    } else {
+      const container = scrollContainer as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+      const stickyBottomNow = stickyHeaderRef.current?.getBoundingClientRect().bottom ?? 0;
+      const desiredTopInContainer = stickyBottomNow + extraTopGap - containerRect.top;
+      const titleRect = titleEl.getBoundingClientRect();
+      const titleTopInContainer = container.scrollTop + (titleRect.top - containerRect.top);
+      container.scrollTo({ top: Math.max(0, titleTopInContainer - desiredTopInContainer), behavior: "auto" });
+    }
+
+    window.history.replaceState(null, "", `#${anchorId}`);
+    requestAnimationFrame(() => {
+      correctIfNeeded();
+      requestAnimationFrame(correctIfNeeded);
+    });
+    window.setTimeout(correctIfNeeded, 120);
+    window.setTimeout(correctIfNeeded, 260);
+  }, [findScrollContainer]);
+
+  const handleAnchorClick = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    navigateToAnchor(anchorId);
+  }, [navigateToAnchor]);
+
+  const navigateToAnchorRef = React.useRef(navigateToAnchor);
+  React.useEffect(() => {
+    navigateToAnchorRef.current = navigateToAnchor;
+  }, [navigateToAnchor]);
+
+  React.useEffect(() => {
+    const applyHashNavigation = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return;
+      navigateToAnchorRef.current(hash);
+    };
+
+    const timer = window.setTimeout(applyHashNavigation, 0);
+    window.addEventListener("hashchange", applyHashNavigation);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("hashchange", applyHashNavigation);
+    };
+  }, []);
+
+  const exampleLinks = React.useMemo(
+    () => [
+      { id: "exemplo-1", label: "1) Basico" },
+      { id: "exemplo-2", label: "2) Com icones (on/off)" },
+      { id: "exemplo-3", label: "3) Remote (simulacao de update)" },
+      { id: "exemplo-4", label: "4) Controlado externamente + captura do valor" },
+      { id: "exemplo-5", label: "5) React Hook Form" },
+      { id: "exemplo-6", label: "6) Estados Disabled / ReadOnly" },
+      { id: "exemplo-7", label: "7) Playground (SgPlayground)" }
+    ],
+    []
+  );
+
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">SgToggleSwitch</h1>
-        <p className="mt-2 text-muted-foreground">
-          Toggle switch inspirado no PrimeFaces (`toggleSwitch`) com suporte a icones,
-          estados disabled/readonly e integracao com `react-hook-form`.
-        </p>
-      </div>
+    <I18NReady>
+      <div
+        className="max-w-5xl space-y-8"
+        style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
+      >
+        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+          <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
+            <h1 className="text-3xl font-bold">SgToggleSwitch</h1>
+            <p className="mt-2 text-muted-foreground">
+              Toggle switch inspirado no PrimeFaces (`toggleSwitch`) com suporte a icones,
+              estados disabled/readonly e integracao com `react-hook-form`.
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
+              {exampleLinks.map((example) => (
+                <Link
+                  key={example.id}
+                  href={`#${example.id}`}
+                  onClick={(event) => handleAnchorClick(event, example.id)}
+                  className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+                >
+                  {example.label}
+                </Link>
+              ))}
+              <Link
+                href="#props-reference"
+                onClick={(event) => handleAnchorClick(event, "props-reference")}
+                className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
+              >
+                Props Reference
+              </Link>
+            </SgGrid>
+          </div>
+        </div>
 
       <Section
-        title="Basico"
+        id="exemplo-1"
+        title="1) Basico"
         description="Exemplo simples controlado por estado React."
       >
         <div className="rounded-md border border-border p-4">
@@ -378,7 +531,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="Com icones (on/off)"
+        id="exemplo-2"
+        title="2) Com icones (on/off)"
         description="Variacao visual com icones dentro do thumb, seguindo a ideia do exemplo com icon no PrimeFaces."
       >
         <div className="rounded-md border border-border p-4">
@@ -400,7 +554,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="Remote (simulacao de update)"
+        id="exemplo-3"
+        title="3) Remote (simulacao de update)"
         description="Ao alterar o switch, simulamos uma atualizacao remota para reproduzir o fluxo comum do showcase PrimeFaces."
       >
         <div className="rounded-md border border-border p-4">
@@ -429,7 +584,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="Controlado externamente + captura do valor"
+        id="exemplo-4"
+        title="4) Controlado externamente + captura do valor"
         description="Exemplo de value controlado por estado externo e captura via onChange."
       >
         <div className="rounded-md border border-border p-4 space-y-3">
@@ -482,7 +638,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="React Hook Form"
+        id="exemplo-5"
+        title="5) React Hook Form"
         description="Suporte nativo para `register` e `control`."
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded-md border border-border p-4">
@@ -523,7 +680,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="Estados Disabled / ReadOnly"
+        id="exemplo-6"
+        title="6) Estados Disabled / ReadOnly"
         description="Disabled bloqueia interacao. ReadOnly mantem visual habilitado, mas nao altera o valor."
       >
         <div className="grid gap-4 rounded-md border border-border p-4 sm:grid-cols-2">
@@ -550,7 +708,8 @@ export default function SgToggleSwitchPage() {
       </Section>
 
       <Section
-        title="Playground (SgPlayground)"
+        id="exemplo-7"
+        title="7) Playground (SgPlayground)"
         description="Playground interativo do componente com set externo e captura de valor."
       >
         <SgPlayground
@@ -562,6 +721,37 @@ export default function SgToggleSwitchPage() {
           defaultOpen
         />
       </Section>
-    </div>
+
+      <section
+        id="props-reference"
+        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
+      >
+        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="pb-2 pr-4 font-semibold">Prop</th>
+                <th className="pb-2 pr-4 font-semibold">Tipo</th>
+                <th className="pb-2 pr-4 font-semibold">Padrão</th>
+                <th className="pb-2 font-semibold">Descrição</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador único.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto exibido ao lado do toggle.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">checked / defaultChecked</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Valor controlado e inicial.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(next: boolean) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback disparado na troca de estado.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onIcon / offIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Icones para estados ligado/desligado.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de interação.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
+      </div>
+    </I18NReady>
   );
 }
