@@ -35,7 +35,7 @@ export type { SgTextEditorProps, SgTextEditorSaveMeta } from "./inputs/SgTextEdi
 export { SgRating } from "./inputs/SgRating";
 export type { SgRatingProps, SgRatingSize } from "./inputs/SgRating";
 export { SgRadioGroup } from "./inputs/SgRadioGroup";
-export type { SgRadioGroupProps, SgRadioGroupOption, SgRadioGroupOrientation } from "./inputs/SgRadioGroup";
+export type { SgRadioGroupProps, SgRadioGroupOption, SgRadioGroupOrientation, SgRadioGroupSelectionStyle } from "./inputs/SgRadioGroup";
 export { SgButton } from "./buttons/SgButton";
 export type { SgButtonProps, SgButtonCustomColors } from "./buttons/SgButton";
 export { SgSplitButton } from "./buttons/SgSplitButton";

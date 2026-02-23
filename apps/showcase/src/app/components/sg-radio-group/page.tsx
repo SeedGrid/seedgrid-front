@@ -22,7 +22,10 @@ import {
   Cloud,
   Mail,
   Phone,
-  Home
+  Home,
+  Landmark,
+  Bell,
+  RefreshCw
 } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
@@ -263,6 +266,12 @@ const WEATHER_OPTIONS: SgRadioGroupOption[] = [
   { label: "Nuvem", value: "cloud", icon: <Cloud className="w-5 h-5 text-gray-500" /> }
 ];
 
+const LIST_HIGHLIGHT_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Reserve", value: "reserve", icon: <Landmark className="w-4 h-4 text-indigo-600" /> },
+  { label: "Alert", value: "alert", icon: <Bell className="w-4 h-4 text-rose-600" /> },
+  { label: "Refresh", value: "refresh", icon: <RefreshCw className="w-4 h-4 text-emerald-600" /> }
+];
+
 const CONTACT_OPTIONS: SgRadioGroupOption[] = [
   { label: "Email", value: "email", icon: <Mail className="w-4 h-4" /> },
   { label: "Telefone", value: "phone", icon: <Phone className="w-4 h-4" /> },
@@ -288,9 +297,10 @@ const EXAMPLE_LINKS = [
   { id: "exemplo-9", label: "9) Somente Leitura" },
   { id: "exemplo-10", label: "10) Obrigatório com Validação" },
   { id: "exemplo-11", label: "11) Horizontal com Ícones Coloridos" },
-  { id: "exemplo-12", label: "12) Com GroupBox Customizado" },
-  { id: "exemplo-13", label: "13) React Hook Form - Register" },
-  { id: "exemplo-14", label: "14) Playground Interativo" }
+  { id: "exemplo-12", label: "12) Selection Style Highlight (Lista)" },
+  { id: "exemplo-13", label: "13) Com GroupBox Customizado" },
+  { id: "exemplo-14", label: "14) React Hook Form - Register" },
+  { id: "exemplo-15", label: "15) Playground Interativo" }
 ];
 
 export default function SgRadioGroupShowcase() {
@@ -298,6 +308,7 @@ export default function SgRadioGroupShowcase() {
   const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>(null);
   const [selectedWithCancel, setSelectedWithCancel] = React.useState<string | number | null>("option2");
   const [externalValue, setExternalValue] = React.useState<string | number | null>("banana");
+  const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<string | number | null>("reserve");
 
   const { register, control, handleSubmit } = useForm();
 
@@ -332,6 +343,12 @@ export default function SgRadioGroupShowcase() {
       type: '"horizontal" | "vertical"',
       defaultValue: '"vertical"',
       description: "Orientação do layout das opções"
+    },
+    {
+      name: "selectionStyle",
+      type: '"radio" | "highlight"',
+      defaultValue: '"radio"',
+      description: "Define o estilo visual da seleção (radio padrão ou destaque em linha)"
     },
     {
       name: "iconOnly",
@@ -800,7 +817,35 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-12" title="12) Com GroupBox Customizado">
+      <Section id="exemplo-12" title="12) Selection Style Highlight (Lista)">
+        <SgRadioGroup
+          id="highlight-list"
+          title="Opções"
+          source={LIST_HIGHLIGHT_OPTIONS}
+          value={selectedHighlightStyle ?? undefined}
+          onChange={setSelectedHighlightStyle}
+          selectionStyle="highlight"
+          className="max-w-xs"
+        />
+        <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
+          Valor: <strong>{selectedHighlightStyle ?? "Nenhum"}</strong>
+        </p>
+        <CodeBlock>
+          {`const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<string | number | null>("reserve");
+
+<SgRadioGroup
+  id="highlight-list"
+  title="Opções"
+  source={LIST_HIGHLIGHT_OPTIONS}
+  value={selectedHighlightStyle ?? undefined}
+  onChange={setSelectedHighlightStyle}
+  selectionStyle="highlight"
+  className="max-w-xs"
+/>`}
+        </CodeBlock>
+      </Section>
+
+      <Section id="exemplo-13" title="13) Com GroupBox Customizado">
         <SgRadioGroup
           id="custom-groupbox"
           title="Escolha com estilo customizado"
@@ -823,7 +868,7 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-13" title="13) React Hook Form - Register">
+      <Section id="exemplo-14" title="14) React Hook Form - Register">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <SgRadioGroup
             name="fruit"
@@ -848,7 +893,7 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-14" title="14) Playground Interativo">
+      <Section id="exemplo-15" title="15) Playground Interativo">
         <SgPlayground
           title="SgRadioGroup Playground"
           interactive
