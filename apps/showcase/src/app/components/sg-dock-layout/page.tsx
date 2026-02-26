@@ -51,7 +51,7 @@ export default function App() {
             <SgToolbarIconButton icon="L2" hint="Left 2" />
           </SgToolBar>
         </SgDockZone>
-        <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">Arraste as barras</div>
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">Arraste as barras</div>
       </SgDockLayout>
     </div>
   );
@@ -137,7 +137,7 @@ export default function SgDockLayoutPage() {
               </SgToolBar>
             </SgDockZone>
 
-            <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
               {t(i18n, "showcase.component.dockLayout.labels.dragHint")}
             </div>
           </SgDockLayout>
@@ -179,12 +179,12 @@ export default function Example() {
 
         <ShowcasePropsReference
           id="props-reference"
-          title="ReferÃªncia de Props - SgDockLayout"
+          title="Referencia de Props - SgDockLayout"
           rows={DOCK_LAYOUT_PROPS}
         />
         <ShowcasePropsReference
           id="props-reference-dock-zone"
-          title="ReferÃªncia de Props - SgDockZone"
+          title="Referencia de Props - SgDockZone"
           rows={DOCK_ZONE_PROPS}
         />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />

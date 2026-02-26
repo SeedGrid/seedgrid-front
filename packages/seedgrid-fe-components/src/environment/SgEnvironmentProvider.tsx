@@ -141,8 +141,14 @@ export function useSgPersistentState<T>(args: {
   deserialize?: (value: unknown) => T;
 }) {
   const { baseKey, defaultValue } = args;
-  const serialize = args.serialize ?? ((value: T) => value);
-  const deserialize = args.deserialize ?? ((value: unknown) => value as T);
+  const serialize = React.useMemo(
+    () => args.serialize ?? ((value: T) => value),
+    [args.serialize]
+  );
+  const deserialize = React.useMemo(
+    () => args.deserialize ?? ((value: unknown) => value as T),
+    [args.deserialize]
+  );
   const persistence = useSgPersistence();
   const [value, setValue] = React.useState<T>(defaultValue);
   const [hydrated, setHydrated] = React.useState(false);
@@ -168,7 +174,7 @@ export function useSgPersistentState<T>(args: {
     return () => {
       alive = false;
     };
-  }, [baseKey, persistence.load, deserialize]);
+  }, [baseKey, defaultValue, persistence.load, deserialize]);
 
   const setAndPersist = React.useCallback(
     (next: T | ((prev: T) => T)) => {
