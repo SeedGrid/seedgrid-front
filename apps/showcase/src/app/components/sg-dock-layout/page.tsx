@@ -8,6 +8,7 @@ import {
   SgToolBar,
   SgToolbarIconButton
 } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
@@ -34,6 +35,7 @@ function CodeBlock(props: { code: string }) {
 
 const DOCK_LAYOUT_PLAYGROUND_CODE = `import * as React from "react";
 import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
 export default function App() {
   return (
@@ -41,29 +43,29 @@ export default function App() {
       <SgDockLayout id="dock-playground-v3">
         <SgDockZone zone="top" className="absolute left-0 right-0 top-0 h-20 items-start border-b border-white/20 px-4 pt-4">
           <SgToolBar id="tb-top-v3" dockZone="top" orientationDirection="horizontal-left" title="Topo" draggable>
-            <SgToolbarIconButton icon="T1" hint="Top 1" />
-            <SgToolbarIconButton icon="T2" hint="Top 2" />
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
           </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="bottom" className="absolute bottom-0 left-0 right-0 h-20 items-end border-t border-white/20 px-4 pb-4">
           <SgToolBar id="tb-bottom-v3" dockZone="bottom" orientationDirection="horizontal-left" title="Base" draggable>
-            <SgToolbarIconButton icon="B1" hint="Bottom 1" />
-            <SgToolbarIconButton icon="B2" hint="Bottom 2" />
+            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
           </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="left" className="absolute bottom-20 left-0 top-20 w-44 items-start border-r border-white/20 px-4 pt-4">
           <SgToolBar id="tb-left-v3" dockZone="left" orientationDirection="vertical-down" title="Esquerda" collapsible draggable>
-            <SgToolbarIconButton icon="L1" hint="Left 1" />
-            <SgToolbarIconButton icon="L2" hint="Left 2" />
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
           </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="right" className="absolute bottom-20 right-0 top-20 w-44 items-start border-l border-white/20 px-4 pt-4">
           <SgToolBar id="tb-right-v3" dockZone="right" orientationDirection="vertical-down" title="Direita" collapsible draggable>
-            <SgToolbarIconButton icon="R1" hint="Right 1" />
-            <SgToolbarIconButton icon="R2" hint="Right 2" />
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
           </SgToolBar>
         </SgDockZone>
 
@@ -118,8 +120,8 @@ export default function SgDockLayoutPage() {
           <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
             <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
               <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
-                <SgToolbarIconButton icon="T1" hint="Top 1" />
-                <SgToolbarIconButton icon="T2" hint="Top 2" />
+                <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+                <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
               </SgToolBar>
             </SgDockZone>
 
@@ -136,6 +138,7 @@ export default function SgDockLayoutPage() {
         <CodeBlock
           code={`import React from "react";
 import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Search } from "lucide-react";
 
 export default function Example() {
   return (
@@ -143,8 +146,8 @@ export default function Example() {
       <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
         <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
           <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
-            <SgToolbarIconButton icon="T1" hint="Top 1" />
-            <SgToolbarIconButton icon="T2" hint="Top 2" />
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
           </SgToolBar>
         </SgDockZone>
 

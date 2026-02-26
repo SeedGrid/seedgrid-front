@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { useSgDockLayout } from "./SgDockLayout";
+import { useSgDockLayout, type SgDockZoneId } from "./SgDockLayout";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 export type SgToolBarOrientation = "horizontal" | "vertical";
@@ -154,6 +154,20 @@ function resolveOrientationDirection(
   }
 }
 
+function resolveDockOrientationDirection(
+  orientationDirection: SgToolBarOrientationDirection,
+  inDock: boolean,
+  zone: "top" | "bottom" | "left" | "right" | "free"
+): SgToolBarOrientationDirection {
+  if (!inDock || zone === "free") return orientationDirection;
+
+  if (zone === "top" || zone === "bottom") {
+    return orientationDirection.startsWith("horizontal") ? orientationDirection : "horizontal-left";
+  }
+
+  return orientationDirection.startsWith("vertical") ? orientationDirection : "vertical-down";
+}
+
 type SgToolBarDragMode = "fixed" | "absolute";
 
 type SgToolBarDragPos = {
@@ -187,7 +201,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const {
     id,
     title,
-    orientationDirection = "vertical-down",
+    orientationDirection,
     buttonsPerDirection,
     bgColorTitle,
     bgColor,
@@ -204,12 +218,20 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     onCollapsedChange,
     children
   } = props;
-  const { orientation, direction } = resolveOrientationDirection(orientationDirection);
 
   const dock = useSgDockLayout();
   const inDock = !!dock;
   const assignedZone = inDock ? dock.getToolbarZone(id) : null;
   const effectiveZone = assignedZone ?? dockZone ?? "free";
+  const [dragHoverZone, setDragHoverZone] = React.useState<SgDockZoneId | null>(null);
+  const dragHoverZoneRef = React.useRef<SgDockZoneId | null>(null);
+  const zoneForOrientation = inDock && !freeDrag && dragHoverZone ? dragHoverZone : effectiveZone;
+  const resolvedOrientationDirection = resolveDockOrientationDirection(
+    orientationDirection ?? "vertical-down",
+    inDock,
+    zoneForOrientation
+  );
+  const { orientation, direction } = resolveOrientationDirection(resolvedOrientationDirection);
   const portalTarget = inDock ? dock.getZoneElement(effectiveZone) : null;
 
   const [isCollapsed, setIsCollapsed] = useControlledState<boolean>({
@@ -234,6 +256,11 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const storageKey = React.useMemo(() => `sg-toolbar-pos:${id}`, [id]);
+  const setDragHoverZoneSafe = React.useCallback((next: SgDockZoneId | null) => {
+    if (dragHoverZoneRef.current === next) return;
+    dragHoverZoneRef.current = next;
+    setDragHoverZone(next);
+  }, []);
 
   const loadStoredPosition = React.useCallback(async (): Promise<{ x: number; y: number } | null> => {
     if (!storageKey) return null;
@@ -396,6 +423,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       event.preventDefault();
       if (inDock && !freeDrag) {
         dock.setDropPreviewActive(true);
+        setDragHoverZoneSafe(dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveZone);
       }
 
       const rect = containerRef.current.getBoundingClientRect();
@@ -437,6 +465,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         };
         dragPosRef.current = next;
         setDragPos(next);
+        if (inDock && !freeDrag) {
+          setDragHoverZoneSafe(dock.getZoneAtPoint(moveEvent.clientX, moveEvent.clientY));
+        }
       };
 
       const handleUp = (upEvent: PointerEvent) => {
@@ -444,6 +475,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         window.removeEventListener("pointerup", handleUp);
         window.removeEventListener("pointercancel", handleUp);
         setDragActive(false);
+        setDragHoverZoneSafe(null);
         if (inDock && !freeDrag) {
           dock.setDropPreviewActive(false);
         }
@@ -470,7 +502,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
           setDragPos(clamped);
           void saveStoredPosition({ x: clamped.x, y: clamped.y });
         } else if (inDock) {
-          const zone = dock.getZoneAtPoint(upEvent.clientX, upEvent.clientY);
+          const zone = dragHoverZoneRef.current ?? dock.getZoneAtPoint(upEvent.clientX, upEvent.clientY);
           if (zone) dock.moveToolbar(id, zone);
           dragPosRef.current = null;
           setDragPos(null);
@@ -481,7 +513,18 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       window.addEventListener("pointerup", handleUp);
       window.addEventListener("pointercancel", handleUp);
     },
-    [draggable, freeDrag, inDock, dock, id, resolveFreeDragMode, getDragBounds, saveStoredPosition]
+    [
+      draggable,
+      freeDrag,
+      inDock,
+      dock,
+      id,
+      effectiveZone,
+      resolveFreeDragMode,
+      getDragBounds,
+      saveStoredPosition,
+      setDragHoverZoneSafe
+    ]
   );
 
   const showContent = !isCollapsed;
@@ -493,7 +536,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       : undefined;
   const showLeadingCollapseButton = orientation === "horizontal" && openLeft && showContent;
   const collapseIconDirection: "left" | "right" | "up" | "down" =
-    orientationDirection === "horizontal-right" ? "right" : direction;
+    resolvedOrientationDirection === "horizontal-right" ? "right" : direction;
 
   const content = showContent ? (
     <div
