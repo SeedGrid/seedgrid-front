@@ -166,8 +166,8 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     className,
     style,
     dockZone,
-    draggable = true,
-    freeDrag = true,
+    draggable = false,
+    freeDrag = false,
     defaultPosition,
     collapsible = true,
     collapsed,
@@ -537,13 +537,24 @@ export function SgToolbarIconButton(
   const c = BTN_COLORS[severity];
   const text = typeof icon === "string" ? icon : null;
   const hasVisibleLabel = Boolean(label) && showLabel && !hideLabel;
-  const showHintTooltip = Boolean(hint) && !hideLabel && hint !== label;
+  const showHintTooltip = Boolean(hint) && !hideLabel;
+  const [hintPosition, setHintPosition] = React.useState({ x: 20, y: 20 });
+
+  const handleMouseMove = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!showHintTooltip) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setHintPosition({
+      x: event.clientX - rect.left + 12,
+      y: event.clientY - rect.top
+    });
+  }, [showHintTooltip]);
 
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={onClick}
+      onMouseMove={handleMouseMove}
       aria-label={hint ?? label ?? text ?? undefined}
       className={cn(
         "group",
@@ -572,7 +583,14 @@ export function SgToolbarIconButton(
         <span className="text-xs font-medium leading-none">{label}</span>
       ) : null}
       {showHintTooltip ? (
-        <span className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-foreground/90 px-2 py-1 text-[11px] text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+        <span
+          className="pointer-events-none absolute z-20 whitespace-nowrap rounded bg-foreground/90 px-2 py-1 text-[11px] text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+          style={{
+            left: hintPosition.x,
+            top: hintPosition.y,
+            transform: "translateY(-50%)"
+          }}
+        >
           {hint}
         </span>
       ) : null}

@@ -54,20 +54,20 @@ export default function App() {
 }`;
 
 const TOOLBAR_PROPS: ShowcasePropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador Ãºnico da toolbar." },
-  { prop: "title", type: "ReactNode", defaultValue: "-", description: "TÃ­tulo exibido no cabeÃ§alho." },
-  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "DireÃ§Ã£o dos botÃµes." },
-  { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "DimensÃµes fixas da toolbar." },
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador único da toolbar." },
+  { prop: "title", type: "ReactNode", defaultValue: "-", description: "Título exibido no cabeçalho." },
+  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "Direção dos botões." },
+  { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Dimensões fixas da toolbar." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
   { prop: "dockZone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "free", description: "Zona inicial quando usada com dock." },
-  { prop: "draggable", type: "boolean", defaultValue: "true", description: "Permite iniciar arraste." },
-  { prop: "freeDrag", type: "boolean", defaultValue: "true", description: "Ativa arraste livre com posiÃ§Ã£o x/y." },
-  { prop: "defaultPosition", type: "{ x: number; y: number }", defaultValue: "-", description: "PosiÃ§Ã£o inicial quando nÃ£o existe estado salvo." },
-  { prop: "collapsible", type: "boolean", defaultValue: "true", description: "Habilita botÃ£o de expandir/contrair." },
+  { prop: "draggable", type: "boolean", defaultValue: "false", description: "Permite iniciar arraste." },
+  { prop: "freeDrag", type: "boolean", defaultValue: "false", description: "Ativa arraste livre com posição x/y." },
+  { prop: "defaultPosition", type: "{ x: number; y: number }", defaultValue: "-", description: "Posição inicial quando não existe estado salvo." },
+  { prop: "collapsible", type: "boolean", defaultValue: "true", description: "Habilita botão de expandir/contrair." },
   { prop: "collapsed", type: "boolean", defaultValue: "controlado", description: "Controla o estado colapsado externamente." },
-  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado no modo nÃ£o controlado." },
-  { prop: "collapseDirection", type: "\"left\" | \"right\" | \"top\" | \"bottom\"", defaultValue: "left(horizontal) / top(vertical)", description: "DireÃ§Ã£o da seta de colapso." },
+  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado no modo não controlado." },
+  { prop: "collapseDirection", type: "\"left\" | \"right\" | \"top\" | \"bottom\"", defaultValue: "left(horizontal) / top(vertical)", description: "Direção da seta de colapso." },
   { prop: "onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Callback ao alternar colapso." },
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Itens internos, normalmente SgToolbarIconButton." }
 ];
@@ -209,7 +209,7 @@ export default function Example() {
 
       <Section
         title="4) Drag preso no container"
-        description="Neste exemplo o drag continua dentro da caixa porque a toolbar estÃ¡ em modo absolute."
+        description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
       >
         <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
           <SgToolBar
@@ -264,12 +264,12 @@ export default function Example() {
 
         <ShowcasePropsReference
           id="props-reference"
-          title="ReferÃªncia de Props - SgToolBar"
+          title="Referência de Props - SgToolBar"
           rows={TOOLBAR_PROPS}
         />
         <ShowcasePropsReference
           id="props-reference-toolbar-icon-button"
-          title="ReferÃªncia de Props - SgToolbarIconButton"
+          title="Referência de Props - SgToolbarIconButton"
           rows={TOOLBAR_ICON_BUTTON_PROPS}
         />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
@@ -277,6 +277,7 @@ export default function Example() {
     </I18NReady>
   );
 }
+
 
 
 
