@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -86,11 +86,176 @@ export default function App() {
   );
 }`;
 
+const MAIN_PANEL_FULL_EXAMPLE_CODE = `import React from "react";
+import {
+  SgScreen,
+  SgMainPanel,
+  SgPanel,
+  SgGrid,
+  SgStack,
+  SgButton,
+  SgInputText,
+  SgBadge
+} from "@seedgrid/fe-components";
+
+function Card(props: { title: string; subtitle?: string }) {
+  return (
+    <SgPanel padding={12} className="rounded-lg">
+      <SgStack gap={8}>
+        <p className="font-medium">{props.title}</p>
+        <p className="text-xs text-muted-foreground">{props.subtitle ?? "Card padrao"}</p>
+        <SgPanel borderStyle="solid" className="h-16 rounded bg-muted/30" />
+        <SgStack direction="row" justify="between" align="center">
+          <span className="text-xs text-muted-foreground">Status: OK</span>
+          <SgButton size="sm" appearance="outline">Abrir</SgButton>
+        </SgStack>
+      </SgStack>
+    </SgPanel>
+  );
+}
+
+export default function Example() {
+  const [mode, setMode] = React.useState<"columns" | "autofit">("columns");
+  const [search, setSearch] = React.useState("");
+
+  return (
+    <SgPanel className="h-[780px] rounded-xl bg-muted/30" padding={12}>
+      <SgScreen fullscreen={false} padding={10} className="rounded-lg bg-zinc-100">
+        <SgMainPanel gap={10} padding={10}>
+          <SgPanel align="top" height={10} padding={10} className="rounded-lg">
+            <SgStack direction="row" justify="between" align="center" wrap gap={10}>
+              <SgStack direction="row" align="center" gap={8}>
+                <SgPanel borderStyle="none" className="h-8 w-8 rounded bg-zinc-900" />
+                <SgStack gap={2}>
+                  <p className="text-sm font-semibold">SeedGrid Layout Showcase</p>
+                  <p className="text-xs text-muted-foreground">Header (height = 10%)</p>
+                </SgStack>
+              </SgStack>
+
+              <SgStack direction="row" gap={8} align="center" wrap>
+                <SgInputText
+                  id="search-main-panel"
+                  label="Pesquisa"
+                  width={220}
+                  inputProps={{ value: search, placeholder: "Pesquisar..." }}
+                  onChange={setSearch}
+                />
+                <SgButton appearance="outline" onClick={() => setMode("columns")}>
+                  Grid Responsivo
+                </SgButton>
+                <SgButton appearance="outline" onClick={() => setMode("autofit")}>
+                  Auto-fit
+                </SgButton>
+                <SgButton>Novo</SgButton>
+              </SgStack>
+            </SgStack>
+          </SgPanel>
+
+          <SgPanel align="left" width={18} padding={10} scrollable="y" className="rounded-lg">
+            <SgStack gap={8}>
+              <p className="text-xs font-medium text-muted-foreground">MENU</p>
+              <SgButton appearance="outline">Dashboard</SgButton>
+              <SgButton appearance="outline">Relatorios</SgButton>
+              <SgButton appearance="outline">Clientes</SgButton>
+              <SgButton appearance="outline">Produtos</SgButton>
+              <p className="pt-2 text-xs font-medium text-muted-foreground">STATUS</p>
+              <SgPanel borderStyle="dashed" padding={8} className="rounded-md">
+                <SgStack gap={6}>
+                  <p className="text-xs">Ambiente: dev</p>
+                  <p className="text-xs">Tenant: seedgrid-demo</p>
+                </SgStack>
+              </SgPanel>
+            </SgStack>
+          </SgPanel>
+
+          <SgPanel align="right" width={18} padding={10} scrollable="y" className="rounded-lg">
+            <SgStack gap={8}>
+              <p className="text-xs font-medium text-muted-foreground">ACOES</p>
+              <SgPanel padding={8} className="rounded-md">
+                <SgStack gap={6}>
+                  <p className="text-xs font-medium">Filtros rapidos</p>
+                  <SgStack direction="row" gap={6} wrap>
+                    <SgBadge value="Hoje" />
+                    <SgBadge value="7 dias" />
+                    <SgBadge value="Mes" />
+                    <SgBadge value="Ativos" />
+                  </SgStack>
+                </SgStack>
+              </SgPanel>
+              <SgPanel borderStyle="dashed" padding={8} className="rounded-md">
+                <SgStack gap={6}>
+                  <p className="text-xs">Modo: {mode}</p>
+                  <p className="text-xs">Search: {search || "(vazio)"}</p>
+                </SgStack>
+              </SgPanel>
+            </SgStack>
+          </SgPanel>
+
+          <SgPanel align="bottom" height={7} padding={10} className="rounded-lg">
+            <SgStack direction="row" justify="between" align="center">
+              <span className="text-xs text-muted-foreground">Footer (height = 7%)</span>
+              <SgStack direction="row" gap={8}>
+                <SgButton size="sm" appearance="outline">Ajuda</SgButton>
+                <SgButton size="sm">Salvar</SgButton>
+              </SgStack>
+            </SgStack>
+          </SgPanel>
+
+          <SgPanel align="client" padding={10} scrollable="y" scrollbarGutter className="rounded-lg">
+            <SgStack gap={12}>
+              <SgStack direction="row" justify="between" align="center" wrap>
+                <SgStack gap={2}>
+                  <p className="text-sm font-semibold">Conteudo (client)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Area restante do layout com scroll vertical.
+                  </p>
+                </SgStack>
+              </SgStack>
+
+              {mode === "columns" ? (
+                <SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={10}>
+                  <Card title="Card 1" />
+                  <Card title="Card 2" />
+                  <SgPanel span={2} padding={12} className="rounded-lg">
+                    <SgStack gap={8}>
+                      <p className="font-medium">Card 3 (span 2)</p>
+                      <p className="text-xs text-muted-foreground">Ocupa duas colunas.</p>
+                    </SgStack>
+                  </SgPanel>
+                  <Card title="Card 4" />
+                  <Card title="Card 5" />
+                </SgGrid>
+              ) : (
+                <SgGrid minItemWidth="16rem" gap={10} rowHeight={120} dense>
+                  <Card title="Card A" />
+                  <SgPanel rowSpan={2} padding={12} className="rounded-lg">
+                    <SgStack gap={8}>
+                      <p className="font-medium">Card B (rowSpan 2)</p>
+                      <p className="text-xs text-muted-foreground">Com dense + rowHeight.</p>
+                    </SgStack>
+                  </SgPanel>
+                  <Card title="Card C" />
+                  <SgPanel span={2} padding={12} className="rounded-lg">
+                    <SgStack gap={8}>
+                      <p className="font-medium">Card D (span 2)</p>
+                      <p className="text-xs text-muted-foreground">Tambem funciona em auto-fit.</p>
+                    </SgStack>
+                  </SgPanel>
+                  <Card title="Card E" />
+                </SgGrid>
+              )}
+            </SgStack>
+          </SgPanel>
+        </SgMainPanel>
+      </SgScreen>
+    </SgPanel>
+  );
+}`;
 const MAIN_PANEL_PROPS: ShowcasePropRow[] = [
-  { prop: "gap", type: "number", defaultValue: "0", description: "Espaçamento entre painéis filhos." },
+  { prop: "gap", type: "number", defaultValue: "0", description: "EspaÃ§amento entre painÃ©is filhos." },
   { prop: "padding", type: "number", defaultValue: "0", description: "Padding interno do container." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Painéis alinhados (`top|left|right|bottom|client`)." },
-  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual e layout adicional." }
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "PainÃ©is alinhados (`top|left|right|bottom|client`)." },
+  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "CustomizaÃ§Ã£o visual e layout adicional." }
 ];
 
 export default function SgMainPanelPage() {
@@ -108,7 +273,7 @@ export default function SgMainPanelPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgMainPanel"
-          subtitle='Layout estilo Delphi com align="top|left|bottom|right|client". width e height numéricos viram porcentagem.'
+          subtitle='Layout estilo Delphi com align="top|left|bottom|right|client". width e height numÃ©ricos viram porcentagem.'
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
@@ -249,40 +414,11 @@ export default function SgMainPanelPage() {
         </SgPanel>
 
         <SgStack className="mt-6">
-          <CodeBlockBase
-            code={`import {
-  SgScreen,
-  SgMainPanel,
-  SgPanel,
-  SgGrid,
-  SgStack
-} from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgScreen padding={12} className="bg-zinc-100">
-      <SgMainPanel gap={8} padding={12}>
-        <SgPanel align="top" height={10}>Header</SgPanel>
-        <SgPanel align="left" width={18}>Sidebar</SgPanel>
-        <SgPanel align="right" width={18}>Acoes</SgPanel>
-        <SgPanel align="bottom" height={7}>Footer</SgPanel>
-
-        <SgPanel align="client" scrollable="y">
-          <SgGrid columns={{ base: 1, md: 2, lg: 3 }} gap={12}>
-            <SgPanel>Card 1</SgPanel>
-            <SgPanel span={2}>Card 2</SgPanel>
-            <SgPanel rowSpan={2}>Card 3</SgPanel>
-          </SgGrid>
-        </SgPanel>
-      </SgMainPanel>
-    </SgScreen>
-  );
-}`}
-          />
+          <CodeBlockBase code={MAIN_PANEL_FULL_EXAMPLE_CODE} />
         </SgStack>
       </Section>
 
-        <Section title="2) Playground (SgPlayground)" description="Teste rápido das principais props do SgMainPanel.">
+        <Section title="2) Playground (SgPlayground)" description="Teste rÃ¡pido das principais props do SgMainPanel.">
           <SgPlayground
             title="SgMainPanel Playground"
             interactive
@@ -299,4 +435,5 @@ export default function Example() {
     </I18NReady>
   );
 }
+
 

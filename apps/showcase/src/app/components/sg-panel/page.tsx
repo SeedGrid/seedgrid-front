@@ -191,17 +191,11 @@ export default function SgPanelPage() {
       >
         <SgGrid columns={{ base: 1, md: 4 }} gap={8} rowHeight={90} dense>
           <SgPanel padding={10} className="rounded-md">Item 1</SgPanel>
-          <SgPanel span={2} padding={10} className="rounded-md">
-            {"span={2}"}
-          </SgPanel>
-          <SgPanel rowSpan={2} padding={10} className="rounded-md">
-            {"rowSpan={2}"}
-          </SgPanel>
+          <SgPanel span={2} padding={10} className="rounded-md">span={2}</SgPanel>
+          <SgPanel rowSpan={2} padding={10} className="rounded-md">rowSpan={2}</SgPanel>
           <SgPanel padding={10} className="rounded-md">Item 4</SgPanel>
           <SgPanel padding={10} className="rounded-md">Item 5</SgPanel>
-          <SgPanel span={2} rowSpan={2} padding={10} className="rounded-md">
-            {"span={2} + rowSpan={2}"}
-          </SgPanel>
+          <SgPanel span={2} rowSpan={2} padding={10} className="rounded-md">span={2} + rowSpan={2}</SgPanel>
         </SgGrid>
 
         <SgStack className="mt-6">
@@ -351,29 +345,52 @@ export default function SgPanelPage() {
         </SgStack>
       </Section>
 
-      <Section title="5) Snippet com todas as props" description="Resumo rapido de uso cobrindo toda a API do SgPanel.">
-        <CodeBlockBase
-          code={`import { SgMainPanel, SgGrid, SgPanel } from "@seedgrid/fe-components";
+      <Section title="5) Exemplo combinado" description="Exemplo unico com props de dock/layout e de grid, com codigo 1:1.">
+        <SgStack gap={10}>
+          <SgPanel className="h-[260px] rounded-xl bg-muted/30" padding={10}>
+            <SgMainPanel gap={8} className="h-full rounded-lg bg-background p-3">
+              <SgPanel align="top" height={10} borderStyle="solid" padding={12}>
+                header
+              </SgPanel>
+              <SgPanel align="left" width={18} borderStyle="dashed" padding={8} scrollable="y">
+                menu
+              </SgPanel>
+              <SgPanel align="client" borderStyle="none" padding={10} scrollable="auto" scrollbarGutter>
+                conteudo
+              </SgPanel>
+            </SgMainPanel>
+          </SgPanel>
 
-// Props de dock/layout
-<SgMainPanel>
-  <SgPanel align="top" height={10} borderStyle="solid" padding={12}>
-    header
-  </SgPanel>
-  <SgPanel align="left" width={18} borderStyle="dashed" padding={8} scrollable="y">
-    menu
-  </SgPanel>
-  <SgPanel align="client" borderStyle="none" padding={10} scrollable="auto" scrollbarGutter>
-    conteudo
-  </SgPanel>
-</SgMainPanel>
+          <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+            <SgPanel span={2}>span=2</SgPanel>
+            <SgPanel rowSpan={2}>rowSpan=2</SgPanel>
+          </SgGrid>
+        </SgStack>
 
-// Props de grid
-<SgGrid columns={{ base: 1, md: 3 }} gap={8}>
-  <SgPanel span={2}>span=2</SgPanel>
-  <SgPanel rowSpan={2}>rowSpan=2</SgPanel>
-</SgGrid>`}
-        />
+        <SgStack className="mt-6">
+          <CodeBlockBase
+            code={`<SgStack gap={10}>
+  <SgPanel className="h-[260px] rounded-xl bg-muted/30" padding={10}>
+    <SgMainPanel gap={8} className="h-full rounded-lg bg-background p-3">
+      <SgPanel align="top" height={10} borderStyle="solid" padding={12}>
+        header
+      </SgPanel>
+      <SgPanel align="left" width={18} borderStyle="dashed" padding={8} scrollable="y">
+        menu
+      </SgPanel>
+      <SgPanel align="client" borderStyle="none" padding={10} scrollable="auto" scrollbarGutter>
+        conteudo
+      </SgPanel>
+    </SgMainPanel>
+  </SgPanel>
+
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+    <SgPanel span={2}>span=2</SgPanel>
+    <SgPanel rowSpan={2}>rowSpan=2</SgPanel>
+  </SgGrid>
+</SgStack>`}
+          />
+        </SgStack>
       </Section>
 
         <Section title="6) Playground (SgPlayground)" description="Teste rápido das principais props do SgPanel.">

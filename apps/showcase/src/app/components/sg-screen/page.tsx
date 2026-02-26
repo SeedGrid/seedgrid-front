@@ -87,36 +87,27 @@ const SCREEN_PLAYGROUND_CODE = `import * as React from "react";
 import { SgMainPanel, SgPanel, SgScreen, SgStack } from "@seedgrid/fe-components";
 
 export default function App() {
-  const [padding, setPadding] = React.useState(10);
-
   return (
-    <div className="space-y-3 p-2">
-      <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPadding((prev) => (prev === 10 ? 16 : 10))}>
-        padding: {padding}
-      </button>
-
-      <SgPanel className="h-[360px] rounded-xl bg-muted/30" padding={12}>
-        <SgScreen fullscreen={false} padding={padding} className="rounded-lg bg-zinc-100">
-          <SgMainPanel gap={8} padding={8}>
-            <SgPanel align="top" height={12} padding={10} className="rounded-md">Header</SgPanel>
-            <SgPanel align="left" width={20} padding={10} className="rounded-md">Left</SgPanel>
-            <SgPanel align="right" width={18} padding={10} className="rounded-md">Right</SgPanel>
-            <SgPanel align="bottom" height={10} padding={10} className="rounded-md">Footer</SgPanel>
-            <SgPanel align="client" padding={10} className="rounded-md">
-              <SgStack gap={6}>
-                <span className="text-sm font-medium">Area client</span>
-                <SgPanel borderStyle="solid" className="h-20 rounded bg-muted/20" />
-              </SgStack>
-            </SgPanel>
-          </SgMainPanel>
-        </SgScreen>
-      </SgPanel>
-    </div>
+    <SgScreen fullscreen={false} height={360} padding={12} className="rounded-xl bg-zinc-100">
+      <SgMainPanel gap={8} padding={8}>
+        <SgPanel align="top" height={12} padding={10} className="rounded-md">Top</SgPanel>
+        <SgPanel align="left" width={20} padding={10} className="rounded-md">Left</SgPanel>
+        <SgPanel align="right" width={20} padding={10} className="rounded-md">Right</SgPanel>
+        <SgPanel align="bottom" height={10} padding={10} className="rounded-md">Bottom</SgPanel>
+        <SgPanel align="client" padding={10} className="rounded-md">
+          <SgStack gap={6}>
+            <span className="text-sm font-medium">Client</span>
+            <SgPanel borderStyle="solid" className="h-20 rounded bg-muted/20" />
+          </SgStack>
+        </SgPanel>
+      </SgMainPanel>
+    </SgScreen>
   );
 }`;
 
 const SCREEN_PROPS: ShowcasePropRow[] = [
   { prop: "fullscreen", type: "boolean", defaultValue: "true", description: "Define se ocupa toda a viewport." },
+  { prop: "width / height", type: "number | string", defaultValue: "-", description: "Dimensoes explicitas do container (ex.: 960, 100%, 60vh)." },
   { prop: "padding", type: "number", defaultValue: "0", description: "Padding interno aplicado ao root da tela." },
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteúdo principal da tela." },
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual do container." }
@@ -196,7 +187,7 @@ export default function SgScreenPage() {
         </SgStack>
       </Section>
 
-        <Section title="2) Playground (SgPlayground)" description="Teste rápido das props principais do SgScreen.">
+        <Section title="2) Playground (SgPlayground)" description="Exemplo simples e direto com top, left, right, bottom e client.">
           <SgPlayground
             title="SgScreen Playground"
             interactive

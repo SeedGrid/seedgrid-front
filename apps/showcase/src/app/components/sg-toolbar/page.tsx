@@ -101,7 +101,7 @@ import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
 
 export default function Example() {
   return (
-    <SgToolBar id="tb-nav" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
+    <SgToolBar id="tb-basic" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
       <SgToolbarIconButton icon="H" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
       <SgToolbarIconButton icon="U" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
       <SgToolbarIconButton icon="S" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
@@ -133,7 +133,7 @@ import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
 export default function Example() {
   return (
     <SgToolBar
-      id="tb-actions"
+      id="tb-horizontal"
       title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
       orientation="horizontal"
       collapsible
@@ -172,10 +172,20 @@ import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
 
 export default function Example() {
   return (
-    <SgToolBar id="tb-free" title="${t(i18n, "showcase.component.toolbar.labels.free")}" orientation="vertical" draggable freeDrag defaultPosition={{ x: 16, y: 16 }}>
-      <SgToolbarIconButton icon="F" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
-      <SgToolbarIconButton icon="R" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
-    </SgToolBar>
+    <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
+      <SgToolBar
+        id="tb-free"
+        title="${t(i18n, "showcase.component.toolbar.labels.free")}"
+        orientation="vertical"
+        draggable
+        freeDrag
+        defaultPosition={{ x: 16, y: 16 }}
+        className="absolute"
+      >
+        <SgToolbarIconButton icon="F" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
+        <SgToolbarIconButton icon="R" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
+      </SgToolBar>
+    </div>
   );
 }`}
         />

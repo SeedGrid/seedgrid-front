@@ -86,49 +86,50 @@ export function SgMainPanel(props: Readonly<SgMainPanelProps>) {
   const right = allItems.filter((item) => item.align === "right");
   const client = allItems.filter((item) => item.align === "client");
 
-  const dockGapStyle = { gap: toCssSpace(gap) };
+  const gapCss = toCssSpace(gap);
+  const dockGapStyle: React.CSSProperties | undefined =
+    gapCss !== undefined ? { gap: gapCss } : undefined;
 
   return (
     <div
       className={cn("flex h-full w-full min-h-0 min-w-0 flex-col", className)}
       style={{
         ...style,
-        padding: toCssSpace(padding)
+        padding: toCssSpace(padding),
+        ...(dockGapStyle ?? null)
       }}
       {...rest}
     >
-      {top.length > 0 ? (
-        <div className="flex flex-col min-h-0 min-w-0" style={dockGapStyle}>
-          {top.map((item, index) =>
-            cloneWithLayout(
-              item.node,
-              item.key ?? `top-${index}`,
-              {
-                width: "100%",
-                height: toCssPercent(item.height)
-              },
-              "w-full"
-            )
-          )}
-        </div>
-      ) : null}
+      {top.map((item, index) => {
+        const heightCss = toCssPercent(item.height);
+        return cloneWithLayout(
+          item.node,
+          item.key ?? `top-${index}`,
+          {
+            width: "100%",
+            ...(heightCss !== undefined
+              ? { height: heightCss, flex: `0 0 ${heightCss}` }
+              : { flex: "0 0 auto" })
+          },
+          "w-full"
+        );
+      })}
 
       <div className="flex flex-1 min-h-0 min-w-0" style={dockGapStyle}>
-        {left.length > 0 ? (
-          <div className="flex min-h-0 min-w-0 flex-col" style={dockGapStyle}>
-            {left.map((item, index) =>
-              cloneWithLayout(
-                item.node,
-                item.key ?? `left-${index}`,
-                {
-                  width: toCssPercent(item.width),
-                  height: "100%"
-                },
-                "h-full"
-              )
-            )}
-          </div>
-        ) : null}
+        {left.map((item, index) => {
+          const widthCss = toCssPercent(item.width);
+          return cloneWithLayout(
+            item.node,
+            item.key ?? `left-${index}`,
+            {
+              height: "100%",
+              ...(widthCss !== undefined
+                ? { width: widthCss, flex: `0 0 ${widthCss}` }
+                : { flex: "0 0 auto" })
+            },
+            "h-full min-h-0"
+          );
+        })}
 
         <div className="flex flex-1 min-h-0 min-w-0" style={dockGapStyle}>
           {client.map((item, index) => (
@@ -146,41 +147,38 @@ export function SgMainPanel(props: Readonly<SgMainPanelProps>) {
           ))}
         </div>
 
-        {right.length > 0 ? (
-          <div className="flex min-h-0 min-w-0 flex-col" style={dockGapStyle}>
-            {right.map((item, index) =>
-              cloneWithLayout(
-                item.node,
-                item.key ?? `right-${index}`,
-                {
-                  width: toCssPercent(item.width),
-                  height: "100%"
-                },
-                "h-full"
-              )
-            )}
-          </div>
-        ) : null}
+        {right.map((item, index) => {
+          const widthCss = toCssPercent(item.width);
+          return cloneWithLayout(
+            item.node,
+            item.key ?? `right-${index}`,
+            {
+              height: "100%",
+              ...(widthCss !== undefined
+                ? { width: widthCss, flex: `0 0 ${widthCss}` }
+                : { flex: "0 0 auto" })
+            },
+            "h-full min-h-0"
+          );
+        })}
       </div>
 
-      {bottom.length > 0 ? (
-        <div className="flex flex-col min-h-0 min-w-0" style={dockGapStyle}>
-          {bottom.map((item, index) =>
-            cloneWithLayout(
-              item.node,
-              item.key ?? `bottom-${index}`,
-              {
-                width: "100%",
-                height: toCssPercent(item.height)
-              },
-              "w-full"
-            )
-          )}
-        </div>
-      ) : null}
+      {bottom.map((item, index) => {
+        const heightCss = toCssPercent(item.height);
+        return cloneWithLayout(
+          item.node,
+          item.key ?? `bottom-${index}`,
+          {
+            width: "100%",
+            ...(heightCss !== undefined
+              ? { height: heightCss, flex: `0 0 ${heightCss}` }
+              : { flex: "0 0 auto" })
+          },
+          "w-full"
+        );
+      })}
     </div>
   );
 }
 
 SgMainPanel.displayName = "SgMainPanel";
-

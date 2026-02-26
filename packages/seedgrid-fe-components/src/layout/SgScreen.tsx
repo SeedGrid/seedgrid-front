@@ -13,6 +13,8 @@ function toCssSpace(value?: number | string) {
 
 export type SgScreenProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children"> & {
   fullscreen?: boolean;
+  width?: number | string;
+  height?: number | string;
   padding?: number | string;
   children?: React.ReactNode;
 };
@@ -20,6 +22,8 @@ export type SgScreenProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children
 export function SgScreen(props: Readonly<SgScreenProps>) {
   const {
     fullscreen = true,
+    width,
+    height,
     padding,
     className,
     style,
@@ -30,12 +34,14 @@ export function SgScreen(props: Readonly<SgScreenProps>) {
   return (
     <div
       className={cn(
-        "min-h-0 min-w-0",
+        "relative min-h-0 min-w-0",
         fullscreen ? "h-screen w-screen" : "h-full w-full",
         className
       )}
       style={{
         ...style,
+        ...(width !== undefined ? { width: toCssSpace(width) } : null),
+        ...(height !== undefined ? { height: toCssSpace(height) } : null),
         padding: toCssSpace(padding)
       }}
       {...rest}
@@ -46,4 +52,3 @@ export function SgScreen(props: Readonly<SgScreenProps>) {
 }
 
 SgScreen.displayName = "SgScreen";
-

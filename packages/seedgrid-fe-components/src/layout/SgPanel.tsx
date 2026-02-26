@@ -11,6 +11,11 @@ function toCssSpace(value?: number | string) {
   return typeof value === "number" ? `${value}px` : value;
 }
 
+function toCssPercent(value?: SgPanelPercent) {
+  if (value === undefined || value === null) return undefined;
+  return typeof value === "number" ? `${value}%` : value;
+}
+
 export type SgPanelAlign = "top" | "left" | "bottom" | "right" | "client";
 export type SgPanelBorderStyle = "none" | "solid" | "dashed";
 export type SgPanelScrollable = boolean | "auto" | "y" | "x";
@@ -38,6 +43,8 @@ function getScrollClass(scrollable: SgPanelScrollable | undefined) {
 
 export function SgPanel(props: Readonly<SgPanelProps>) {
   const {
+    width,
+    height,
     borderStyle = "solid",
     padding,
     scrollable = false,
@@ -55,11 +62,16 @@ export function SgPanel(props: Readonly<SgPanelProps>) {
       ? "border border-dashed border-border"
       : "border border-solid border-border";
 
+  const widthCss = toCssPercent(width);
+  const heightCss = toCssPercent(height);
+
   return (
     <div
       className={cn("min-h-0 min-w-0 bg-background", borderClass, getScrollClass(scrollable), className)}
       style={{
         ...style,
+        ...(widthCss !== undefined ? { width: widthCss } : null),
+        ...(heightCss !== undefined ? { height: heightCss } : null),
         padding: toCssSpace(padding),
         ...(scrollbarGutter ? ({ scrollbarGutter: "stable" } as React.CSSProperties) : null)
       }}
@@ -71,4 +83,3 @@ export function SgPanel(props: Readonly<SgPanelProps>) {
 }
 
 SgPanel.displayName = "SgPanel";
-
