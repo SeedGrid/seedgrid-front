@@ -474,6 +474,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const showContent = !isCollapsed;
   const openUp = orientation === "vertical" && direction === "up";
   const openLeft = orientation === "horizontal" && direction === "left";
+  const showLeadingCollapseButton = orientation === "horizontal" && openLeft && showContent;
+  const collapseIconDirection: "left" | "right" | "up" | "down" =
+    orientationDirection === "horizontal-right" ? "right" : direction;
 
   const content = showContent ? (
     <div
@@ -493,8 +496,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         data-sg-toolbar-root="true"
         className={cn(
           "select-none rounded-xl border border-border bg-background shadow-sm",
-          "flex",
-          orientation === "horizontal" ? "flex-row items-center" : "flex-col items-center",
+          orientation === "horizontal" ? "inline-flex flex-row items-center" : "flex flex-col items-center",
           className
         )}
         style={{
@@ -514,7 +516,8 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         {(title || collapsible) && (
           <div
             className={cn(
-              "flex items-center gap-2 px-2 py-1 w-full",
+              "flex items-center gap-2 px-2 py-1",
+              orientation === "horizontal" ? "w-auto" : "w-full",
               orientation === "horizontal"
                 ? showContent
                   ? (openLeft ? "border-l border-border" : "border-r border-border")
@@ -524,12 +527,23 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
                   : ""
             )}
         >
+            {collapsible && showLeadingCollapseButton ? (
+              <button
+                type="button"
+                className="inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                onPointerDown={(e) => e.stopPropagation()}
+                aria-label="Toggle toolbar"
+              >
+                <CollapseIcon direction={collapseIconDirection} collapsed={isCollapsed} />
+              </button>
+            ) : null}
             {title ? (
               <span className="text-xs font-semibold text-foreground truncate">
                 {title}
               </span>
             ) : null}
-            {collapsible ? (
+            {collapsible && !showLeadingCollapseButton ? (
               <button
                 type="button"
                 className="ml-auto inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
@@ -537,7 +551,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
                 onPointerDown={(e) => e.stopPropagation()}
                 aria-label="Toggle toolbar"
               >
-                <CollapseIcon direction={direction} collapsed={isCollapsed} />
+                <CollapseIcon direction={collapseIconDirection} collapsed={isCollapsed} />
               </button>
             ) : null}
           </div>
