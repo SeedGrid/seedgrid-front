@@ -105,9 +105,10 @@ const TOOLBAR_ICON_BUTTON_PROPS: ShowcasePropRow[] = [
   { prop: "label", type: "string", defaultValue: "-", description: "Texto visível no botão." },
   { prop: "showLabel", type: "boolean", defaultValue: "true", description: "Controla a exibição do label." },
   { prop: "hint", type: "string", defaultValue: "-", description: "Texto de dica/tooltip (se diferente do label)." },
+  { prop: "loading", type: "boolean", defaultValue: "false", description: "Força estado de loading com spinner e bloqueia clique." },
   { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"info\" | \"warning\" | \"help\" | \"danger\" | \"plain\"", defaultValue: "plain", description: "Variação de cor do botão." },
   { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita interação." },
-  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Ação executada no clique." }
+  { prop: "onClick", type: "() => void | Promise<void>", defaultValue: "-", description: "Ação executada no clique. Se retornar Promise, mostra spinner até concluir." }
 ];
 
 export default function SgToolBarPage() {
@@ -159,7 +160,7 @@ export default function Example() {
 
       <Section
         title="2) onClick com Toast"
-        description="SgToolbarIconButton aceita onClick e aqui cada acao dispara um toast."
+        description="Quando onClick retorna Promise, o botao mostra spinner ate finalizar e depois dispara o toast."
       >
         <SgToolBar id="tb-onclick-toast" title="Acoes" orientationDirection="horizontal-left" collapsible>
           <SgToolbarIconButton
@@ -167,21 +168,30 @@ export default function Example() {
             label="Criar"
             hint="Criar novo registro"
             severity="success"
-            onClick={() => toast.success("Acao Criar executada")}
+            onClick={async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1200));
+              toast.success("Acao Criar concluida");
+            }}
           />
           <SgToolbarIconButton
             icon={<Pencil className="size-4" />}
             label="Editar"
             hint="Editar registro selecionado"
             severity="info"
-            onClick={() => toast.info("Acao Editar executada")}
+            onClick={async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              toast.info("Acao Editar concluida");
+            }}
           />
           <SgToolbarIconButton
             icon={<Trash2 className="size-4" />}
             label="Excluir"
             hint="Excluir registro selecionado"
             severity="danger"
-            onClick={() => toast.warning("Acao Excluir executada")}
+            onClick={async () => {
+              await new Promise((resolve) => setTimeout(resolve, 1400));
+              toast.warning("Acao Excluir concluida");
+            }}
           />
         </SgToolBar>
         <CodeBlock
@@ -197,21 +207,30 @@ export default function Example() {
         label="Criar"
         hint="Criar novo registro"
         severity="success"
-        onClick={() => toast.success("Acao Criar executada")}
+        onClick={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+          toast.success("Acao Criar concluida");
+        }}
       />
       <SgToolbarIconButton
         icon={<Pencil className="size-4" />}
         label="Editar"
         hint="Editar registro selecionado"
         severity="info"
-        onClick={() => toast.info("Acao Editar executada")}
+        onClick={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          toast.info("Acao Editar concluida");
+        }}
       />
       <SgToolbarIconButton
         icon={<Trash2 className="size-4" />}
         label="Excluir"
         hint="Excluir registro selecionado"
         severity="danger"
-        onClick={() => toast.warning("Acao Excluir executada")}
+        onClick={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1400));
+          toast.warning("Acao Excluir concluida");
+        }}
       />
     </SgToolBar>
   );

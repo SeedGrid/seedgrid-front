@@ -55,9 +55,10 @@ export type SgToolbarIconButtonProps = {
   label?: string;
   showLabel?: boolean;
   hint?: string;
+  loading?: boolean;
   severity?: SgToolBarSeverity;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: () => void | Promise<void>;
 };
 
 function cn(...parts: Array<string | false | null | undefined>) {
@@ -598,16 +599,29 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
 export function SgToolbarIconButton(
   props: Readonly<SgToolbarIconButtonProps & { hideLabel?: boolean }>
 ) {
-  const { icon, label, showLabel = true, hint, severity = "plain", disabled, onClick, hideLabel } = props;
+  const { icon, label, showLabel = true, hint, loading = false, severity = "plain", disabled, onClick, hideLabel } = props;
   const toolbarOrientation = React.useContext(SgToolbarOrientationContext);
   const isHorizontalToolbar = toolbarOrientation === "horizontal";
   const c = BTN_COLORS[severity];
   const text = typeof icon === "string" ? icon : null;
   const hasVisibleLabel = Boolean(label) && showLabel && !hideLabel;
+  const [isPending, setIsPending] = React.useState(false);
+  const isLoading = loading || isPending;
   const showHintTooltip = Boolean(hint) && !hideLabel;
   const [hintPosition, setHintPosition] = React.useState({ x: 0, y: 0 });
   const [isHintHovered, setIsHintHovered] = React.useState(false);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const handleClick = React.useCallback(() => {
+    if (!onClick || disabled || isLoading) return;
+
+    const result = onClick();
+    if (!result || typeof (result as { then?: unknown }).then !== "function") return;
+
+    setIsPending(true);
+    void (result as Promise<void>).finally(() => {
+      setIsPending(false);
+    });
+  }, [disabled, isLoading, onClick]);
 
   const updateHintPosition = React.useCallback(() => {
     if (!buttonRef.current) return;
@@ -668,8 +682,9 @@ export function SgToolbarIconButton(
       <button
         ref={buttonRef}
         type="button"
-        disabled={disabled}
-        onClick={onClick}
+        disabled={disabled || isLoading}
+        onClick={handleClick}
+        aria-busy={isLoading || undefined}
         onMouseEnter={showHintTooltip ? () => {
           updateHintPosition();
           setIsHintHovered(true);
@@ -694,7 +709,9 @@ export function SgToolbarIconButton(
           ["--tw-ring-color" as string]: c.ring
         }}
       >
-        {icon && typeof icon !== "string" ? (
+        {isLoading ? (
+          <span className="inline-flex size-4 shrink-0 animate-spin rounded-full border-2 border-current border-r-transparent" />
+        ) : icon && typeof icon !== "string" ? (
           <span className="inline-flex shrink-0">{icon}</span>
         ) : (
           <span className="shrink-0 text-[10px] font-semibold">{text?.slice(0, 2)}</span>
