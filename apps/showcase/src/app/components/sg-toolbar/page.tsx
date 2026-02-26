@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgPlayground, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
@@ -45,25 +45,41 @@ export default function App() {
       </div>
 
       <SgToolBar id="tb-playground" title="Actions" orientation={orientation} collapsible={collapsible}>
-        <SgToolbarIconButton icon="A" hint="Action A" severity="primary" />
-        <SgToolbarIconButton icon="B" hint="Action B" />
-        <SgToolbarIconButton icon="C" hint="Action C" severity="danger" />
+        <SgToolbarIconButton icon="A" label="Action A" hint="Open Action A details" severity="primary" />
+        <SgToolbarIconButton icon="B" label="Action B" hint="Open Action B details" />
+        <SgToolbarIconButton icon="C" label="Action C" hint="Open Action C details" severity="danger" />
       </SgToolBar>
     </div>
   );
 }`;
 
 const TOOLBAR_PROPS: ShowcasePropRow[] = [
-  { prop: "id / title", type: "string", defaultValue: "-", description: "Identificação e título da toolbar." },
-  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "Direção de exibição dos botões." },
-  { prop: "size", type: "number", defaultValue: "48", description: "Tamanho base dos botões." },
-  { prop: "dockZone", type: "\"top\" | \"left\" | \"right\" | \"bottom\"", defaultValue: "-", description: "Zona de dock quando usado com SgDockLayout." },
-  { prop: "draggable / freeDrag / defaultPosition", type: "boolean / boolean / {x,y}", defaultValue: "false / false / -", description: "Controle de arraste." },
-  { prop: "collapsible / collapsed / defaultCollapsed", type: "boolean", defaultValue: "false / controlado / false", description: "Modo recolhível." },
-  { prop: "collapseDirection", type: "\"left\" | \"right\" | \"top\" | \"bottom\"", defaultValue: "left", description: "Direção do recolhimento." },
-  { prop: "onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Evento de mudança do colapso." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Itens internos (ex.: SgToolbarIconButton)." },
-  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual." }
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador Ãºnico da toolbar." },
+  { prop: "title", type: "ReactNode", defaultValue: "-", description: "TÃ­tulo exibido no cabeÃ§alho." },
+  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "DireÃ§Ã£o dos botÃµes." },
+  { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "DimensÃµes fixas da toolbar." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
+  { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
+  { prop: "dockZone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "free", description: "Zona inicial quando usada com dock." },
+  { prop: "draggable", type: "boolean", defaultValue: "true", description: "Permite iniciar arraste." },
+  { prop: "freeDrag", type: "boolean", defaultValue: "true", description: "Ativa arraste livre com posiÃ§Ã£o x/y." },
+  { prop: "defaultPosition", type: "{ x: number; y: number }", defaultValue: "-", description: "PosiÃ§Ã£o inicial quando nÃ£o existe estado salvo." },
+  { prop: "collapsible", type: "boolean", defaultValue: "true", description: "Habilita botÃ£o de expandir/contrair." },
+  { prop: "collapsed", type: "boolean", defaultValue: "controlado", description: "Controla o estado colapsado externamente." },
+  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado no modo nÃ£o controlado." },
+  { prop: "collapseDirection", type: "\"left\" | \"right\" | \"top\" | \"bottom\"", defaultValue: "left(horizontal) / top(vertical)", description: "DireÃ§Ã£o da seta de colapso." },
+  { prop: "onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Callback ao alternar colapso." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Itens internos, normalmente SgToolbarIconButton." }
+];
+
+const TOOLBAR_ICON_BUTTON_PROPS: ShowcasePropRow[] = [
+  { prop: "icon", type: "ReactNode | string", defaultValue: "-", description: "Ícone ou texto exibido no botão." },
+  { prop: "label", type: "string", defaultValue: "-", description: "Texto visível no botão." },
+  { prop: "showLabel", type: "boolean", defaultValue: "true", description: "Controla a exibição do label." },
+  { prop: "hint", type: "string", defaultValue: "-", description: "Texto de dica/tooltip (se diferente do label)." },
+  { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"info\" | \"warning\" | \"help\" | \"danger\" | \"plain\"", defaultValue: "plain", description: "Variação de cor do botão." },
+  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita interação." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Ação executada no clique." }
 ];
 
 export default function SgToolBarPage() {
@@ -92,9 +108,9 @@ export default function SgToolBarPage() {
         description={t(i18n, "showcase.component.toolbar.sections.basic.description")}
       >
         <SgToolBar id="tb-basic" title={t(i18n, "showcase.component.toolbar.labels.navigation")} orientation="vertical">
-          <SgToolbarIconButton icon={<Home className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
-          <SgToolbarIconButton icon={<Users className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
-          <SgToolbarIconButton icon={<Settings className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
+          <SgToolbarIconButton icon={<Home className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.home")} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
+          <SgToolbarIconButton icon={<Users className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.users")} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.settings")} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
         </SgToolBar>
         <CodeBlock
           code={`import React from "react";
@@ -104,9 +120,9 @@ import { Home, Users, Settings } from "lucide-react";
 export default function Example() {
   return (
     <SgToolBar id="tb-basic" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
-      <SgToolbarIconButton icon={<Home className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
-      <SgToolbarIconButton icon={<Users className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
-      <SgToolbarIconButton icon={<Settings className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
+      <SgToolbarIconButton icon={<Home className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.home")}" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
+      <SgToolbarIconButton icon={<Users className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.users")}" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
+      <SgToolbarIconButton icon={<Settings className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.settings")}" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
     </SgToolBar>
   );
 }`}
@@ -124,9 +140,9 @@ export default function Example() {
           collapsible
           collapseDirection="right"
         >
-          <SgToolbarIconButton icon={<Plus className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
-          <SgToolbarIconButton icon={<Pencil className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
-          <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
+          <SgToolbarIconButton icon={<Plus className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.create")} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
+          <SgToolbarIconButton icon={<Pencil className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.edit")} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
+          <SgToolbarIconButton icon={<Trash2 className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.delete")} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
         </SgToolBar>
         <CodeBlock
           code={`import React from "react";
@@ -142,9 +158,9 @@ export default function Example() {
       collapsible
       collapseDirection="right"
     >
-      <SgToolbarIconButton icon={<Plus className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
-      <SgToolbarIconButton icon={<Pencil className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
-      <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
+      <SgToolbarIconButton icon={<Plus className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.create")}" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
+      <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.edit")}" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
+      <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.delete")}" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
     </SgToolBar>
   );
 }`}
@@ -163,8 +179,8 @@ export default function Example() {
             draggable
             freeDrag
           >
-            <SgToolbarIconButton icon={<Filter className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
-            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
+            <SgToolbarIconButton icon={<Filter className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.filter")} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
+            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.refresh")} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
           </SgToolBar>
         </div>
         <CodeBlock
@@ -182,8 +198,8 @@ export default function Example() {
         draggable
         freeDrag
       >
-        <SgToolbarIconButton icon={<Filter className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
-        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
+        <SgToolbarIconButton icon={<Filter className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.filter")}" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
+        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.refresh")}" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
       </SgToolBar>
     </div>
   );
@@ -193,7 +209,7 @@ export default function Example() {
 
       <Section
         title="4) Drag preso no container"
-        description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
+        description="Neste exemplo o drag continua dentro da caixa porque a toolbar estÃ¡ em modo absolute."
       >
         <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
           <SgToolBar
@@ -205,8 +221,8 @@ export default function Example() {
             defaultPosition={{ x: 16, y: 16 }}
             className="absolute"
           >
-            <SgToolbarIconButton icon={<Filter className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
-            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
+            <SgToolbarIconButton icon={<Filter className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.filter")} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
+            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.refresh")} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
           </SgToolBar>
         </div>
         <CodeBlock
@@ -226,8 +242,8 @@ export default function Example() {
         defaultPosition={{ x: 16, y: 16 }}
         className="absolute"
       >
-        <SgToolbarIconButton icon={<Filter className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
-        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
+        <SgToolbarIconButton icon={<Filter className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.filter")}" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
+        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.refresh")}" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
       </SgToolBar>
     </div>
   );
@@ -246,9 +262,21 @@ export default function Example() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={TOOLBAR_PROPS} />
+        <ShowcasePropsReference
+          id="props-reference"
+          title="ReferÃªncia de Props - SgToolBar"
+          rows={TOOLBAR_PROPS}
+        />
+        <ShowcasePropsReference
+          id="props-reference-toolbar-icon-button"
+          title="ReferÃªncia de Props - SgToolbarIconButton"
+          rows={TOOLBAR_ICON_BUTTON_PROPS}
+        />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
+
+

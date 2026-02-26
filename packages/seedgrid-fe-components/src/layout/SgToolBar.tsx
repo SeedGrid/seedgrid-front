@@ -45,6 +45,8 @@ export type SgToolBarProps = {
 
 export type SgToolbarIconButtonProps = {
   icon?: React.ReactNode | string;
+  label?: string;
+  showLabel?: boolean;
   hint?: string;
   severity?: SgToolBarSeverity;
   disabled?: boolean;
@@ -531,26 +533,30 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
 export function SgToolbarIconButton(
   props: Readonly<SgToolbarIconButtonProps & { hideLabel?: boolean }>
 ) {
-  const { icon, hint, severity = "plain", disabled, onClick, hideLabel } = props;
+  const { icon, label, showLabel = true, hint, severity = "plain", disabled, onClick, hideLabel } = props;
   const c = BTN_COLORS[severity];
   const text = typeof icon === "string" ? icon : null;
+  const hasVisibleLabel = Boolean(label) && showLabel && !hideLabel;
+  const showHintTooltip = Boolean(hint) && !hideLabel && hint !== label;
 
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={onClick}
-      title={hint}
+      aria-label={hint ?? label ?? text ?? undefined}
       className={cn(
         "group",
         "relative inline-flex items-center justify-center rounded-lg",
         "transition-[transform,filter] duration-150",
         "hover:brightness-95 active:brightness-90",
         "focus-visible:outline-none focus-visible:ring-4",
-        "disabled:opacity-50 disabled:cursor-not-allowed"
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+        hasVisibleLabel ? "gap-2 px-2 pr-3" : ""
       )}
       style={{
-        width: 40,
+        width: hasVisibleLabel ? undefined : 40,
+        minWidth: 40,
         height: 40,
         backgroundColor: c.bg,
         color: c.fg,
@@ -558,11 +564,14 @@ export function SgToolbarIconButton(
       }}
     >
       {icon && typeof icon !== "string" ? (
-        <span className="inline-flex">{icon}</span>
+        <span className="inline-flex shrink-0">{icon}</span>
       ) : (
-        <span className="text-[10px] font-semibold">{text?.slice(0, 2)}</span>
+        <span className="shrink-0 text-[10px] font-semibold">{text?.slice(0, 2)}</span>
       )}
-      {!hideLabel && hint ? (
+      {hasVisibleLabel ? (
+        <span className="text-xs font-medium leading-none">{label}</span>
+      ) : null}
+      {showHintTooltip ? (
         <span className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-foreground/90 px-2 py-1 text-[11px] text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100">
           {hint}
         </span>

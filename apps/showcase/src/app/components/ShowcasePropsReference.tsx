@@ -11,15 +11,20 @@ export type ShowcasePropRow = {
 
 type ShowcasePropsReferenceProps = {
   rows: ShowcasePropRow[];
+  id?: string;
+  title?: string;
 };
 
 export default function ShowcasePropsReference(props: Readonly<ShowcasePropsReferenceProps>) {
+  const sectionId = props.id ?? "props-reference";
+  const sectionTitle = props.title ?? "Referência de Props";
+
   return (
     <section
-      id="props-reference"
+      id={sectionId}
       className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
     >
-      <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{sectionTitle}</h2>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -45,4 +50,3 @@ export default function ShowcasePropsReference(props: Readonly<ShowcasePropsRefe
     </section>
   );
 }
-
