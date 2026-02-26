@@ -139,9 +139,9 @@ function resolveOrientationDirection(
 ): { orientation: SgToolBarOrientation; direction: "left" | "right" | "up" | "down" } {
   switch (orientationDirection) {
     case "horizontal-right":
-      return { orientation: "horizontal", direction: "right" };
-    case "horizontal-left":
       return { orientation: "horizontal", direction: "left" };
+    case "horizontal-left":
+      return { orientation: "horizontal", direction: "right" };
     case "vertical-up":
       return { orientation: "vertical", direction: "up" };
     case "vertical-down":
@@ -473,7 +473,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
 
   const showContent = !isCollapsed;
   const openUp = orientation === "vertical" && direction === "up";
-  const openLeft = orientation === "horizontal" && direction === "right";
+  const openLeft = orientation === "horizontal" && direction === "left";
 
   const content = showContent ? (
     <div
