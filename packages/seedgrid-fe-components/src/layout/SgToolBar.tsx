@@ -30,6 +30,7 @@ export type SgToolBarProps = {
   id: string;
   title?: React.ReactNode;
   orientationDirection?: SgToolBarOrientationDirection;
+  buttonsPerRow?: number;
   size?: SgToolBarSize;
   className?: string;
   style?: React.CSSProperties;
@@ -184,6 +185,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     id,
     title,
     orientationDirection = "vertical-down",
+    buttonsPerRow,
     size,
     className,
     style,
@@ -474,6 +476,10 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const showContent = !isCollapsed;
   const openUp = orientation === "vertical" && direction === "up";
   const openLeft = orientation === "horizontal" && direction === "left";
+  const normalizedButtonsPerRow =
+    Number.isFinite(buttonsPerRow) && typeof buttonsPerRow === "number" && buttonsPerRow > 0
+      ? Math.floor(buttonsPerRow)
+      : undefined;
   const showLeadingCollapseButton = orientation === "horizontal" && openLeft && showContent;
   const collapseIconDirection: "left" | "right" | "up" | "down" =
     orientationDirection === "horizontal-right" ? "right" : direction;
@@ -481,9 +487,18 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const content = showContent ? (
     <div
       className={cn(
-        "flex gap-2 p-2",
-        orientation === "horizontal" ? "flex-row" : "flex-col"
+        "gap-2 p-2",
+        normalizedButtonsPerRow
+          ? "grid"
+          : orientation === "horizontal"
+            ? "flex flex-row"
+            : "flex flex-col"
       )}
+      style={
+        normalizedButtonsPerRow
+          ? { gridTemplateColumns: `repeat(${normalizedButtonsPerRow}, max-content)` }
+          : undefined
+      }
     >
       {children}
     </div>
@@ -496,7 +511,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         data-sg-toolbar-root="true"
         className={cn(
           "select-none rounded-xl border border-border bg-background shadow-sm",
-          orientation === "horizontal" ? "inline-flex flex-row items-center" : "flex flex-col items-center",
+          orientation === "horizontal" ? "inline-flex flex-row items-center" : "inline-flex flex-col items-center",
           className
         )}
         style={{

@@ -35,6 +35,7 @@ export default function App() {
   type OrientationDirection = typeof options[number];
   const [orientationDirection, setOrientationDirection] = React.useState<OrientationDirection>("horizontal-left");
   const [collapsible, setCollapsible] = React.useState(true);
+  const [buttonsPerRow, setButtonsPerRow] = React.useState<number | undefined>(undefined);
 
   return (
     <div className="space-y-4 p-2">
@@ -52,9 +53,24 @@ export default function App() {
           <input type="checkbox" checked={collapsible} onChange={(e) => setCollapsible(e.target.checked)} />
           collapsible
         </label>
+        <select
+          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs"
+          value={buttonsPerRow ?? ""}
+          onChange={(e) => setButtonsPerRow(e.target.value ? Number(e.target.value) : undefined)}
+        >
+          <option value="">buttonsPerRow: auto</option>
+          <option value="2">buttonsPerRow: 2</option>
+          <option value="3">buttonsPerRow: 3</option>
+        </select>
       </div>
 
-      <SgToolBar id="tb-playground" title="Actions" orientationDirection={orientationDirection} collapsible={collapsible}>
+      <SgToolBar
+        id="tb-playground"
+        title="Actions"
+        orientationDirection={orientationDirection}
+        collapsible={collapsible}
+        buttonsPerRow={buttonsPerRow}
+      >
         <SgToolbarIconButton icon="A" label="Action A" hint="Open Action A details" severity="primary" />
         <SgToolbarIconButton icon="B" label="Action B" hint="Open Action B details" />
         <SgToolbarIconButton icon="C" label="Action C" hint="Open Action C details" severity="danger" />
@@ -67,6 +83,7 @@ const TOOLBAR_PROPS: ShowcasePropRow[] = [
   { prop: "id", type: "string", defaultValue: "-", description: "Identificador único da toolbar." },
   { prop: "title", type: "ReactNode", defaultValue: "-", description: "Título exibido no cabeçalho." },
   { prop: "orientationDirection", type: "\"vertical-up\" | \"vertical-down\" | \"horizontal-left\" | \"horizontal-right\"", defaultValue: "vertical-down", description: "Define orientação e direção de abertura em uma única prop." },
+  { prop: "buttonsPerRow", type: "number", defaultValue: "-", description: "Quantidade de botões por linha quando expandido. Se informado, quebra em múltiplas linhas." },
   { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Dimensões fixas da toolbar." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
@@ -279,7 +296,53 @@ export default function Example() {
       </Section>
 
       <Section
-        title={`4) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
+        title="4) Quebra em múltiplas linhas (buttonsPerRow)"
+        description="Quando buttonsPerRow é informado, os botões quebram em mais linhas."
+      >
+        <div className="w-full rounded-lg border border-dashed border-border p-3">
+          <SgToolBar
+            id="tb-wrap"
+            title="Acoes em grade"
+            orientationDirection="vertical-down"
+            collapsible
+            buttonsPerRow={2}
+          >
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para Inicio" severity="primary" />
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir lista de clientes" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+            <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados da tela" />
+          </SgToolBar>
+        </div>
+        <CodeBlock
+          code={`import React from "react";
+import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Users, Settings, Filter, RefreshCcw } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="w-full rounded-lg border border-dashed border-border p-3">
+      <SgToolBar
+        id="tb-wrap"
+        title="Acoes em grade"
+        orientationDirection="vertical-down"
+        collapsible
+        buttonsPerRow={2}
+      >
+        <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para Inicio" severity="primary" />
+        <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir lista de clientes" />
+        <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+        <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados da tela" />
+      </SgToolBar>
+    </div>
+  );
+}`}
+        />
+      </Section>
+
+      <Section
+        title={`5) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
         description={t(i18n, "showcase.component.toolbar.sections.freeDrag.description")}
       >
         <div className="h-56 w-full rounded-lg border border-dashed border-border p-3">
@@ -319,7 +382,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title="5) Drag preso no container"
+        title="6) Drag preso no container"
         description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
       >
         <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
@@ -362,7 +425,7 @@ export default function Example() {
         />
       </Section>
 
-        <Section title="6) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
+        <Section title="7) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
           <SgPlayground
             title="SgToolBar Playground"
             interactive
