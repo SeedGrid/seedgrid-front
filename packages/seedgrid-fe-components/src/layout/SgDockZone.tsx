@@ -34,7 +34,7 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       ref={ref}
       data-sg-dock-zone={zone}
       className={cn(
-        "relative flex gap-3 p-2",
+        "relative flex min-h-0 min-w-0 gap-3 p-2",
         isHorizontalZone
           ? "flex-row flex-wrap items-start content-start"
           : isVerticalZone
