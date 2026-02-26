@@ -30,7 +30,7 @@ export type SgToolBarProps = {
   id: string;
   title?: React.ReactNode;
   orientationDirection?: SgToolBarOrientationDirection;
-  buttonsPerRow?: number;
+  buttonsPerDirection?: number;
   size?: SgToolBarSize;
   className?: string;
   style?: React.CSSProperties;
@@ -185,7 +185,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     id,
     title,
     orientationDirection = "vertical-down",
-    buttonsPerRow,
+    buttonsPerDirection,
     size,
     className,
     style,
@@ -476,9 +476,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const showContent = !isCollapsed;
   const openUp = orientation === "vertical" && direction === "up";
   const openLeft = orientation === "horizontal" && direction === "left";
-  const normalizedButtonsPerRow =
-    Number.isFinite(buttonsPerRow) && typeof buttonsPerRow === "number" && buttonsPerRow > 0
-      ? Math.floor(buttonsPerRow)
+  const normalizedButtonsPerDirection =
+    Number.isFinite(buttonsPerDirection) && typeof buttonsPerDirection === "number" && buttonsPerDirection > 0
+      ? Math.floor(buttonsPerDirection)
       : undefined;
   const showLeadingCollapseButton = orientation === "horizontal" && openLeft && showContent;
   const collapseIconDirection: "left" | "right" | "up" | "down" =
@@ -488,15 +488,20 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     <div
       className={cn(
         "gap-2 p-2",
-        normalizedButtonsPerRow
+        normalizedButtonsPerDirection
           ? "grid"
           : orientation === "horizontal"
             ? "flex flex-row"
             : "flex flex-col"
       )}
       style={
-        normalizedButtonsPerRow
-          ? { gridTemplateColumns: `repeat(${normalizedButtonsPerRow}, max-content)` }
+        normalizedButtonsPerDirection
+          ? orientation === "horizontal"
+            ? { gridTemplateColumns: `repeat(${normalizedButtonsPerDirection}, max-content)` }
+            : {
+              gridTemplateRows: `repeat(${normalizedButtonsPerDirection}, max-content)`,
+              gridAutoFlow: "column"
+            }
           : undefined
       }
     >
