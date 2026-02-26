@@ -31,6 +31,8 @@ export type SgToolBarProps = {
   title?: React.ReactNode;
   orientationDirection?: SgToolBarOrientationDirection;
   buttonsPerDirection?: number;
+  bgColorTitle?: string;
+  bgColor?: string;
   size?: SgToolBarSize;
   className?: string;
   style?: React.CSSProperties;
@@ -186,6 +188,8 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     title,
     orientationDirection = "vertical-down",
     buttonsPerDirection,
+    bgColorTitle,
+    bgColor,
     size,
     className,
     style,
@@ -522,6 +526,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         style={{
           width: size?.w,
           height: size?.h,
+          backgroundColor: bgColor,
           cursor: draggable ? (dragActive ? "grabbing" : "grab") : undefined,
           position: dragPos?.mode,
           left: dragPos?.x,
@@ -546,6 +551,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
                   ? (openUp ? "border-t border-border" : "border-b border-border")
                   : ""
             )}
+            style={{ backgroundColor: bgColorTitle }}
         >
             {collapsible && showLeadingCollapseButton ? (
               <button

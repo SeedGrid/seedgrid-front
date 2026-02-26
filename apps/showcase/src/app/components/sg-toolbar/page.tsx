@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import React from "react";
-import { SgPlayground, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { SgPlayground, SgToolBar, SgToolbarIconButton, toast } from "@seedgrid/fe-components";
 import { Filter, Home, Pencil, RefreshCcw, Settings, Trash2, Users, Plus } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
@@ -84,6 +84,8 @@ const TOOLBAR_PROPS: ShowcasePropRow[] = [
   { prop: "title", type: "ReactNode", defaultValue: "-", description: "Título exibido no cabeçalho." },
   { prop: "orientationDirection", type: "\"vertical-up\" | \"vertical-down\" | \"horizontal-left\" | \"horizontal-right\"", defaultValue: "vertical-down", description: "Define orientação e direção de abertura em uma única prop." },
   { prop: "buttonsPerDirection", type: "number", defaultValue: "-", description: "Quantidade por direção principal: horizontal=por linha, vertical=por coluna." },
+  { prop: "bgColorTitle", type: "string", defaultValue: "-", description: "Cor de fundo do cabecalho (area do titulo)." },
+  { prop: "bgColor", type: "string", defaultValue: "-", description: "Cor de fundo da area principal da toolbar." },
   { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Dimensões fixas da toolbar." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
@@ -156,7 +158,69 @@ export default function Example() {
       </Section>
 
       <Section
-        title="2) Horizontal: orientationDirection left/right"
+        title="2) onClick com Toast"
+        description="SgToolbarIconButton aceita onClick e aqui cada acao dispara um toast."
+      >
+        <SgToolBar id="tb-onclick-toast" title="Acoes" orientationDirection="horizontal-left" collapsible>
+          <SgToolbarIconButton
+            icon={<Plus className="size-4" />}
+            label="Criar"
+            hint="Criar novo registro"
+            severity="success"
+            onClick={() => toast.success("Acao Criar executada")}
+          />
+          <SgToolbarIconButton
+            icon={<Pencil className="size-4" />}
+            label="Editar"
+            hint="Editar registro selecionado"
+            severity="info"
+            onClick={() => toast.info("Acao Editar executada")}
+          />
+          <SgToolbarIconButton
+            icon={<Trash2 className="size-4" />}
+            label="Excluir"
+            hint="Excluir registro selecionado"
+            severity="danger"
+            onClick={() => toast.warning("Acao Excluir executada")}
+          />
+        </SgToolBar>
+        <CodeBlock
+          code={`import React from "react";
+import { SgToolBar, SgToolbarIconButton, toast } from "@seedgrid/fe-components";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+
+export default function Example() {
+  return (
+    <SgToolBar id="tb-onclick-toast" title="Acoes" orientationDirection="horizontal-left" collapsible>
+      <SgToolbarIconButton
+        icon={<Plus className="size-4" />}
+        label="Criar"
+        hint="Criar novo registro"
+        severity="success"
+        onClick={() => toast.success("Acao Criar executada")}
+      />
+      <SgToolbarIconButton
+        icon={<Pencil className="size-4" />}
+        label="Editar"
+        hint="Editar registro selecionado"
+        severity="info"
+        onClick={() => toast.info("Acao Editar executada")}
+      />
+      <SgToolbarIconButton
+        icon={<Trash2 className="size-4" />}
+        label="Excluir"
+        hint="Excluir registro selecionado"
+        severity="danger"
+        onClick={() => toast.warning("Acao Excluir executada")}
+      />
+    </SgToolBar>
+  );
+}`}
+        />
+      </Section>
+
+      <Section
+        title="3) Horizontal: orientationDirection left/right"
         description="horizontal-left abre as opções para a direita. horizontal-right abre as opções para a esquerda."
       >
         <div className="grid w-full gap-4 md:grid-cols-2">
@@ -228,7 +292,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title="3) Vertical: orientationDirection up/down"
+        title="4) Vertical: orientationDirection up/down"
         description="vertical-down abre as opções abaixo do título e vertical-up abre acima."
       >
         <div className="grid w-full gap-4 md:grid-cols-2">
@@ -296,7 +360,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title="4) Quebra automática (buttonsPerDirection)"
+        title="5) Quebra automática (buttonsPerDirection)"
         description="Exemplo horizontal e vertical usando buttonsPerDirection."
       >
         <div className="grid w-full gap-4 lg:grid-cols-2">
@@ -380,7 +444,85 @@ export default function Example() {
       </Section>
 
       <Section
-        title={`5) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
+        title="6) Cores de fundo (bgColor / bgColorTitle)"
+        description="bgColor pinta a area principal. bgColorTitle pinta apenas o cabecalho."
+      >
+        <div className="grid w-full gap-4 md:grid-cols-2">
+          <div className="rounded-lg border border-dashed border-border p-3">
+            <p className="mb-2 text-xs text-muted-foreground">Somente bgColor</p>
+            <SgToolBar
+              id="tb-bg-color"
+              title="Cor no corpo"
+              orientationDirection="vertical-down"
+              collapsible
+              bgColor="#ECFEFF"
+            >
+              <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para Inicio" severity="primary" />
+              <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir lista de clientes" />
+              <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+            </SgToolBar>
+          </div>
+          <div className="rounded-lg border border-dashed border-border p-3">
+            <p className="mb-2 text-xs text-muted-foreground">bgColor + bgColorTitle</p>
+            <SgToolBar
+              id="tb-bg-both"
+              title="Titulo destacado"
+              orientationDirection="vertical-down"
+              collapsible
+              bgColor="#DAD7D2"
+              bgColorTitle="#C9712D"
+            >
+              <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+              <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados da tela" />
+              <SgToolbarIconButton icon={<Pencil className="size-4" />} label="Editar" hint="Editar registro selecionado" severity="info" />
+            </SgToolBar>
+          </div>
+        </div>
+        <CodeBlock
+          code={`import React from "react";
+import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Users, Settings, Filter, RefreshCcw, Pencil } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="grid w-full gap-4 md:grid-cols-2">
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">Somente bgColor</p>
+        <SgToolBar
+          id="tb-bg-color"
+          title="Cor no corpo"
+          orientationDirection="vertical-down"
+          collapsible
+          bgColor="#ECFEFF"
+        >
+          <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para Inicio" severity="primary" />
+          <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir lista de clientes" />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+        </SgToolBar>
+      </div>
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">bgColor + bgColorTitle</p>
+        <SgToolBar
+          id="tb-bg-both"
+          title="Titulo destacado"
+          orientationDirection="vertical-down"
+          collapsible
+          bgColor="#DAD7D2"
+          bgColorTitle="#C9712D"
+        >
+          <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+          <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados da tela" />
+          <SgToolbarIconButton icon={<Pencil className="size-4" />} label="Editar" hint="Editar registro selecionado" severity="info" />
+        </SgToolBar>
+      </div>
+    </div>
+  );
+}`}
+        />
+      </Section>
+
+      <Section
+        title={`7) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
         description={t(i18n, "showcase.component.toolbar.sections.freeDrag.description")}
       >
         <div className="h-56 w-full rounded-lg border border-dashed border-border p-3">
@@ -420,7 +562,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title="6) Drag preso no container"
+        title="8) Drag preso no container"
         description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
       >
         <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
@@ -463,7 +605,7 @@ export default function Example() {
         />
       </Section>
 
-        <Section title="7) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
+        <Section title="9) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
           <SgPlayground
             title="SgToolBar Playground"
             interactive
