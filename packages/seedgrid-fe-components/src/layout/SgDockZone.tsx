@@ -20,6 +20,8 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const i18n = useComponentsI18n();
   const ref = React.useRef<HTMLDivElement>(null);
   const showDropPreview = Boolean(dock?.isDropPreviewActive);
+  const isHorizontalZone = zone === "top" || zone === "bottom";
+  const isVerticalZone = zone === "left" || zone === "right";
 
   React.useEffect(() => {
     if (!dock) return;
@@ -33,10 +35,14 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       data-sg-dock-zone={zone}
       className={cn(
         "relative flex gap-3 p-2",
-        zone === "top" || zone === "bottom" ? "flex-row items-center" : "flex-col items-center",
+        isHorizontalZone
+          ? "flex-row flex-wrap items-start content-start"
+          : isVerticalZone
+            ? "flex-col flex-wrap items-start content-start"
+            : "flex-col items-center",
         showDropPreview ? "rounded-xl border-2 border-dashed border-border/70 bg-background/40 p-3 transition-colors duration-150" : null,
-        showDropPreview && (zone === "top" || zone === "bottom") ? "min-h-16" : null,
-        showDropPreview && (zone === "left" || zone === "right") ? "min-w-24" : null,
+        showDropPreview && isHorizontalZone ? "min-h-16" : null,
+        showDropPreview && isVerticalZone ? "min-w-24" : null,
         className
       )}
     >
