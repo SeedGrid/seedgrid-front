@@ -31,20 +31,30 @@ const TOOLBAR_PLAYGROUND_CODE = `import * as React from "react";
 import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
 
 export default function App() {
-  const [orientation, setOrientation] = React.useState<"vertical" | "horizontal">("horizontal");
+  const options = ["horizontal-left", "horizontal-right", "vertical-down", "vertical-up"] as const;
+  type OrientationDirection = typeof options[number];
+  const [orientationDirection, setOrientationDirection] = React.useState<OrientationDirection>("horizontal-left");
   const [collapsible, setCollapsible] = React.useState(true);
 
   return (
     <div className="space-y-4 p-2">
       <div className="flex gap-2">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setOrientation((prev) => (prev === "horizontal" ? "vertical" : "horizontal"))}>orientation: {orientation}</button>
+        <select
+          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs"
+          value={orientationDirection}
+          onChange={(e) => setOrientationDirection(e.target.value as OrientationDirection)}
+        >
+          {options.map((value) => (
+            <option key={value} value={value}>{value}</option>
+          ))}
+        </select>
         <label className="inline-flex items-center gap-2 text-xs">
           <input type="checkbox" checked={collapsible} onChange={(e) => setCollapsible(e.target.checked)} />
           collapsible
         </label>
       </div>
 
-      <SgToolBar id="tb-playground" title="Actions" orientation={orientation} collapsible={collapsible}>
+      <SgToolBar id="tb-playground" title="Actions" orientationDirection={orientationDirection} collapsible={collapsible}>
         <SgToolbarIconButton icon="A" label="Action A" hint="Open Action A details" severity="primary" />
         <SgToolbarIconButton icon="B" label="Action B" hint="Open Action B details" />
         <SgToolbarIconButton icon="C" label="Action C" hint="Open Action C details" severity="danger" />
@@ -56,7 +66,7 @@ export default function App() {
 const TOOLBAR_PROPS: ShowcasePropRow[] = [
   { prop: "id", type: "string", defaultValue: "-", description: "Identificador único da toolbar." },
   { prop: "title", type: "ReactNode", defaultValue: "-", description: "Título exibido no cabeçalho." },
-  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "Direção dos botões." },
+  { prop: "orientationDirection", type: "\"vertical-up\" | \"vertical-down\" | \"horizontal-left\" | \"horizontal-right\"", defaultValue: "vertical-down", description: "Define orientação e direção de abertura em uma única prop." },
   { prop: "size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Dimensões fixas da toolbar." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
@@ -67,7 +77,6 @@ const TOOLBAR_PROPS: ShowcasePropRow[] = [
   { prop: "collapsible", type: "boolean", defaultValue: "true", description: "Habilita botão de expandir/contrair." },
   { prop: "collapsed", type: "boolean", defaultValue: "controlado", description: "Controla o estado colapsado externamente." },
   { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado no modo não controlado." },
-  { prop: "collapseDirection", type: "\"left\" | \"right\" | \"top\" | \"bottom\"", defaultValue: "left(horizontal) / top(vertical)", description: "Direção da seta de colapso." },
   { prop: "onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Callback ao alternar colapso." },
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Itens internos, normalmente SgToolbarIconButton." }
 ];
@@ -107,7 +116,7 @@ export default function SgToolBarPage() {
         title={`1) ${t(i18n, "showcase.component.toolbar.sections.basic.title")}`}
         description={t(i18n, "showcase.component.toolbar.sections.basic.description")}
       >
-        <SgToolBar id="tb-basic" title={t(i18n, "showcase.component.toolbar.labels.navigation")} orientation="vertical">
+        <SgToolBar id="tb-basic" title={t(i18n, "showcase.component.toolbar.labels.navigation")} orientationDirection="vertical-down">
           <SgToolbarIconButton icon={<Home className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.home")} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
           <SgToolbarIconButton icon={<Users className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.users")} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
           <SgToolbarIconButton icon={<Settings className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.settings")} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
@@ -119,7 +128,7 @@ import { Home, Users, Settings } from "lucide-react";
 
 export default function Example() {
   return (
-    <SgToolBar id="tb-basic" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
+    <SgToolBar id="tb-basic" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientationDirection="vertical-down">
       <SgToolbarIconButton icon={<Home className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.home")}" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
       <SgToolbarIconButton icon={<Users className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.users")}" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
       <SgToolbarIconButton icon={<Settings className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.settings")}" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
@@ -130,20 +139,37 @@ export default function Example() {
       </Section>
 
       <Section
-        title={`2) ${t(i18n, "showcase.component.toolbar.sections.horizontal.title")}`}
-        description={t(i18n, "showcase.component.toolbar.sections.horizontal.description")}
+        title="2) Horizontal: orientationDirection left/right"
+        description="horizontal-left abre as opções para a direita. horizontal-right abre as opções para a esquerda."
       >
-        <SgToolBar
-          id="tb-horizontal"
-          title={t(i18n, "showcase.component.toolbar.labels.quickActions")}
-          orientation="horizontal"
-          collapsible
-          collapseDirection="right"
-        >
-          <SgToolbarIconButton icon={<Plus className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.create")} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
-          <SgToolbarIconButton icon={<Pencil className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.edit")} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
-          <SgToolbarIconButton icon={<Trash2 className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.delete")} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
-        </SgToolBar>
+        <div className="grid w-full gap-4 md:grid-cols-2">
+          <div className="rounded-lg border border-dashed border-border p-3">
+            <p className="mb-2 text-xs text-muted-foreground">orientationDirection = "horizontal-left"</p>
+            <SgToolBar
+              id="tb-horizontal-left"
+              title={t(i18n, "showcase.component.toolbar.labels.quickActions")}
+              orientationDirection="horizontal-left"
+              collapsible
+            >
+              <SgToolbarIconButton icon={<Plus className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.create")} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
+              <SgToolbarIconButton icon={<Pencil className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.edit")} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
+              <SgToolbarIconButton icon={<Trash2 className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.delete")} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
+            </SgToolBar>
+          </div>
+          <div className="rounded-lg border border-dashed border-border p-3">
+            <p className="mb-2 text-xs text-muted-foreground">orientationDirection = "horizontal-right"</p>
+            <SgToolBar
+              id="tb-horizontal-right"
+              title={t(i18n, "showcase.component.toolbar.labels.quickActions")}
+              orientationDirection="horizontal-right"
+              collapsible
+            >
+              <SgToolbarIconButton icon={<Plus className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.create")} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
+              <SgToolbarIconButton icon={<Pencil className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.edit")} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
+              <SgToolbarIconButton icon={<Trash2 className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.delete")} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
+            </SgToolBar>
+          </div>
+        </div>
         <CodeBlock
           code={`import React from "react";
 import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
@@ -151,31 +177,116 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function Example() {
   return (
-    <SgToolBar
-      id="tb-horizontal"
-      title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
-      orientation="horizontal"
-      collapsible
-      collapseDirection="right"
-    >
-      <SgToolbarIconButton icon={<Plus className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.create")}" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
-      <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.edit")}" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
-      <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.delete")}" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
-    </SgToolBar>
+    <div className="grid w-full gap-4 md:grid-cols-2">
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">orientationDirection = "horizontal-left"</p>
+        <SgToolBar
+          id="tb-horizontal-left"
+          title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
+          orientationDirection="horizontal-left"
+          collapsible
+        >
+          <SgToolbarIconButton icon={<Plus className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.create")}" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
+          <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.edit")}" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
+          <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.delete")}" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
+        </SgToolBar>
+      </div>
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">orientationDirection = "horizontal-right"</p>
+        <SgToolBar
+          id="tb-horizontal-right"
+          title="${t(i18n, "showcase.component.toolbar.labels.quickActions")}"
+          orientationDirection="horizontal-right"
+          collapsible
+        >
+          <SgToolbarIconButton icon={<Plus className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.create")}" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
+          <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.edit")}" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
+          <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.delete")}" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
+        </SgToolBar>
+      </div>
+    </div>
   );
 }`}
         />
       </Section>
 
       <Section
-        title={`3) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
+        title="3) Vertical: orientationDirection up/down"
+        description="vertical-down abre as opções abaixo do título e vertical-up abre acima."
+      >
+        <div className="grid w-full gap-4 md:grid-cols-2">
+          <div className="flex h-72 items-start rounded-lg border border-dashed border-border p-3">
+            <SgToolBar
+              id="tb-vertical-down"
+              title={t(i18n, "showcase.component.toolbar.labels.navigation")}
+              orientationDirection="vertical-down"
+              collapsible
+            >
+              <SgToolbarIconButton icon={<Home className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.home")} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
+              <SgToolbarIconButton icon={<Users className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.users")} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
+              <SgToolbarIconButton icon={<Settings className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.settings")} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
+            </SgToolBar>
+          </div>
+          <div className="flex h-72 items-end rounded-lg border border-dashed border-border p-3">
+            <SgToolBar
+              id="tb-vertical-up"
+              title={t(i18n, "showcase.component.toolbar.labels.navigation")}
+              orientationDirection="vertical-up"
+              collapsible
+            >
+              <SgToolbarIconButton icon={<Home className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.home")} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
+              <SgToolbarIconButton icon={<Users className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.users")} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
+              <SgToolbarIconButton icon={<Settings className="size-4" />} label={t(i18n, "showcase.component.toolbar.labels.settings")} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
+            </SgToolBar>
+          </div>
+        </div>
+        <CodeBlock
+          code={`import React from "react";
+import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Users, Settings } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="grid w-full gap-4 md:grid-cols-2">
+      <div className="flex h-72 items-start rounded-lg border border-dashed border-border p-3">
+        <SgToolBar
+          id="tb-vertical-down"
+          title="${t(i18n, "showcase.component.toolbar.labels.navigation")}"
+          orientationDirection="vertical-down"
+          collapsible
+        >
+          <SgToolbarIconButton icon={<Home className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.home")}" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
+          <SgToolbarIconButton icon={<Users className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.users")}" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.settings")}" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
+        </SgToolBar>
+      </div>
+      <div className="flex h-72 items-end rounded-lg border border-dashed border-border p-3">
+        <SgToolBar
+          id="tb-vertical-up"
+          title="${t(i18n, "showcase.component.toolbar.labels.navigation")}"
+          orientationDirection="vertical-up"
+          collapsible
+        >
+          <SgToolbarIconButton icon={<Home className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.home")}" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
+          <SgToolbarIconButton icon={<Users className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.users")}" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label="${t(i18n, "showcase.component.toolbar.labels.settings")}" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
+        </SgToolBar>
+      </div>
+    </div>
+  );
+}`}
+        />
+      </Section>
+
+      <Section
+        title={`4) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
         description={t(i18n, "showcase.component.toolbar.sections.freeDrag.description")}
       >
         <div className="h-56 w-full rounded-lg border border-dashed border-border p-3">
           <SgToolBar
             id="tb-free"
             title={t(i18n, "showcase.component.toolbar.labels.free")}
-            orientation="vertical"
+            orientationDirection="vertical-down"
             draggable
             freeDrag
           >
@@ -194,7 +305,7 @@ export default function Example() {
       <SgToolBar
         id="tb-free"
         title="${t(i18n, "showcase.component.toolbar.labels.free")}"
-        orientation="vertical"
+        orientationDirection="vertical-down"
         draggable
         freeDrag
       >
@@ -208,14 +319,14 @@ export default function Example() {
       </Section>
 
       <Section
-        title="4) Drag preso no container"
+        title="5) Drag preso no container"
         description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
       >
         <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
           <SgToolBar
             id="tb-bounded"
             title="Drag preso"
-            orientation="vertical"
+            orientationDirection="vertical-down"
             draggable
             freeDrag
             defaultPosition={{ x: 16, y: 16 }}
@@ -236,7 +347,7 @@ export default function Example() {
       <SgToolBar
         id="tb-bounded"
         title="Drag preso"
-        orientation="vertical"
+        orientationDirection="vertical-down"
         draggable
         freeDrag
         defaultPosition={{ x: 16, y: 16 }}
@@ -251,7 +362,7 @@ export default function Example() {
         />
       </Section>
 
-        <Section title="5) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
+        <Section title="6) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
           <SgPlayground
             title="SgToolBar Playground"
             interactive

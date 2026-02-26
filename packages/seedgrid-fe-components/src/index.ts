@@ -194,6 +194,7 @@ export { SgToolBar, SgToolbarIconButton } from "./layout/SgToolBar";
 export type {
   SgToolBarProps,
   SgToolBarOrientation,
+  SgToolBarOrientationDirection,
   SgToolBarSeverity,
   SgToolBarSize,
   SgToolbarIconButtonProps

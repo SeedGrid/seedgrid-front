@@ -6,6 +6,11 @@ import { useSgDockLayout } from "./SgDockLayout";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 export type SgToolBarOrientation = "horizontal" | "vertical";
+export type SgToolBarOrientationDirection =
+  | "vertical-up"
+  | "vertical-down"
+  | "horizontal-left"
+  | "horizontal-right";
 export type SgToolBarSeverity =
   | "primary"
   | "secondary"
@@ -24,7 +29,7 @@ export type SgToolBarSize = {
 export type SgToolBarProps = {
   id: string;
   title?: React.ReactNode;
-  orientation?: SgToolBarOrientation;
+  orientationDirection?: SgToolBarOrientationDirection;
   size?: SgToolBarSize;
   className?: string;
   style?: React.CSSProperties;
@@ -37,7 +42,6 @@ export type SgToolBarProps = {
   collapsible?: boolean;
   collapsed?: boolean;
   defaultCollapsed?: boolean;
-  collapseDirection?: "left" | "right" | "top" | "bottom";
   onCollapsedChange?: (collapsed: boolean) => void;
 
   children?: React.ReactNode;
@@ -130,6 +134,22 @@ function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null 
   };
 }
 
+function resolveOrientationDirection(
+  orientationDirection: SgToolBarOrientationDirection
+): { orientation: SgToolBarOrientation; direction: "left" | "right" | "up" | "down" } {
+  switch (orientationDirection) {
+    case "horizontal-right":
+      return { orientation: "horizontal", direction: "right" };
+    case "horizontal-left":
+      return { orientation: "horizontal", direction: "left" };
+    case "vertical-up":
+      return { orientation: "vertical", direction: "up" };
+    case "vertical-down":
+    default:
+      return { orientation: "vertical", direction: "down" };
+  }
+}
+
 type SgToolBarDragMode = "fixed" | "absolute";
 
 type SgToolBarDragPos = {
@@ -137,6 +157,8 @@ type SgToolBarDragPos = {
   y: number;
   mode: SgToolBarDragMode;
 };
+
+const SgToolbarOrientationContext = React.createContext<SgToolBarOrientation>("vertical");
 
 function useControlledState<T>(args: { value?: T; defaultValue: T; onChange?: (next: T) => void }) {
   const { value, defaultValue, onChange } = args;
@@ -161,7 +183,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const {
     id,
     title,
-    orientation = "vertical",
+    orientationDirection = "vertical-down",
     size,
     className,
     style,
@@ -172,10 +194,10 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     collapsible = true,
     collapsed,
     defaultCollapsed = false,
-    collapseDirection,
     onCollapsedChange,
     children
   } = props;
+  const { orientation, direction } = resolveOrientationDirection(orientationDirection);
 
   const dock = useSgDockLayout();
   const inDock = !!dock;
@@ -449,78 +471,81 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     [draggable, freeDrag, inDock, dock, id, resolveFreeDragMode, getDragBounds, saveStoredPosition]
   );
 
-  const direction =
-    collapseDirection ??
-    (orientation === "horizontal"
-      ? "left"
-      : "top");
-
   const showContent = !isCollapsed;
+  const openUp = orientation === "vertical" && direction === "up";
+  const openLeft = orientation === "horizontal" && direction === "right";
+
+  const content = showContent ? (
+    <div
+      className={cn(
+        "flex gap-2 p-2",
+        orientation === "horizontal" ? "flex-row" : "flex-col"
+      )}
+    >
+      {children}
+    </div>
+  ) : null;
 
   const toolbar = (
-    <div
-      ref={containerRef}
-      className={cn(
-        "select-none rounded-xl border border-border bg-background shadow-sm",
-        "flex",
-        orientation === "horizontal" ? "flex-row items-center" : "flex-col items-center",
-        className
-      )}
-      style={{
-        width: size?.w,
-        height: size?.h,
-        cursor: draggable ? (dragActive ? "grabbing" : "grab") : undefined,
-        position: dragPos?.mode,
-        left: dragPos?.x,
-        top: dragPos?.y,
-        zIndex: dragPos ? 1000 : undefined,
-        ...style
-      }}
-      onPointerDown={handlePointerDown}
-    >
-      {(title || collapsible) && (
-        <div
-          className={cn(
-            "flex items-center gap-2 px-2 py-1 w-full",
-            orientation === "horizontal"
-              ? showContent
-                ? "border-r border-border"
-                : ""
-              : showContent
-                ? "border-b border-border"
-                : ""
-          )}
-        >
-          {title ? (
-            <span className="text-xs font-semibold text-foreground truncate">
-              {title}
-            </span>
-          ) : null}
-          {collapsible ? (
-            <button
-              type="button"
-              className="ml-auto inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              onPointerDown={(e) => e.stopPropagation()}
-              aria-label="Toggle toolbar"
-            >
-              <CollapseIcon direction={direction} collapsed={isCollapsed} />
-            </button>
-          ) : null}
-        </div>
-      )}
+    <SgToolbarOrientationContext.Provider value={orientation}>
+      <div
+        ref={containerRef}
+        data-sg-toolbar-root="true"
+        className={cn(
+          "select-none rounded-xl border border-border bg-background shadow-sm",
+          "flex",
+          orientation === "horizontal" ? "flex-row items-center" : "flex-col items-center",
+          className
+        )}
+        style={{
+          width: size?.w,
+          height: size?.h,
+          cursor: draggable ? (dragActive ? "grabbing" : "grab") : undefined,
+          position: dragPos?.mode,
+          left: dragPos?.x,
+          top: dragPos?.y,
+          zIndex: dragPos ? 1000 : undefined,
+          ...style
+        }}
+        onPointerDown={handlePointerDown}
+      >
+        {openUp || openLeft ? content : null}
 
-      {showContent ? (
-        <div
-          className={cn(
-            "flex gap-2 p-2",
-            orientation === "horizontal" ? "flex-row" : "flex-col"
-          )}
+        {(title || collapsible) && (
+          <div
+            className={cn(
+              "flex items-center gap-2 px-2 py-1 w-full",
+              orientation === "horizontal"
+                ? showContent
+                  ? (openLeft ? "border-l border-border" : "border-r border-border")
+                  : ""
+                : showContent
+                  ? (openUp ? "border-t border-border" : "border-b border-border")
+                  : ""
+            )}
         >
-          {children}
-        </div>
-      ) : null}
-    </div>
+            {title ? (
+              <span className="text-xs font-semibold text-foreground truncate">
+                {title}
+              </span>
+            ) : null}
+            {collapsible ? (
+              <button
+                type="button"
+                className="ml-auto inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                onPointerDown={(e) => e.stopPropagation()}
+                aria-label="Toggle toolbar"
+              >
+                <CollapseIcon direction={direction} collapsed={isCollapsed} />
+              </button>
+            ) : null}
+          </div>
+        )}
+
+        {openUp || openLeft ? null : content}
+      </div>
+    </SgToolbarOrientationContext.Provider>
   );
 
   if (portalTarget) {
@@ -534,84 +559,127 @@ export function SgToolbarIconButton(
   props: Readonly<SgToolbarIconButtonProps & { hideLabel?: boolean }>
 ) {
   const { icon, label, showLabel = true, hint, severity = "plain", disabled, onClick, hideLabel } = props;
+  const toolbarOrientation = React.useContext(SgToolbarOrientationContext);
+  const isHorizontalToolbar = toolbarOrientation === "horizontal";
   const c = BTN_COLORS[severity];
   const text = typeof icon === "string" ? icon : null;
   const hasVisibleLabel = Boolean(label) && showLabel && !hideLabel;
   const showHintTooltip = Boolean(hint) && !hideLabel;
-  const [hintPosition, setHintPosition] = React.useState({ x: 20, y: 20 });
+  const [hintPosition, setHintPosition] = React.useState({ x: 0, y: 0 });
+  const [isHintHovered, setIsHintHovered] = React.useState(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-  const handleMouseMove = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!showHintTooltip) return;
-    const rect = event.currentTarget.getBoundingClientRect();
+  const updateHintPosition = React.useCallback(() => {
+    if (!buttonRef.current) return;
+
+    const buttonRect = buttonRef.current.getBoundingClientRect();
+    const toolbarRoot = buttonRef.current.closest("[data-sg-toolbar-root='true']");
+    const toolbarRect = toolbarRoot instanceof HTMLElement ? toolbarRoot.getBoundingClientRect() : null;
+    if (isHorizontalToolbar) {
+      const baseY = toolbarRect ? toolbarRect.top : buttonRect.top;
+      setHintPosition({
+        x: buttonRect.left + (buttonRect.width / 2),
+        y: baseY - 8
+      });
+      return;
+    }
+
+    const baseX = toolbarRect ? toolbarRect.right : buttonRect.right;
     setHintPosition({
-      x: event.clientX - rect.left + 12,
-      y: event.clientY - rect.top
+      x: baseX + 8,
+      y: buttonRect.top + (buttonRect.height / 2)
     });
-  }, [showHintTooltip]);
+  }, [isHorizontalToolbar]);
 
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      aria-label={hint ?? label ?? text ?? undefined}
-      className={cn(
-        "group",
-        "relative inline-flex items-center justify-center rounded-lg",
-        "transition-[transform,filter] duration-150",
-        "hover:brightness-95 active:brightness-90",
-        "focus-visible:outline-none focus-visible:ring-4",
-        "disabled:opacity-50 disabled:cursor-not-allowed",
-        hasVisibleLabel ? "gap-2 px-2 pr-3" : ""
-      )}
-      style={{
-        width: hasVisibleLabel ? undefined : 40,
-        minWidth: 40,
-        height: 40,
-        backgroundColor: c.bg,
-        color: c.fg,
-        ["--tw-ring-color" as string]: c.ring
-      }}
-    >
-      {icon && typeof icon !== "string" ? (
-        <span className="inline-flex shrink-0">{icon}</span>
-      ) : (
-        <span className="shrink-0 text-[10px] font-semibold">{text?.slice(0, 2)}</span>
-      )}
-      {hasVisibleLabel ? (
-        <span className="text-xs font-medium leading-none">{label}</span>
-      ) : null}
-      {showHintTooltip ? (
+  React.useEffect(() => {
+    if (!showHintTooltip || !isHintHovered) return;
+
+    updateHintPosition();
+
+    const handleReposition = () => updateHintPosition();
+    window.addEventListener("scroll", handleReposition, true);
+    window.addEventListener("resize", handleReposition);
+
+    return () => {
+      window.removeEventListener("scroll", handleReposition, true);
+      window.removeEventListener("resize", handleReposition);
+    };
+  }, [isHintHovered, showHintTooltip, updateHintPosition]);
+
+  const hintNode =
+    showHintTooltip && isHintHovered && typeof document !== "undefined"
+      ? createPortal(
         <span
-          className="pointer-events-none absolute z-20 whitespace-nowrap rounded bg-foreground/90 px-2 py-1 text-[11px] text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+          className="pointer-events-none fixed z-[1200] whitespace-nowrap rounded bg-foreground/90 px-2 py-1 text-[11px] text-background"
           style={{
             left: hintPosition.x,
             top: hintPosition.y,
-            transform: "translateY(-50%)"
+            transform: isHorizontalToolbar ? "translate(-50%, -100%)" : "translateY(-50%)"
           }}
         >
           {hint}
-        </span>
-      ) : null}
-    </button>
+        </span>,
+        document.body
+      )
+      : null;
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        disabled={disabled}
+        onClick={onClick}
+        onMouseEnter={showHintTooltip ? () => {
+          updateHintPosition();
+          setIsHintHovered(true);
+        } : undefined}
+        onMouseLeave={showHintTooltip ? () => setIsHintHovered(false) : undefined}
+        aria-label={hint ?? label ?? text ?? undefined}
+        className={cn(
+          "group",
+          "relative inline-flex items-center justify-center rounded-lg",
+          "transition-[transform,filter] duration-150",
+          "hover:brightness-95 active:brightness-90",
+          "focus-visible:outline-none focus-visible:ring-4",
+          "disabled:opacity-50 disabled:cursor-not-allowed",
+          hasVisibleLabel ? "gap-2 px-2 pr-3" : ""
+        )}
+        style={{
+          width: hasVisibleLabel ? undefined : 40,
+          minWidth: 40,
+          height: 40,
+          backgroundColor: c.bg,
+          color: c.fg,
+          ["--tw-ring-color" as string]: c.ring
+        }}
+      >
+        {icon && typeof icon !== "string" ? (
+          <span className="inline-flex shrink-0">{icon}</span>
+        ) : (
+          <span className="shrink-0 text-[10px] font-semibold">{text?.slice(0, 2)}</span>
+        )}
+        {hasVisibleLabel ? (
+          <span className="text-xs font-medium leading-none">{label}</span>
+        ) : null}
+      </button>
+      {hintNode}
+    </>
   );
 }
 
-function CollapseIcon(props: { direction: "left" | "right" | "top" | "bottom"; collapsed: boolean }) {
+function CollapseIcon(props: { direction: "left" | "right" | "up" | "down"; collapsed: boolean }) {
   const { direction, collapsed } = props;
-  const path = (() => {
-    if (direction === "top") {
-      return collapsed ? "M6 9l6 6 6-6" : "M6 15l6-6 6 6";
-    }
-    if (direction === "bottom") {
-      return collapsed ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6";
-    }
-    if (direction === "left") {
-      return collapsed ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6";
-    }
-    return collapsed ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
-  })();
+  const arrowUp = "M6 15l6-6 6 6";
+  const arrowDown = "M6 9l6 6 6-6";
+  const arrowLeft = "M15 6l-6 6 6 6";
+  const arrowRight = "M9 6l6 6-6 6";
+
+  const path =
+    direction === "down" ? (collapsed ? arrowDown : arrowUp)
+      : direction === "up" ? (collapsed ? arrowUp : arrowDown)
+        : direction === "left" ? (collapsed ? arrowLeft : arrowRight)
+          : (collapsed ? arrowRight : arrowLeft);
 
   return (
     <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">

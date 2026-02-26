@@ -40,13 +40,13 @@ export default function App() {
     <div className="relative h-[360px] rounded-xl border border-border bg-muted/30 p-2">
       <SgDockLayout id="dock-playground">
         <SgDockZone zone="top" className="absolute left-0 right-0 top-0">
-          <SgToolBar id="tb-top" dockZone="top" orientation="horizontal" title="Top">
+          <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title="Top">
             <SgToolbarIconButton icon="T1" hint="Top 1" />
             <SgToolbarIconButton icon="T2" hint="Top 2" />
           </SgToolBar>
         </SgDockZone>
         <SgDockZone zone="left" className="absolute left-0 top-0 bottom-0">
-          <SgToolBar id="tb-left" dockZone="left" orientation="vertical" title="Left" collapsible collapseDirection="left">
+          <SgToolBar id="tb-left" dockZone="left" orientationDirection="vertical-down" title="Left" collapsible>
             <SgToolbarIconButton icon="L1" hint="Left 1" />
             <SgToolbarIconButton icon="L2" hint="Left 2" />
           </SgToolBar>
@@ -92,14 +92,14 @@ export default function SgDockLayoutPage() {
         <div className="relative h-[420px] rounded-xl border border-border bg-muted/30">
           <SgDockLayout id="showcase-dock">
             <SgDockZone zone="top" className="absolute left-0 right-0 top-0">
-              <SgToolBar id="tb-top" dockZone="top" orientation="horizontal" title={t(i18n, "showcase.component.dockLayout.labels.top")}>
+              <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title={t(i18n, "showcase.component.dockLayout.labels.top")}>
                 <SgToolbarIconButton icon="T1" hint="Top 1" />
                 <SgToolbarIconButton icon="T2" hint="Top 2" />
               </SgToolBar>
             </SgDockZone>
 
             <SgDockZone zone="bottom" className="absolute left-0 right-0 bottom-0">
-              <SgToolBar id="tb-bottom" dockZone="bottom" orientation="horizontal" title={t(i18n, "showcase.component.dockLayout.labels.bottom")}>
+              <SgToolBar id="tb-bottom" dockZone="bottom" orientationDirection="horizontal-left" title={t(i18n, "showcase.component.dockLayout.labels.bottom")}>
                 <SgToolbarIconButton icon="B1" hint="Bottom 1" />
                 <SgToolbarIconButton icon="B2" hint="Bottom 2" />
               </SgToolBar>
@@ -109,10 +109,9 @@ export default function SgDockLayoutPage() {
               <SgToolBar
                 id="tb-left"
                 dockZone="left"
-                orientation="vertical"
+                orientationDirection="vertical-down"
                 title={t(i18n, "showcase.component.dockLayout.labels.left")}
                 collapsible
-                collapseDirection="left"
               >
                 <SgToolbarIconButton icon="L1" hint="Left 1" />
                 <SgToolbarIconButton icon="L2" hint="Left 2" />
@@ -123,10 +122,9 @@ export default function SgDockLayoutPage() {
               <SgToolBar
                 id="tb-right"
                 dockZone="right"
-                orientation="vertical"
+                orientationDirection="vertical-down"
                 title={t(i18n, "showcase.component.dockLayout.labels.right")}
                 collapsible
-                collapseDirection="right"
               >
                 <SgToolbarIconButton icon="R1" hint="Right 1" />
                 <SgToolbarIconButton icon="R2" hint="Right 2" />
@@ -146,13 +144,13 @@ export default function Example() {
   return (
     <SgDockLayout id="dock-main">
       <SgDockZone zone="top">
-        <SgToolBar id="tb-top" dockZone="top" orientation="horizontal" title="${t(i18n, "showcase.component.dockLayout.labels.top")}">
+        <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title="${t(i18n, "showcase.component.dockLayout.labels.top")}">
           <SgToolbarIconButton icon="T1" hint="Top 1" />
         </SgToolBar>
       </SgDockZone>
 
       <SgDockZone zone="left">
-        <SgToolBar id="tb-left" dockZone="left" orientation="vertical" title="${t(i18n, "showcase.component.dockLayout.labels.left")}" collapsible collapseDirection="left">
+        <SgToolBar id="tb-left" dockZone="left" orientationDirection="vertical-down" title="${t(i18n, "showcase.component.dockLayout.labels.left")}" collapsible>
           <SgToolbarIconButton icon="L1" hint="Left 1" />
         </SgToolBar>
       </SgDockZone>
