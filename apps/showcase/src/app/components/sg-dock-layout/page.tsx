@@ -37,21 +37,39 @@ import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedg
 
 export default function App() {
   return (
-    <div className="relative h-[360px] rounded-xl border border-border bg-muted/30 p-2">
-      <SgDockLayout id="dock-playground">
-        <SgDockZone zone="top" className="absolute left-0 right-0 top-0">
-          <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title="Top">
+    <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
+      <SgDockLayout id="dock-playground-v3">
+        <SgDockZone zone="top" className="absolute left-0 right-0 top-0 h-20 items-start border-b border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-top-v3" dockZone="top" orientationDirection="horizontal-left" title="Topo" draggable>
             <SgToolbarIconButton icon="T1" hint="Top 1" />
             <SgToolbarIconButton icon="T2" hint="Top 2" />
           </SgToolBar>
         </SgDockZone>
-        <SgDockZone zone="left" className="absolute left-0 top-0 bottom-0">
-          <SgToolBar id="tb-left" dockZone="left" orientationDirection="vertical-down" title="Left" collapsible>
+
+        <SgDockZone zone="bottom" className="absolute bottom-0 left-0 right-0 h-20 items-end border-t border-white/20 px-4 pb-4">
+          <SgToolBar id="tb-bottom-v3" dockZone="bottom" orientationDirection="horizontal-left" title="Base" draggable>
+            <SgToolbarIconButton icon="B1" hint="Bottom 1" />
+            <SgToolbarIconButton icon="B2" hint="Bottom 2" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="left" className="absolute bottom-20 left-0 top-20 w-44 items-start border-r border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-left-v3" dockZone="left" orientationDirection="vertical-down" title="Esquerda" collapsible draggable>
             <SgToolbarIconButton icon="L1" hint="Left 1" />
             <SgToolbarIconButton icon="L2" hint="Left 2" />
           </SgToolBar>
         </SgDockZone>
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">Arraste as barras</div>
+
+        <SgDockZone zone="right" className="absolute bottom-20 right-0 top-20 w-44 items-start border-l border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-right-v3" dockZone="right" orientationDirection="vertical-down" title="Direita" collapsible draggable>
+            <SgToolbarIconButton icon="R1" hint="Right 1" />
+            <SgToolbarIconButton icon="R2" hint="Right 2" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="free" className="absolute bottom-20 left-44 right-44 top-20 items-center justify-center">
+          <div className="pointer-events-none text-sm text-white/60">Zona livre (free)</div>
+        </SgDockZone>
       </SgDockLayout>
     </div>
   );
@@ -72,6 +90,7 @@ const DOCK_ZONE_PROPS: ShowcasePropRow[] = [
 
 export default function SgDockLayoutPage() {
   const i18n = useShowcaseI18n();
+  const topLabel = t(i18n, "showcase.component.dockLayout.labels.top");
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
   });
@@ -93,53 +112,19 @@ export default function SgDockLayoutPage() {
 
       <Section
         title={`1) ${t(i18n, "showcase.component.dockLayout.sections.basic.title")}`}
-        description={t(i18n, "showcase.component.dockLayout.sections.basic.description")}
+        description="Duas zonas (top/bottom) e uma toolbar arrastavel."
       >
-        <div className="relative h-[420px] rounded-xl border border-border bg-muted/30">
-          <SgDockLayout id="showcase-dock">
-            <SgDockZone zone="top" className="absolute left-0 right-0 top-0">
-              <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title={t(i18n, "showcase.component.dockLayout.labels.top")}>
+        <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
+          <SgDockLayout id="showcase-dock-basic-v7" className="flex h-full flex-col justify-between">
+            <SgDockZone zone="top" className="shrink-0 items-start border-b border-white/20">
+              <SgToolBar id="tb-main-basic-v7" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
                 <SgToolbarIconButton icon="T1" hint="Top 1" />
                 <SgToolbarIconButton icon="T2" hint="Top 2" />
               </SgToolBar>
             </SgDockZone>
 
-            <SgDockZone zone="bottom" className="absolute left-0 right-0 bottom-0">
-              <SgToolBar id="tb-bottom" dockZone="bottom" orientationDirection="horizontal-left" title={t(i18n, "showcase.component.dockLayout.labels.bottom")}>
-                <SgToolbarIconButton icon="B1" hint="Bottom 1" />
-                <SgToolbarIconButton icon="B2" hint="Bottom 2" />
-              </SgToolBar>
+            <SgDockZone zone="bottom" className="shrink-0 items-end border-t border-white/20">
             </SgDockZone>
-
-            <SgDockZone zone="left" className="absolute left-0 top-0 bottom-0">
-              <SgToolBar
-                id="tb-left"
-                dockZone="left"
-                orientationDirection="vertical-down"
-                title={t(i18n, "showcase.component.dockLayout.labels.left")}
-                collapsible
-              >
-                <SgToolbarIconButton icon="L1" hint="Left 1" />
-                <SgToolbarIconButton icon="L2" hint="Left 2" />
-              </SgToolBar>
-            </SgDockZone>
-
-            <SgDockZone zone="right" className="absolute right-0 top-0 bottom-0">
-              <SgToolBar
-                id="tb-right"
-                dockZone="right"
-                orientationDirection="vertical-down"
-                title={t(i18n, "showcase.component.dockLayout.labels.right")}
-                collapsible
-              >
-                <SgToolbarIconButton icon="R1" hint="Right 1" />
-                <SgToolbarIconButton icon="R2" hint="Right 2" />
-              </SgToolBar>
-            </SgDockZone>
-
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
-              {t(i18n, "showcase.component.dockLayout.labels.dragHint")}
-            </div>
           </SgDockLayout>
         </div>
         <CodeBlock
@@ -148,19 +133,19 @@ import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedg
 
 export default function Example() {
   return (
-    <SgDockLayout id="dock-main">
-      <SgDockZone zone="top">
-        <SgToolBar id="tb-top" dockZone="top" orientationDirection="horizontal-left" title="${t(i18n, "showcase.component.dockLayout.labels.top")}">
-          <SgToolbarIconButton icon="T1" hint="Top 1" />
-        </SgToolBar>
-      </SgDockZone>
+    <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
+      <SgDockLayout id="showcase-dock-basic-v7" className="flex h-full flex-col justify-between">
+        <SgDockZone zone="top" className="shrink-0 items-start border-b border-white/20">
+          <SgToolBar id="tb-main-basic-v7" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
+            <SgToolbarIconButton icon="T1" hint="Top 1" />
+            <SgToolbarIconButton icon="T2" hint="Top 2" />
+          </SgToolBar>
+        </SgDockZone>
 
-      <SgDockZone zone="left">
-        <SgToolBar id="tb-left" dockZone="left" orientationDirection="vertical-down" title="${t(i18n, "showcase.component.dockLayout.labels.left")}" collapsible>
-          <SgToolbarIconButton icon="L1" hint="Left 1" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
+        <SgDockZone zone="bottom" className="shrink-0 items-end border-t border-white/20">
+        </SgDockZone>
+      </SgDockLayout>
+    </div>
   );
 }`}
         />
@@ -172,7 +157,7 @@ export default function Example() {
             interactive
             codeContract="appFile"
             code={DOCK_LAYOUT_PLAYGROUND_CODE}
-            height={520}
+            height={560}
             defaultOpen
           />
         </Section>

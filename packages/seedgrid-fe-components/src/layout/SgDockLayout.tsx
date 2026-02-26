@@ -32,6 +32,8 @@ type DockContextValue = {
   getZoneElement: (zone: SgDockZoneId) => HTMLDivElement | null;
   registerZone: (zone: SgDockZoneId, el: HTMLDivElement | null) => void;
   getZoneAtPoint: (x: number, y: number) => SgDockZoneId | null;
+  isDropPreviewActive: boolean;
+  setDropPreviewActive: (next: boolean) => void;
   getToolbarZone: (id: string) => SgDockZoneId | null;
   moveToolbar: (id: string, zone: SgDockZoneId) => void;
   ensureToolbar: (id: string, state: Partial<SgDockToolbarState>) => void;
@@ -53,6 +55,7 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     baseKey: `dock-layout:${id}`,
     defaultValue: defaultState ?? EMPTY_STATE
   });
+  const [isDropPreviewActive, setIsDropPreviewActive] = React.useState(false);
 
   const zonesRef = React.useRef<ZoneRegistry>(new Map());
 
@@ -77,6 +80,31 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     }
     return null;
   }, []);
+
+  const setDropPreviewActive = React.useCallback((next: boolean) => {
+    setIsDropPreviewActive((prev) => (prev === next ? prev : next));
+  }, []);
+
+  React.useEffect(() => {
+    if (!isDropPreviewActive) return;
+
+    const clearPreview = () => setIsDropPreviewActive(false);
+    const handleVisibilityChange = () => {
+      if (document.hidden) clearPreview();
+    };
+
+    window.addEventListener("pointerup", clearPreview);
+    window.addEventListener("pointercancel", clearPreview);
+    window.addEventListener("blur", clearPreview);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("pointerup", clearPreview);
+      window.removeEventListener("pointercancel", clearPreview);
+      window.removeEventListener("blur", clearPreview);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isDropPreviewActive]);
 
   const getToolbarZone = React.useCallback(
     (toolbarId: string) => persisted.toolbars[toolbarId]?.zone ?? null,
@@ -152,6 +180,8 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     getZoneElement,
     registerZone,
     getZoneAtPoint,
+    isDropPreviewActive,
+    setDropPreviewActive,
     getToolbarZone,
     moveToolbar,
     ensureToolbar,

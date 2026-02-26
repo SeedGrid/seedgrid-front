@@ -75,6 +75,7 @@
   "components.fab.no": "No",
   "components.dock.resetPosition": "Reset position",
   "components.dock.resetConfirm": "Are you sure you want to reset the dock position to default?",
+  "components.dock.dropHere": "Drop here",
   "components.actions.cancel": "Cancel",
   "components.actions.confirm": "Confirm",
   "components.rating.required": "Please provide a rating",

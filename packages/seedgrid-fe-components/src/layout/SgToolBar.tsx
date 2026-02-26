@@ -394,6 +394,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       if (!containerRef.current) return;
       if (!freeDrag && !inDock) return;
       event.preventDefault();
+      if (inDock && !freeDrag) {
+        dock.setDropPreviewActive(true);
+      }
 
       const rect = containerRef.current.getBoundingClientRect();
       const dragMode: SgToolBarDragMode = freeDrag
@@ -441,6 +444,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         window.removeEventListener("pointerup", handleUp);
         window.removeEventListener("pointercancel", handleUp);
         setDragActive(false);
+        if (inDock && !freeDrag) {
+          dock.setDropPreviewActive(false);
+        }
         if (!dragStart.current) return;
         const start = dragStart.current;
         dragStart.current = null;

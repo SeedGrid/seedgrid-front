@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useSgDockLayout, type SgDockZoneId } from "./SgDockLayout";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgDockZoneProps = {
   zone: SgDockZoneId;
@@ -16,7 +17,9 @@ function cn(...parts: Array<string | false | null | undefined>) {
 export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const { zone, className, children } = props;
   const dock = useSgDockLayout();
+  const i18n = useComponentsI18n();
   const ref = React.useRef<HTMLDivElement>(null);
+  const showDropPreview = Boolean(dock?.isDropPreviewActive);
 
   React.useEffect(() => {
     if (!dock) return;
@@ -29,12 +32,23 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       ref={ref}
       data-sg-dock-zone={zone}
       className={cn(
-        "relative flex gap-3 p-3",
+        "relative flex gap-3 p-2",
         zone === "top" || zone === "bottom" ? "flex-row items-center" : "flex-col items-center",
+        showDropPreview ? "rounded-xl border-2 border-dashed border-border/70 bg-background/40 p-3 transition-colors duration-150" : null,
+        showDropPreview && (zone === "top" || zone === "bottom") ? "min-h-16" : null,
+        showDropPreview && (zone === "left" || zone === "right") ? "min-w-24" : null,
         className
       )}
     >
       {children}
+      {showDropPreview ? (
+        <span
+          className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center text-xs font-semibold uppercase tracking-wide text-foreground/70"
+          aria-hidden="true"
+        >
+          {t(i18n, "components.dock.dropHere")}
+        </span>
+      ) : null}
     </div>
   );
 }
