@@ -453,7 +453,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       ? "left"
       : "top");
 
-  const showContent = !(orientation === "vertical" && isCollapsed);
+  const showContent = !isCollapsed;
 
   const toolbar = (
     <div
@@ -481,7 +481,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
           className={cn(
             "flex items-center gap-2 px-2 py-1 w-full",
             orientation === "horizontal"
-              ? "border-r border-border"
+              ? showContent
+                ? "border-r border-border"
+                : ""
               : showContent
                 ? "border-b border-border"
                 : ""
@@ -510,15 +512,10 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         <div
           className={cn(
             "flex gap-2 p-2",
-            orientation === "horizontal" ? "flex-row" : "flex-col",
-            isCollapsed ? "opacity-90" : ""
+            orientation === "horizontal" ? "flex-row" : "flex-col"
           )}
         >
-          {React.Children.map(children, (child) => {
-            if (!isCollapsed) return child;
-            if (!React.isValidElement(child)) return child;
-            return React.cloneElement(child as React.ReactElement<any>, { hideLabel: true });
-          })}
+          {children}
         </div>
       ) : null}
     </div>
