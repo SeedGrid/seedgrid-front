@@ -114,50 +114,90 @@ export default function SgDockLayoutPage() {
 
       <Section
         title={`1) ${t(i18n, "showcase.component.dockLayout.sections.basic.title")}`}
-        description="Quatro zonas (top/bottom/left/right) e uma toolbar arrastavel."
+        description="Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis."
       >
         <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
-          <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
+          <SgDockLayout id="showcase-dock-basic-v9" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
             <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
-              <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
+              <SgToolBar id="tb-main-basic-v9" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
                 <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
                 <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
+              </SgToolBar>
+              <SgToolBar id="tb-top-extra-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="Acoes" draggable>
+                <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+                <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
               </SgToolBar>
             </SgDockZone>
 
             <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/20">
+              <SgToolBar id="tb-left-basic-v9" dockZone="left" orientationDirection="vertical-down" title="Navegacao" collapsible draggable>
+                <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
+                <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+              </SgToolBar>
             </SgDockZone>
 
             <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/20">
+              <SgToolBar id="tb-right-basic-v9" dockZone="right" orientationDirection="vertical-down" title="Equipe" collapsible draggable>
+                <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
+                <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
+              </SgToolBar>
             </SgDockZone>
 
             <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/20">
+              <SgToolBar id="tb-bottom-a-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape A" draggable>
+                <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+                <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar no rodape" />
+              </SgToolBar>
+              <SgToolBar id="tb-bottom-b-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape B" draggable>
+                <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Tarefas" hint="Abrir tarefas" />
+                <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Voltar ao inicio" />
+              </SgToolBar>
             </SgDockZone>
           </SgDockLayout>
         </div>
         <CodeBlock
           code={`import React from "react";
 import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-import { Home, Search } from "lucide-react";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
 export default function Example() {
   return (
     <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
-      <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
+      <SgDockLayout id="showcase-dock-basic-v9" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
         <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
-          <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
+          <SgToolBar id="tb-main-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
             <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
             <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
+          </SgToolBar>
+          <SgToolBar id="tb-top-extra-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="Acoes" draggable>
+            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
           </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/20">
+          <SgToolBar id="tb-left-basic-v9" dockZone="left" orientationDirection="vertical-down" title="Navegacao" collapsible draggable>
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+          </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/20">
+          <SgToolBar id="tb-right-basic-v9" dockZone="right" orientationDirection="vertical-down" title="Equipe" collapsible draggable>
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
+          </SgToolBar>
         </SgDockZone>
 
         <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/20">
+          <SgToolBar id="tb-bottom-a-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape A" draggable>
+            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar no rodape" />
+          </SgToolBar>
+          <SgToolBar id="tb-bottom-b-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape B" draggable>
+            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Tarefas" hint="Abrir tarefas" />
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Voltar ao inicio" />
+          </SgToolBar>
         </SgDockZone>
       </SgDockLayout>
     </div>
