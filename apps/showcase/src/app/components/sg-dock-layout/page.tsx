@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -58,10 +58,16 @@ export default function App() {
 }`;
 
 const DOCK_LAYOUT_PROPS: ShowcasePropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador da área de dock." },
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador da area de dock." },
   { prop: "defaultState", type: "SgDockLayoutState", defaultValue: "-", description: "Estado inicial das toolbars por zona." },
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Zonas e componentes internos do layout." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes adicionais do container." }
+];
+
+const DOCK_ZONE_PROPS: ShowcasePropRow[] = [
+  { prop: "zone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "-", description: "Identificador da zona de dock." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais da zona." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteudo renderizado dentro da zona." }
 ];
 
 export default function SgDockLayoutPage() {
@@ -171,9 +177,19 @@ export default function Example() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={DOCK_LAYOUT_PROPS} />
+        <ShowcasePropsReference
+          id="props-reference"
+          title="ReferÃªncia de Props - SgDockLayout"
+          rows={DOCK_LAYOUT_PROPS}
+        />
+        <ShowcasePropsReference
+          id="props-reference-dock-zone"
+          title="ReferÃªncia de Props - SgDockZone"
+          rows={DOCK_ZONE_PROPS}
+        />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
