@@ -112,18 +112,24 @@ export default function SgDockLayoutPage() {
 
       <Section
         title={`1) ${t(i18n, "showcase.component.dockLayout.sections.basic.title")}`}
-        description="Duas zonas (top/bottom) e uma toolbar arrastavel."
+        description="Quatro zonas (top/bottom/left/right) e uma toolbar arrastavel."
       >
         <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
-          <SgDockLayout id="showcase-dock-basic-v7" className="flex h-full flex-col justify-between">
-            <SgDockZone zone="top" className="shrink-0 items-start border-b border-white/20">
-              <SgToolBar id="tb-main-basic-v7" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
+          <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
+            <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
+              <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
                 <SgToolbarIconButton icon="T1" hint="Top 1" />
                 <SgToolbarIconButton icon="T2" hint="Top 2" />
               </SgToolBar>
             </SgDockZone>
 
-            <SgDockZone zone="bottom" className="shrink-0 items-end border-t border-white/20">
+            <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/20">
+            </SgDockZone>
+
+            <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/20">
+            </SgDockZone>
+
+            <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/20">
             </SgDockZone>
           </SgDockLayout>
         </div>
@@ -134,15 +140,21 @@ import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedg
 export default function Example() {
   return (
     <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
-      <SgDockLayout id="showcase-dock-basic-v7" className="flex h-full flex-col justify-between">
-        <SgDockZone zone="top" className="shrink-0 items-start border-b border-white/20">
-          <SgToolBar id="tb-main-basic-v7" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
+      <SgDockLayout id="showcase-dock-basic-v8" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
+        <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
+          <SgToolBar id="tb-main-basic-v8" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
             <SgToolbarIconButton icon="T1" hint="Top 1" />
             <SgToolbarIconButton icon="T2" hint="Top 2" />
           </SgToolBar>
         </SgDockZone>
 
-        <SgDockZone zone="bottom" className="shrink-0 items-end border-t border-white/20">
+        <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/20">
+        </SgDockZone>
+
+        <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/20">
+        </SgDockZone>
+
+        <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/20">
         </SgDockZone>
       </SgDockLayout>
     </div>
