@@ -22,6 +22,10 @@ export { SgInputEmail } from "./inputs/SgInputEmail";
 export { SgInputPassword } from "./inputs/SgInputPassword";
 export { SgInputOTP } from "./inputs/SgInputOTP";
 export type { SgInputOTPProps, SgInputOTPRef } from "./inputs/SgInputOTP";
+export { SgSlider } from "./inputs/SgSlider";
+export type { SgSliderProps } from "./inputs/SgSlider";
+export { SgStepperInput } from "./inputs/SgStepperInput";
+export type { SgStepperInputProps } from "./inputs/SgStepperInput";
 export { SgInputDate } from "./inputs/SgInputDate";
 export { SgInputBirthDate } from "./inputs/SgInputBirthDate";
 export { SgToggleSwitch, SgSwitch } from "./inputs/SgToggleSwitch";
@@ -73,6 +77,7 @@ export type {
 export { SgBadge } from "./commons/SgBadge";
 export { SgBadgeOverlay } from "./commons/SgBadgeOverlay";
 export { SgSkeleton } from "./commons/SgSkeleton";
+export { SgAvatar, SgAvatarGroup } from "./commons/SgAvatar";
 export type {
   SgBadgeProps,
   SgBadgeSeverity,
@@ -83,6 +88,15 @@ export type {
 } from "./commons/SgBadge";
 export type { SgBadgeOverlayProps, SgBadgeOverlayPlacement } from "./commons/SgBadgeOverlay";
 export type { SgSkeletonProps, SgSkeletonAnimation, SgSkeletonShape } from "./commons/SgSkeleton";
+export type {
+  SgAvatarProps,
+  SgAvatarGroupProps,
+  SgAvatarSeverity,
+  SgAvatarShape,
+  SgAvatarSize,
+  SgAvatarCustomColors,
+  SgAvatarGroupOverlap
+} from "./commons/SgAvatar";
 export { toast } from "./commons/SgToast";
 export type {
   SgToastFn,
@@ -145,6 +159,35 @@ export { SgAccordion } from "./layout/SgAccordion";
 export type { SgAccordionProps, SgAccordionItem, SgAccordionOrientation } from "./layout/SgAccordion";
 export { SgCarousel } from "./layout/SgCarousel";
 export type { SgCarouselProps, SgCarouselOrientation } from "./layout/SgCarousel";
+export { SgExpandablePanel } from "./layout/SgExpandablePanel";
+export type {
+  SgExpandablePanelProps,
+  SgExpandablePanelDirection,
+  SgExpandablePanelPlacement,
+  SgExpandablePanelMode,
+  SgExpandablePanelSize,
+  SgExpandablePanelAnimation,
+  SgExpandablePanelElevation,
+  SgExpandablePanelRounded,
+  SgExpandablePanelRole
+} from "./layout/SgExpandablePanel";
+export { SgBreadcrumb } from "./layout/SgBreadcrumb";
+export type {
+  SgBreadcrumbProps,
+  SgBreadcrumbItem,
+  SgBreadcrumbSeparator
+} from "./layout/SgBreadcrumb";
+export { SgPageControl, SgPageControlPage } from "./layout/SgPageControl";
+export type { SgPageControlProps, SgPageControlPageProps } from "./layout/SgPageControl";
+export { SgMenu } from "./layout/SgMenu";
+export type {
+  SgMenuProps,
+  SgMenuStyle,
+  SgMenuNode,
+  SgMenuSelection,
+  SgMenuBrand,
+  SgMenuUser
+} from "./layout/SgMenu";
 export { default as SgPlayground } from "./others/SgPlayground";
 export type { SgPlaygroundProps } from "./others/SgPlayground";
 export { SgToolBar, SgToolbarIconButton } from "./layout/SgToolBar";
@@ -179,6 +222,19 @@ export { SgFlipDigit } from "./gadgets/flip-digit";
 export type { SgFlipDigitProps } from "./gadgets/flip-digit";
 export { SgQRCode } from "./gadgets/qr-code";
 export type { SgQRCodeProps, SgQRCodeErrorCorrectionLevel } from "./gadgets/qr-code";
+export { SgLinearGauge, SgRadialGauge } from "./gadgets/gauge";
+export type {
+  SgLinearGaugeProps,
+  SgLinearGaugeRange,
+  SgLinearGaugePointer,
+  SgLinearGaugePointerShape,
+  SgRadialGaugeProps,
+  SgRadialGaugeRange,
+  SgRadialGaugePointer,
+  SgRadialGaugePointerType,
+  SgRadialGaugeMarkerShape,
+  SgRadialGaugeAnnotation
+} from "./gadgets/gauge";
 export {
   registerTheme,
   registerThemes,

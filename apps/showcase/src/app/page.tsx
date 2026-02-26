@@ -25,6 +25,8 @@ const COMPONENTS = [
       { slug: "sg-input-phone", name: "SgInputPhone", desc: "Input de telefone brasileiro com mascara (XX) XXXXX-XXXX" },
       { slug: "sg-autocomplete", name: "SgAutocomplete", desc: "Autocomplete com busca, agrupamento e render custom" },
       { slug: "sg-combobox", name: "SgCombobox", desc: "Combobox estilo select com source de objetos e onSelect(value)" },
+      { slug: "sg-slider", name: "SgSlider", desc: "Slider com minValue, maxValue e onChange(value)" },
+      { slug: "sg-stepper-input", name: "SgStepperInput", desc: "Input numérico com setas e step (min/max)" },
       { slug: "sg-text-editor", name: "SgTextEditor", desc: "Editor rico HTML com save/load" }
     ]
   },
@@ -42,17 +44,24 @@ const COMPONENTS = [
       { slug: "sg-stack", name: "SgStack", desc: "Flex declarativo com direction, gap, justify, align e wrap" },
       { slug: "sg-badge", name: "SgBadge", desc: "Badge de status, contador e labels" },
       { slug: "sg-badge-overlay", name: "SgBadgeOverlay", desc: "Badge sobre icone/elemento" },
+      { slug: "sg-avatar", name: "SgAvatar", desc: "Avatar com label, icon, image, shape, size e grupo" },
+      { slug: "sg-breadcrumb", name: "SgBreadcrumb", desc: "Breadcrumb hierárquico com overflow e navegação" },
+      { slug: "sg-menu", name: "SgMenu", desc: "Menu hierárquico para sidebar, drawer e inline" },
+      { slug: "sg-expandable-panel", name: "SgExpandablePanel", desc: "Painel expansível inline/overlay com resize e animação" },
       { slug: "sg-dialog", name: "SgDialog", desc: "Dialog com header, severidade e footer" },
       { slug: "sg-toolbar", name: "SgToolBar", desc: "Toolbar com botoes e drag" },
       { slug: "sg-dock-layout", name: "SgDockLayout", desc: "Layout com dock zones e persistencia" },
-      { slug: "sg-tree-view", name: "SgTreeView", desc: "Arvore com check, busca e confirmacao" }
+      { slug: "sg-tree-view", name: "SgTreeView", desc: "Arvore com check, busca e confirmacao" },
+      { slug: "sg-page-control", name: "SgPageControl", desc: "TabView com controle externo de página ativa e ocultação" }
     ]
   },
   {
     categoryKey: "showcase.nav.gadgets",
     items: [
       { slug: "gadgets/sg-clock", name: "SgClock", desc: "Relogio digital e analogico com themes" },
-      { slug: "gadgets/sg-qr-code", name: "SgQRCode", desc: "QR Code com valor dinamico e logo central" }
+      { slug: "gadgets/sg-qr-code", name: "SgQRCode", desc: "QR Code com valor dinamico e logo central" },
+      { slug: "gadgets/sg-linear-gauge", name: "SgLinearGauge", desc: "Gauge linear com ranges e pointers" },
+      { slug: "gadgets/sg-radial-gauge", name: "SgRadialGauge", desc: "Gauge radial com needle, marker e annotations" }
     ]
   },
   {

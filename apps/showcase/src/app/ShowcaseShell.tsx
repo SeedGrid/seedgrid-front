@@ -24,7 +24,7 @@ import {
   type ShowcaseLocale
 } from "../i18n";
 import { ThemeEditor } from "./ThemeEditor";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-text", label: "SgInputText" },
@@ -44,6 +44,8 @@ const COMPONENTS = [
   { group: "Inputs", slug: "sg-input-phone", label: "SgInputPhone" },
   { group: "Inputs", slug: "sg-autocomplete", label: "SgAutocomplete" },
   { group: "Inputs", slug: "sg-combobox", label: "SgCombobox" },
+  { group: "Inputs", slug: "sg-slider", label: "SgSlider" },
+  { group: "Inputs", slug: "sg-stepper-input", label: "SgStepperInput" },
   { group: "Inputs", slug: "sg-text-editor", label: "SgTextEditor" },
   { group: "Inputs", slug: "sg-rating", label: "SgRating" },
   { group: "Inputs", slug: "sg-radio-group", label: "SgRadioGroup" },
@@ -51,6 +53,8 @@ const COMPONENTS = [
   { group: "Buttons", slug: "sg-split-button", label: "SgSplitButton" },
   { group: "Buttons", slug: "sg-float-action-button", label: "SgFloatActionButton" },
   { group: "Menus", slug: "sg-dock-menu", label: "SgDockMenu" },
+  { group: "Menus", slug: "sg-breadcrumb", label: "SgBreadcrumb" },
+  { group: "Menus", slug: "sg-menu", label: "SgMenu" },
   { group: "Utils", slug: "sg-environment-provider", label: "SgEnvironmentProvider" },
   { group: "Layout", slug: "sg-group-box", label: "SgGroupBox" },
   { group: "Layout", slug: "sg-card", label: "SgCard" },
@@ -69,9 +73,14 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-toolbar", label: "SgToolBar" },
   { group: "Layout", slug: "sg-dock-layout", label: "SgDockLayout" },
   { group: "Layout", slug: "sg-tree-view", label: "SgTreeView" },
+  { group: "Layout", slug: "sg-avatar", label: "SgAvatar" },
+  { group: "Layout", slug: "sg-expandable-panel", label: "SgExpandablePanel" },
+  { group: "Layout", slug: "sg-page-control", label: "SgPageControl" },
   { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
   { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
   { group: "Gadgets", slug: "gadgets/sg-qr-code", label: "SgQRCode" },
+  { group: "Gadgets", slug: "gadgets/sg-linear-gauge", label: "SgLinearGauge" },
+  { group: "Gadgets", slug: "gadgets/sg-radial-gauge", label: "SgRadialGauge" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-toaster", label: "SgToaster" },
   { group: "Utils", slug: "sg-playground", label: "SgPlayground" },
@@ -158,9 +167,18 @@ export default function ShowcaseShell(props: {
   initialMessages?: Record<string, string>;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [locale, setLocale] = React.useState<ShowcaseLocale>(props.initialLocale ?? "pt-BR");
   const [messages, setMessages] = React.useState<Record<string, string>>(
     props.initialMessages ?? showcaseMessagesPtBr
+  );
+
+  const isPathActive = React.useCallback(
+    (href: string) => {
+      const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
+      return normalizePath(pathname ?? "/") === normalizePath(href);
+    },
+    [pathname]
   );
 
   React.useEffect(() => {
@@ -278,15 +296,25 @@ export default function ShowcaseShell(props: {
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
                 <nav className="flex flex-col gap-0.5 pb-4">
-                  {THEME_ITEMS.map((c) => (
-                    <Link
-                      key={c.slug}
-                      href={`/${c.slug}`}
-                      className="rounded-md px-3 py-2 text-sm font-semibold text-[#3a2517] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                    >
-                      {c.label}
-                    </Link>
-                  ))}
+                  {THEME_ITEMS.map((c) => {
+                    const href = `/${c.slug}`;
+                    const isActive = isPathActive(href);
+                    return (
+                      <Link
+                        key={c.slug}
+                        href={href}
+                        aria-current={isActive ? "page" : undefined}
+                        className={[
+                          "rounded-md px-3 py-2 text-sm font-semibold transition-colors",
+                          isActive
+                            ? "bg-[#c56a2d] text-white shadow-sm"
+                            : "text-[#3a2517] hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
+                        ].join(" ")}
+                      >
+                        {c.label}
+                      </Link>
+                    );
+                  })}
                   <div className="my-2 border-t border-[#dcc6b2]" />
                   {(["Inputs", "Buttons", "Menus", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
                     const items = COMPONENTS.filter((c) => c.group === group);
@@ -296,15 +324,25 @@ export default function ShowcaseShell(props: {
                         <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#a86a3f]">
                           {group}
                         </div>
-                        {items.map((c) => (
-                          <Link
-                            key={c.slug}
-                            href={`/components/${c.slug}`}
-                            className="rounded-md px-3 py-2 text-sm text-[#4b3221] transition-colors hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                          >
-                            {c.label}
-                          </Link>
-                        ))}
+                        {items.map((c) => {
+                          const href = `/components/${c.slug}`;
+                          const isActive = isPathActive(href);
+                          return (
+                            <Link
+                              key={c.slug}
+                              href={href}
+                              aria-current={isActive ? "page" : undefined}
+                              className={[
+                                "rounded-md px-3 py-2 text-sm transition-colors",
+                                isActive
+                                  ? "bg-[#c56a2d] font-medium text-white shadow-sm"
+                                  : "text-[#4b3221] hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
+                              ].join(" ")}
+                            >
+                              {c.label}
+                            </Link>
+                          );
+                        })}
                       </div>
                     );
                   })}
