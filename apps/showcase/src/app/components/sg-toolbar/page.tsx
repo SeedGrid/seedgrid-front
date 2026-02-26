@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgPlayground, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Filter, Home, Pencil, RefreshCcw, Settings, Trash2, Users, Plus } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
@@ -91,20 +92,21 @@ export default function SgToolBarPage() {
         description={t(i18n, "showcase.component.toolbar.sections.basic.description")}
       >
         <SgToolBar id="tb-basic" title={t(i18n, "showcase.component.toolbar.labels.navigation")} orientation="vertical">
-          <SgToolbarIconButton icon="H" hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
-          <SgToolbarIconButton icon="U" hint={t(i18n, "showcase.component.toolbar.labels.users")} />
-          <SgToolbarIconButton icon="S" hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
+          <SgToolbarIconButton icon={<Home className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.home")} severity="primary" />
+          <SgToolbarIconButton icon={<Users className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.users")} />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.settings")} />
         </SgToolBar>
         <CodeBlock
           code={`import React from "react";
 import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Users, Settings } from "lucide-react";
 
 export default function Example() {
   return (
     <SgToolBar id="tb-basic" title="${t(i18n, "showcase.component.toolbar.labels.navigation")}" orientation="vertical">
-      <SgToolbarIconButton icon="H" hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
-      <SgToolbarIconButton icon="U" hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
-      <SgToolbarIconButton icon="S" hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
+      <SgToolbarIconButton icon={<Home className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.home")}" severity="primary" />
+      <SgToolbarIconButton icon={<Users className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.users")}" />
+      <SgToolbarIconButton icon={<Settings className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.settings")}" />
     </SgToolBar>
   );
 }`}
@@ -122,13 +124,14 @@ export default function Example() {
           collapsible
           collapseDirection="right"
         >
-          <SgToolbarIconButton icon="C" hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
-          <SgToolbarIconButton icon="E" hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
-          <SgToolbarIconButton icon="D" hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
+          <SgToolbarIconButton icon={<Plus className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.create")} severity="success" />
+          <SgToolbarIconButton icon={<Pencil className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.edit")} severity="info" />
+          <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.delete")} severity="danger" />
         </SgToolBar>
         <CodeBlock
           code={`import React from "react";
 import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
 export default function Example() {
   return (
@@ -139,9 +142,9 @@ export default function Example() {
       collapsible
       collapseDirection="right"
     >
-      <SgToolbarIconButton icon="C" hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
-      <SgToolbarIconButton icon="E" hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
-      <SgToolbarIconButton icon="D" hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
+      <SgToolbarIconButton icon={<Plus className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.create")}" severity="success" />
+      <SgToolbarIconButton icon={<Pencil className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.edit")}" severity="info" />
+      <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.delete")}" severity="danger" />
     </SgToolBar>
   );
 }`}
@@ -152,38 +155,35 @@ export default function Example() {
         title={`3) ${t(i18n, "showcase.component.toolbar.sections.freeDrag.title")}`}
         description={t(i18n, "showcase.component.toolbar.sections.freeDrag.description")}
       >
-        <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
+        <div className="h-56 w-full rounded-lg border border-dashed border-border p-3">
           <SgToolBar
             id="tb-free"
             title={t(i18n, "showcase.component.toolbar.labels.free")}
             orientation="vertical"
             draggable
             freeDrag
-            defaultPosition={{ x: 16, y: 16 }}
-            className="absolute"
           >
-            <SgToolbarIconButton icon="F" hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
-            <SgToolbarIconButton icon="R" hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
+            <SgToolbarIconButton icon={<Filter className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
+            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
           </SgToolBar>
         </div>
         <CodeBlock
           code={`import React from "react";
 import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Filter, RefreshCcw } from "lucide-react";
 
 export default function Example() {
   return (
-    <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
+    <div className="h-56 w-full rounded-lg border border-dashed border-border p-3">
       <SgToolBar
         id="tb-free"
         title="${t(i18n, "showcase.component.toolbar.labels.free")}"
         orientation="vertical"
         draggable
         freeDrag
-        defaultPosition={{ x: 16, y: 16 }}
-        className="absolute"
       >
-        <SgToolbarIconButton icon="F" hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
-        <SgToolbarIconButton icon="R" hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
+        <SgToolbarIconButton icon={<Filter className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
+        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
       </SgToolBar>
     </div>
   );
@@ -191,7 +191,51 @@ export default function Example() {
         />
       </Section>
 
-        <Section title="4) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
+      <Section
+        title="4) Drag preso no container"
+        description="Neste exemplo o drag continua dentro da caixa porque a toolbar está em modo absolute."
+      >
+        <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
+          <SgToolBar
+            id="tb-bounded"
+            title="Drag preso"
+            orientation="vertical"
+            draggable
+            freeDrag
+            defaultPosition={{ x: 16, y: 16 }}
+            className="absolute"
+          >
+            <SgToolbarIconButton icon={<Filter className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.filter")} />
+            <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint={t(i18n, "showcase.component.toolbar.labels.refresh")} />
+          </SgToolBar>
+        </div>
+        <CodeBlock
+          code={`import React from "react";
+import { SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Filter, RefreshCcw } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="relative h-56 w-full rounded-lg border border-dashed border-border">
+      <SgToolBar
+        id="tb-bounded"
+        title="Drag preso"
+        orientation="vertical"
+        draggable
+        freeDrag
+        defaultPosition={{ x: 16, y: 16 }}
+        className="absolute"
+      >
+        <SgToolbarIconButton icon={<Filter className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.filter")}" />
+        <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} hint="${t(i18n, "showcase.component.toolbar.labels.refresh")}" />
+      </SgToolBar>
+    </div>
+  );
+}`}
+        />
+      </Section>
+
+        <Section title="5) Playground (SgPlayground)" description="Ajuste as principais props do SgToolBar.">
           <SgPlayground
             title="SgToolBar Playground"
             interactive

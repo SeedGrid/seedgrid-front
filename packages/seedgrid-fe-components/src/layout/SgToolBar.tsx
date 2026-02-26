@@ -581,9 +581,9 @@ function CollapseIcon(props: { direction: "left" | "right" | "top" | "bottom"; c
       return collapsed ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6";
     }
     if (direction === "left") {
-      return collapsed ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
+      return collapsed ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6";
     }
-    return collapsed ? "M15 6l-6 6 6 6" : "M9 6l6 6-6 6";
+    return collapsed ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6";
   })();
 
   return (
