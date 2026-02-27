@@ -10,16 +10,16 @@ import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
 
 const MENU: SgMenuNode[] = [
-  { id: "dashboard", label: "Dashboard", url: "/dashboard", iconKey: "db" },
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
   {
     id: "customers",
     label: "Customers",
-    iconKey: "cu",
+    icon: <Users className="size-4" />,
     children: [
       {
         id: "customers-new",
         label: "New",
-        iconKey: "nw",
+        icon: <LayoutGrid className="size-4" />,
         children: [
           { id: "customer-create", label: "Customer", url: "/customers/new/customer" },
           { id: "customer-duplicate", label: "Duplicate", url: "/customers/new/duplicate" }
@@ -28,7 +28,7 @@ const MENU: SgMenuNode[] = [
       {
         id: "customers-reports",
         label: "Reports",
-        iconKey: "rp",
+        icon: <ClipboardList className="size-4" />,
         children: [
           { id: "customers-cohort", label: "Cohort", url: "/customers/reports/cohort" },
           { id: "customers-churn", label: "Churn", url: "/customers/reports/churn" }
@@ -39,12 +39,12 @@ const MENU: SgMenuNode[] = [
   {
     id: "orders",
     label: "Orders",
-    iconKey: "or",
+    icon: <LayoutGrid className="size-4" />,
     children: [
       {
         id: "orders-sales",
         label: "Sales",
-        iconKey: "sl",
+        icon: <Search className="size-4" />,
         children: [
           { id: "orders-open", label: "Open Orders", url: "/orders/sales/open", badge: 4 },
           { id: "orders-closed", label: "Closed Orders", url: "/orders/sales/closed" }
@@ -53,14 +53,14 @@ const MENU: SgMenuNode[] = [
       { id: "orders-returns", label: "Returns", url: "/orders/returns", badge: 7 }
     ]
   },
-  { id: "profile", label: "Profile", url: "/profile", iconKey: "pf" }
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
 ];
 
 const MEGA_MENU: SgMenuNode[] = [
   {
     id: "fashion",
     label: "Fashion",
-    iconKey: "fa",
+    icon: <Users className="size-4" />,
     children: [
       {
         id: "fashion-woman",
@@ -83,7 +83,7 @@ const MEGA_MENU: SgMenuNode[] = [
   {
     id: "electronics",
     label: "Electronics",
-    iconKey: "el",
+    icon: <Settings className="size-4" />,
     children: [
       {
         id: "electronics-computer",
@@ -111,18 +111,6 @@ const USER_MENU: SgMenuNode[] = [
   { id: "logout", label: "Sair", onClick: () => {} }
 ];
 
-const ICON_REGISTRY: Record<string, React.ReactNode> = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
-
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section
@@ -141,16 +129,16 @@ function CodeBlock(props: { code: string }) {
 }
 
 const MENU_CODE_SNIPPET = `const MENU = [
-  { id: "dashboard", label: "Dashboard", url: "/dashboard", iconKey: "db" },
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
   {
     id: "customers",
     label: "Customers",
-    iconKey: "cu",
+    icon: <Users className="size-4" />,
     children: [
       {
         id: "customers-new",
         label: "New",
-        iconKey: "nw",
+        icon: <LayoutGrid className="size-4" />,
         children: [
           { id: "customer-create", label: "Customer", url: "/customers/new/customer" },
           { id: "customer-duplicate", label: "Duplicate", url: "/customers/new/duplicate" }
@@ -159,7 +147,7 @@ const MENU_CODE_SNIPPET = `const MENU = [
       {
         id: "customers-reports",
         label: "Reports",
-        iconKey: "rp",
+        icon: <ClipboardList className="size-4" />,
         children: [
           { id: "customers-cohort", label: "Cohort", url: "/customers/reports/cohort" },
           { id: "customers-churn", label: "Churn", url: "/customers/reports/churn" }
@@ -170,12 +158,12 @@ const MENU_CODE_SNIPPET = `const MENU = [
   {
     id: "orders",
     label: "Orders",
-    iconKey: "or",
+    icon: <LayoutGrid className="size-4" />,
     children: [
       {
         id: "orders-sales",
         label: "Sales",
-        iconKey: "sl",
+        icon: <Search className="size-4" />,
         children: [
           { id: "orders-open", label: "Open Orders", url: "/orders/sales/open", badge: 4 },
           { id: "orders-closed", label: "Closed Orders", url: "/orders/sales/closed" }
@@ -184,14 +172,14 @@ const MENU_CODE_SNIPPET = `const MENU = [
       { id: "orders-returns", label: "Returns", url: "/orders/returns", badge: 7 }
     ]
   },
-  { id: "profile", label: "Profile", url: "/profile", iconKey: "pf" }
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
 ];`;
 
 const MEGA_MENU_CODE_SNIPPET = `const MEGA_MENU = [
   {
     id: "fashion",
     label: "Fashion",
-    iconKey: "fa",
+    icon: <Users className="size-4" />,
     children: [
       {
         id: "fashion-woman",
@@ -214,7 +202,7 @@ const MEGA_MENU_CODE_SNIPPET = `const MEGA_MENU = [
   {
     id: "electronics",
     label: "Electronics",
-    iconKey: "el",
+    icon: <Settings className="size-4" />,
     children: [
       {
         id: "electronics-computer",
@@ -242,18 +230,6 @@ const USER_MENU_CODE_SNIPPET = `const USER_MENU = [
   { id: "logout", label: "Sair", onClick: () => {} }
 ];`;
 
-const ICON_REGISTRY_CODE_SNIPPET = `const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};`;
-
 const EXAMPLE_SIDEBAR_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
@@ -261,8 +237,6 @@ import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide
 ${MENU_CODE_SNIPPET}
 
 ${USER_MENU_CODE_SNIPPET}
-
-${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -283,7 +257,6 @@ export default function Example() {
           brand={{ title: "SeedGrid ERP" }}
           user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
           userMenu={USER_MENU}
-          iconRegistry={ICON_REGISTRY}
           onNavigate={(node) => setActiveId(node.id)}
         />
         <div className="flex-1 space-y-3 p-4">
@@ -302,8 +275,6 @@ import { SgButton, SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
 ${MENU_CODE_SNIPPET}
-
-${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -331,7 +302,6 @@ export default function Example() {
         closeOnNavigate
         search={{ enabled: true, placeholder: "Buscar..." }}
         brand={{ title: "SeedGrid ERP" }}
-        iconRegistry={ICON_REGISTRY}
         onNavigate={(node) => setActiveId(node.id)}
       />
     </>
@@ -344,15 +314,13 @@ import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide
 
 ${MENU_CODE_SNIPPET}
 
-${ICON_REGISTRY_CODE_SNIPPET}
-
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
 
   return (
     <div className="rounded-lg border border-border p-3">
       <div className="h-[320px] overflow-auto rounded-md border border-border">
-        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
       </div>
     </div>
   );
@@ -364,15 +332,13 @@ import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide
 
 ${MENU_CODE_SNIPPET}
 
-${ICON_REGISTRY_CODE_SNIPPET}
-
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
 
   return (
     <div className="rounded-lg border border-border p-3">
       <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
       </div>
     </div>
   );
@@ -384,8 +350,6 @@ import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide
 
 ${MEGA_MENU_CODE_SNIPPET}
 
-${ICON_REGISTRY_CODE_SNIPPET}
-
 export default function Example() {
   return (
     <div className="rounded-lg border border-border p-3">
@@ -394,7 +358,6 @@ export default function Example() {
         selection={{ activeId: "fashion" }}
         variant="inline"
         menuStyle="MegaMenuHorizontal"
-        iconRegistry={ICON_REGISTRY}
       />
     </div>
   );
@@ -406,8 +369,6 @@ import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide
 
 ${MEGA_MENU_CODE_SNIPPET}
 
-${ICON_REGISTRY_CODE_SNIPPET}
-
 export default function Example() {
   return (
     <div className="rounded-lg border border-border p-3">
@@ -416,7 +377,6 @@ export default function Example() {
         selection={{ activeId: "fashion" }}
         variant="inline"
         menuStyle="MegaMenuVertical"
-        iconRegistry={ICON_REGISTRY}
       />
     </div>
   );
@@ -427,8 +387,6 @@ import { SgButton, SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
 ${MENU_CODE_SNIPPET}
-
-${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function App() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -469,7 +427,6 @@ export default function App() {
           showCollapseButton
           onNavigate={(node) => setActiveId(node.id)}
           search={{ enabled: true, placeholder: "Buscar..." }}
-          iconRegistry={ICON_REGISTRY}
         />
       </div>
     </div>
@@ -518,7 +475,6 @@ const MENU_PROPS: ShowcasePropRow[] = [
   { prop: "border", type: "boolean", defaultValue: "true", description: "Exibe borda externa do menu." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no root." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilos inline no root." },
-  { prop: "iconRegistry", type: "Record<string, ReactNode>", defaultValue: "-", description: "Mapeia iconKey para icone real." },
   { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Conteudo de rodape do menu." }
 ];
 
@@ -529,7 +485,6 @@ const MENU_NODE_PROPS: ShowcasePropRow[] = [
   { prop: "children", type: "SgMenuNode[]", defaultValue: "-", description: "Subitens do no atual." },
   { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita interacao do item." },
   { prop: "icon", type: "ReactNode", defaultValue: "-", description: "Icone direto do item." },
-  { prop: "iconKey", type: "string", defaultValue: "-", description: "Chave para resolver icone via iconRegistry." },
   { prop: "badge", type: "string | number", defaultValue: "-", description: "Badge auxiliar ao lado do label." },
   { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao local do item." }
 ];
@@ -591,7 +546,6 @@ export default function SgMenuPage() {
                 brand={{ title: "SeedGrid ERP" }}
                 user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
                 userMenu={USER_MENU}
-                iconRegistry={ICON_REGISTRY}
                 onNavigate={(node) => setActiveId(node.id)}
               />
               <div className="flex-1 space-y-3 p-4">
@@ -625,7 +579,6 @@ export default function SgMenuPage() {
             closeOnNavigate
             search={{ enabled: true, placeholder: "Buscar..." }}
             brand={{ title: "SeedGrid ERP" }}
-            iconRegistry={ICON_REGISTRY}
             onNavigate={(node) => setActiveId(node.id)}
           />
           <CodeBlock code={EXAMPLE_DRAWER_CODE} />
@@ -634,7 +587,7 @@ export default function SgMenuPage() {
         <Section title="3) PanelMenu" description="Exemplo isolado para visualizar apenas o estilo panel.">
           <div className="rounded-lg border border-border p-3">
             <div className="h-[320px] overflow-auto rounded-md border border-border">
-              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
           <CodeBlock code={EXAMPLE_PANEL_MENU_CODE} />
@@ -643,7 +596,7 @@ export default function SgMenuPage() {
         <Section title="4) Tiered" description="Exemplo isolado para visualizar apenas o estilo tiered.">
           <div className="rounded-lg border border-border p-3">
             <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
           <CodeBlock code={EXAMPLE_TIERED_CODE} />
@@ -656,7 +609,6 @@ export default function SgMenuPage() {
               selection={{ activeId: "fashion" }}
               variant="inline"
               menuStyle="MegaMenuHorizontal"
-              iconRegistry={ICON_REGISTRY}
             />
           </div>
           <CodeBlock code={EXAMPLE_MEGA_HORIZONTAL_CODE} />
@@ -669,7 +621,6 @@ export default function SgMenuPage() {
               selection={{ activeId: "fashion" }}
               variant="inline"
               menuStyle="MegaMenuVertical"
-              iconRegistry={ICON_REGISTRY}
             />
           </div>
           <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />

@@ -14,7 +14,6 @@ export type SgMenuNode = {
   children?: SgMenuNode[];
   disabled?: boolean;
   icon?: React.ReactNode;
-  iconKey?: string;
   badge?: string | number;
   onClick?: () => void;
 };
@@ -102,7 +101,6 @@ export type SgMenuProps = {
   className?: string;
   style?: React.CSSProperties;
 
-  iconRegistry?: Record<string, React.ReactNode>;
   footer?: React.ReactNode;
 };
 
@@ -328,16 +326,8 @@ function elevationClass(elevation: "none" | "sm" | "md") {
   return "";
 }
 
-function resolveIcon(
-  node: SgMenuNode,
-  iconRegistry: Record<string, React.ReactNode> | undefined
-) {
-  if (node.icon) return node.icon;
-  if (node.iconKey && iconRegistry?.[node.iconKey]) return iconRegistry[node.iconKey];
-  if (node.iconKey) {
-    return <span className="text-[10px] font-semibold uppercase">{firstChars(node.iconKey)}</span>;
-  }
-  return null;
+function resolveIcon(node: SgMenuNode) {
+  return node.icon ?? null;
 }
 
 export function SgMenu(props: Readonly<SgMenuProps>) {
@@ -383,7 +373,6 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     border = true,
     className,
     style,
-    iconRegistry,
     footer
   } = props;
 
@@ -694,7 +683,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       const isExactActive = activeSets.exact.has(node.id);
       const isBranchActive = activeSets.branch.has(node.id);
       const disabled = !!node.disabled;
-      const iconNode = resolveIcon(node, iconRegistry);
+      const iconNode = resolveIcon(node);
       const hideChildren = isCollapsed;
 
       return (
@@ -793,7 +782,6 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       densityCfg.row,
       expandedSet,
       hasSearch,
-      iconRegistry,
       indent,
       isCollapsed,
       toggleExpanded
@@ -805,7 +793,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       const isExactActive = activeSets.exact.has(node.id);
       const isBranchActive = activeSets.branch.has(node.id);
       const hasChildren = !!node.children?.length;
-      const iconNode = resolveIcon(node, iconRegistry);
+      const iconNode = resolveIcon(node);
 
       return (
         <button
@@ -843,7 +831,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </button>
       );
     },
-    [activateNode, activeSets.branch, activeSets.exact, densityCfg.icon, iconRegistry]
+    [activateNode, activeSets.branch, activeSets.exact, densityCfg.icon]
   );
 
   const renderTieredLevels = React.useCallback(
@@ -864,7 +852,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               const hasChildren = !!node.children?.length;
               const isOpen = activeIdAtDepth === node.id;
               const isExactActive = activeSets.exact.has(node.id);
-              const iconNode = resolveIcon(node, iconRegistry);
+              const iconNode = resolveIcon(node);
               return (
                 <button
                   key={node.id}
@@ -920,7 +908,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </div>
       );
     },
-    [activateNode, activeSets.exact, densityCfg.icon, iconRegistry, openSubmenuOnHover, tieredPath]
+    [activateNode, activeSets.exact, densityCfg.icon, openSubmenuOnHover, tieredPath]
   );
 
   const renderMegaColumns = React.useCallback(
@@ -986,7 +974,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             {items.map((node) => {
               const hasChildren = !!node.children?.length;
               const active = activeMegaNode?.id === node.id;
-              const iconNode = resolveIcon(node, iconRegistry);
+              const iconNode = resolveIcon(node);
               return (
                 <button
                   key={node.id}
@@ -1029,7 +1017,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           {items.map((node) => {
             const hasChildren = !!node.children?.length;
             const active = activeMegaNode?.id === node.id;
-            const iconNode = resolveIcon(node, iconRegistry);
+            const iconNode = resolveIcon(node);
             return (
               <button
                 key={node.id}
@@ -1205,7 +1193,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               const data = item.data as { path?: string; nodeId?: string } | undefined;
               const path = data?.path;
               const node = data?.nodeId ? maps.nodeById.get(data.nodeId) : undefined;
-              const iconNode = node ? resolveIcon(node, iconRegistry) : null;
+              const iconNode = node ? resolveIcon(node) : null;
               return (
                 <div className="flex min-w-0 items-start gap-2">
                   <span
@@ -1437,7 +1425,6 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               search={search}
               elevation="none"
               border={false}
-              iconRegistry={iconRegistry}
               footer={footer}
             />
           </SgExpandablePanel>
