@@ -525,7 +525,9 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       : position;
   const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
   const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
-  const tieredOpenToLeft = resolvedPosition === "right";
+  const tieredOpenToLeft =
+    resolvedPosition === "right" ||
+    (isHorizontalDockZone && horizontalDockAlign === "right");
 
   const [localActiveId, setLocalActiveId] = React.useState<string | undefined>(selection?.activeId);
   const [tieredPath, setTieredPath] = React.useState<string[]>([]);
@@ -1610,7 +1612,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         )}
         style={{
           width: dockDragActive || horizontalDockAlign !== null
-            ? (isCollapsed ? collapsedWidthCss : expandedWidthCss)
+            ? expandedWidthCss
             : undefined,
           ...style
         }}
@@ -1619,10 +1621,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         {!isCollapsed ? (
           <div
             className={cn(
-              "absolute z-50 flex flex-col bg-background text-foreground overflow-auto",
+              "absolute z-50 flex flex-col bg-background text-foreground",
+              effectiveMenuStyle === "tiered" ? "overflow-visible" : "overflow-auto",
               effectiveDockZone === "bottom" ? "bottom-full" : "top-full",
               horizontalDockAlign === "right" ? "right-0" : "left-0",
-              "min-w-[240px] max-h-[60vh] border border-border",
+              "min-w-[240px]",
+              effectiveMenuStyle !== "tiered" ? "max-h-[60vh]" : "",
+              "border border-border",
               elevationClass(elevation === "none" ? "sm" : elevation)
             )}
           >
