@@ -8,6 +8,7 @@ import { useDarkFlag } from "./themes/useDarkFlag";
 import type { SgClockTheme } from "./themes/types";
 import { getTheme } from "./themes/registry";
 import { SgFlipDigit } from "../flip-digit";
+import { SgRoller3DDigit } from "../roller3d-digit";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -446,57 +447,25 @@ function DigitalClock({
     const hourMax = format === "12h" ? 12 : 23;
     const hourMin = format === "12h" ? 1 : 0;
     const safeHour = format === "12h" ? (hNum === 0 ? 12 : hNum) : hNum;
-    const hours = buildRange(hourMin, hourMax);
-    const minutes = buildRange(0, 59);
-    const seconds = buildRange(0, 59);
-    const periodList = ["AM", "PM"];
 
-    const w = Math.round(sizePx * 2.8);
-    const h = Math.round(sizePx * 3.6);
-    const itemH = Math.round(sizePx * 1.6);
-    const glow = "shadow-[inset_0_0_28px_rgba(0,0,0,0.08),0_8px_28px_rgba(0,0,0,0.12)]";
-    const face = "relative overflow-hidden rounded-2xl bg-white text-neutral-900 ring-1 ring-black/5";
-    const topShade = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-black/6 before:to-transparent before:content-['']";
-    const bottomShade = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/12 after:to-transparent after:content-['']";
-    const divider = "absolute left-0 right-0 top-1/2 h-px bg-red-500/70";
-    const mask =
-      "[mask-image:linear-gradient(to_bottom,transparent,black_22%,black_78%,transparent)]";
+    const hourItems = buildRange(hourMin, hourMax).map((n) => String(n).padStart(2, "0"));
+    const minuteItems = buildRange(0, 59).map((n) => String(n).padStart(2, "0"));
+    const secondItems = buildRange(0, 59).map((n) => String(n).padStart(2, "0"));
+    const periodItems = ["AM", "PM"];
 
-    const renderRoll = (list: Array<string | number>, value: number | string, pad = 2) => {
-      const idx =
-        typeof value === "string" ? list.indexOf(value) : list.indexOf(value);
-      const translateY = -idx * itemH + h / 2 - itemH / 2;
-      return (
-        <div className={cn("relative", glow, face, topShade, bottomShade)} style={{ width: w, height: h }}>
-          <div className={divider} />
-          <div
-            className={cn("absolute left-0 top-0 w-full transition-transform duration-500 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]", mask)}
-            style={{ transform: `translateY(${translateY}px)` }}
-          >
-            {list.map((v, i) => (
-              <div
-                key={`${v}-${i}`}
-                className="flex h-[var(--sg-roll-h)] items-center justify-center font-medium tabular-nums text-neutral-400"
-                style={{
-                  height: itemH,
-                  fontSize: Math.round(sizePx * 1.35),
-                  color: i === idx ? "rgb(30 30 34)" : "rgb(163 163 170)"
-                }}
-              >
-                {typeof v === "number" ? String(v).padStart(pad, "0") : v}
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    };
+    const digitFont = Math.round(sizePx * 1.35);
+    const hh = String(safeHour).padStart(2, "0");
+    const mm = String(mNum).padStart(2, "0");
+    const ss = String(sNum).padStart(2, "0");
 
     return (
       <div className={cn("flex items-center gap-4", className)} style={fontSize} aria-label="Digital clock">
-        {renderRoll(hours, safeHour)}
-        {renderRoll(minutes, mNum)}
-        {showSeconds ? renderRoll(seconds, sNum) : null}
-        {format === "12h" && dayPeriod ? renderRoll(periodList, dayPeriod.toUpperCase(), 0) : null}
+        <SgRoller3DDigit value={hh} items={hourItems} fontSize={digitFont} />
+        <SgRoller3DDigit value={mm} items={minuteItems} fontSize={digitFont} />
+        {showSeconds ? <SgRoller3DDigit value={ss} items={secondItems} fontSize={digitFont} /> : null}
+        {format === "12h" && dayPeriod ? (
+          <SgRoller3DDigit value={dayPeriod.toUpperCase()} items={periodItems} fontSize={digitFont} />
+        ) : null}
       </div>
     );
   }

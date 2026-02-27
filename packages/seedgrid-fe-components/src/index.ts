@@ -223,6 +223,8 @@ export type { SgTimeContextValue } from "./gadgets/clock/SgTimeProvider";
 export type { SgClockProps } from "./gadgets/clock/SgClock";
 export { SgFlipDigit } from "./gadgets/flip-digit";
 export type { SgFlipDigitProps } from "./gadgets/flip-digit";
+export { SgRoller3DDigit } from "./gadgets/roller3d-digit";
+export type { SgRoller3DDigitProps } from "./gadgets/roller3d-digit";
 export { SgQRCode } from "./gadgets/qr-code";
 export type { SgQRCodeProps, SgQRCodeErrorCorrectionLevel } from "./gadgets/qr-code";
 export { SgLinearGauge, SgRadialGauge } from "./gadgets/gauge";
