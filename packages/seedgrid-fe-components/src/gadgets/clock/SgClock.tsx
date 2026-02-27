@@ -7,6 +7,7 @@ import { ThemeLayer, resolveTheme } from "./themes/renderTheme";
 import { useDarkFlag } from "./themes/useDarkFlag";
 import type { SgClockTheme } from "./themes/types";
 import { getTheme } from "./themes/registry";
+import { SgFlipDigit } from "../flip-digit";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -342,139 +343,6 @@ function AnalogClock({
   );
 }
 
-type FlipDigitCardProps = {
-  ch: string;
-  w: number;
-  h: number;
-  digitFont: number;
-};
-
-function FlipDigitCard({ ch, w, h, digitFont }: FlipDigitCardProps) {
-  const prevRef = React.useRef(ch);
-  const [prev, setPrev] = React.useState(ch);
-  const [flip, setFlip] = React.useState(false);
-  const [animKey, setAnimKey] = React.useState(0);
-
-  React.useEffect(() => {
-    if (ch === prevRef.current) return;
-    setPrev(prevRef.current);
-    setFlip(false);
-    const raf = window.requestAnimationFrame(() => {
-      setAnimKey((v) => v + 1);
-      setFlip(true);
-    });
-    const id = window.setTimeout(() => {
-      setFlip(false);
-      prevRef.current = ch;
-    }, 1200);
-    return () => {
-      window.cancelAnimationFrame(raf);
-      window.clearTimeout(id);
-    };
-  }, [ch]);
-
-  const panel =
-    "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
-  const seam = "absolute left-0 right-0 top-1/2 z-10 h-[3px] bg-gradient-to-b from-black/70 to-transparent shadow-[0_3px_8px_rgba(0,0,0,0.7),0_-2px_6px_rgba(255,255,255,0.25)]";
-  const half = "absolute left-0 w-full overflow-hidden";
-  const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
-  const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
-
-  return (
-    <div className={cn(panel, glossTop, glossBottom)} style={{ width: w, height: h, transformStyle: "preserve-3d", perspective: "1000px" }}>
-      <div className={seam} />
-      {/* Top half - shows upper portion of the digit */}
-      <div className={cn(half, "top-0")} style={{ height: h / 2 }}>
-        <div
-          className="absolute flex items-center justify-center font-bold font-mono"
-          style={{
-            fontSize: digitFont,
-            lineHeight: 1,
-            width: "100%",
-            height: h,
-            top: 0,
-            left: 0
-          }}
-        >
-          {flip ? prev : ch}
-        </div>
-      </div>
-      {/* Bottom half - shows lower portion of the digit */}
-      <div className={cn(half, "bottom-0")} style={{ height: h / 2 }}>
-        <div
-          className="absolute flex items-center justify-center font-bold font-mono"
-          style={{
-            fontSize: digitFont,
-            lineHeight: 1,
-            width: "100%",
-            height: h,
-            top: `-${h / 2}px`,
-            left: 0
-          }}
-        >
-          {ch}
-        </div>
-      </div>
-
-      {flip ? (
-        <>
-          {/* Animated top half */}
-          <div className="absolute left-0 top-0 z-20 w-full overflow-hidden rounded-t-lg" style={{ height: h / 2 }}>
-            <div
-              key={`top-${animKey}`}
-              className="flip-top"
-              style={{
-                transformOrigin: "center bottom",
-                height: "100%",
-                width: "100%"
-              }}
-            >
-              <div
-                className="absolute flex items-center justify-center font-bold font-mono"
-                style={{
-                  fontSize: digitFont,
-                  lineHeight: 1,
-                  width: "100%",
-                  height: h,
-                  top: 0,
-                  left: 0
-                }}
-              >
-                {prev}
-              </div>
-            </div>
-          </div>
-          {/* Animated bottom half */}
-          <div className="absolute bottom-0 left-0 z-20 w-full overflow-hidden rounded-b-lg" style={{ height: h / 2 }}>
-            <div
-              key={`bottom-${animKey}`}
-              className="flip-bottom"
-              style={{
-                transformOrigin: "center top",
-                height: "100%",
-                width: "100%"
-              }}
-            >
-              <div
-                className="absolute flex items-center justify-center font-bold font-mono"
-                style={{
-                  fontSize: digitFont,
-                  lineHeight: 1,
-                  width: "100%",
-                  height: h,
-                  top: `-${h / 2}px`,
-                  left: 0
-                }}
-              >
-                {ch}
-              </div>
-            </div>
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
-}
 
 function DigitalClock({
   timezone,
@@ -525,27 +393,28 @@ function DigitalClock({
     const mm = String(mNum).padStart(2, "0");
     const ss = String(sNum).padStart(2, "0");
 
-    const w = Math.round(sizePx * 1.62);
-    const h = Math.round(sizePx * 2.35);
+    // fontSize drives all sizing in SgFlipDigit/@pqina/flip
     const digitFont = Math.round(sizePx * 1.4);
-    const panel =
-      "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
-    const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
-    const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
+    // Approx card height: fontSize * line-height(1.4) from the library CSS
+    const cardH = Math.round(digitFont * 1.4);
 
     const Colon = () => (
-      <div className="flex flex-col items-center justify-center" style={{ height: h }}>
-        <div className="h-2 w-2 rounded-full bg-white/80" />
-        <div className="mt-2 h-2 w-2 rounded-full bg-white/80" />
+      <div className="flex flex-col items-center justify-center gap-2" style={{ height: cardH }}>
+        <div className="h-2 w-2 rounded-full bg-[#edebeb]/80" />
+        <div className="h-2 w-2 rounded-full bg-[#edebeb]/80" />
       </div>
     );
 
     const PeriodCell = ({ value }: { value: string }) => (
       <div
-        className={cn(panel, glossTop, glossBottom, "flex items-center justify-center")}
-        style={{ width: Math.round(w * 1.35), height: h }}
+        className="flex items-center justify-center rounded bg-[#333232]"
+        style={{
+          height: cardH,
+          padding: `0 ${Math.round(sizePx * 0.4)}px`,
+          boxShadow: "0 .125em .3125em rgba(0,0,0,.25)",
+        }}
       >
-        <span className="font-semibold text-white/90" style={{ fontSize: Math.round(sizePx * 1.05), lineHeight: 1 }}>
+        <span style={{ fontSize: Math.round(sizePx * 0.9), color: "#edebeb", fontWeight: 700, lineHeight: 1 }}>
           {value}
         </span>
       </div>
@@ -553,87 +422,16 @@ function DigitalClock({
 
     return (
       <div className={cn("flex items-center gap-2", className)} aria-label="Digital clock">
-        <style>{`
-          .flip-top {
-            background: #1a1a1a;
-            border-radius: 8px 8px 0 0;
-            animation: sgFlipTop 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            will-change: transform;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2);
-          }
-          .flip-bottom {
-            background: #1a1a1a;
-            border-radius: 0 0 8px 8px;
-            animation: sgFlipBottom 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
-            animation-delay: 0.6s;
-            backface-visibility: hidden;
-            transform-style: preserve-3d;
-            will-change: transform;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2);
-          }
-          @keyframes sgFlipTop {
-            0% {
-              transform: rotateX(0deg);
-              z-index: 30;
-            }
-            100% {
-              transform: rotateX(-180deg);
-              z-index: 5;
-            }
-          }
-          @keyframes sgFlipBottom {
-            0% {
-              transform: rotateX(180deg);
-              z-index: 5;
-            }
-            100% {
-              transform: rotateX(0deg);
-              z-index: 30;
-            }
-          }
-        `}</style>
-        <FlipDigitCard
-          ch={hh.charAt(0)}
-          w={w}
-          h={h}
-          digitFont={digitFont}
-        />
-        <FlipDigitCard
-          ch={hh.charAt(1)}
-          w={w}
-          h={h}
-          digitFont={digitFont}
-        />
+        <SgFlipDigit value={hh.charAt(0)} fontSize={digitFont} />
+        <SgFlipDigit value={hh.charAt(1)} fontSize={digitFont} />
         <Colon />
-        <FlipDigitCard
-          ch={mm.charAt(0)}
-          w={w}
-          h={h}
-          digitFont={digitFont}
-        />
-        <FlipDigitCard
-          ch={mm.charAt(1)}
-          w={w}
-          h={h}
-          digitFont={digitFont}
-        />
+        <SgFlipDigit value={mm.charAt(0)} fontSize={digitFont} />
+        <SgFlipDigit value={mm.charAt(1)} fontSize={digitFont} />
         {showSeconds ? (
           <>
             <Colon />
-            <FlipDigitCard
-              ch={ss.charAt(0)}
-              w={w}
-              h={h}
-              digitFont={digitFont}
-            />
-            <FlipDigitCard
-              ch={ss.charAt(1)}
-              w={w}
-              h={h}
-              digitFont={digitFont}
-            />
+            <SgFlipDigit value={ss.charAt(0)} fontSize={digitFont} />
+            <SgFlipDigit value={ss.charAt(1)} fontSize={digitFont} />
           </>
         ) : null}
         {format === "12h" && dayPeriod ? <PeriodCell value={dayPeriod.toUpperCase()} /> : null}

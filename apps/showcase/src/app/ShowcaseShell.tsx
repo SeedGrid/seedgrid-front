@@ -89,7 +89,8 @@ const COMPONENTS = [
 ];
 
 const THEME_ITEMS = [
-  { slug: "theme", label: "Theme System", isTheme: true }
+  { slug: "theme", label: "Theme System", isTheme: true },
+  { slug: "credits", label: "Creditos / Licencas", isTheme: true }
 ];
 
 const SIDEBAR_THEME_VARS = {

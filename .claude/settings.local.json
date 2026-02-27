@@ -46,7 +46,8 @@
       "WebFetch(domain:app.unpkg.com)",
       "Bash(pnpm add @pqina/flip --filter @seedgrid/fe-components)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\(''main'',''''\\), d.get\\(''types'',''''\\), d.get\\(''typings'',''''\\)\\)\")",
-      "Bash(pnpm run typecheck)"
+      "Bash(pnpm run typecheck)",
+      "Bash(xargs grep -l \"credits\\\\|license\\\\|terceiro\\\\|third\" -i)"
     ]
   }
 }
