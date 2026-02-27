@@ -1175,11 +1175,25 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               activateNode(node);
             }}
             renderItem={(item) => {
-              const path = (item.data as { path?: string } | undefined)?.path;
+              const data = item.data as { path?: string; nodeId?: string } | undefined;
+              const path = data?.path;
+              const node = data?.nodeId ? maps.nodeById.get(data.nodeId) : undefined;
+              const iconNode = node ? resolveIcon(node, iconRegistry) : null;
               return (
-                <div className="min-w-0">
-                  <div className="truncate">{item.label}</div>
-                  {path ? <div className="truncate text-xs text-muted-foreground">{path}</div> : null}
+                <div className="flex min-w-0 items-start gap-2">
+                  <span
+                    className={cn(
+                      "mt-0.5 inline-flex shrink-0 items-center justify-center rounded",
+                      densityCfg.icon,
+                      iconNode ? "" : "bg-muted text-[10px] font-semibold"
+                    )}
+                  >
+                    {iconNode ?? firstChars(item.label, 1)}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="truncate">{item.label}</div>
+                    {path ? <div className="truncate text-xs text-muted-foreground">{path}</div> : null}
+                  </div>
                 </div>
               );
             }}
@@ -1405,7 +1419,7 @@ SgMenu.displayName = "SgMenu";
 
 function CollapseIcon(props: { collapsed: boolean; side: "left" | "right" }) {
   const { collapsed, side } = props;
-  const rotation = side === "left" ? (collapsed ? 180 : 0) : collapsed ? 0 : 180;
+  const rotation = side === "left" ? (collapsed ? 0 : 180) : collapsed ? 180 : 0;
   return (
     <svg viewBox="0 0 24 24" className="size-4" style={{ transform: `rotate(${rotation}deg)` }} aria-hidden="true">
       <path d="M9 6l6 6-6 6" fill="currentColor" />

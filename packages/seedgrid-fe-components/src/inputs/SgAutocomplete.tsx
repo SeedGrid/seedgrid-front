@@ -208,10 +208,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
   );
 
   React.useEffect(() => {
-    if (!openRef.current && !openOnFocus) return;
+    if (!openRef.current) return;
     const handler = setTimeout(() => runSearch(inputValue), delay);
     return () => clearTimeout(handler);
-  }, [delay, inputValue, openOnFocus, runSearch]);
+  }, [delay, inputValue, runSearch]);
 
   const selectItem = (item: SgAutocompleteItem) => {
     if (item.disabled) return;
@@ -231,6 +231,13 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
   const handleInputChange = (next: string) => {
     setInputValue(next);
     onChange?.(next);
+    if (next.length === 0) {
+      setItems([]);
+      setOpen(false);
+      onOpenChange?.(false);
+      setActiveIndex(-1);
+      return;
+    }
     if (!open && (openOnFocus || next.length >= minLengthForSearch)) {
       setOpen(true);
       onOpenChange?.(true);
@@ -392,6 +399,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
         iconButtons={mergedIconButtons}
         inputProps={{
           ...inputProps,
+          autoComplete: "off",
+          autoCorrect: "off",
+          autoCapitalize: "off",
+          spellCheck: false,
           value: inputValue,
           onChange: (event) => handleInputChange(event.currentTarget.value),
           onBlur: (event) => {
