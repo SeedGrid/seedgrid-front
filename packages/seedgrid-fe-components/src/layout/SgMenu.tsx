@@ -1303,10 +1303,15 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     ) : null;
   const showBrandContent = Boolean(brand && (!isCollapsed || isHorizontalDockZone));
   const showBrandSpacer = !showBrandContent && !isCollapsed;
+  // In horizontal zones: collapse goes left when aligned left/center, right when aligned right.
+  // In vertical zones: keep the original resolvedPosition logic.
+  const collapseOnLeft = isHorizontalDockZone
+    ? horizontalDockAlign !== "right"
+    : resolvedPosition === "right";
 
   const shellHeaderRow = (brand || showCollapseButton || showPinButton || showDockDragHandle) ? (
     <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
-      {resolvedPosition === "right" ? collapseButton : null}
+      {collapseOnLeft ? collapseButton : null}
 
       {showBrandContent && brand ? (
         <button
@@ -1371,7 +1376,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </button>
       ) : null}
 
-      {resolvedPosition === "left" ? collapseButton : null}
+      {!collapseOnLeft ? collapseButton : null}
     </div>
   ) : null;
 
