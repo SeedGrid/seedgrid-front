@@ -140,11 +140,109 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
-const EXAMPLE_SIDEBAR_CODE = `import React from "react";
-import { SgMenu } from "@seedgrid/fe-components";
-import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+const MENU_CODE_SNIPPET = `const MENU = [
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", iconKey: "db" },
+  {
+    id: "customers",
+    label: "Customers",
+    iconKey: "cu",
+    children: [
+      {
+        id: "customers-new",
+        label: "New",
+        iconKey: "nw",
+        children: [
+          { id: "customer-create", label: "Customer", url: "/customers/new/customer" },
+          { id: "customer-duplicate", label: "Duplicate", url: "/customers/new/duplicate" }
+        ]
+      },
+      {
+        id: "customers-reports",
+        label: "Reports",
+        iconKey: "rp",
+        children: [
+          { id: "customers-cohort", label: "Cohort", url: "/customers/reports/cohort" },
+          { id: "customers-churn", label: "Churn", url: "/customers/reports/churn" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    iconKey: "or",
+    children: [
+      {
+        id: "orders-sales",
+        label: "Sales",
+        iconKey: "sl",
+        children: [
+          { id: "orders-open", label: "Open Orders", url: "/orders/sales/open", badge: 4 },
+          { id: "orders-closed", label: "Closed Orders", url: "/orders/sales/closed" }
+        ]
+      },
+      { id: "orders-returns", label: "Returns", url: "/orders/returns", badge: 7 }
+    ]
+  },
+  { id: "profile", label: "Profile", url: "/profile", iconKey: "pf" }
+];`;
 
-const ICON_REGISTRY = {
+const MEGA_MENU_CODE_SNIPPET = `const MEGA_MENU = [
+  {
+    id: "fashion",
+    label: "Fashion",
+    iconKey: "fa",
+    children: [
+      {
+        id: "fashion-woman",
+        label: "Woman",
+        children: [
+          { id: "fashion-woman-1", label: "Woman Casual", url: "/fashion/woman/1" },
+          { id: "fashion-woman-2", label: "Woman Formal", url: "/fashion/woman/2" }
+        ]
+      },
+      {
+        id: "fashion-men",
+        label: "Men",
+        children: [
+          { id: "fashion-men-1", label: "Men Casual", url: "/fashion/men/1" },
+          { id: "fashion-men-2", label: "Men Formal", url: "/fashion/men/2" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "electronics",
+    label: "Electronics",
+    iconKey: "el",
+    children: [
+      {
+        id: "electronics-computer",
+        label: "Computer",
+        children: [
+          { id: "electronics-computer-1", label: "Laptop", url: "/electronics/computer/1" },
+          { id: "electronics-computer-2", label: "Desktop", url: "/electronics/computer/2" }
+        ]
+      },
+      {
+        id: "electronics-tv",
+        label: "TV",
+        children: [
+          { id: "electronics-tv-1", label: "Smart TV", url: "/electronics/tv/1" },
+          { id: "electronics-tv-2", label: "Home Theater", url: "/electronics/tv/2" }
+        ]
+      }
+    ]
+  }
+];`;
+
+const USER_MENU_CODE_SNIPPET = `const USER_MENU = [
+  { id: "perfil", label: "Meu perfil", onClick: () => {} },
+  { id: "preferencias", label: "Preferencias", onClick: () => {} },
+  { id: "logout", label: "Sair", onClick: () => {} }
+];`;
+
+const ICON_REGISTRY_CODE_SNIPPET = `const ICON_REGISTRY = {
   db: <Home className="size-4" />,
   cu: <Users className="size-4" />,
   nw: <LayoutGrid className="size-4" />,
@@ -154,7 +252,17 @@ const ICON_REGISTRY = {
   pf: <Settings className="size-4" />,
   fa: <Users className="size-4" />,
   el: <Settings className="size-4" />
-};
+};`;
+
+const EXAMPLE_SIDEBAR_CODE = `import React from "react";
+import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+${MENU_CODE_SNIPPET}
+
+${USER_MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -193,17 +301,9 @@ const EXAMPLE_DRAWER_CODE = `import React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -242,17 +342,9 @@ const EXAMPLE_PANEL_MENU_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -270,17 +362,9 @@ const EXAMPLE_TIERED_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -298,17 +382,9 @@ const EXAMPLE_MEGA_HORIZONTAL_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MEGA_MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   return (
@@ -328,17 +404,9 @@ const EXAMPLE_MEGA_VERTICAL_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MEGA_MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function Example() {
   return (
@@ -358,17 +426,9 @@ const PLAYGROUND_CODE = `import * as React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-const ICON_REGISTRY = {
-  db: <Home className="size-4" />,
-  cu: <Users className="size-4" />,
-  nw: <LayoutGrid className="size-4" />,
-  rp: <ClipboardList className="size-4" />,
-  or: <LayoutGrid className="size-4" />,
-  sl: <Search className="size-4" />,
-  pf: <Settings className="size-4" />,
-  fa: <Users className="size-4" />,
-  el: <Settings className="size-4" />
-};
+${MENU_CODE_SNIPPET}
+
+${ICON_REGISTRY_CODE_SNIPPET}
 
 export default function App() {
   const [activeId, setActiveId] = React.useState("dashboard");
