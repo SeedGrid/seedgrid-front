@@ -1,209 +1,110 @@
 import * as React from "react";
 
-function cn(...parts: Array<string | false | null | undefined>) {
-  return parts.filter(Boolean).join(" ");
+// @pqina/flip accesses the DOM at module load time — must be imported dynamically
+// to avoid crashing in SSR (Next.js server). The static import below is only for types.
+import type {} from "@pqina/flip";
+
+// CSS from @pqina/flip v1.8.4 (MIT) — embedded to avoid CSS import in tsc-only build
+const FLIP_CSS = `.tick{box-sizing:border-box;-webkit-user-select:none;-ms-user-select:none;user-select:none;cursor:default;position:relative;z-index:1;line-height:1.4}.tick *{box-sizing:inherit}.tick [data-view]{max-width:100%}.tick span[data-view]{display:inline-block}.tick .tick-credits{position:absolute;right:0;bottom:0;opacity:.4;text-decoration:none;font-size:11px;color:inherit}.tick [data-layout~=pad]{margin:-.25em}.tick [data-layout~=pad]>*{margin:.25em}.tick [data-layout~=horizontal]{display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;-ms-flex-pack:center;justify-content:center}.tick [data-layout~=horizontal][data-layout~=baseline]{-ms-flex-align:baseline;align-items:baseline}.tick [data-layout~=horizontal][data-layout~=center]{-ms-flex-pack:center;justify-content:center}.tick [data-layout~=horizontal][data-layout~=right]{-ms-flex-pack:end;justify-content:flex-end}.tick [data-layout~=horizontal][data-layout~=left]{-ms-flex-pack:start;justify-content:flex-start}.tick [data-layout~=horizontal][data-layout~=fill],.tick [data-layout~=horizontal][data-layout~=stretch]{-ms-flex-line-pack:stretch;align-content:stretch;-ms-flex-wrap:nowrap;flex-wrap:nowrap}.tick [data-layout~=horizontal][data-layout~=fill]>*,.tick [data-layout~=horizontal][data-layout~=stretch]>*{-ms-flex:1 0 0px;flex:1 0 0;width:100%}.tick [data-layout~=horizontal][data-layout~=multi-line]{-ms-flex-wrap:wrap;flex-wrap:wrap}.tick [data-layout~=horizontal][data-layout~=fit]{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-ms-flex-line-pack:center;align-content:center;white-space:nowrap;-ms-flex-pack:start;justify-content:flex-start}.tick [data-layout~=vertical]{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}.tick [data-layout~=vertical][data-layout~=top]{-ms-flex-pack:start;justify-content:flex-start}.tick [data-layout~=vertical][data-layout~=bottom]{-ms-flex-pack:end;justify-content:flex-end;min-height:100%}.tick [data-layout~=vertical][data-layout~=middle]{-ms-flex-pack:center;justify-content:center;min-height:100%}.tick [data-layout~=vertical][data-layout~=left]{-ms-flex-align:start;align-items:flex-start}.tick [data-layout~=vertical][data-layout~=right]{-ms-flex-align:end;align-items:flex-end}.tick [data-layout~=vertical][data-layout~=center]{text-align:center}.tick [data-layout~=vertical][data-layout~=fill],.tick [data-layout~=vertical][data-layout~=stretch]{-ms-flex-align:stretch;align-items:stretch;min-height:100%}.tick [data-layout~=vertical][data-layout~=fill]>*,.tick [data-layout~=vertical][data-layout~=stretch]>*{-ms-flex:1 0 0px;flex:1 0 0}.tick [data-layout~=vertical]>*+*{margin-top:.5em}.tick [data-layout~=overlay]{position:relative}.tick [data-layout~=overlay]>*{margin:0}.tick [data-layout~=overlay][data-layout~=center]{text-align:center}.tick [data-layout~=overlay][data-layout~=left]{text-align:left}.tick [data-layout~=overlay][data-layout~=right]{text-align:right}.tick [data-layout~=overlay]>[data-overlay=fill],.tick [data-layout~=overlay]>[data-overlay=stretch]{position:absolute;left:0;right:0;top:0;bottom:0}.tick [data-layout~=overlay]>[data-overlay=center]{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;position:absolute;left:0;right:0;top:0;bottom:0}.tick-flip{position:relative;text-align:center}.tick-flip *{border-radius:inherit;white-space:pre;letter-spacing:inherit;text-indent:inherit}.tick-flip-front{border-bottom-left-radius:0;border-bottom-right-radius:0}.tick-flip-back{border-top-left-radius:0;border-top-right-radius:0}.tick-flip-spacer{display:block;visibility:hidden}.tick-flip-shadow{position:absolute;left:1px;right:1px;top:1px;bottom:1px;color:transparent!important;background:transparent!important}.tick-flip-shadow-top{bottom:calc(50% - 1px)}.tick-flip-shadow-bottom{top:calc(50% + 1px)}.tick-flip-card-shadow{position:absolute;left:.15em;right:.15em;bottom:.125em;height:.5em;background-color:transparent;border-radius:0;opacity:0;transform-origin:0 100%;box-shadow:0 .125em .25em rgba(0,0,0,.5),0 .125em .5em rgba(0,0,0,.75);z-index:0}.tick-flip-card{position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;perspective:4em}.tick-flip-panel-back,.tick-flip-panel-front{position:absolute;left:0;width:100%;height:51%;backface-visibility:hidden;transform-style:preserve-3d}.tick-flip-panel-back-text,.tick-flip-panel-front-text{position:absolute;left:-1px;top:0;right:-1px;height:100%;overflow:hidden}.tick-flip-panel-text-wrapper{position:absolute;left:0;top:0;right:0;height:100%}.tick-flip-panel-back-text .tick-flip-panel-text-wrapper{height:200%;top:-100%}.tick-flip-panel-front{transform-origin:center bottom;top:0;z-index:2;box-shadow:inset 0 1px hsla(0,0%,100%,.05)}.tick-flip-panel-back{transform-origin:center top;top:50%;z-index:1;box-shadow:inset 0 -1px rgba(0,0,0,.1)}.tick-flip-panel-back:after{z-index:1;content:"";position:absolute;left:0;top:0;width:100%;height:100%;background-image:linear-gradient(180deg,rgba(0,0,0,.3) 1px,rgba(0,0,0,.15) 0,transparent 30%)}.tick-flip-panel-back-shadow{z-index:2}.tick-flip-panel-back-highlight{z-index:3}.tick-flip-panel-back-highlight,.tick-flip-panel-back-shadow{border-bottom-left-radius:inherit;border-bottom-right-radius:inherit}.tick-flip-panel-back-highlight,.tick-flip-panel-back-shadow,.tick-flip-panel-front-shadow{position:absolute;left:0;top:0;right:0;bottom:0;opacity:0}.tick-flip-panel-front-shadow{background-image:linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,.3))}.tick-flip-panel-back-shadow{background-image:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,.5))}.tick-flip-panel-back-highlight{background-image:linear-gradient(180deg,hsla(0,0%,100%,.15),hsla(0,0%,100%,.3))}.tick [data-style*="shadow:inner"],.tick [data-style*="shadow:inner"] .tick-flip-card-shadow,.tick [data-style*="shadow:none"] .tick-flip-card-shadow,.tick [data-style*="shadow:none"] .tick-flip-panel-back,.tick [data-style*="shadow:none"] .tick-flip-panel-front,.tick [data-style*="shadow:none"] .tick-flip-shadow{box-shadow:none}.tick [data-style*="shadow:none"] .tick-flip-back:after,.tick [data-style*="shadow:none"] .tick-flip-panel-back-shadow,.tick [data-style*="shadow:none"] .tick-flip-panel-back-text:after,.tick [data-style*="shadow:none"] .tick-flip-panel-front-shadow{background-image:none}.tick [data-style*="rounded:none"]{border-radius:0}.tick [data-style*="rounded:panels"] .tick-flip-front,.tick [data-style*="rounded:panels"] .tick-flip-shadow-bottom{border-bottom-left-radius:inherit;border-bottom-right-radius:inherit}.tick [data-style*="rounded:panels"] .tick-flip-back,.tick [data-style*="rounded:panels"] .tick-flip-panel-back:after,.tick [data-style*="rounded:panels"] .tick-flip-shadow-top{border-top-left-radius:inherit;border-top-right-radius:inherit}.tick-flip{margin-left:.0625em;margin-right:.0625em;min-width:1.125em;border-radius:.125em;letter-spacing:.25em;text-indent:.25em}.tick-flip-panel{color:#edebeb;background-color:#333232}.tick-flip-shadow{box-shadow:0 .125em .3125em rgba(0,0,0,.25),0 .02125em .06125em rgba(0,0,0,.25)}`;
+
+let flipCssInjected = false;
+function ensureFlipCss() {
+  if (flipCssInjected || typeof document === "undefined") return;
+  if (document.getElementById("pqina-flip-css")) {
+    flipCssInjected = true;
+    return;
+  }
+  const style = document.createElement("style");
+  style.id = "pqina-flip-css";
+  style.textContent = FLIP_CSS;
+  document.head.appendChild(style);
+  flipCssInjected = true;
 }
 
 export type SgFlipDigitProps = {
   /** The character to display (single char) */
   value: string;
-  /** Width in pixels */
-  width?: number;
-  /** Height in pixels */
-  height?: number;
-  /** Font size in pixels */
+  /** Font size in pixels — controls overall scale */
   fontSize?: number;
-  /** Additional CSS classes */
+  /** Additional CSS classes applied to the outer wrapper */
   className?: string;
+  /**
+   * @deprecated Use fontSize to control size. width/height are ignored when using @pqina/flip.
+   */
+  width?: number;
+  /**
+   * @deprecated Use fontSize to control size. width/height are ignored when using @pqina/flip.
+   */
+  height?: number;
 };
 
 /**
- * SgFlipDigit - Animated flip card for single character display
+ * SgFlipDigit - Animated flip card powered by @pqina/flip (MIT)
  *
  * @example
  * ```tsx
  * const [digit, setDigit] = useState("0");
- * <SgFlipDigit value={digit} />
+ * <SgFlipDigit value={digit} fontSize={70} />
  * ```
  */
 export function SgFlipDigit({
   value,
-  width = 80,
-  height = 120,
   fontSize = 70,
-  className
+  className,
 }: SgFlipDigitProps) {
-  const prevRef = React.useRef(value);
-  const [prev, setPrev] = React.useState(value);
-  const [flip, setFlip] = React.useState(false);
-  const [animKey, setAnimKey] = React.useState(0);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const tickRef = React.useRef<{ value: string } | null>(null);
+  const valueRef = React.useRef(value);
 
+  // Mount: inject CSS + create Tick instance
   React.useEffect(() => {
-    if (value === prevRef.current) return;
-    setPrev(prevRef.current);
-    setFlip(false);
-    const raf = window.requestAnimationFrame(() => {
-      setAnimKey((v) => v + 1);
-      setFlip(true);
+    ensureFlipCss();
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    let cancelled = false;
+    let destroyFn: (() => void) | null = null;
+
+    // Dynamic import: @pqina/flip touches window/document at module evaluation,
+    // so it must never run on the server (SSR). useEffect is client-only.
+    import("@pqina/flip").then(({ default: Tick }) => {
+      if (cancelled || !el.isConnected) return;
+
+      // Build the required inner DOM structure for @pqina/flip
+      const repeat = document.createElement("div");
+      repeat.setAttribute("data-repeat", "true");
+      repeat.setAttribute("aria-hidden", "true");
+
+      const flipSpan = document.createElement("span");
+      flipSpan.setAttribute("data-view", "flip");
+      repeat.appendChild(flipSpan);
+      el.appendChild(repeat);
+
+      tickRef.current = Tick.DOM.create(el, { value: valueRef.current });
+      destroyFn = () => Tick.DOM.destroy(el);
     });
-    const id = window.setTimeout(() => {
-      setFlip(false);
-      prevRef.current = value;
-    }, 1200);
+
     return () => {
-      window.cancelAnimationFrame(raf);
-      window.clearTimeout(id);
+      cancelled = true;
+      destroyFn?.();
+      tickRef.current = null;
     };
+  }, []);
+
+  // Update value
+  React.useEffect(() => {
+    valueRef.current = value;
+    if (tickRef.current) {
+      tickRef.current.value = value;
+    }
   }, [value]);
 
-  const panel =
-    "relative overflow-hidden rounded-lg bg-neutral-900 text-white shadow-[0_10px_24px_rgba(0,0,0,0.4)]";
-  const seam = "absolute left-0 right-0 top-1/2 z-10 h-[3px] bg-gradient-to-b from-black/70 to-transparent shadow-[0_3px_8px_rgba(0,0,0,0.7),0_-2px_6px_rgba(255,255,255,0.25)]";
-  const half = "absolute left-0 w-full overflow-hidden";
-  const glossTop = "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:content-['']";
-  const glossBottom = "after:absolute after:inset-0 after:bg-gradient-to-t after:from-black/30 after:to-transparent after:content-['']";
-
-  // Calculate positioning to ensure perfect centering
-  const digitContainerStyle = {
-    fontSize,
-    width: "100%",
-    height: height,
-    lineHeight: `${height}px`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  };
-
   return (
-    <>
-      <style>{`
-        .sg-flip-top {
-          background: #1a1a1a;
-          border-radius: 8px 8px 0 0;
-          animation: sgFlipTopAnim 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
-          backface-visibility: hidden;
-          transform-style: preserve-3d;
-          will-change: transform;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 -2px 4px rgba(0,0,0,0.2);
-        }
-        .sg-flip-bottom {
-          background: #1a1a1a;
-          border-radius: 0 0 8px 8px;
-          animation: sgFlipBottomAnim 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) both;
-          animation-delay: 0.6s;
-          backface-visibility: hidden;
-          transform-style: preserve-3d;
-          will-change: transform;
-          box-shadow: 0 -2px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        @keyframes sgFlipTopAnim {
-          0% {
-            transform: rotateX(0deg);
-            z-index: 30;
-          }
-          100% {
-            transform: rotateX(-180deg);
-            z-index: 5;
-          }
-        }
-        @keyframes sgFlipBottomAnim {
-          0% {
-            transform: rotateX(180deg);
-            z-index: 5;
-          }
-          100% {
-            transform: rotateX(0deg);
-            z-index: 30;
-          }
-        }
-      `}</style>
-
-      <div
-        className={cn(panel, glossTop, glossBottom, className)}
-        style={{ width, height, transformStyle: "preserve-3d", perspective: "1000px" }}
-      >
-        <div className={seam} />
-
-        {/* Static top half - shows upper portion of NEW digit (destination) */}
-        <div className={cn(half, "top-0")} style={{ height: height / 2 }}>
-          <div
-            className="absolute font-bold font-mono"
-            style={{
-              ...digitContainerStyle,
-              top: 0,
-              left: 0
-            }}
-          >
-            {value}
-          </div>
-        </div>
-
-        {/* Static bottom half - shows lower portion of NEW digit (destination) */}
-        <div className={cn(half, "bottom-0")} style={{ height: height / 2 }}>
-          <div
-            className="absolute font-bold font-mono"
-            style={{
-              ...digitContainerStyle,
-              top: -(height / 2),
-              left: 0
-            }}
-          >
-            {value}
-          </div>
-        </div>
-
-        {flip ? (
-          <>
-            {/* Animated top half - flips away to reveal new digit underneath */}
-            <div className="absolute left-0 top-0 z-20 w-full overflow-hidden rounded-t-lg" style={{ height: height / 2 }}>
-              <div
-                key={`top-${animKey}`}
-                className="sg-flip-top"
-                style={{
-                  transformOrigin: "center bottom",
-                  height: "100%",
-                  width: "100%"
-                }}
-              >
-                <div
-                  className="absolute font-bold font-mono"
-                  style={{
-                    ...digitContainerStyle,
-                    top: 0,
-                    left: 0
-                  }}
-                >
-                  {prev}
-                </div>
-              </div>
-            </div>
-
-            {/* Animated bottom half - flips into place showing new digit */}
-            <div className="absolute bottom-0 left-0 z-20 w-full overflow-hidden rounded-b-lg" style={{ height: height / 2 }}>
-              <div
-                key={`bottom-${animKey}`}
-                className="sg-flip-bottom"
-                style={{
-                  transformOrigin: "center top",
-                  height: "100%",
-                  width: "100%"
-                }}
-              >
-                <div
-                  className="absolute font-bold font-mono"
-                  style={{
-                    ...digitContainerStyle,
-                    top: -(height / 2),
-                    left: 0
-                  }}
-                >
-                  {value}
-                </div>
-              </div>
-            </div>
-          </>
-        ) : null}
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      className={["tick", className].filter(Boolean).join(" ")}
+      style={{ fontSize, display: "inline-block" }}
+    />
   );
 }

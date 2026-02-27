@@ -226,6 +226,9 @@ importers:
       '@codesandbox/sandpack-react':
         specifier: ^2.20.0
         version: 2.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@pqina/flip':
+        specifier: ^1.8.4
+        version: 1.8.4
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -616,6 +619,9 @@ packages:
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+
+  '@pqina/flip@1.8.4':
+    resolution: {integrity: sha512-vOOGo23t0egDHOhnNeDwHdSQVT1p8l+MetwpZPd+5xEYjvZR6FNUaWYqLki3XFfMijro9YpYuljInCaLhO62dQ==}
 
   '@react-hook/intersection-observer@3.1.2':
     resolution: {integrity: sha512-mWU3BMkmmzyYMSuhO9wu3eJVP21N8TcgYm9bZnTrMwuM818bEk+0NRM3hP+c/TqA9Ln5C7qE53p1H0QMtzYdvQ==}
@@ -1943,6 +1949,8 @@ snapshots:
   '@open-draft/deferred-promise@2.2.0': {}
 
   '@popperjs/core@2.11.8': {}
+
+  '@pqina/flip@1.8.4': {}
 
   '@react-hook/intersection-observer@3.1.2(react@19.0.0)':
     dependencies:
