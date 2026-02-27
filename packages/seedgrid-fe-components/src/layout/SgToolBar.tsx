@@ -577,7 +577,6 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
           width: size?.w,
           height: size?.h,
           backgroundColor: bgColor,
-          alignSelf: inDock && effectiveZone === "right" ? "center" : undefined,
           cursor: draggable ? (dragActive ? "grabbing" : "grab") : undefined,
           position: dragPos?.mode,
           left: dragPos?.x,
@@ -639,11 +638,18 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     </SgToolbarOrientationContext.Provider>
   );
 
+  const needsCenterWrapper = inDock && (effectiveZone === "right" || effectiveZone === "left");
+  const toolbarForRender = needsCenterWrapper ? (
+    <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      {toolbar}
+    </div>
+  ) : toolbar;
+
   if (portalTarget) {
-    return createPortal(toolbar, portalTarget);
+    return createPortal(toolbarForRender, portalTarget);
   }
 
-  return toolbar;
+  return toolbarForRender;
 }
 
 export function SgToolbarIconButton(
