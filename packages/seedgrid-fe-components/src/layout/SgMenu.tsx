@@ -1209,7 +1209,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     );
   };
 
-  const showDockDragHandle = dockMode && draggable;
+  const showDockDragHandle = dockMode && draggable && !isCollapsed;
   const resolvedPosition: "left" | "right" =
     dockMode && effectiveDockZone
       ? effectiveDockZone === "right"
@@ -1220,12 +1220,55 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         ? "right"
         : "left"
       : position;
+  const collapseButton =
+    showCollapseButton && variant !== "drawer" ? (
+      <button
+        type="button"
+        onClick={() => {
+          if (variant === "hybrid") {
+            if (pinnedState) {
+              setPinnedState(false);
+              setDrawerOpen(false);
+              return;
+            }
+            setDrawerOpen(!drawerOpen);
+            return;
+          }
+          setCollapsedState(!collapsedState);
+        }}
+        aria-label={
+          variant === "hybrid"
+            ? pinnedState
+              ? "Unpin and collapse menu"
+              : drawerOpen
+              ? "Close menu"
+              : "Open menu"
+            : collapsedState
+            ? "Expand menu"
+            : "Collapse menu"
+        }
+        className={cn(
+          "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
+          "bg-background hover:bg-muted/60",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+        )}
+      >
+        <CollapseIcon
+          collapsed={variant === "hybrid" ? !(pinnedState || drawerOpen) : collapsedState}
+          side={resolvedPosition}
+        />
+      </button>
+    ) : null;
+  const showBrandContent = Boolean(brand && !isCollapsed);
+  const showBrandSpacer = !showBrandContent && !isCollapsed;
 
   const shellBody = (
     <div ref={menuRootRef} className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
       {(brand || showCollapseButton || showPinButton || showDockDragHandle) && (
         <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
-          {brand ? (
+          {resolvedPosition === "right" ? collapseButton : null}
+
+          {showBrandContent && brand ? (
             <button
               type="button"
               onClick={brand.onClick}
@@ -1240,13 +1283,11 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               ) : brand.imageSrc ? (
                 <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-7 w-auto max-w-[120px]" />
               ) : null}
-              {!isCollapsed ? (
-                <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
-              ) : null}
+              <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
             </button>
-          ) : (
+          ) : showBrandSpacer ? (
             <div className="flex-1" />
-          )}
+          ) : null}
 
           {showDockDragHandle ? (
             <button
@@ -1254,7 +1295,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               onPointerDown={handleDockDragPointerDown}
               aria-label="Drag menu"
               className={cn(
-                "inline-flex size-8 items-center justify-center rounded-md border border-border",
+                "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
                 "bg-background hover:bg-muted/60",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
                 dockDragActive ? "cursor-grabbing" : "cursor-grab"
@@ -1281,7 +1322,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               }}
               aria-label={pinnedState ? "Unpin menu" : "Pin menu"}
               className={cn(
-                "inline-flex size-8 items-center justify-center rounded-md border border-border",
+                "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
                 "bg-background hover:bg-muted/60",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
               )}
@@ -1290,44 +1331,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             </button>
           ) : null}
 
-          {showCollapseButton && variant !== "drawer" ? (
-            <button
-              type="button"
-              onClick={() => {
-                if (variant === "hybrid") {
-                  if (pinnedState) {
-                    setPinnedState(false);
-                    setDrawerOpen(false);
-                    return;
-                  }
-                  setDrawerOpen(!drawerOpen);
-                  return;
-                }
-                setCollapsedState(!collapsedState);
-              }}
-              aria-label={
-                variant === "hybrid"
-                  ? pinnedState
-                    ? "Unpin and collapse menu"
-                    : drawerOpen
-                    ? "Close menu"
-                    : "Open menu"
-                  : collapsedState
-                  ? "Expand menu"
-                  : "Collapse menu"
-              }
-              className={cn(
-                "inline-flex size-8 items-center justify-center rounded-md border border-border",
-                "bg-background hover:bg-muted/60",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-              )}
-            >
-              <CollapseIcon
-                collapsed={variant === "hybrid" ? !(pinnedState || drawerOpen) : collapsedState}
-                side={resolvedPosition}
-              />
-            </button>
-          ) : null}
+          {resolvedPosition === "left" ? collapseButton : null}
         </div>
       )}
 
@@ -1496,6 +1500,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const isMegaMenuStyle =
     effectiveMenuStyle === "mega-horizontal" || effectiveMenuStyle === "mega-vertical";
   const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
+  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
+  const dockAlignStyle: React.CSSProperties | undefined =
+    dockMode && effectiveDockZone === "right"
+      ? { alignSelf: "flex-end" }
+      : dockMode && effectiveDockZone === "left"
+      ? { alignSelf: "flex-start" }
+      : undefined;
 
   const sidebarWidthCss =
     dockMode && isHorizontalDockZone
@@ -1509,6 +1520,10 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       : isCollapsed
       ? collapsedWidthCss
       : expandedWidthCss;
+  const sidebarWidthStyle =
+    dockMode && isVerticalDockZone && sidebarWidthCss !== "100%"
+      ? `min(100%, ${sidebarWidthCss})`
+      : sidebarWidthCss;
 
   const sidebarShell = (
     <aside
@@ -1523,14 +1538,22 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         resolvedPosition === "right" ? "ml-auto" : "",
         className
       )}
-      style={{ width: sidebarWidthCss, ...style }}
+      style={{ width: sidebarWidthStyle, ...dockAlignStyle, ...style }}
     >
       {shellBody}
     </aside>
   );
+  const shellForRender =
+    dockMode && effectiveDockZone === "right" && isCollapsed ? (
+      <div style={{ alignSelf: "stretch", display: "flex", justifyContent: "flex-end" }}>
+        {sidebarShell}
+      </div>
+    ) : (
+      sidebarShell
+    );
 
   if (dockMode && portalTarget) {
-    return createPortal(sidebarShell, portalTarget);
+    return createPortal(shellForRender, portalTarget);
   }
 
   if (variant === "drawer") {
@@ -1563,7 +1586,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   if (variant === "hybrid") {
     return (
       <>
-        {sidebarShell}
+        {shellForRender}
         {!pinnedState ? (
           <SgExpandablePanel
             mode="overlay"
@@ -1633,7 +1656,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     );
   }
 
-  return sidebarShell;
+  return shellForRender;
 }
 
 SgMenu.displayName = "SgMenu";
