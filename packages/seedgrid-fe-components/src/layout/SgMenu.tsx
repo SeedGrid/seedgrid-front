@@ -559,21 +559,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     };
   }, [dockDragActive]);
 
-  React.useEffect(
-    () => () => {
-      if (!dock) return;
-      dock.setDropPreviewActive(false);
-    },
-    [dock]
-  );
-
   const applyDockDragVisual = React.useCallback((dx: number, dy: number) => {
     const shell = sidebarShellRef.current;
     if (!shell) return;
     shell.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
     shell.style.willChange = "transform";
     shell.style.zIndex = "1300";
-    shell.style.pointerEvents = "none";
   }, []);
 
   const clearDockDragVisual = React.useCallback(() => {
@@ -582,7 +573,6 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     shell.style.transform = "";
     shell.style.willChange = "";
     shell.style.zIndex = "";
-    shell.style.pointerEvents = "";
   }, []);
 
   React.useEffect(
