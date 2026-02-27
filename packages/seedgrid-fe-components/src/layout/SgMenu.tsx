@@ -692,7 +692,17 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       dockDragStartRef.current = { x: event.clientX, y: event.clientY };
       dockDragMovedRef.current = false;
       dockHoverZoneRef.current = dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveDockZone;
-      applyDockDragVisual(0, 0);
+
+      if (isHorizontalDockZone && sidebarShellRef.current) {
+        const rect = sidebarShellRef.current.getBoundingClientRect();
+        const compactWidth = parseFloat(isCollapsed ? collapsedWidthCss : expandedWidthCss) || 280;
+        // Position compact element so cursor aligns with drag handle (~40px from right)
+        const initialDx = event.clientX - rect.left - Math.max(0, compactWidth - 40);
+        dockDragStartRef.current.x = event.clientX - initialDx;
+        applyDockDragVisual(initialDx, 0);
+      } else {
+        applyDockDragVisual(0, 0);
+      }
 
       const handleMove = (moveEvent: PointerEvent) => {
         const start = dockDragStartRef.current;
