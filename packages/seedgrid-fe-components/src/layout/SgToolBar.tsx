@@ -577,6 +577,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
           width: size?.w,
           height: size?.h,
           backgroundColor: bgColor,
+          alignSelf: inDock && effectiveZone === "right" ? "center" : undefined,
           cursor: draggable ? (dragActive ? "grabbing" : "grab") : undefined,
           position: dragPos?.mode,
           left: dragPos?.x,

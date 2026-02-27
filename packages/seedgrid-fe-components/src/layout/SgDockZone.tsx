@@ -19,7 +19,7 @@ const DEFAULT_ZONE_LAYOUT_CLASS: Record<SgDockZoneId, string> = {
   top: "col-span-3 row-start-1 items-start",
   bottom: "col-span-3 row-start-3 items-end",
   left: "col-start-1 row-start-2 items-start",
-  right: "col-start-3 row-start-2 items-end",
+  right: "col-start-3 row-start-2 items-start",
   free: "col-start-2 row-start-2 items-center justify-center"
 };
 
@@ -47,9 +47,7 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       data-sg-dock-zone={zone}
       className={cn(
         hasExplicitPositionClass ? "flex min-h-0 min-w-0 gap-3 p-2" : "relative flex min-h-0 min-w-0 gap-3 p-2",
-        zone === "right"
-          ? "flex-col flex-wrap items-end content-end"
-          : isHorizontalZone
+        isHorizontalZone
           ? "flex-row flex-wrap items-start content-start"
           : isVerticalZone
             ? "flex-col flex-wrap items-start content-start"

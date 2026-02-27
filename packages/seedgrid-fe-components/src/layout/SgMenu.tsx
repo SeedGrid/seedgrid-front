@@ -1502,7 +1502,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
   const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
   const dockAlignStyle: React.CSSProperties | undefined =
-    dockMode && effectiveDockZone === "right"
+    dockMode && effectiveDockZone === "right" && !isCollapsed
       ? { alignSelf: "flex-end" }
       : dockMode && effectiveDockZone === "left"
       ? { alignSelf: "flex-start" }
@@ -1545,7 +1545,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   );
   const shellForRender =
     dockMode && effectiveDockZone === "right" && isCollapsed ? (
-      <div style={{ alignSelf: "stretch", display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "flex-end" }}>
         {sidebarShell}
       </div>
     ) : (

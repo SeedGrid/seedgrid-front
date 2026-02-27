@@ -396,7 +396,7 @@ export default function Example() {
       <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
         <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
         <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-        <SgDockZone zone="right" className="col-start-3 row-start-2 items-end border-l border-white/15" />
+        <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
         <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
         <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
           <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
@@ -676,7 +676,7 @@ export default function SgMenuPage() {
             <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
               <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
               <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-              <SgDockZone zone="right" className="col-start-3 row-start-2 items-end border-l border-white/15" />
+              <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
               <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
               <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
                 <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
