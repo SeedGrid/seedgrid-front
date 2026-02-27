@@ -1300,7 +1300,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const sidebarShell = (
     <aside
       className={cn(
-        "flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground",
+        "flex h-full min-h-0 flex-col bg-background text-foreground",
+        effectiveMenuStyle === "tiered" ? "overflow-visible" : "overflow-hidden",
         border ? "border border-border" : "",
         elevationClass(elevation),
         position === "right" ? "ml-auto" : "",
