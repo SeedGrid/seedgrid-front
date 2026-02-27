@@ -149,14 +149,20 @@ function useControllableState<T>(
   const [internal, setInternal] = React.useState<T>(defaultValue);
   const isControlled = value !== undefined;
   const current = isControlled ? (value as T) : internal;
+  const currentRef = React.useRef(current);
+
+  React.useEffect(() => {
+    currentRef.current = current;
+  }, [current]);
 
   const setValue = React.useCallback(
     (next: T | ((prev: T) => T)) => {
-      const resolved = typeof next === "function" ? (next as (prev: T) => T)(current) : next;
+      const base = currentRef.current;
+      const resolved = typeof next === "function" ? (next as (prev: T) => T)(base) : next;
       if (!isControlled) setInternal(resolved);
       onChange?.(resolved);
     },
-    [current, isControlled, onChange]
+    [isControlled, onChange]
   );
 
   return [current, setValue] as const;
@@ -876,7 +882,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   onClick={() => {
                     if (node.disabled) return;
                     if (hasChildren) {
-                      setTieredPath((prev) => [...prev.slice(0, depth), node.id]);
+                      const isOpenAtDepth = tieredPath[depth] === node.id;
+                      setTieredPath((prev) => {
+                        const base = prev.slice(0, depth);
+                        return isOpenAtDepth ? base : [...base, node.id];
+                      });
+                      if (isOpenAtDepth) return;
                       if (!node.url && !node.onClick) return;
                     }
                     activateNode(node);
