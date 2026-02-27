@@ -480,6 +480,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const searchEnabled = search?.enabled ?? false;
   const [searchValue, setSearchValue] = React.useState("");
   const menuRootRef = React.useRef<HTMLDivElement | null>(null);
+  const sidebarShellRef = React.useRef<HTMLElement | null>(null);
   const [dockDragActive, setDockDragActive] = React.useState(false);
   const dockDragStartRef = React.useRef<DockDragStart | null>(null);
   const dockDragMovedRef = React.useRef(false);
@@ -564,6 +565,31 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       dock.setDropPreviewActive(false);
     },
     [dock]
+  );
+
+  const applyDockDragVisual = React.useCallback((dx: number, dy: number) => {
+    const shell = sidebarShellRef.current;
+    if (!shell) return;
+    shell.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+    shell.style.willChange = "transform";
+    shell.style.zIndex = "1300";
+    shell.style.pointerEvents = "none";
+  }, []);
+
+  const clearDockDragVisual = React.useCallback(() => {
+    const shell = sidebarShellRef.current;
+    if (!shell) return;
+    shell.style.transform = "";
+    shell.style.willChange = "";
+    shell.style.zIndex = "";
+    shell.style.pointerEvents = "";
+  }, []);
+
+  React.useEffect(
+    () => () => {
+      clearDockDragVisual();
+    },
+    [clearDockDragVisual]
   );
 
   const effectiveActiveId =
@@ -676,12 +702,15 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       dockDragStartRef.current = { x: event.clientX, y: event.clientY };
       dockDragMovedRef.current = false;
       dockHoverZoneRef.current = dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveDockZone;
+      applyDockDragVisual(0, 0);
 
       const handleMove = (moveEvent: PointerEvent) => {
-        if (!dockDragStartRef.current) return;
-        const dx = moveEvent.clientX - dockDragStartRef.current.x;
-        const dy = moveEvent.clientY - dockDragStartRef.current.y;
+        const start = dockDragStartRef.current;
+        if (!start) return;
+        const dx = moveEvent.clientX - start.x;
+        const dy = moveEvent.clientY - start.y;
         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dockDragMovedRef.current = true;
+        applyDockDragVisual(dx, dy);
         dockHoverZoneRef.current = dock.getZoneAtPoint(moveEvent.clientX, moveEvent.clientY);
       };
 
@@ -692,6 +721,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
         setDockDragActive(false);
         dock.setDropPreviewActive(false);
+        clearDockDragVisual();
 
         if (!dockDragStartRef.current) return;
         dockDragStartRef.current = null;
@@ -709,7 +739,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       window.addEventListener("pointerup", handleEnd);
       window.addEventListener("pointercancel", handleEnd);
     },
-    [dock, dockMode, dockableId, draggable, effectiveDockZone]
+    [applyDockDragVisual, clearDockDragVisual, dock, dockMode, dockableId, draggable, effectiveDockZone]
   );
 
   const visibleNodes = React.useMemo(
@@ -1492,6 +1522,9 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
   const sidebarShell = (
     <aside
+      ref={(node) => {
+        sidebarShellRef.current = node;
+      }}
       className={cn(
         "flex h-full min-h-0 flex-col bg-background text-foreground",
         effectiveMenuStyle === "tiered" ? "overflow-visible" : "overflow-hidden",
