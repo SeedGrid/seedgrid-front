@@ -1,7 +1,16 @@
 "use client";
 
 import React from "react";
-import { SgButton, SgDockLayout, SgDockZone, SgMenu, SgPlayground, type SgMenuNode } from "@seedgrid/fe-components";
+import {
+  SgButton,
+  SgDockLayout,
+  SgDockZone,
+  SgMenu,
+  SgPlayground,
+  SgRadioGroup,
+  type SgMenuNode,
+  type SgRadioGroupOption
+} from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
@@ -109,6 +118,11 @@ const USER_MENU: SgMenuNode[] = [
   { id: "perfil", label: "Meu perfil", onClick: () => {} },
   { id: "preferencias", label: "Preferencias", onClick: () => {} },
   { id: "logout", label: "Sair", onClick: () => {} }
+];
+
+const DOCKABLE_MENU_STYLE_OPTIONS: SgRadioGroupOption[] = [
+  { label: "PanelMenu", value: "PanelMenu" },
+  { label: "Tiered Menu", value: "Tiered" }
 ];
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
@@ -383,40 +397,59 @@ export default function Example() {
 }`;
 
 const EXAMPLE_DOCKABLE_CODE = `import React from "react";
-import { SgDockLayout, SgDockZone, SgMenu } from "@seedgrid/fe-components";
+import { SgDockLayout, SgDockZone, SgMenu, SgRadioGroup } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
 ${MENU_CODE_SNIPPET}
 
+const DOCKABLE_MENU_STYLE_OPTIONS = [
+  { label: "PanelMenu", value: "PanelMenu" },
+  { label: "Tiered Menu", value: "Tiered" }
+];
+
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
+  const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
 
   return (
-    <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
-      <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
-        <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
-        <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-        <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
-        <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
-        <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
-          <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
-        </SgDockZone>
+    <div className="space-y-3">
+      <SgRadioGroup
+        title="Menu Style"
+        source={DOCKABLE_MENU_STYLE_OPTIONS}
+        value={dockMenuStyle}
+        orientation="horizontal"
+        onChange={(value) => {
+          if (value === "PanelMenu" || value === "Tiered") setDockMenuStyle(value);
+        }}
+      />
 
-        <SgMenu
-          id="menu-dock-sidebar-v1"
-          menu={MENU}
-          selection={{ activeId }}
-          variant="sidebar"
-          mode="accordion"
-          dockable
-          dockZone="left"
-          draggable
-          showCollapseButton
-          search={{ enabled: true, placeholder: "Buscar modulo..." }}
-          brand={{ title: "SeedGrid ERP" }}
-          onNavigate={(node) => setActiveId(node.id)}
-        />
-      </SgDockLayout>
+      <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
+        <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
+          <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
+          <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
+          <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
+          <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+          <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+            <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+          </SgDockZone>
+
+          <SgMenu
+            id="menu-dock-sidebar-v1"
+            menu={MENU}
+            selection={{ activeId }}
+            variant="sidebar"
+            menuStyle={dockMenuStyle}
+            mode="accordion"
+            dockable
+            dockZone="left"
+            draggable
+            showCollapseButton
+            search={{ enabled: true, placeholder: "Buscar modulo..." }}
+            brand={{ title: "SeedGrid ERP" }}
+            onNavigate={(node) => setActiveId(node.id)}
+          />
+        </SgDockLayout>
+      </div>
     </div>
   );
 }`;
@@ -556,6 +589,7 @@ const MENU_USER_PROPS: ShowcasePropRow[] = [
 export default function SgMenuPage() {
   const [activeId, setActiveId] = React.useState("dashboard");
   const [dockActiveId, setDockActiveId] = React.useState("dashboard");
+  const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
   const [collapsed, setCollapsed] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [drawerPinned, setDrawerPinned] = React.useState(false);
@@ -672,31 +706,44 @@ export default function SgMenuPage() {
         </Section>
 
         <Section title="7) Sidebar Dockable" description="SgMenu dockable dentro do SgDockLayout, com drag entre zonas.">
-          <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
-            <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
-              <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
-              <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-              <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
-              <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
-              <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
-                <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
-              </SgDockZone>
+          <div className="space-y-3">
+            <SgRadioGroup
+              title="Menu Style"
+              source={DOCKABLE_MENU_STYLE_OPTIONS}
+              value={dockMenuStyle}
+              orientation="horizontal"
+              onChange={(value) => {
+                if (value === "PanelMenu" || value === "Tiered") setDockMenuStyle(value);
+              }}
+            />
 
-              <SgMenu
-                id="menu-dock-sidebar-v1"
-                menu={MENU}
-                selection={{ activeId: dockActiveId }}
-                variant="sidebar"
-                mode="accordion"
-                dockable
-                dockZone="left"
-                draggable
-                showCollapseButton
-                search={{ enabled: true, placeholder: "Buscar modulo..." }}
-                brand={{ title: "SeedGrid ERP" }}
-                onNavigate={(node) => setDockActiveId(node.id)}
-              />
-            </SgDockLayout>
+            <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
+              <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
+                <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
+                <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
+                <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
+                <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+                <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+                  <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+                </SgDockZone>
+
+                <SgMenu
+                  id="menu-dock-sidebar-v1"
+                  menu={MENU}
+                  selection={{ activeId: dockActiveId }}
+                  variant="sidebar"
+                  menuStyle={dockMenuStyle}
+                  mode="accordion"
+                  dockable
+                  dockZone="left"
+                  draggable
+                  showCollapseButton
+                  search={{ enabled: true, placeholder: "Buscar modulo..." }}
+                  brand={{ title: "SeedGrid ERP" }}
+                  onNavigate={(node) => setDockActiveId(node.id)}
+                />
+              </SgDockLayout>
+            </div>
           </div>
           <CodeBlock code={EXAMPLE_DOCKABLE_CODE} />
         </Section>
