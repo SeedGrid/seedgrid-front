@@ -1209,7 +1209,9 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     );
   };
 
-  const showDockDragHandle = dockMode && draggable && !isCollapsed;
+  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
+  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
+  const showDockDragHandle = dockMode && draggable && (!isCollapsed || isHorizontalDockZone);
   const resolvedPosition: "left" | "right" =
     dockMode && effectiveDockZone
       ? effectiveDockZone === "right"
@@ -1220,6 +1222,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         ? "right"
         : "left"
       : position;
+  const collapseIconSide: "left" | "right" | "top" | "bottom" =
+    isHorizontalDockZone ? (effectiveDockZone as "top" | "bottom") : resolvedPosition;
   const collapseButton =
     showCollapseButton && variant !== "drawer" ? (
       <button
@@ -1255,86 +1259,86 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       >
         <CollapseIcon
           collapsed={variant === "hybrid" ? !(pinnedState || drawerOpen) : collapsedState}
-          side={resolvedPosition}
+          side={collapseIconSide}
         />
       </button>
     ) : null;
-  const showBrandContent = Boolean(brand && !isCollapsed);
+  const showBrandContent = Boolean(brand && (!isCollapsed || isHorizontalDockZone));
   const showBrandSpacer = !showBrandContent && !isCollapsed;
 
-  const shellBody = (
-    <div ref={menuRootRef} className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
-      {(brand || showCollapseButton || showPinButton || showDockDragHandle) && (
-        <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
-          {resolvedPosition === "right" ? collapseButton : null}
+  const shellHeaderRow = (brand || showCollapseButton || showPinButton || showDockDragHandle) ? (
+    <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
+      {resolvedPosition === "right" ? collapseButton : null}
 
-          {showBrandContent && brand ? (
-            <button
-              type="button"
-              onClick={brand.onClick}
-              className={cn(
-                "min-w-0 flex-1 rounded-md",
-                "flex items-center gap-2",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-              )}
-            >
-              {brand.image ? (
-                <span className="inline-flex shrink-0 items-center justify-center">{brand.image}</span>
-              ) : brand.imageSrc ? (
-                <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-7 w-auto max-w-[120px]" />
-              ) : null}
-              <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
-            </button>
-          ) : showBrandSpacer ? (
-            <div className="flex-1" />
+      {showBrandContent && brand ? (
+        <button
+          type="button"
+          onClick={brand.onClick}
+          className={cn(
+            "min-w-0 flex-1 rounded-md",
+            "flex items-center gap-2",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+          )}
+        >
+          {brand.image ? (
+            <span className="inline-flex shrink-0 items-center justify-center">{brand.image}</span>
+          ) : brand.imageSrc ? (
+            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-7 w-auto max-w-[120px]" />
           ) : null}
+          <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
+        </button>
+      ) : showBrandSpacer ? (
+        <div className="flex-1" />
+      ) : null}
 
-          {showDockDragHandle ? (
-            <button
-              type="button"
-              onPointerDown={handleDockDragPointerDown}
-              aria-label="Drag menu"
-              className={cn(
-                "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
-                "bg-background hover:bg-muted/60",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-                dockDragActive ? "cursor-grabbing" : "cursor-grab"
-              )}
-            >
-              <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
-                <circle cx="8" cy="8" r="1.25" fill="currentColor" />
-                <circle cx="8" cy="12" r="1.25" fill="currentColor" />
-                <circle cx="8" cy="16" r="1.25" fill="currentColor" />
-                <circle cx="16" cy="8" r="1.25" fill="currentColor" />
-                <circle cx="16" cy="12" r="1.25" fill="currentColor" />
-                <circle cx="16" cy="16" r="1.25" fill="currentColor" />
-              </svg>
-            </button>
-          ) : null}
+      {showDockDragHandle ? (
+        <button
+          type="button"
+          onPointerDown={handleDockDragPointerDown}
+          aria-label="Drag menu"
+          className={cn(
+            "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
+            "bg-background hover:bg-muted/60",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+            dockDragActive ? "cursor-grabbing" : "cursor-grab"
+          )}
+        >
+          <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
+            <circle cx="8" cy="8" r="1.25" fill="currentColor" />
+            <circle cx="8" cy="12" r="1.25" fill="currentColor" />
+            <circle cx="8" cy="16" r="1.25" fill="currentColor" />
+            <circle cx="16" cy="8" r="1.25" fill="currentColor" />
+            <circle cx="16" cy="12" r="1.25" fill="currentColor" />
+            <circle cx="16" cy="16" r="1.25" fill="currentColor" />
+          </svg>
+        </button>
+      ) : null}
 
-          {showPinButton ? (
-            <button
-              type="button"
-              onClick={() => {
-                const next = !pinnedState;
-                setPinnedState(next);
-                if (variant === "hybrid" && next) setDrawerOpen(false);
-              }}
-              aria-label={pinnedState ? "Unpin menu" : "Pin menu"}
-              className={cn(
-                "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
-                "bg-background hover:bg-muted/60",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
-              )}
-            >
-              <PinIcon pinned={pinnedState} />
-            </button>
-          ) : null}
+      {showPinButton ? (
+        <button
+          type="button"
+          onClick={() => {
+            const next = !pinnedState;
+            setPinnedState(next);
+            if (variant === "hybrid" && next) setDrawerOpen(false);
+          }}
+          aria-label={pinnedState ? "Unpin menu" : "Pin menu"}
+          className={cn(
+            "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
+            "bg-background hover:bg-muted/60",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+          )}
+        >
+          <PinIcon pinned={pinnedState} />
+        </button>
+      ) : null}
 
-          {resolvedPosition === "left" ? collapseButton : null}
-        </div>
-      )}
+      {resolvedPosition === "left" ? collapseButton : null}
+    </div>
+  ) : null;
 
+  const shellContentArea = (
+    <>
       {searchEnabled && !isCollapsed ? (
         <div className={cn("border-b border-border", densityCfg.section)}>
           <SgAutocomplete
@@ -1494,13 +1498,18 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           )}
         </div>
       ) : null}
+    </>
+  );
+
+  const shellBody = (
+    <div ref={menuRootRef} className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
+      {shellHeaderRow}
+      {shellContentArea}
     </div>
   );
 
   const isMegaMenuStyle =
     effectiveMenuStyle === "mega-horizontal" || effectiveMenuStyle === "mega-vertical";
-  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
-  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
   const dockAlignStyle: React.CSSProperties | undefined =
     dockMode && effectiveDockZone === "right" && !isCollapsed
       ? { alignSelf: "flex-end" }
@@ -1548,6 +1557,38 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "flex-end" }}>
         {sidebarShell}
       </div>
+    ) : dockMode && isHorizontalDockZone ? (
+      <aside
+        ref={(node) => {
+          (menuRootRef as React.MutableRefObject<HTMLElement | null>).current = node;
+          sidebarShellRef.current = node;
+        }}
+        className={cn(
+          "relative flex flex-col bg-background text-foreground",
+          dockDragActive ? null : "w-full self-stretch",
+          border ? "border border-border" : "",
+          elevationClass(elevation),
+          className
+        )}
+        style={{
+          width: dockDragActive ? (isCollapsed ? collapsedWidthCss : expandedWidthCss) : undefined,
+          ...style
+        }}
+      >
+        {shellHeaderRow}
+        {!isCollapsed ? (
+          <div
+            className={cn(
+              "absolute z-50 flex flex-col bg-background text-foreground overflow-auto",
+              effectiveDockZone === "bottom" ? "bottom-full" : "top-full",
+              "left-0 min-w-[240px] max-h-[60vh] border border-border",
+              elevationClass(elevation === "none" ? "sm" : elevation)
+            )}
+          >
+            {shellContentArea}
+          </div>
+        ) : null}
+      </aside>
     ) : (
       sidebarShell
     );
@@ -1661,9 +1702,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
 SgMenu.displayName = "SgMenu";
 
-function CollapseIcon(props: { collapsed: boolean; side: "left" | "right" }) {
+function CollapseIcon(props: { collapsed: boolean; side: "left" | "right" | "top" | "bottom" }) {
   const { collapsed, side } = props;
-  const rotation = side === "left" ? (collapsed ? 0 : 180) : collapsed ? 180 : 0;
+  const rotation =
+    side === "top" ? (collapsed ? 90 : -90) :
+    side === "bottom" ? (collapsed ? -90 : 90) :
+    side === "left" ? (collapsed ? 0 : 180) :
+    (collapsed ? 180 : 0);
   return (
     <svg viewBox="0 0 24 24" className="size-4" style={{ transform: `rotate(${rotation}deg)` }} aria-hidden="true">
       <path d="M9 6l6 6-6 6" fill="currentColor" />
