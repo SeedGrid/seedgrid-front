@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SgButton, SgMenu, SgPlayground, type SgMenuNode } from "@seedgrid/fe-components";
+import { SgButton, SgDockLayout, SgDockZone, SgMenu, SgPlayground, type SgMenuNode } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
@@ -382,6 +382,45 @@ export default function Example() {
   );
 }`;
 
+const EXAMPLE_DOCKABLE_CODE = `import React from "react";
+import { SgDockLayout, SgDockZone, SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+${MENU_CODE_SNIPPET}
+
+export default function Example() {
+  const [activeId, setActiveId] = React.useState("dashboard");
+
+  return (
+    <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
+      <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
+        <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
+        <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
+        <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/15" />
+        <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+        <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+          <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+        </SgDockZone>
+
+        <SgMenu
+          id="menu-dock-sidebar-v1"
+          menu={MENU}
+          selection={{ activeId }}
+          variant="sidebar"
+          mode="accordion"
+          dockable
+          dockZone="left"
+          draggable
+          showCollapseButton
+          search={{ enabled: true, placeholder: "Buscar modulo..." }}
+          brand={{ title: "SeedGrid ERP" }}
+          onNavigate={(node) => setActiveId(node.id)}
+        />
+      </SgDockLayout>
+    </div>
+  );
+}`;
+
 const PLAYGROUND_CODE = `import * as React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
@@ -434,6 +473,7 @@ export default function App() {
 }`;
 
 const MENU_PROPS: ShowcasePropRow[] = [
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador estavel do menu (recomendado para dockable com persistencia)." },
   { prop: "menu", type: "SgMenuNode[]", defaultValue: "-", description: "Arvore de navegacao exibida pelo menu." },
   { prop: "selection", type: "SgMenuSelection", defaultValue: "-", description: "Item ativo por id ou por url." },
   { prop: "brand", type: "SgMenuBrand", defaultValue: "-", description: "Bloco de marca no topo." },
@@ -448,6 +488,10 @@ const MENU_PROPS: ShowcasePropRow[] = [
   { prop: "expandedWidth", type: "number | string", defaultValue: "280", description: "Largura quando expandido." },
   { prop: "overlaySize", type: "SgExpandablePanelSize", defaultValue: "-", description: "Tamanho do overlay nos modos drawer/hybrid." },
   { prop: "overlayBackdrop", type: "boolean", defaultValue: "-", description: "Controla backdrop no overlay." },
+  { prop: "dockable", type: "boolean", defaultValue: "false", description: "Quando true e dentro de SgDockLayout, o menu pode ser dockado em zonas." },
+  { prop: "dockZone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "left", description: "Zona inicial no modo dockable (quando nao informado, pode ser inferida por orientationDirection)." },
+  { prop: "draggable", type: "boolean", defaultValue: "false", description: "No modo dockable, exibe handle para arrastar entre dock zones." },
+  { prop: "orientationDirection", type: "\"horizontal-left\" | \"horizontal-right\" | \"vertical-up\" | \"vertical-top\" | \"vertical-down\"", defaultValue: "-", description: "Direcao opcional usada como fallback para inferir a dockZone inicial." },
   { prop: "mode", type: "\"accordion\" | \"multiple\"", defaultValue: "multiple", description: "Estrategia de expansao dos grupos." },
   { prop: "expandedIds", type: "string[]", defaultValue: "-", description: "Controle externo dos grupos expandidos." },
   { prop: "defaultExpandedIds", type: "string[]", defaultValue: "[]", description: "Estado inicial dos grupos expandidos." },
@@ -511,6 +555,7 @@ const MENU_USER_PROPS: ShowcasePropRow[] = [
 
 export default function SgMenuPage() {
   const [activeId, setActiveId] = React.useState("dashboard");
+  const [dockActiveId, setDockActiveId] = React.useState("dashboard");
   const [collapsed, setCollapsed] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [drawerPinned, setDrawerPinned] = React.useState(false);
@@ -626,7 +671,37 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />
         </Section>
 
-        <Section title="7) Playground" description="Teste variant, style, collapsed e open.">
+        <Section title="7) Sidebar Dockable" description="SgMenu dockable dentro do SgDockLayout, com drag entre zonas.">
+          <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
+            <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
+              <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
+              <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
+              <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/15" />
+              <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+              <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+                <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+              </SgDockZone>
+
+              <SgMenu
+                id="menu-dock-sidebar-v1"
+                menu={MENU}
+                selection={{ activeId: dockActiveId }}
+                variant="sidebar"
+                mode="accordion"
+                dockable
+                dockZone="left"
+                draggable
+                showCollapseButton
+                search={{ enabled: true, placeholder: "Buscar modulo..." }}
+                brand={{ title: "SeedGrid ERP" }}
+                onNavigate={(node) => setDockActiveId(node.id)}
+              />
+            </SgDockLayout>
+          </div>
+          <CodeBlock code={EXAMPLE_DOCKABLE_CODE} />
+        </Section>
+
+        <Section title="8) Playground" description="Teste variant, style, collapsed e open.">
           <SgPlayground
             title="SgMenu Playground"
             interactive

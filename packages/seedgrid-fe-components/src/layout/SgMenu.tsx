@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { SgAvatar } from "../commons/SgAvatar";
 import { SgExpandablePanel, type SgExpandablePanelSize } from "./SgExpandablePanel";
 import { SgAutocomplete, type SgAutocompleteItem } from "../inputs/SgAutocomplete";
 import { SgCard } from "./SgCard";
+import { useSgDockLayout, type SgDockZoneId } from "./SgDockLayout";
 
 export type SgMenuNode = {
   id: string;
@@ -48,7 +50,15 @@ export type SgMenuStyle =
   | "MegaMenuHorizontal"
   | "MegaMenuVertical";
 
+export type SgMenuOrientationDirection =
+  | "horizontal-left"
+  | "horizontal-right"
+  | "vertical-up"
+  | "vertical-top"
+  | "vertical-down";
+
 export type SgMenuProps = {
+  id?: string;
   menu: SgMenuNode[];
   selection?: SgMenuSelection;
 
@@ -66,6 +76,10 @@ export type SgMenuProps = {
   expandedWidth?: number | string;
   overlaySize?: SgExpandablePanelSize;
   overlayBackdrop?: boolean;
+  dockable?: boolean;
+  dockZone?: SgDockZoneId;
+  draggable?: boolean;
+  orientationDirection?: SgMenuOrientationDirection;
 
   mode?: "accordion" | "multiple";
   expandedIds?: string[];
@@ -117,6 +131,11 @@ type MenuMaps = {
   firstByUrl: Map<string, string>;
 };
 
+type DockDragStart = {
+  x: number;
+  y: number;
+};
+
 const ROOT_PARENT_ID = "__sg_menu_root__";
 
 function cn(...parts: Array<string | false | null | undefined>) {
@@ -137,6 +156,24 @@ function normalizeMenuStyle(value: SgMenuStyle | undefined) {
   if (value === "MegaMenuHorizontal") return "mega-horizontal" as const;
   if (value === "MegaMenuVertical") return "mega-vertical" as const;
   return value;
+}
+
+function resolveDockZoneFromOrientationDirection(
+  orientationDirection: SgMenuOrientationDirection | undefined
+): SgDockZoneId {
+  switch (orientationDirection) {
+    case "horizontal-right":
+      return "bottom";
+    case "horizontal-left":
+      return "top";
+    case "vertical-up":
+    case "vertical-top":
+      return "left";
+    case "vertical-down":
+      return "right";
+    default:
+      return "left";
+  }
 }
 
 function useControllableState<T>(
@@ -332,6 +369,7 @@ function resolveIcon(node: SgMenuNode) {
 
 export function SgMenu(props: Readonly<SgMenuProps>) {
   const {
+    id,
     menu,
     selection,
     brand,
@@ -346,6 +384,10 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     expandedWidth = 280,
     overlaySize,
     overlayBackdrop,
+    dockable = false,
+    dockZone,
+    draggable = false,
+    orientationDirection,
     mode = "multiple",
     expandedIds: expandedIdsProp,
     defaultExpandedIds = [],
@@ -395,6 +437,17 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
   const maps = React.useMemo(() => buildMenuMaps(menu), [menu]);
   const resolvedMenuStyle = normalizeMenuStyle(menuStyle);
+  const dock = useSgDockLayout();
+  const autoId = React.useId();
+  const dockableId = React.useMemo(
+    () => id ?? `sg-menu-${autoId.replace(/[:]/g, "")}`,
+    [autoId, id]
+  );
+  const dockMode = Boolean(dockable && dock && variant !== "drawer" && variant !== "hybrid");
+  const defaultDockZone = dockZone ?? resolveDockZoneFromOrientationDirection(orientationDirection);
+  const assignedDockZone = dockMode && dock ? dock.getToolbarZone(dockableId) : null;
+  const effectiveDockZone = dockMode ? assignedDockZone ?? defaultDockZone : null;
+  const portalTarget = dockMode && dock && effectiveDockZone ? dock.getZoneElement(effectiveDockZone) : null;
 
   const [expandedIds, setExpandedIds] = useControllableState<string[]>(
     expandedIdsProp,
@@ -427,6 +480,10 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const searchEnabled = search?.enabled ?? false;
   const [searchValue, setSearchValue] = React.useState("");
   const menuRootRef = React.useRef<HTMLDivElement | null>(null);
+  const [dockDragActive, setDockDragActive] = React.useState(false);
+  const dockDragStartRef = React.useRef<DockDragStart | null>(null);
+  const dockDragMovedRef = React.useRef(false);
+  const dockHoverZoneRef = React.useRef<SgDockZoneId | null>(null);
   const searchEntries = React.useMemo(() => collectMenuSearchEntries(menu), [menu]);
   const autocompleteSource = React.useCallback(
     (query: string): SgAutocompleteItem[] => {
@@ -478,6 +535,36 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     if (!pinnedState || !drawerOpen) return;
     setDrawerOpen(false);
   }, [drawerOpen, pinnedState, setDrawerOpen, variant]);
+
+  React.useEffect(() => {
+    if (!dockMode || !dock) return;
+    const orientation = defaultDockZone === "top" || defaultDockZone === "bottom" ? "horizontal" : "vertical";
+    dock.ensureToolbar(dockableId, {
+      zone: defaultDockZone,
+      collapsed: defaultCollapsed,
+      orientation
+    });
+  }, [defaultCollapsed, defaultDockZone, dock, dockMode, dockableId]);
+
+  React.useEffect(() => {
+    if (!dockDragActive) return;
+    const previousBodyCursor = document.body.style.cursor;
+    const previousHtmlCursor = document.documentElement.style.cursor;
+    document.body.style.cursor = "grabbing";
+    document.documentElement.style.cursor = "grabbing";
+    return () => {
+      document.body.style.cursor = previousBodyCursor;
+      document.documentElement.style.cursor = previousHtmlCursor;
+    };
+  }, [dockDragActive]);
+
+  React.useEffect(
+    () => () => {
+      if (!dock) return;
+      dock.setDropPreviewActive(false);
+    },
+    [dock]
+  );
 
   const effectiveActiveId =
     selection?.activeId ??
@@ -575,6 +662,54 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       setDrawerOpen,
       variant
     ]
+  );
+
+  const handleDockDragPointerDown = React.useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (event.button !== 0) return;
+      if (!dockMode || !dock || !draggable || !effectiveDockZone) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      dock.setDropPreviewActive(true);
+      setDockDragActive(true);
+      dockDragStartRef.current = { x: event.clientX, y: event.clientY };
+      dockDragMovedRef.current = false;
+      dockHoverZoneRef.current = dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveDockZone;
+
+      const handleMove = (moveEvent: PointerEvent) => {
+        if (!dockDragStartRef.current) return;
+        const dx = moveEvent.clientX - dockDragStartRef.current.x;
+        const dy = moveEvent.clientY - dockDragStartRef.current.y;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dockDragMovedRef.current = true;
+        dockHoverZoneRef.current = dock.getZoneAtPoint(moveEvent.clientX, moveEvent.clientY);
+      };
+
+      const handleEnd = (upEvent: PointerEvent) => {
+        window.removeEventListener("pointermove", handleMove);
+        window.removeEventListener("pointerup", handleEnd);
+        window.removeEventListener("pointercancel", handleEnd);
+
+        setDockDragActive(false);
+        dock.setDropPreviewActive(false);
+
+        if (!dockDragStartRef.current) return;
+        dockDragStartRef.current = null;
+        if (!dockDragMovedRef.current) {
+          dockHoverZoneRef.current = null;
+          return;
+        }
+
+        const zone = dockHoverZoneRef.current ?? dock.getZoneAtPoint(upEvent.clientX, upEvent.clientY);
+        dockHoverZoneRef.current = null;
+        if (zone) dock.moveToolbar(dockableId, zone);
+      };
+
+      window.addEventListener("pointermove", handleMove);
+      window.addEventListener("pointerup", handleEnd);
+      window.addEventListener("pointercancel", handleEnd);
+    },
+    [dock, dockMode, dockableId, draggable, effectiveDockZone]
   );
 
   const visibleNodes = React.useMemo(
@@ -1054,9 +1189,21 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     );
   };
 
+  const showDockDragHandle = dockMode && draggable;
+  const resolvedPosition: "left" | "right" =
+    dockMode && effectiveDockZone
+      ? effectiveDockZone === "right"
+        ? "right"
+        : effectiveDockZone === "left"
+        ? "left"
+        : orientationDirection === "horizontal-right"
+        ? "right"
+        : "left"
+      : position;
+
   const shellBody = (
     <div ref={menuRootRef} className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
-      {(brand || showCollapseButton || showPinButton) && (
+      {(brand || showCollapseButton || showPinButton || showDockDragHandle) && (
         <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
           {brand ? (
             <button
@@ -1080,6 +1227,29 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           ) : (
             <div className="flex-1" />
           )}
+
+          {showDockDragHandle ? (
+            <button
+              type="button"
+              onPointerDown={handleDockDragPointerDown}
+              aria-label="Drag menu"
+              className={cn(
+                "inline-flex size-8 items-center justify-center rounded-md border border-border",
+                "bg-background hover:bg-muted/60",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                dockDragActive ? "cursor-grabbing" : "cursor-grab"
+              )}
+            >
+              <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
+                <circle cx="8" cy="8" r="1.25" fill="currentColor" />
+                <circle cx="8" cy="12" r="1.25" fill="currentColor" />
+                <circle cx="8" cy="16" r="1.25" fill="currentColor" />
+                <circle cx="16" cy="8" r="1.25" fill="currentColor" />
+                <circle cx="16" cy="12" r="1.25" fill="currentColor" />
+                <circle cx="16" cy="16" r="1.25" fill="currentColor" />
+              </svg>
+            </button>
+          ) : null}
 
           {showPinButton ? (
             <button
@@ -1134,7 +1304,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             >
               <CollapseIcon
                 collapsed={variant === "hybrid" ? !(pinnedState || drawerOpen) : collapsedState}
-                side={position}
+                side={resolvedPosition}
               />
             </button>
           ) : null}
@@ -1305,9 +1475,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
   const isMegaMenuStyle =
     effectiveMenuStyle === "mega-horizontal" || effectiveMenuStyle === "mega-vertical";
+  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
 
   const sidebarWidthCss =
-    variant === "inline" && isMegaMenuStyle
+    dockMode && isHorizontalDockZone
+      ? "100%"
+      : variant === "inline" && isMegaMenuStyle
       ? "100%"
       : variant === "hybrid"
       ? pinnedState
@@ -1324,7 +1497,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         effectiveMenuStyle === "tiered" ? "overflow-visible" : "overflow-hidden",
         border ? "border border-border" : "",
         elevationClass(elevation),
-        position === "right" ? "ml-auto" : "",
+        resolvedPosition === "right" ? "ml-auto" : "",
         className
       )}
       style={{ width: sidebarWidthCss, ...style }}
@@ -1333,13 +1506,17 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     </aside>
   );
 
+  if (dockMode && portalTarget) {
+    return createPortal(sidebarShell, portalTarget);
+  }
+
   if (variant === "drawer") {
     return (
       <SgExpandablePanel
         mode="overlay"
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
-        expandTo={position === "left" ? "right" : "left"}
+        expandTo={resolvedPosition === "left" ? "right" : "left"}
         placement="start"
         size={resolvedOverlaySize}
         animation={{ type: "slide", durationMs: 180 }}
@@ -1369,7 +1546,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             mode="overlay"
             open={drawerOpen}
             onOpenChange={setDrawerOpen}
-            expandTo={position === "left" ? "right" : "left"}
+            expandTo={resolvedPosition === "left" ? "right" : "left"}
             placement="start"
             size={resolvedOverlaySize}
             animation={{ type: "slide", durationMs: 180 }}
