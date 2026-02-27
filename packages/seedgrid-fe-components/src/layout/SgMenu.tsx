@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { SgAvatar } from "../commons/SgAvatar";
 import { SgExpandablePanel, type SgExpandablePanelSize } from "./SgExpandablePanel";
 import { SgAutocomplete, type SgAutocompleteItem } from "../inputs/SgAutocomplete";
@@ -513,6 +513,19 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   );
   const hasSearch = searchEnabled && searchValue.trim().length > 0;
   const effectiveMenuStyle = isCollapsed || hasSearch ? "panel" : resolvedMenuStyle;
+  const resolvedPosition: "left" | "right" =
+    dockMode && effectiveDockZone
+      ? effectiveDockZone === "right"
+        ? "right"
+        : effectiveDockZone === "left"
+        ? "left"
+        : orientationDirection === "horizontal-right"
+        ? "right"
+        : "left"
+      : position;
+  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
+  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
+  const tieredOpenToLeft = resolvedPosition === "right";
 
   const [localActiveId, setLocalActiveId] = React.useState<string | undefined>(selection?.activeId);
   const [tieredPath, setTieredPath] = React.useState<string[]>([]);
@@ -1022,7 +1035,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       return (
         <div
           className={cn(
-            depth === 0 ? "relative w-full" : "absolute left-full top-0 ml-1 min-w-[220px]",
+            depth === 0
+              ? "relative w-full"
+              : cn(
+                "absolute top-0 min-w-[220px]",
+                tieredOpenToLeft ? "right-full mr-1" : "left-full ml-1"
+              ),
             depth > 0 ? "z-20" : ""
           )}
         >
@@ -1075,7 +1093,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                     {iconNode ?? firstChars(node.label, 1)}
                   </span>
                   <span className="min-w-0 flex-1 truncate">{node.label}</span>
-                  {hasChildren ? <ChevronRight className="size-4 shrink-0 text-muted-foreground" /> : null}
+                  {hasChildren ? (
+                    tieredOpenToLeft ? (
+                      <ChevronLeft className="size-4 shrink-0 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                    )
+                  ) : null}
                 </button>
               );
             })}
@@ -1087,7 +1111,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </div>
       );
     },
-    [activateNode, activeSets.exact, densityCfg.icon, openSubmenuOnHover, tieredPath]
+    [activateNode, activeSets.exact, densityCfg.icon, openSubmenuOnHover, tieredOpenToLeft, tieredPath]
   );
 
   const renderMegaColumns = React.useCallback(
@@ -1233,19 +1257,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     );
   };
 
-  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
-  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
   const showDockDragHandle = dockMode && draggable && (!isCollapsed || isHorizontalDockZone);
-  const resolvedPosition: "left" | "right" =
-    dockMode && effectiveDockZone
-      ? effectiveDockZone === "right"
-        ? "right"
-        : effectiveDockZone === "left"
-        ? "left"
-        : orientationDirection === "horizontal-right"
-        ? "right"
-        : "left"
-      : position;
   const collapseIconSide: "left" | "right" | "top" | "bottom" =
     isHorizontalDockZone ? (effectiveDockZone as "top" | "bottom") : resolvedPosition;
   const collapseButton =
