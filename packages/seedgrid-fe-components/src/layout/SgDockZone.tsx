@@ -29,6 +29,9 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const i18n = useComponentsI18n();
   const ref = React.useRef<HTMLDivElement>(null);
   const showDropPreview = Boolean(dock?.isDropPreviewActive);
+  const dropIndicator = dock?.dropIndicator ?? null;
+  const indicatorIndex = dropIndicator?.zone === zone ? dropIndicator.index : null;
+  const showInsertionIndicator = showDropPreview && zone !== "free" && indicatorIndex !== null;
   const isHorizontalZone = zone === "top" || zone === "bottom";
   const isVerticalZone = zone === "left" || zone === "right";
   const hasExplicitPositionClass = POSITION_CLASS_PATTERN.test(className ?? "");
@@ -60,7 +63,19 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       )}
     >
       {children}
-      {showDropPreview ? (
+      {showInsertionIndicator ? (
+        <span
+          className={cn(
+            "pointer-events-none relative z-[2] inline-flex shrink-0 items-center justify-center rounded border border-dashed border-primary/70 bg-background/90 text-[11px] font-semibold uppercase tracking-wide text-primary",
+            isHorizontalZone ? "h-10 w-7" : "h-7 w-16"
+          )}
+          style={{ order: indicatorIndex * 2 - 1 }}
+          aria-hidden="true"
+        >
+          &gt;&lt;
+        </span>
+      ) : null}
+      {showDropPreview && !showInsertionIndicator ? (
         <span
           className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center text-xs font-semibold uppercase tracking-wide text-foreground/70"
           aria-hidden="true"

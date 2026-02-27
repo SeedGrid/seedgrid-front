@@ -27,15 +27,25 @@ export type SgDockLayoutProps = {
 
 type ZoneRegistry = Map<SgDockZoneId, HTMLDivElement>;
 
+export type SgDockDropIndicator = {
+  zone: SgDockZoneId;
+  index: number;
+};
+
 type DockContextValue = {
   layoutId: string;
   getZoneElement: (zone: SgDockZoneId) => HTMLDivElement | null;
   registerZone: (zone: SgDockZoneId, el: HTMLDivElement | null) => void;
   getZoneAtPoint: (x: number, y: number) => SgDockZoneId | null;
+  getDropPlacementAtPoint: (x: number, y: number, draggingToolbarId: string) => SgDockDropIndicator | null;
   isDropPreviewActive: boolean;
   setDropPreviewActive: (next: boolean) => void;
+  dropIndicator: SgDockDropIndicator | null;
+  setDropIndicator: (next: SgDockDropIndicator | null) => void;
   getToolbarZone: (id: string) => SgDockZoneId | null;
+  getToolbarOrder: (id: string) => number | undefined;
   moveToolbar: (id: string, zone: SgDockZoneId) => void;
+  placeToolbar: (id: string, zone: SgDockZoneId, index: number) => void;
   ensureToolbar: (id: string, state: Partial<SgDockToolbarState>) => void;
   getToolbarCollapsed: (id: string) => boolean | undefined;
   setToolbarCollapsed: (id: string, next: boolean) => void;
@@ -56,8 +66,28 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     defaultValue: defaultState ?? EMPTY_STATE
   });
   const [isDropPreviewActive, setIsDropPreviewActive] = React.useState(false);
+  const [dropIndicator, setDropIndicator] = React.useState<SgDockDropIndicator | null>(null);
 
   const zonesRef = React.useRef<ZoneRegistry>(new Map());
+
+  const getSortedZoneToolbarIds = React.useCallback(
+    (
+      state: Record<string, SgDockToolbarState>,
+      zone: SgDockZoneId,
+      excludingId?: string
+    ) => {
+      return Object.values(state)
+        .filter((tb) => tb.zone === zone && tb.id !== excludingId)
+        .sort((a, b) => {
+          const orderA = a.order ?? 0;
+          const orderB = b.order ?? 0;
+          if (orderA !== orderB) return orderA - orderB;
+          return a.id.localeCompare(b.id);
+        })
+        .map((tb) => tb.id);
+    },
+    []
+  );
 
   const registerZone = React.useCallback((zone: SgDockZoneId, el: HTMLDivElement | null) => {
     if (!el) {
@@ -81,14 +111,65 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     return null;
   }, []);
 
+  const getDropPlacementAtPoint = React.useCallback(
+    (x: number, y: number, draggingToolbarId: string): SgDockDropIndicator | null => {
+      const zone = getZoneAtPoint(x, y);
+      if (!zone) return null;
+      const zoneEl = zonesRef.current.get(zone);
+      if (!zoneEl) return null;
+
+      const axisHorizontal = zone === "top" || zone === "bottom";
+      const toolbarEls = Array.from(
+        zoneEl.querySelectorAll<HTMLElement>("[data-sg-toolbar-root='true'][data-sg-toolbar-id]")
+      )
+        .filter((el) => el.dataset.sgToolbarId !== draggingToolbarId)
+        .sort((a, b) => {
+          const rectA = a.getBoundingClientRect();
+          const rectB = b.getBoundingClientRect();
+          if (axisHorizontal) {
+            if (rectA.top !== rectB.top) return rectA.top - rectB.top;
+            return rectA.left - rectB.left;
+          }
+          if (rectA.left !== rectB.left) return rectA.left - rectB.left;
+          return rectA.top - rectB.top;
+        });
+
+      const cursorMajor = axisHorizontal ? x : y;
+      const cursorMinor = axisHorizontal ? y : x;
+      let index = toolbarEls.length;
+      for (let i = 0; i < toolbarEls.length; i += 1) {
+        const toolbarEl = toolbarEls[i];
+        if (!toolbarEl) continue;
+        const rect = toolbarEl.getBoundingClientRect();
+        const minorStart = axisHorizontal ? rect.top : rect.left;
+        const minorEnd = axisHorizontal ? rect.bottom : rect.right;
+        const majorCenter = axisHorizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
+
+        if (cursorMinor < minorStart) {
+          index = i;
+          break;
+        }
+
+        if (cursorMinor <= minorEnd && cursorMajor < majorCenter) {
+          index = i;
+          break;
+        }
+      }
+
+      return { zone, index };
+    },
+    [getZoneAtPoint]
+  );
+
   const setDropPreviewActive = React.useCallback((next: boolean) => {
     setIsDropPreviewActive((prev) => (prev === next ? prev : next));
+    if (!next) setDropIndicator(null);
   }, []);
 
   React.useEffect(() => {
     if (!isDropPreviewActive) return;
 
-    const clearPreview = () => setIsDropPreviewActive(false);
+    const clearPreview = () => setDropPreviewActive(false);
     const handleVisibilityChange = () => {
       if (document.hidden) clearPreview();
     };
@@ -104,53 +185,93 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
       window.removeEventListener("blur", clearPreview);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [isDropPreviewActive]);
+  }, [isDropPreviewActive, setDropPreviewActive]);
 
   const getToolbarZone = React.useCallback(
     (toolbarId: string) => persisted.toolbars[toolbarId]?.zone ?? null,
     [persisted]
   );
 
+  const getToolbarOrder = React.useCallback(
+    (toolbarId: string) => {
+      const toolbar = persisted.toolbars[toolbarId];
+      if (!toolbar) return undefined;
+      const ids = getSortedZoneToolbarIds(persisted.toolbars, toolbar.zone);
+      const index = ids.indexOf(toolbarId);
+      return index === -1 ? undefined : index;
+    },
+    [getSortedZoneToolbarIds, persisted]
+  );
+
   const ensureToolbar = React.useCallback(
     (toolbarId: string, state: Partial<SgDockToolbarState>) => {
       setValue((prev) => {
         if (prev.toolbars[toolbarId]) return prev;
+        const targetZone = state.zone ?? "free";
+        const zoneIds = getSortedZoneToolbarIds(prev.toolbars, targetZone);
         return {
           ...prev,
           toolbars: {
             ...prev.toolbars,
             [toolbarId]: {
               id: toolbarId,
-              zone: state.zone ?? "free",
+              zone: targetZone,
               collapsed: state.collapsed ?? false,
               orientation: state.orientation,
-              order: state.order ?? Object.keys(prev.toolbars).length
+              order: state.order ?? zoneIds.length
             }
           }
         };
       });
     },
-    [setValue]
+    [getSortedZoneToolbarIds, setValue]
+  );
+
+  const placeToolbar = React.useCallback(
+    (toolbarId: string, zone: SgDockZoneId, index: number) => {
+      setValue((prev) => {
+        const current = prev.toolbars[toolbarId];
+        if (!current) return prev;
+        const sourceZone = current.zone;
+        const targetZone = zone;
+        const nextToolbars: Record<string, SgDockToolbarState> = {
+          ...prev.toolbars
+        };
+
+        const targetIds = getSortedZoneToolbarIds(prev.toolbars, targetZone, toolbarId);
+        const safeIndex = Math.max(0, Math.min(index, targetIds.length));
+        targetIds.splice(safeIndex, 0, toolbarId);
+
+        targetIds.forEach((tbId, i) => {
+          const base = nextToolbars[tbId];
+          if (!base) return;
+          nextToolbars[tbId] = { ...base, zone: targetZone, order: i };
+        });
+
+        if (sourceZone !== targetZone) {
+          const sourceIds = getSortedZoneToolbarIds(prev.toolbars, sourceZone, toolbarId);
+          sourceIds.forEach((tbId, i) => {
+            const base = nextToolbars[tbId];
+            if (!base) return;
+            nextToolbars[tbId] = { ...base, order: i };
+          });
+        }
+
+        return {
+          ...prev,
+          toolbars: nextToolbars
+        };
+      });
+    },
+    [getSortedZoneToolbarIds, setValue]
   );
 
   const moveToolbar = React.useCallback(
     (toolbarId: string, zone: SgDockZoneId) => {
-      setValue((prev) => {
-        const current = prev.toolbars[toolbarId];
-        if (!current) return prev;
-        return {
-          ...prev,
-          toolbars: {
-            ...prev.toolbars,
-            [toolbarId]: {
-              ...current,
-              zone
-            }
-          }
-        };
-      });
+      const currentZoneIds = getSortedZoneToolbarIds(persisted.toolbars, zone, toolbarId);
+      placeToolbar(toolbarId, zone, currentZoneIds.length);
     },
-    [setValue]
+    [getSortedZoneToolbarIds, persisted.toolbars, placeToolbar]
   );
 
   const getToolbarCollapsed = React.useCallback(
@@ -180,10 +301,15 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     getZoneElement,
     registerZone,
     getZoneAtPoint,
+    getDropPlacementAtPoint,
     isDropPreviewActive,
     setDropPreviewActive,
+    dropIndicator,
+    setDropIndicator,
     getToolbarZone,
+    getToolbarOrder,
     moveToolbar,
+    placeToolbar,
     ensureToolbar,
     getToolbarCollapsed,
     setToolbarCollapsed
