@@ -38,8 +38,11 @@ type DockContextValue = {
   registerZone: (zone: SgDockZoneId, el: HTMLDivElement | null) => void;
   getZoneAtPoint: (x: number, y: number) => SgDockZoneId | null;
   getDropPlacementAtPoint: (x: number, y: number, draggingToolbarId: string) => SgDockDropIndicator | null;
+  getZoneToolbarCount: (zone: SgDockZoneId) => number;
   isDropPreviewActive: boolean;
   setDropPreviewActive: (next: boolean) => void;
+  draggingToolbarId: string | null;
+  setDraggingToolbarId: (toolbarId: string | null) => void;
   dropIndicator: SgDockDropIndicator | null;
   setDropIndicator: (next: SgDockDropIndicator | null) => void;
   getToolbarZone: (id: string) => SgDockZoneId | null;
@@ -66,6 +69,7 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     defaultValue: defaultState ?? EMPTY_STATE
   });
   const [isDropPreviewActive, setIsDropPreviewActive] = React.useState(false);
+  const [draggingToolbarId, setDraggingToolbarIdState] = React.useState<string | null>(null);
   const [dropIndicator, setDropIndicator] = React.useState<SgDockDropIndicator | null>(null);
 
   const zonesRef = React.useRef<ZoneRegistry>(new Map());
@@ -135,22 +139,13 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
         });
 
       const cursorMajor = axisHorizontal ? x : y;
-      const cursorMinor = axisHorizontal ? y : x;
       let index = toolbarEls.length;
       for (let i = 0; i < toolbarEls.length; i += 1) {
         const toolbarEl = toolbarEls[i];
         if (!toolbarEl) continue;
         const rect = toolbarEl.getBoundingClientRect();
-        const minorStart = axisHorizontal ? rect.top : rect.left;
-        const minorEnd = axisHorizontal ? rect.bottom : rect.right;
         const majorCenter = axisHorizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
-
-        if (cursorMinor < minorStart) {
-          index = i;
-          break;
-        }
-
-        if (cursorMinor <= minorEnd && cursorMajor < majorCenter) {
+        if (cursorMajor < majorCenter) {
           index = i;
           break;
         }
@@ -163,7 +158,14 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
 
   const setDropPreviewActive = React.useCallback((next: boolean) => {
     setIsDropPreviewActive((prev) => (prev === next ? prev : next));
-    if (!next) setDropIndicator(null);
+    if (!next) {
+      setDropIndicator(null);
+      setDraggingToolbarIdState(null);
+    }
+  }, []);
+
+  const setDraggingToolbarId = React.useCallback((toolbarId: string | null) => {
+    setDraggingToolbarIdState((prev) => (prev === toolbarId ? prev : toolbarId));
   }, []);
 
   React.useEffect(() => {
@@ -196,11 +198,27 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     (toolbarId: string) => {
       const toolbar = persisted.toolbars[toolbarId];
       if (!toolbar) return undefined;
-      const ids = getSortedZoneToolbarIds(persisted.toolbars, toolbar.zone);
+      if (draggingToolbarId && toolbarId === draggingToolbarId) return undefined;
+      const ids = getSortedZoneToolbarIds(
+        persisted.toolbars,
+        toolbar.zone,
+        draggingToolbarId ?? undefined
+      );
       const index = ids.indexOf(toolbarId);
       return index === -1 ? undefined : index;
     },
-    [getSortedZoneToolbarIds, persisted]
+    [draggingToolbarId, getSortedZoneToolbarIds, persisted]
+  );
+
+  const getZoneToolbarCount = React.useCallback(
+    (zone: SgDockZoneId) => {
+      const zoneEl = zonesRef.current.get(zone);
+      if (!zoneEl) return 0;
+      return Array.from(
+        zoneEl.querySelectorAll<HTMLElement>("[data-sg-toolbar-root='true'][data-sg-toolbar-id]")
+      ).filter((el) => el.dataset.sgToolbarId !== draggingToolbarId).length;
+    },
+    [draggingToolbarId]
   );
 
   const ensureToolbar = React.useCallback(
@@ -302,8 +320,11 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
     registerZone,
     getZoneAtPoint,
     getDropPlacementAtPoint,
+    getZoneToolbarCount,
     isDropPreviewActive,
     setDropPreviewActive,
+    draggingToolbarId,
+    setDraggingToolbarId,
     dropIndicator,
     setDropIndicator,
     getToolbarZone,

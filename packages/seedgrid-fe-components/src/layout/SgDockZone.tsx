@@ -30,8 +30,13 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const ref = React.useRef<HTMLDivElement>(null);
   const showDropPreview = Boolean(dock?.isDropPreviewActive);
   const dropIndicator = dock?.dropIndicator ?? null;
-  const indicatorIndex = dropIndicator?.zone === zone ? dropIndicator.index : null;
-  const showInsertionIndicator = showDropPreview && zone !== "free" && indicatorIndex !== null;
+  const zoneToolbarCount = dock?.getZoneToolbarCount(zone) ?? 0;
+  const showSlotPreview = showDropPreview && zone !== "free" && Boolean(dock?.draggingToolbarId);
+  const dropSlotIndexes = React.useMemo(() => {
+    if (!showSlotPreview) return [];
+    const slotCount = Math.max(1, zoneToolbarCount + 1);
+    return Array.from({ length: slotCount }, (_, i) => i);
+  }, [showSlotPreview, zoneToolbarCount]);
   const isHorizontalZone = zone === "top" || zone === "bottom";
   const isVerticalZone = zone === "left" || zone === "right";
   const hasExplicitPositionClass = POSITION_CLASS_PATTERN.test(className ?? "");
@@ -63,19 +68,26 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       )}
     >
       {children}
-      {showInsertionIndicator ? (
-        <span
-          className={cn(
-            "pointer-events-none relative z-[2] inline-flex shrink-0 items-center justify-center rounded border border-dashed border-primary/70 bg-background/90 text-[11px] font-semibold uppercase tracking-wide text-primary",
-            isHorizontalZone ? "h-10 w-7" : "h-7 w-16"
-          )}
-          style={{ order: indicatorIndex * 2 - 1 }}
-          aria-hidden="true"
-        >
-          &gt;&lt;
-        </span>
-      ) : null}
-      {showDropPreview && !showInsertionIndicator ? (
+      {dropSlotIndexes.map((slotIndex) => {
+        const isActiveSlot = dropIndicator?.zone === zone && dropIndicator.index === slotIndex;
+        return (
+          <span
+            key={`drop-slot-${zone}-${slotIndex}`}
+            className={cn(
+              "pointer-events-none relative z-[2] inline-flex shrink-0 items-center justify-center rounded border border-dashed text-[11px] font-semibold uppercase tracking-wide transition-colors duration-100",
+              isHorizontalZone ? "h-10 w-16" : "h-8 w-20 self-center",
+              isActiveSlot
+                ? "border-primary/70 bg-background/95 text-primary"
+                : "border-border/60 bg-background/70 text-foreground/50"
+            )}
+            style={{ order: slotIndex * 2 - 1 }}
+            aria-hidden="true"
+          >
+            &gt;&lt;
+          </span>
+        );
+      })}
+      {showDropPreview && !showSlotPreview ? (
         <span
           className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center text-xs font-semibold uppercase tracking-wide text-foreground/70"
           aria-hidden="true"

@@ -259,6 +259,8 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     left: number;
     top: number;
     mode: SgToolBarDragMode;
+    width: number;
+    height: number;
   } | null>(null);
   const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -434,17 +436,27 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         clientX: number,
         clientY: number,
         toolbarLeft: number,
-        toolbarTop: number
+        toolbarTop: number,
+        toolbarWidth: number,
+        toolbarHeight: number
       ) => {
         if (!dockInstance) return { zone: null as SgDockZoneId | null, placement: null as SgDockDropIndicator | null };
         const zone = dockInstance.getZoneAtPoint(clientX, clientY);
         if (!zone) return { zone: null as SgDockZoneId | null, placement: null as SgDockDropIndicator | null };
         const zoneEl = dockInstance.getZoneElement(zone);
         const zoneRect = zoneEl?.getBoundingClientRect();
-        const useToolbarLeft = zone === "top" || zone === "bottom";
-        const useToolbarTop = zone === "left" || zone === "right";
-        const rawX = useToolbarLeft ? toolbarLeft : clientX;
-        const rawY = useToolbarTop ? toolbarTop : clientY;
+        const isHorizontalZone = zone === "top" || zone === "bottom";
+        const isVerticalZone = zone === "left" || zone === "right";
+        const rawX = isHorizontalZone
+          ? toolbarLeft
+          : isVerticalZone
+            ? toolbarLeft + toolbarWidth / 2
+            : clientX;
+        const rawY = isVerticalZone
+          ? toolbarTop
+          : isHorizontalZone
+            ? toolbarTop + toolbarHeight / 2
+            : clientY;
         const sampleX = zoneRect ? clamp(rawX, zoneRect.left + 1, zoneRect.right - 1) : rawX;
         const sampleY = zoneRect ? clamp(rawY, zoneRect.top + 1, zoneRect.bottom - 1) : rawY;
         return {
@@ -453,8 +465,16 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         };
       };
       if (inDock && !freeDrag && dockInstance) {
+        dockInstance.setDraggingToolbarId(id);
         dockInstance.setDropPreviewActive(true);
-        const initial = resolveDockPlacement(event.clientX, event.clientY, rect.left, rect.top);
+        const initial = resolveDockPlacement(
+          event.clientX,
+          event.clientY,
+          rect.left,
+          rect.top,
+          rect.width,
+          rect.height
+        );
         dragPlacementRef.current = initial.placement;
         dockInstance.setDropIndicator(initial.placement);
         const initialZone = initial.zone ?? effectiveZone;
@@ -481,7 +501,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         y: event.clientY,
         left: initialLeft,
         top: initialTop,
-        mode: dragMode
+        mode: dragMode,
+        width: rect.width,
+        height: rect.height
       };
       setDragActive(true);
       dragMoved.current = false;
@@ -506,7 +528,9 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
             moveEvent.clientX,
             moveEvent.clientY,
             placementSourceLeft,
-            placementSourceTop
+            placementSourceTop,
+            dragStart.current.width,
+            dragStart.current.height
           );
           dragPlacementRef.current = resolved.placement;
           dockInstance.setDropIndicator(resolved.placement);
@@ -531,7 +555,14 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
             : upEvent.clientY;
         const resolvedFinal =
           inDock && !freeDrag && dockInstance
-            ? resolveDockPlacement(upEvent.clientX, upEvent.clientY, placementSourceLeft, placementSourceTop)
+            ? resolveDockPlacement(
+              upEvent.clientX,
+              upEvent.clientY,
+              placementSourceLeft,
+              placementSourceTop,
+              activeDrag?.width ?? rect.width,
+              activeDrag?.height ?? rect.height
+            )
             : { zone: null as SgDockZoneId | null, placement: null as SgDockDropIndicator | null };
         const finalPlacement =
           inDock && !freeDrag && dockInstance
@@ -546,6 +577,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
         setDragHoverZoneSafe(null);
         if (inDock && !freeDrag && dockInstance) {
           dockInstance.setDropIndicator(null);
+          dockInstance.setDraggingToolbarId(null);
           dockInstance.setDropPreviewActive(false);
         }
         if (!dragStart.current) return;
@@ -602,6 +634,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const showContent = !isCollapsed;
   const openUp = orientation === "vertical" && direction === "up";
   const openLeft = orientation === "horizontal" && direction === "left";
+  const detachFromDockFlow = dragActive && inDock && !freeDrag;
   const normalizedButtonsPerDirection =
     Number.isFinite(buttonsPerDirection) && typeof buttonsPerDirection === "number" && buttonsPerDirection > 0
       ? Math.floor(buttonsPerDirection)
@@ -654,7 +687,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
           position: dragPos?.mode,
           left: dragPos?.x,
           top: dragPos?.y,
-          order: toolbarRenderOrder,
+          order: detachFromDockFlow ? undefined : toolbarRenderOrder,
           zIndex: dragPos ? 1000 : undefined,
           ...style
         }}
@@ -713,7 +746,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   );
 
   const needsCenterWrapper = inDock && (effectiveZone === "right" || effectiveZone === "left");
-  const toolbarForRender = needsCenterWrapper ? (
+  const toolbarForRender = needsCenterWrapper && !detachFromDockFlow ? (
     <div style={{ width: "100%", display: "flex", justifyContent: "center", order: toolbarRenderOrder }}>
       {toolbar}
     </div>
