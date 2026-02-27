@@ -482,6 +482,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const menuRootRef = React.useRef<HTMLDivElement | null>(null);
   const sidebarShellRef = React.useRef<HTMLElement | null>(null);
   const [dockDragActive, setDockDragActive] = React.useState(false);
+  const [horizontalDockAlign, setHorizontalDockAlign] = React.useState<"left" | "right" | null>(null);
   const dockDragStartRef = React.useRef<DockDragStart | null>(null);
   const dockDragMovedRef = React.useRef(false);
   const dockHoverZoneRef = React.useRef<SgDockZoneId | null>(null);
@@ -694,10 +695,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       dockHoverZoneRef.current = dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveDockZone;
 
       if (isHorizontalDockZone && sidebarShellRef.current) {
-        const rect = sidebarShellRef.current.getBoundingClientRect();
         const compactWidth = parseFloat(isCollapsed ? collapsedWidthCss : expandedWidthCss) || 280;
-        // Position compact element so cursor aligns with drag handle (~40px from right)
-        const initialDx = event.clientX - rect.left - Math.max(0, compactWidth - 40);
+        // After dockDragActive=true, ml-auto is removed and element's natural left = zone's left edge.
+        // Use zone left (not element rect.left) so the offset is correct regardless of current alignment.
+        const zoneEl = effectiveDockZone ? dock.getZoneElement(effectiveDockZone) : null;
+        const zoneLeft = zoneEl ? zoneEl.getBoundingClientRect().left : 0;
+        const initialDx = event.clientX - zoneLeft - Math.max(0, compactWidth - 40);
         dockDragStartRef.current.x = event.clientX - initialDx;
         applyDockDragVisual(initialDx, 0);
       } else {
@@ -732,14 +735,25 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
         const zone = dockHoverZoneRef.current ?? dock.getZoneAtPoint(upEvent.clientX, upEvent.clientY);
         dockHoverZoneRef.current = null;
-        if (zone) dock.moveToolbar(dockableId, zone);
+        if (zone) {
+          dock.moveToolbar(dockableId, zone);
+          if (zone === "top" || zone === "bottom") {
+            const zoneEl = dock.getZoneElement(zone);
+            if (zoneEl) {
+              const zoneRect = zoneEl.getBoundingClientRect();
+              setHorizontalDockAlign(upEvent.clientX < zoneRect.left + zoneRect.width / 2 ? "left" : "right");
+            }
+          } else {
+            setHorizontalDockAlign(null);
+          }
+        }
       };
 
       window.addEventListener("pointermove", handleMove);
       window.addEventListener("pointerup", handleEnd);
       window.addEventListener("pointercancel", handleEnd);
     },
-    [applyDockDragVisual, clearDockDragVisual, dock, dockMode, dockableId, draggable, effectiveDockZone]
+    [applyDockDragVisual, clearDockDragVisual, dock, dockMode, dockableId, draggable, effectiveDockZone, setHorizontalDockAlign]
   );
 
   const visibleNodes = React.useMemo(
@@ -1575,13 +1589,17 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         }}
         className={cn(
           "relative flex flex-col bg-background text-foreground",
-          dockDragActive ? null : "w-full self-stretch",
+          !dockDragActive && horizontalDockAlign === null ? "w-full" : "",
+          !dockDragActive ? "self-stretch" : "",
+          !dockDragActive && horizontalDockAlign === "right" ? "ml-auto" : "",
           border ? "border border-border" : "",
           elevationClass(elevation),
           className
         )}
         style={{
-          width: dockDragActive ? (isCollapsed ? collapsedWidthCss : expandedWidthCss) : undefined,
+          width: dockDragActive || horizontalDockAlign !== null
+            ? (isCollapsed ? collapsedWidthCss : expandedWidthCss)
+            : undefined,
           ...style
         }}
       >
@@ -1591,7 +1609,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             className={cn(
               "absolute z-50 flex flex-col bg-background text-foreground overflow-auto",
               effectiveDockZone === "bottom" ? "bottom-full" : "top-full",
-              "left-0 min-w-[240px] max-h-[60vh] border border-border",
+              horizontalDockAlign === "right" ? "right-0" : "left-0",
+              "min-w-[240px] max-h-[60vh] border border-border",
               elevationClass(elevation === "none" ? "sm" : elevation)
             )}
           >
