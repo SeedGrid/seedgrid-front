@@ -106,7 +106,7 @@ const MEGA_MENU: SgMenuNode[] = [
 
 const USER_MENU: SgMenuNode[] = [
   { id: "perfil", label: "Meu perfil", onClick: () => {} },
-  { id: "preferencias", label: "Preferências", onClick: () => {} },
+  { id: "preferencias", label: "Preferencias", onClick: () => {} },
   { id: "logout", label: "Sair", onClick: () => {} }
 ];
 
@@ -135,20 +135,30 @@ export default function Example() {
   const [collapsed, setCollapsed] = React.useState(false);
 
   return (
-    <SgMenu
-      menu={menu}
-      selection={{ activeId }}
-      variant="sidebar"
-      mode="accordion"
-      collapsed={collapsed}
-      onCollapsedChange={setCollapsed}
-      showCollapseButton
-      search={{ enabled: true, placeholder: "Buscar..." }}
-      brand={{ title: "SeedGrid ERP" }}
-      user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
-      userMenu={userMenu}
-      onNavigate={(node) => setActiveId(node.id)}
-    />
+    <div className="h-[460px] overflow-hidden rounded-lg border border-border">
+      <div className="flex h-full">
+        <SgMenu
+          menu={MENU}
+          selection={{ activeId }}
+          variant="sidebar"
+          mode="accordion"
+          collapsed={collapsed}
+          onCollapsedChange={setCollapsed}
+          showCollapseButton
+          search={{ enabled: true, placeholder: "Buscar modulo..." }}
+          brand={{ title: "SeedGrid ERP" }}
+          user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+          userMenu={USER_MENU}
+          onNavigate={(node) => setActiveId(node.id)}
+        />
+        <div className="flex-1 space-y-3 p-4">
+          <h3 className="text-base font-semibold">Conteudo principal</h3>
+          <p className="text-sm text-muted-foreground">
+            Item ativo: <span className="font-medium text-foreground">{activeId}</span>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }`;
 
@@ -156,23 +166,31 @@ const EXAMPLE_DRAWER_CODE = `import React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [open, setOpen] = React.useState(false);
-  const [pinned, setPinned] = React.useState(false);
   const [activeId, setActiveId] = React.useState("dashboard");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerPinned, setDrawerPinned] = React.useState(false);
 
   return (
     <>
-      <SgButton onClick={() => setOpen(true)}>Abrir menu mobile</SgButton>
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => setDrawerOpen(true)}>Abrir menu mobile</SgButton>
+        <SgButton appearance="outline" onClick={() => setDrawerPinned((v) => !v)}>
+          \${drawerPinned ? "Desafixar drawer" : "Fixar drawer"}
+        </SgButton>
+      </div>
+
       <SgMenu
-        menu={menu}
+        menu={MENU}
         selection={{ activeId }}
         variant="drawer"
-        open={open}
-        onOpenChange={setOpen}
-        pinned={pinned}
-        onPinnedChange={setPinned}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        pinned={drawerPinned}
+        onPinnedChange={setDrawerPinned}
         showPinButton
         closeOnNavigate
+        search={{ enabled: true, placeholder: "Buscar..." }}
+        brand={{ title: "SeedGrid ERP" }}
         onNavigate={(node) => setActiveId(node.id)}
       />
     </>
@@ -186,12 +204,31 @@ export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
 
   return (
-    <>
-      <SgMenu menu={menu} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
-      <SgMenu menu={menu} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
-      <SgMenu menu={megaMenu} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" onNavigate={(node) => setActiveId(node.id)} />
-      <SgMenu menu={megaMenu} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" onNavigate={(node) => setActiveId(node.id)} />
-    </>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <div className="space-y-2 rounded-lg border border-border p-3">
+        <p className="text-sm font-semibold">PanelMenu</p>
+        <div className="h-[320px] overflow-auto rounded-md border border-border">
+          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
+        </div>
+      </div>
+
+      <div className="space-y-2 rounded-lg border border-border p-3">
+        <p className="text-sm font-semibold">Tiered</p>
+        <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
+          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
+        </div>
+      </div>
+
+      <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
+        <p className="text-sm font-semibold">MegaMenu Horizontal</p>
+        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" onNavigate={(node) => setActiveId(node.id)} />
+      </div>
+
+      <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
+        <p className="text-sm font-semibold">MegaMenu Vertical</p>
+        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" onNavigate={(node) => setActiveId(node.id)} />
+      </div>
+    </div>
   );
 }`;
 
@@ -226,7 +263,7 @@ export default function App() {
 
       <div className="h-[420px] overflow-hidden rounded-lg border border-border">
         <SgMenu
-          menu={menu}
+          menu={MENU}
           selection={{ activeId }}
           variant={variant}
           menuStyle={menuStyle}
@@ -244,22 +281,80 @@ export default function App() {
 }`;
 
 const MENU_PROPS: ShowcasePropRow[] = [
-  { prop: "menu / selection", type: "SgMenuNode[] / { activeId?, activeUrl? }", defaultValue: "-", description: "Dados de navegação e item ativo." },
-  { prop: "brand / user / userMenu / footer", type: "objetos + ReactNode", defaultValue: "-", description: "Áreas opcionais do cabeçalho, usuário e rodapé." },
-  { prop: "variant", type: "\"sidebar\" | \"drawer\" | \"inline\" | \"hybrid\"", defaultValue: "sidebar", description: "Modo geral de apresentação." },
-  { prop: "menuStyle", type: "\"panel\" | \"tiered\" | \"mega-horizontal\" | \"mega-vertical\" (+ aliases)", defaultValue: "panel", description: "Estilo de navegação interna." },
-  { prop: "position / density / indent", type: "\"left|right\" / \"compact|comfortable\" / number", defaultValue: "left / comfortable / 16", description: "Ajustes de layout e espaçamento." },
-  { prop: "collapsedWidth / expandedWidth / overlaySize / overlayBackdrop", type: "size props", defaultValue: "72 / 280 / auto / depende do variant", description: "Dimensões de sidebar/drawer." },
-  { prop: "mode / expandedIds / defaultExpandedIds / onExpandedIdsChange", type: "estado de expansão", defaultValue: "multiple / []", description: "Controle de submenus." },
-  { prop: "collapsed / defaultCollapsed / onCollapsedChange / showCollapseButton", type: "estado colapsado", defaultValue: "false / false / - / false", description: "Controle do colapso do menu." },
-  { prop: "open / defaultOpen / onOpenChange / closeOnNavigate", type: "estado drawer", defaultValue: "false / false / - / true", description: "Abertura em modos overlay." },
-  { prop: "pinned / defaultPinned / onPinnedChange / showPinButton", type: "estado pin", defaultValue: "false / false / - / false", description: "Fixação no modo híbrido/drawer." },
-  { prop: "onNavigate / onAction / onItemClick", type: "callbacks", defaultValue: "-", description: "Eventos de navegação e ação." },
-  { prop: "ariaLabel / keyboardNavigation", type: "string / boolean", defaultValue: "Menu / true", description: "Acessibilidade e teclado." },
-  { prop: "search", type: "{ enabled: boolean; placeholder?: string }", defaultValue: "{ enabled: false }", description: "Busca integrada com autocomplete." },
-  { prop: "elevation / border / className / style", type: "visual props", defaultValue: "none / true / - / -", description: "Customização visual do container." },
-  { prop: "iconRegistry", type: "Record<string, ReactNode>", defaultValue: "-", description: "Registro para resolver ícones por chave." },
-  { prop: "SgMenuNode.id / label / url / children / disabled / icon / iconKey / badge / onClick", type: "node props", defaultValue: "-", description: "Estrutura de cada item do menu." }
+  { prop: "menu", type: "SgMenuNode[]", defaultValue: "-", description: "Arvore de navegacao exibida pelo menu." },
+  { prop: "selection", type: "SgMenuSelection", defaultValue: "-", description: "Item ativo por id ou por url." },
+  { prop: "brand", type: "SgMenuBrand", defaultValue: "-", description: "Bloco de marca no topo." },
+  { prop: "user", type: "SgMenuUser", defaultValue: "-", description: "Bloco de usuario no topo/rodape do menu." },
+  { prop: "userMenu", type: "SgMenuNode[]", defaultValue: "-", description: "Acoes exibidas no menu do usuario." },
+  { prop: "variant", type: "\"sidebar\" | \"drawer\" | \"inline\" | \"hybrid\"", defaultValue: "sidebar", description: "Modo geral de apresentacao." },
+  { prop: "menuStyle", type: "SgMenuStyle", defaultValue: "panel", description: "Estilo interno: panel, tiered, mega-horizontal ou mega-vertical." },
+  { prop: "position", type: "\"left\" | \"right\"", defaultValue: "left", description: "Posicao horizontal do menu." },
+  { prop: "density", type: "\"compact\" | \"comfortable\"", defaultValue: "comfortable", description: "Densidade visual das linhas e icones." },
+  { prop: "indent", type: "number", defaultValue: "16", description: "Recuo por nivel de profundidade." },
+  { prop: "collapsedWidth", type: "number | string", defaultValue: "72", description: "Largura quando colapsado." },
+  { prop: "expandedWidth", type: "number | string", defaultValue: "280", description: "Largura quando expandido." },
+  { prop: "overlaySize", type: "SgExpandablePanelSize", defaultValue: "-", description: "Tamanho do overlay nos modos drawer/hybrid." },
+  { prop: "overlayBackdrop", type: "boolean", defaultValue: "-", description: "Controla backdrop no overlay." },
+  { prop: "mode", type: "\"accordion\" | \"multiple\"", defaultValue: "multiple", description: "Estrategia de expansao dos grupos." },
+  { prop: "expandedIds", type: "string[]", defaultValue: "-", description: "Controle externo dos grupos expandidos." },
+  { prop: "defaultExpandedIds", type: "string[]", defaultValue: "[]", description: "Estado inicial dos grupos expandidos." },
+  { prop: "onExpandedIdsChange", type: "(ids: string[]) => void", defaultValue: "-", description: "Callback ao alterar grupos expandidos." },
+  { prop: "collapsed", type: "boolean", defaultValue: "-", description: "Controle externo do estado colapsado." },
+  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado." },
+  { prop: "onCollapsedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao colapsar/expandir." },
+  { prop: "showCollapseButton", type: "boolean", defaultValue: "false", description: "Exibe botao de colapso no cabecalho." },
+  { prop: "open", type: "boolean", defaultValue: "-", description: "Controle externo de abertura no drawer/overlay." },
+  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Estado inicial de abertura no drawer/overlay." },
+  { prop: "onOpenChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao abrir/fechar overlay." },
+  { prop: "closeOnNavigate", type: "boolean", defaultValue: "-", description: "Fecha o drawer apos navegacao." },
+  { prop: "pinned", type: "boolean", defaultValue: "-", description: "Controle externo do estado fixado." },
+  { prop: "defaultPinned", type: "boolean", defaultValue: "false", description: "Estado inicial fixado." },
+  { prop: "onPinnedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao fixar/desafixar." },
+  { prop: "showPinButton", type: "boolean", defaultValue: "false", description: "Exibe botao de pin no cabecalho." },
+  { prop: "onNavigate", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em itens de navegacao (url)." },
+  { prop: "onAction", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em itens de acao." },
+  { prop: "onItemClick", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em qualquer clique de item." },
+  { prop: "ariaLabel", type: "string", defaultValue: "\"Menu\"", description: "Rotulo de acessibilidade do nav." },
+  { prop: "keyboardNavigation", type: "boolean", defaultValue: "true", description: "Ativa navegacao por teclado." },
+  { prop: "search", type: "{ enabled: boolean; placeholder?: string }", defaultValue: "{ enabled: false }", description: "Configuracao da busca integrada." },
+  { prop: "elevation", type: "\"none\" | \"sm\" | \"md\"", defaultValue: "none", description: "Elevacao/sombra do container." },
+  { prop: "border", type: "boolean", defaultValue: "true", description: "Exibe borda externa do menu." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no root." },
+  { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilos inline no root." },
+  { prop: "iconRegistry", type: "Record<string, ReactNode>", defaultValue: "-", description: "Mapeia iconKey para icone real." },
+  { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Conteudo de rodape do menu." }
+];
+
+const MENU_NODE_PROPS: ShowcasePropRow[] = [
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador unico do item." },
+  { prop: "label", type: "string", defaultValue: "-", description: "Texto exibido no item." },
+  { prop: "url", type: "string", defaultValue: "-", description: "Rota de navegacao do item." },
+  { prop: "children", type: "SgMenuNode[]", defaultValue: "-", description: "Subitens do no atual." },
+  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita interacao do item." },
+  { prop: "icon", type: "ReactNode", defaultValue: "-", description: "Icone direto do item." },
+  { prop: "iconKey", type: "string", defaultValue: "-", description: "Chave para resolver icone via iconRegistry." },
+  { prop: "badge", type: "string | number", defaultValue: "-", description: "Badge auxiliar ao lado do label." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao local do item." }
+];
+
+const MENU_SELECTION_PROPS: ShowcasePropRow[] = [
+  { prop: "activeId", type: "string", defaultValue: "-", description: "Id do item ativo." },
+  { prop: "activeUrl", type: "string", defaultValue: "-", description: "URL ativa para selecao por rota." }
+];
+
+const MENU_BRAND_PROPS: ShowcasePropRow[] = [
+  { prop: "title", type: "string", defaultValue: "-", description: "Titulo exibido no bloco de marca." },
+  { prop: "imageSrc", type: "string", defaultValue: "-", description: "URL da imagem da marca." },
+  { prop: "image", type: "ReactNode", defaultValue: "-", description: "Elemento customizado de imagem." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao ao clicar na marca." }
+];
+
+const MENU_USER_PROPS: ShowcasePropRow[] = [
+  { prop: "name", type: "string", defaultValue: "-", description: "Nome exibido no bloco do usuario." },
+  { prop: "subtitle", type: "string", defaultValue: "-", description: "Texto auxiliar do usuario." },
+  { prop: "avatarSrc", type: "string", defaultValue: "-", description: "URL do avatar do usuario." },
+  { prop: "avatar", type: "ReactNode", defaultValue: "-", description: "Avatar customizado." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao ao clicar no bloco do usuario." }
 ];
 
 export default function SgMenuPage() {
@@ -279,12 +374,12 @@ export default function SgMenuPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgMenu"
-          subtitle="Menu hierárquico para sidebar, drawer, inline e híbrido, com busca e múltiplos estilos."
+          subtitle="Menu hierarquico para sidebar, drawer, inline e hibrido, com busca e multiplos estilos."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Sidebar Fixa" description="Menu lateral com grupos colapsáveis e botão de colapso.">
+        <Section title="1) Sidebar Fixa" description="Menu lateral com grupos colapsaveis e botao de colapso.">
           <div className="h-[460px] overflow-hidden rounded-lg border border-border">
             <div className="flex h-full">
               <SgMenu
@@ -295,14 +390,14 @@ export default function SgMenuPage() {
                 collapsed={collapsed}
                 onCollapsedChange={setCollapsed}
                 showCollapseButton
-                search={{ enabled: true, placeholder: "Buscar módulo..." }}
+                search={{ enabled: true, placeholder: "Buscar modulo..." }}
                 brand={{ title: "SeedGrid ERP" }}
                 user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
                 userMenu={USER_MENU}
                 onNavigate={(node) => setActiveId(node.id)}
               />
               <div className="flex-1 space-y-3 p-4">
-                <h3 className="text-base font-semibold">Conteúdo principal</h3>
+                <h3 className="text-base font-semibold">Conteudo principal</h3>
                 <p className="text-sm text-muted-foreground">
                   Item ativo: <span className="font-medium text-foreground">{activeId}</span>
                 </p>
@@ -377,7 +472,12 @@ export default function SgMenuPage() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={MENU_PROPS} />
+        <ShowcasePropsReference id="props-reference" title="Referencia de Props - SgMenu" rows={MENU_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-node" title="Referencia de Props - SgMenuNode" rows={MENU_NODE_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-selection" title="Referencia de Props - SgMenuSelection" rows={MENU_SELECTION_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-brand" title="Referencia de Props - SgMenuBrand" rows={MENU_BRAND_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-user" title="Referencia de Props - SgMenuUser" rows={MENU_USER_PROPS} />
+
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
