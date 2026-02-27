@@ -1315,8 +1315,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     </div>
   );
 
+  const isMegaMenuStyle =
+    effectiveMenuStyle === "mega-horizontal" || effectiveMenuStyle === "mega-vertical";
+
   const sidebarWidthCss =
-    variant === "hybrid"
+    variant === "inline" && isMegaMenuStyle
+      ? "100%"
+      : variant === "hybrid"
       ? pinnedState
         ? expandedWidthCss
         : collapsedWidthCss

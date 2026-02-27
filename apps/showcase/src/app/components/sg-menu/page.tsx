@@ -66,16 +66,16 @@ const MEGA_MENU: SgMenuNode[] = [
         id: "fashion-woman",
         label: "Woman",
         children: [
-          { id: "fashion-woman-1", label: "Woman Item", url: "/fashion/woman/1" },
-          { id: "fashion-woman-2", label: "Woman Item", url: "/fashion/woman/2" }
+          { id: "fashion-woman-1", label: "Woman Casual", url: "/fashion/woman/1" },
+          { id: "fashion-woman-2", label: "Woman Formal", url: "/fashion/woman/2" }
         ]
       },
       {
         id: "fashion-men",
         label: "Men",
         children: [
-          { id: "fashion-men-1", label: "Men Item", url: "/fashion/men/1" },
-          { id: "fashion-men-2", label: "Men Item", url: "/fashion/men/2" }
+          { id: "fashion-men-1", label: "Men Casual", url: "/fashion/men/1" },
+          { id: "fashion-men-2", label: "Men Formal", url: "/fashion/men/2" }
         ]
       }
     ]
@@ -89,16 +89,16 @@ const MEGA_MENU: SgMenuNode[] = [
         id: "electronics-computer",
         label: "Computer",
         children: [
-          { id: "electronics-computer-1", label: "Computer Item", url: "/electronics/computer/1" },
-          { id: "electronics-computer-2", label: "Computer Item", url: "/electronics/computer/2" }
+          { id: "electronics-computer-1", label: "Laptop", url: "/electronics/computer/1" },
+          { id: "electronics-computer-2", label: "Desktop", url: "/electronics/computer/2" }
         ]
       },
       {
         id: "electronics-tv",
         label: "TV",
         children: [
-          { id: "electronics-tv-1", label: "TV Item", url: "/electronics/tv/1" },
-          { id: "electronics-tv-2", label: "TV Item", url: "/electronics/tv/2" }
+          { id: "electronics-tv-1", label: "Smart TV", url: "/electronics/tv/1" },
+          { id: "electronics-tv-2", label: "Home Theater", url: "/electronics/tv/2" }
         ]
       }
     ]
