@@ -384,6 +384,7 @@ const MENU_PROPS: ShowcasePropRow[] = [
   { prop: "onItemClick", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em qualquer clique de item." },
   { prop: "ariaLabel", type: "string", defaultValue: "\"Menu\"", description: "Rotulo de acessibilidade do nav." },
   { prop: "keyboardNavigation", type: "boolean", defaultValue: "true", description: "Ativa navegacao por teclado." },
+  { prop: "openSubmenuOnHover", type: "boolean", defaultValue: "false", description: "No estilo tiered, abre submenu no hover quando true; no default abre no clique." },
   { prop: "search", type: "{ enabled: boolean; placeholder?: string }", defaultValue: "{ enabled: false }", description: "Configuracao da busca integrada." },
   { prop: "elevation", type: "\"none\" | \"sm\" | \"md\"", defaultValue: "none", description: "Elevacao/sombra do container." },
   { prop: "border", type: "boolean", defaultValue: "true", description: "Exibe borda externa do menu." },

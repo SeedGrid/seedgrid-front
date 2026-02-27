@@ -94,6 +94,7 @@ export type SgMenuProps = {
 
   ariaLabel?: string;
   keyboardNavigation?: boolean;
+  openSubmenuOnHover?: boolean;
   search?: { enabled: boolean; placeholder?: string };
 
   elevation?: "none" | "sm" | "md";
@@ -370,6 +371,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     onItemClick,
     ariaLabel = "Menu",
     keyboardNavigation = true,
+    openSubmenuOnHover = false,
     search,
     elevation = "none",
     border = true,
@@ -851,6 +853,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   disabled={node.disabled}
                   aria-current={isExactActive ? "page" : undefined}
                   onMouseEnter={() => {
+                    if (!openSubmenuOnHover) return;
                     if (!hasChildren) {
                       setTieredPath((prev) => prev.slice(0, depth));
                       return;
@@ -893,7 +896,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </div>
       );
     },
-    [activateNode, activeSets.exact, densityCfg.icon, iconRegistry, tieredPath]
+    [activateNode, activeSets.exact, densityCfg.icon, iconRegistry, openSubmenuOnHover, tieredPath]
   );
 
   const renderMegaColumns = React.useCallback(
@@ -1401,6 +1404,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               }}
               ariaLabel={ariaLabel}
               keyboardNavigation={keyboardNavigation}
+              openSubmenuOnHover={openSubmenuOnHover}
               search={search}
               elevation="none"
               border={false}
