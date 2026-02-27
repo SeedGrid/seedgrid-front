@@ -431,6 +431,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const closeOnNavigateResolved = closeOnNavigate ?? true;
   const searchEnabled = search?.enabled ?? false;
   const [searchValue, setSearchValue] = React.useState("");
+  const menuRootRef = React.useRef<HTMLDivElement | null>(null);
   const searchEntries = React.useMemo(() => collectMenuSearchEntries(menu), [menu]);
   const autocompleteSource = React.useCallback(
     (query: string): SgAutocompleteItem[] => {
@@ -513,6 +514,18 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     setTieredPath(nextTieredPath);
     setMegaActiveId(parentChain[0] ?? activeNode?.id ?? menu[0]?.id);
   }, [effectiveActiveId, maps.nodeById, maps.parentById, menu]);
+
+  React.useEffect(() => {
+    if (effectiveMenuStyle !== "tiered") return;
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (menuRootRef.current?.contains(target)) return;
+      setTieredPath((prev) => (prev.length > 0 ? [] : prev));
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [effectiveMenuStyle]);
 
   const toggleExpanded = React.useCallback(
     (nodeId: string) => {
@@ -1043,7 +1056,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   };
 
   const shellBody = (
-    <div className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
+    <div ref={menuRootRef} className={cn("flex h-full min-h-0 flex-col bg-background text-foreground")}>
       {(brand || showCollapseButton || showPinButton) && (
         <div className={cn("flex items-center gap-2 border-b border-border", densityCfg.section)}>
           {brand ? (
