@@ -238,7 +238,7 @@ export default function Example() {
   );
 }`;
 
-const EXAMPLE_STYLES_CODE = `import React from "react";
+const EXAMPLE_PANEL_MENU_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
 import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
@@ -258,30 +258,98 @@ export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <div className="space-y-2 rounded-lg border border-border p-3">
-        <p className="text-sm font-semibold">PanelMenu</p>
-        <div className="h-[320px] overflow-auto rounded-md border border-border">
-          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-        </div>
+    <div className="rounded-lg border border-border p-3">
+      <div className="h-[320px] overflow-auto rounded-md border border-border">
+        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
       </div>
+    </div>
+  );
+}`;
 
-      <div className="space-y-2 rounded-lg border border-border p-3">
-        <p className="text-sm font-semibold">Tiered</p>
-        <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-        </div>
-      </div>
+const EXAMPLE_TIERED_CODE = `import React from "react";
+import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 
-      <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
-        <p className="text-sm font-semibold">MegaMenu Horizontal</p>
-        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-      </div>
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
 
-      <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
-        <p className="text-sm font-semibold">MegaMenu Vertical</p>
-        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+export default function Example() {
+  const [activeId, setActiveId] = React.useState("dashboard");
+
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
+        <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
       </div>
+    </div>
+  );
+}`;
+
+const EXAMPLE_MEGA_HORIZONTAL_CODE = `import React from "react";
+import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
+
+export default function Example() {
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <SgMenu
+        menu={MEGA_MENU}
+        selection={{ activeId: "fashion" }}
+        variant="inline"
+        menuStyle="MegaMenuHorizontal"
+        iconRegistry={ICON_REGISTRY}
+      />
+    </div>
+  );
+}`;
+
+const EXAMPLE_MEGA_VERTICAL_CODE = `import React from "react";
+import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
+
+export default function Example() {
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <SgMenu
+        menu={MEGA_MENU}
+        selection={{ activeId: "fashion" }}
+        variant="inline"
+        menuStyle="MegaMenuVertical"
+        iconRegistry={ICON_REGISTRY}
+      />
     </div>
   );
 }`;
@@ -503,36 +571,51 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_DRAWER_CODE} />
         </Section>
 
-        <Section title="3) Menu Styles" description="Panel, Tiered e MegaMenu horizontal/vertical em modo inline.">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div className="space-y-2 rounded-lg border border-border p-3">
-              <p className="text-sm font-semibold">PanelMenu</p>
-              <div className="h-[320px] overflow-auto rounded-md border border-border">
-                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-              </div>
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-border p-3">
-              <p className="text-sm font-semibold">Tiered</p>
-              <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-              </div>
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
-              <p className="text-sm font-semibold">MegaMenu Horizontal</p>
-              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
-            </div>
-
-            <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
-              <p className="text-sm font-semibold">MegaMenu Vertical</p>
-              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+        <Section title="3) PanelMenu" description="Exemplo isolado para visualizar apenas o estilo panel.">
+          <div className="rounded-lg border border-border p-3">
+            <div className="h-[320px] overflow-auto rounded-md border border-border">
+              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_STYLES_CODE} />
+          <CodeBlock code={EXAMPLE_PANEL_MENU_CODE} />
         </Section>
 
-        <Section title="4) Playground" description="Teste variant, style, collapsed e open.">
+        <Section title="4) Tiered" description="Exemplo isolado para visualizar apenas o estilo tiered.">
+          <div className="rounded-lg border border-border p-3">
+            <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
+              <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
+            </div>
+          </div>
+          <CodeBlock code={EXAMPLE_TIERED_CODE} />
+        </Section>
+
+        <Section title="5) MegaMenu Horizontal" description="Exemplo isolado para visualizar apenas o mega menu horizontal.">
+          <div className="rounded-lg border border-border p-3">
+            <SgMenu
+              menu={MEGA_MENU}
+              selection={{ activeId: "fashion" }}
+              variant="inline"
+              menuStyle="MegaMenuHorizontal"
+              iconRegistry={ICON_REGISTRY}
+            />
+          </div>
+          <CodeBlock code={EXAMPLE_MEGA_HORIZONTAL_CODE} />
+        </Section>
+
+        <Section title="6) MegaMenu Vertical" description="Exemplo isolado para visualizar apenas o mega menu vertical.">
+          <div className="rounded-lg border border-border p-3">
+            <SgMenu
+              menu={MEGA_MENU}
+              selection={{ activeId: "fashion" }}
+              variant="inline"
+              menuStyle="MegaMenuVertical"
+              iconRegistry={ICON_REGISTRY}
+            />
+          </div>
+          <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />
+        </Section>
+
+        <Section title="7) Playground" description="Teste variant, style, collapsed e open.">
           <SgPlayground
             title="SgMenu Playground"
             interactive
