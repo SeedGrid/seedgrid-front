@@ -5,6 +5,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { SgAvatar } from "../commons/SgAvatar";
 import { SgExpandablePanel, type SgExpandablePanelSize } from "./SgExpandablePanel";
 import { SgAutocomplete, type SgAutocompleteItem } from "../inputs/SgAutocomplete";
+import { SgCard } from "./SgCard";
 
 export type SgMenuNode = {
   id: string;
@@ -1202,44 +1203,72 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       {(user || (userMenu && userMenu.length > 0) || footer) ? (
         <div className={cn("border-t border-border", densityCfg.section)}>
           {user ? (
-            <button
-              type="button"
-              onClick={user.onClick}
-              className={cn(
-                "mb-2 w-full rounded-md",
-                "flex items-center gap-2",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
-                "hover:bg-muted/60",
-                densityCfg.row
-              )}
-              title={isCollapsed ? user.name : undefined}
-            >
-              {user.avatar ? (
-                user.avatar
-              ) : (
+            isCollapsed ? (
+              <button
+                type="button"
+                onClick={user.onClick}
+                className={cn(
+                  "mb-2 w-full rounded-md",
+                  "flex items-center gap-2",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35",
+                  "hover:bg-muted/60",
+                  densityCfg.row
+                )}
+                title={user.name}
+              >
                 <SgAvatar
-                  src={user.avatarSrc}
+                  src={user.avatar ? undefined : user.avatarSrc}
                   label={user.name}
                   size={density === "compact" ? "sm" : "md"}
                   severity="secondary"
-                />
-              )}
-              {!isCollapsed ? (
-                <span className="min-w-0 text-left">
-                  <span className="block truncate text-sm font-medium">{user.name}</span>
-                  {user.subtitle ? (
-                    <span className="block truncate text-xs text-muted-foreground">{user.subtitle}</span>
-                  ) : null}
-                </span>
+                >
+                  {user.avatar ?? undefined}
+                </SgAvatar>
+              </button>
+            ) : (
+              <SgCard
+                className="mb-2"
+                variant="outlined"
+                size={density === "compact" ? "sm" : "md"}
+                collapsible
+                defaultOpen={false}
+                title={user.name}
+                description={user.subtitle}
+                leading={(
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      user.onClick?.();
+                    }}
+                    className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+                    aria-label={user.name}
+                  >
+                    <SgAvatar
+                      src={user.avatar ? undefined : user.avatarSrc}
+                      label={user.name}
+                      size={density === "compact" ? "sm" : "md"}
+                      severity="secondary"
+                    >
+                      {user.avatar ?? undefined}
+                    </SgAvatar>
+                  </button>
+                )}
+              >
+                {userMenu && userMenu.length > 0 ? (
+                  <div className="space-y-0.5">{userMenu.map((node) => renderNode(node, 0))}</div>
+                ) : null}
+                {footer ? <div className={userMenu && userMenu.length > 0 ? "mt-2" : undefined}>{footer}</div> : null}
+              </SgCard>
+            )
+          ) : (
+            <>
+              {userMenu && userMenu.length > 0 && !isCollapsed ? (
+                <div className="space-y-0.5">{userMenu.map((node) => renderNode(node, 0))}</div>
               ) : null}
-            </button>
-          ) : null}
-
-          {userMenu && userMenu.length > 0 && !isCollapsed ? (
-            <div className="space-y-0.5">{userMenu.map((node) => renderNode(node, 0))}</div>
-          ) : null}
-
-          {footer ? <div className="mt-2">{footer}</div> : null}
+              {footer ? <div className="mt-2">{footer}</div> : null}
+            </>
+          )}
         </div>
       ) : null}
     </div>

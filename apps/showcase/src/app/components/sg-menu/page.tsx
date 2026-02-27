@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgButton, SgMenu, SgPlayground, type SgMenuNode } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
@@ -110,6 +111,18 @@ const USER_MENU: SgMenuNode[] = [
   { id: "logout", label: "Sair", onClick: () => {} }
 ];
 
+const ICON_REGISTRY: Record<string, React.ReactNode> = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
+
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section
@@ -129,6 +142,19 @@ function CodeBlock(props: { code: string }) {
 
 const EXAMPLE_SIDEBAR_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -149,6 +175,7 @@ export default function Example() {
           brand={{ title: "SeedGrid ERP" }}
           user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
           userMenu={USER_MENU}
+          iconRegistry={ICON_REGISTRY}
           onNavigate={(node) => setActiveId(node.id)}
         />
         <div className="flex-1 space-y-3 p-4">
@@ -164,6 +191,19 @@ export default function Example() {
 
 const EXAMPLE_DRAWER_CODE = `import React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -191,6 +231,7 @@ export default function Example() {
         closeOnNavigate
         search={{ enabled: true, placeholder: "Buscar..." }}
         brand={{ title: "SeedGrid ERP" }}
+        iconRegistry={ICON_REGISTRY}
         onNavigate={(node) => setActiveId(node.id)}
       />
     </>
@@ -199,6 +240,19 @@ export default function Example() {
 
 const EXAMPLE_STYLES_CODE = `import React from "react";
 import { SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -208,25 +262,25 @@ export default function Example() {
       <div className="space-y-2 rounded-lg border border-border p-3">
         <p className="text-sm font-semibold">PanelMenu</p>
         <div className="h-[320px] overflow-auto rounded-md border border-border">
-          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
+          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
         </div>
       </div>
 
       <div className="space-y-2 rounded-lg border border-border p-3">
         <p className="text-sm font-semibold">Tiered</p>
         <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
+          <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
         </div>
       </div>
 
       <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
         <p className="text-sm font-semibold">MegaMenu Horizontal</p>
-        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" onNavigate={(node) => setActiveId(node.id)} />
+        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
       </div>
 
       <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
         <p className="text-sm font-semibold">MegaMenu Vertical</p>
-        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" onNavigate={(node) => setActiveId(node.id)} />
+        <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
       </div>
     </div>
   );
@@ -234,6 +288,19 @@ export default function Example() {
 
 const PLAYGROUND_CODE = `import * as React from "react";
 import { SgButton, SgMenu } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+const ICON_REGISTRY = {
+  db: <Home className="size-4" />,
+  cu: <Users className="size-4" />,
+  nw: <LayoutGrid className="size-4" />,
+  rp: <ClipboardList className="size-4" />,
+  or: <LayoutGrid className="size-4" />,
+  sl: <Search className="size-4" />,
+  pf: <Settings className="size-4" />,
+  fa: <Users className="size-4" />,
+  el: <Settings className="size-4" />
+};
 
 export default function App() {
   const [activeId, setActiveId] = React.useState("dashboard");
@@ -274,6 +341,7 @@ export default function App() {
           showCollapseButton
           onNavigate={(node) => setActiveId(node.id)}
           search={{ enabled: true, placeholder: "Buscar..." }}
+          iconRegistry={ICON_REGISTRY}
         />
       </div>
     </div>
@@ -394,6 +462,7 @@ export default function SgMenuPage() {
                 brand={{ title: "SeedGrid ERP" }}
                 user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
                 userMenu={USER_MENU}
+                iconRegistry={ICON_REGISTRY}
                 onNavigate={(node) => setActiveId(node.id)}
               />
               <div className="flex-1 space-y-3 p-4">
@@ -427,6 +496,7 @@ export default function SgMenuPage() {
             closeOnNavigate
             search={{ enabled: true, placeholder: "Buscar..." }}
             brand={{ title: "SeedGrid ERP" }}
+            iconRegistry={ICON_REGISTRY}
             onNavigate={(node) => setActiveId(node.id)}
           />
           <CodeBlock code={EXAMPLE_DRAWER_CODE} />
@@ -437,25 +507,25 @@ export default function SgMenuPage() {
             <div className="space-y-2 rounded-lg border border-border p-3">
               <p className="text-sm font-semibold">PanelMenu</p>
               <div className="h-[320px] overflow-auto rounded-md border border-border">
-                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
+                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
               </div>
             </div>
 
             <div className="space-y-2 rounded-lg border border-border p-3">
               <p className="text-sm font-semibold">Tiered</p>
               <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
+                <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
               </div>
             </div>
 
             <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
               <p className="text-sm font-semibold">MegaMenu Horizontal</p>
-              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" onNavigate={(node) => setActiveId(node.id)} />
+              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuHorizontal" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
             </div>
 
             <div className="space-y-2 rounded-lg border border-border p-3 lg:col-span-2">
               <p className="text-sm font-semibold">MegaMenu Vertical</p>
-              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" onNavigate={(node) => setActiveId(node.id)} />
+              <SgMenu menu={MEGA_MENU} selection={{ activeId }} variant="inline" menuStyle="MegaMenuVertical" iconRegistry={ICON_REGISTRY} onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
           <CodeBlock code={EXAMPLE_STYLES_CODE} />
@@ -483,4 +553,3 @@ export default function SgMenuPage() {
     </I18NReady>
   );
 }
-
