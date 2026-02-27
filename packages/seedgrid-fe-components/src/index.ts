@@ -203,6 +203,8 @@ export { SgDockLayout } from "./layout/SgDockLayout";
 export type { SgDockLayoutProps, SgDockLayoutState, SgDockToolbarState, SgDockZoneId } from "./layout/SgDockLayout";
 export { SgDockZone } from "./layout/SgDockZone";
 export type { SgDockZoneProps } from "./layout/SgDockZone";
+export { SgDockScreen } from "./layout/SgDockScreen";
+export type { SgDockScreenProps } from "./layout/SgDockScreen";
 export { SgTreeView, sgTreeFromJson, sgTreeFromJsonWithChecked } from "./layout/SgTreeView";
 export type {
   SgTreeViewProps,

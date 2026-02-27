@@ -14,6 +14,15 @@ function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
+const POSITION_CLASS_PATTERN = /(?:^|\s)!?(?:(?:[a-z0-9-]+:)+)?(?:static|fixed|absolute|relative|sticky)(?=\s|$)/i;
+const DEFAULT_ZONE_LAYOUT_CLASS: Record<SgDockZoneId, string> = {
+  top: "col-span-3 row-start-1 items-start",
+  bottom: "col-span-3 row-start-3 items-end",
+  left: "col-start-1 row-start-2 items-start",
+  right: "col-start-3 row-start-2 items-start",
+  free: "col-start-2 row-start-2 items-center justify-center"
+};
+
 export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const { zone, className, children } = props;
   const dock = useSgDockLayout();
@@ -22,6 +31,9 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
   const showDropPreview = Boolean(dock?.isDropPreviewActive);
   const isHorizontalZone = zone === "top" || zone === "bottom";
   const isVerticalZone = zone === "left" || zone === "right";
+  const hasExplicitPositionClass = POSITION_CLASS_PATTERN.test(className ?? "");
+  const hasCustomClass = Boolean(className?.trim());
+  const zoneDefaultLayoutClass = hasCustomClass ? null : DEFAULT_ZONE_LAYOUT_CLASS[zone];
 
   React.useEffect(() => {
     if (!dock) return;
@@ -34,7 +46,7 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
       ref={ref}
       data-sg-dock-zone={zone}
       className={cn(
-        "relative flex min-h-0 min-w-0 gap-3 p-2",
+        hasExplicitPositionClass ? "flex min-h-0 min-w-0 gap-3 p-2" : "relative flex min-h-0 min-w-0 gap-3 p-2",
         isHorizontalZone
           ? "flex-row flex-wrap items-start content-start"
           : isVerticalZone
@@ -43,6 +55,7 @@ export function SgDockZone(props: Readonly<SgDockZoneProps>) {
         showDropPreview ? "rounded-xl border-2 border-dashed border-border/70 bg-background/40 p-3 transition-colors duration-150" : null,
         showDropPreview && isHorizontalZone ? "min-h-16" : null,
         showDropPreview && isVerticalZone ? "min-w-24" : null,
+        zoneDefaultLayoutClass,
         className
       )}
     >

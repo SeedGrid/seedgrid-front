@@ -62,6 +62,7 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-carousel", label: "SgCarousel" },
   { group: "Layout", slug: "sg-skeleton", label: "SgSkeleton" },
   { group: "Layout", slug: "sg-screen", label: "SgScreen" },
+  { group: "Layout", slug: "sg-dock-screen", label: "SgDockScreen" },
   { group: "Layout", slug: "sg-main-panel", label: "SgMainPanel" },
   { group: "Layout", slug: "sg-panel", label: "SgPanel" },
   { group: "Layout", slug: "sg-grid", label: "SgGrid" },

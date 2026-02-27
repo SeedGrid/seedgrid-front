@@ -38,6 +38,7 @@ const COMPONENTS = [
       { slug: "sg-accordion", name: "SgAccordion", desc: "Accordion com modo vertical, horizontal e controle externo" },
       { slug: "sg-skeleton", name: "SgSkeleton", desc: "Placeholder visual para estados de carregamento" },
       { slug: "sg-screen", name: "SgScreen", desc: "Container raiz de viewport para telas e layouts complexos" },
+      { slug: "sg-dock-screen", name: "SgDockScreen", desc: "Composicao pronta de SgScreen com SgDockLayout" },
       { slug: "sg-main-panel", name: "SgMainPanel", desc: "Layout dock estilo Delphi com top/left/right/bottom/client" },
       { slug: "sg-panel", name: "SgPanel", desc: "Container visual com borderStyle, padding, scroll e props de layout" },
       { slug: "sg-grid", name: "SgGrid", desc: "Grid responsivo com columns/minItemWidth, span, rowSpan e dense" },
