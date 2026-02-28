@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useSgTime } from "./SgTimeProvider";
+import { useSgTimeContext } from "./SgTimeProvider";
 import { useSgClockThemeResolver } from "./themes/provider";
 import { ThemeLayer, resolveTheme } from "./themes/renderTheme";
 import { useDarkFlag } from "./themes/useDarkFlag";
@@ -18,17 +18,46 @@ function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
-function useSecondTick() {
+function useSecondTick(enabled = true) {
   const [, setTick] = React.useState(0);
   React.useEffect(() => {
+    if (!enabled) return;
     const id = window.setInterval(() => setTick((v) => v + 1), 1000);
     return () => window.clearInterval(id);
+  }, [enabled]);
+}
+
+function parseInitialServerMs(initialServerTime?: string) {
+  if (!initialServerTime) return Date.now();
+  const parsed = Date.parse(initialServerTime);
+  return Number.isFinite(parsed) ? parsed : Date.now();
+}
+
+function useClockNowMs(initialServerTime?: string) {
+  const ctx = useSgTimeContext();
+  const [seedMs] = React.useState(() => parseInitialServerMs(initialServerTime));
+  const perfStartMsRef = React.useRef(0);
+  const [hydrated, setHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    perfStartMsRef.current = performance.now();
+    setHydrated(true);
   }, []);
+
+  const nowMs = React.useCallback(() => {
+    if (ctx) return ctx.nowMs();
+    if (!hydrated) return seedMs;
+    const delta = performance.now() - perfStartMsRef.current;
+    return seedMs + delta;
+  }, [ctx, hydrated, seedMs]);
+
+  return { nowMs, hasProvider: Boolean(ctx), providerTick: ctx?.tick ?? 0 };
 }
 
 export type SgClockProps = {
   variant?: "digital" | "analog";
   size?: "sm" | "md" | "lg" | number;
+  initialServerTime?: string;
   timezone?: string;
   locale?: string;
   format?: "12h" | "24h";
@@ -81,13 +110,6 @@ function digitalSizeToNumber(size: SgClockProps["size"]) {
   if (size === "sm") return 12;
   if (size === "lg") return 28;
   return 16;
-}
-
-function getPrevNext(value: number, min: number, max: number) {
-  const range = max - min + 1;
-  const prev = ((value - 1 - min + range) % range) + min;
-  const next = ((value + 1 - min) % range) + min;
-  return { prev, next };
 }
 
 function buildRange(min: number, max: number) {
@@ -239,40 +261,10 @@ function renderSegmentText(text: string, sizePx: number) {
   return { width, height, nodes };
 }
 
-function wrapRange(value: number, start: number, end: number) {
-  const size = end - start + 1;
-  const v = ((value - start) % size + size) % size;
-  return start + v;
-}
-
-function getTimeValue(
-  date: Date,
-  locale: string,
-  timeZone: string | undefined,
-  mode: "hours" | "minutes" | "seconds",
-  smooth: boolean
-) {
-  const { h, m, s } = getHmsForTimezone(date, locale, timeZone);
-  const ms = date.getMilliseconds();
-
-  if (mode === "hours") {
-    if (!smooth) return { base: h, frac: 0 };
-    const value = h + m / 60 + s / 3600;
-    return { base: Math.floor(value), frac: value - Math.floor(value) };
-  }
-  if (mode === "minutes") {
-    if (!smooth) return { base: m, frac: 0 };
-    const value = m + s / 60;
-    return { base: Math.floor(value), frac: value - Math.floor(value) };
-  }
-  if (!smooth) return { base: s, frac: 0 };
-  const value = s + ms / 1000;
-  return { base: Math.floor(value), frac: value - Math.floor(value) };
-}
-
 
 function AnalogClock({
   size = 280,
+  initialServerTime,
   timezone,
   locale = "pt-BR",
   showSeconds = true,
@@ -282,9 +274,9 @@ function AnalogClock({
   className,
   centerOverlay
 }: Omit<SgClockProps, "variant" | "format" | "size"> & { size: number }) {
-  const { tick, nowMs } = useSgTime();
-  void tick;
-  useSecondTick();
+  const { nowMs, hasProvider, providerTick } = useClockNowMs(initialServerTime);
+  void providerTick;
+  useSecondTick(!hasProvider);
 
   const resolver = useSgClockThemeResolver();
   const dark = useDarkFlag();
@@ -360,6 +352,7 @@ function AnalogClock({
 
 
 function DigitalClock({
+  initialServerTime,
   timezone,
   locale = "pt-BR",
   format = "24h",
@@ -368,9 +361,9 @@ function DigitalClock({
   digitalStyle = "default",
   className
 }: Omit<SgClockProps, "variant" | "secondHandMode" | "themeId" | "theme" | "centerOverlay">) {
-  const { tick, nowMs } = useSgTime();
-  void tick;
-  useSecondTick();
+  const { nowMs, hasProvider, providerTick } = useClockNowMs(initialServerTime);
+  void providerTick;
+  useSecondTick(!hasProvider);
 
   const d = new Date(nowMs());
   const parts = new Intl.DateTimeFormat(locale, {
@@ -645,6 +638,7 @@ export function SgClock(props: SgClockProps) {
   const {
     variant = "digital",
     size = "md",
+    initialServerTime,
     timezone,
     locale = "pt-BR",
     format = "24h",
@@ -662,6 +656,7 @@ export function SgClock(props: SgClockProps) {
     return (
       <AnalogClock
         size={analogSize}
+        initialServerTime={initialServerTime}
         themeId={themeId}
         theme={theme}
         timezone={timezone}
@@ -677,6 +672,7 @@ export function SgClock(props: SgClockProps) {
   return (
     <DigitalClock
       timezone={timezone}
+      initialServerTime={initialServerTime}
       locale={locale}
       format={format}
       showSeconds={showSeconds}

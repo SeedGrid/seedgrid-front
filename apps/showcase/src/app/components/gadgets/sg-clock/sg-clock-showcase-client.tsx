@@ -8,7 +8,6 @@ import {
   SgButton,
   SgGrid,
   SgPlayground,
-  SgTimeProvider,
   SgDiscardDigit,
   registerThemes,
   sgClockThemesBuiltIn,
@@ -54,7 +53,7 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function RollerShowcase(props: { timezone: string }) {
+function RollerShowcase(props: { timezone: string; initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("12h");
 
@@ -74,6 +73,7 @@ function RollerShowcase(props: { timezone: string }) {
           variant="digital"
           digitalStyle="roller3d"
           size="lg"
+          initialServerTime={props.initialServerTime}
           timezone={props.timezone}
           format={format}
           showSeconds={showSeconds}
@@ -84,7 +84,7 @@ function RollerShowcase(props: { timezone: string }) {
         code={`import * as React from "react";
 import { SgButton, SgClock } from "@seedgrid/fe-components";
 
-export function RollerShowcase(props: { timezone: string }) {
+export function RollerShowcase(props: { timezone: string; initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("12h");
 
@@ -104,6 +104,7 @@ export function RollerShowcase(props: { timezone: string }) {
           variant="digital"
           digitalStyle="roller3d"
           size="lg"
+          initialServerTime={props.initialServerTime}
           timezone={props.timezone}
           format={format}
           showSeconds={showSeconds}
@@ -117,7 +118,7 @@ export function RollerShowcase(props: { timezone: string }) {
   );
 }
 
-function FlipShowcase(props: { timezone: string }) {
+function FlipShowcase(props: { timezone: string; initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
 
@@ -137,6 +138,7 @@ function FlipShowcase(props: { timezone: string }) {
           variant="digital"
           digitalStyle="flip"
           size="lg"
+          initialServerTime={props.initialServerTime}
           timezone={props.timezone}
           format={format}
           showSeconds={showSeconds}
@@ -147,7 +149,7 @@ function FlipShowcase(props: { timezone: string }) {
         code={`import * as React from "react";
 import { SgButton, SgClock } from "@seedgrid/fe-components";
 
-export function FlipShowcase(props: { timezone: string }) {
+export function FlipShowcase(props: { timezone: string; initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
 
@@ -167,6 +169,7 @@ export function FlipShowcase(props: { timezone: string }) {
           variant="digital"
           digitalStyle="flip"
           size="lg"
+          initialServerTime={props.initialServerTime}
           timezone={props.timezone}
           format={format}
           showSeconds={showSeconds}
@@ -271,7 +274,7 @@ const DIGITAL_STYLE_GALLERY_OPTIONS: Array<{ label: string; style: SgClockDigita
   { label: "Discard", style: "discard" }
 ];
 
-function DigitalExtrasShowcase() {
+function DigitalExtrasShowcase(props: { initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
   const discardScale = showSeconds ? (format === "12h" ? 0.98 : 1.05) : format === "12h" ? 1.14 : 1.22;
@@ -323,6 +326,7 @@ function DigitalExtrasShowcase() {
                   variant="digital"
                   digitalStyle={item.style}
                   size={item.style === "matrix" ? "sm" : item.style === "discard" ? "lg" : "md"}
+                  initialServerTime={props.initialServerTime}
                   timezone="America/Sao_Paulo"
                   format={format}
                   showSeconds={showSeconds}
@@ -346,7 +350,7 @@ const DIGITAL_STYLE_GALLERY_OPTIONS: Array<{ label: string; style: SgClockDigita
   { label: "Discard", style: "discard" }
 ];
 
-export function DigitalExtrasShowcase() {
+export function DigitalExtrasShowcase(props: { initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
   const discardScale = showSeconds ? (format === "12h" ? 0.98 : 1.05) : format === "12h" ? 1.14 : 1.22;
@@ -398,6 +402,7 @@ export function DigitalExtrasShowcase() {
                   variant="digital"
                   digitalStyle={item.style}
                   size={item.style === "matrix" ? "sm" : item.style === "discard" ? "lg" : "md"}
+                  initialServerTime={props.initialServerTime}
                   timezone="America/Sao_Paulo"
                   format={format}
                   showSeconds={showSeconds}
@@ -420,7 +425,6 @@ import {
   SgClock,
   SgClockThemeProvider,
   SgGrid,
-  SgTimeProvider,
   type SgClockDigitalStyle
 } from "@seedgrid/fe-components";
 
@@ -446,55 +450,57 @@ export default function App() {
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [digitalStyle, setDigitalStyle] = React.useState<SgClockDigitalStyle>("default");
+  const initialServerTime = new Date().toISOString();
 
   return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      <SgClockThemeProvider value={{ mode: "fallback", fallbackThemeId: "classic" }}>
-        <div className="space-y-4 p-2">
-          <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-            <SgButton size="sm" appearance={showSeconds ? "solid" : "outline"} onClick={() => setShowSeconds((prev) => !prev)}>
-              seconds
-            </SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setFormat((prev) => (prev === "24h" ? "12h" : "24h"))}>
-              {format}
-            </SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => nextDigitalStyle(prev))}>
-              {digitalStyle}
-            </SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setTimezone((prev) => (prev === "America/Sao_Paulo" ? "Europe/Lisbon" : "America/Sao_Paulo"))}>
-              {timezone === "America/Sao_Paulo" ? "Sao Paulo" : "Lisbon"}
-            </SgButton>
-          </SgGrid>
+    <SgClockThemeProvider value={{ mode: "fallback", fallbackThemeId: "classic" }}>
+      <div className="space-y-4 p-2">
+        <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+          <SgButton size="sm" appearance={showSeconds ? "solid" : "outline"} onClick={() => setShowSeconds((prev) => !prev)}>
+            seconds
+          </SgButton>
+          <SgButton size="sm" appearance="outline" onClick={() => setFormat((prev) => (prev === "24h" ? "12h" : "24h"))}>
+            {format}
+          </SgButton>
+          <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => nextDigitalStyle(prev))}>
+            {digitalStyle}
+          </SgButton>
+          <SgButton size="sm" appearance="outline" onClick={() => setTimezone((prev) => (prev === "America/Sao_Paulo" ? "Europe/Lisbon" : "America/Sao_Paulo"))}>
+            {timezone === "America/Sao_Paulo" ? "Sao Paulo" : "Lisbon"}
+          </SgButton>
+        </SgGrid>
 
-          <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
-            <div className="rounded border border-border bg-background p-4">
-              <SgClock
-                variant="digital"
-                size="lg"
-                timezone={timezone}
-                format={format}
-                showSeconds={showSeconds}
-                digitalStyle={digitalStyle}
-              />
-            </div>
-            <div className="rounded border border-border bg-background p-4">
-              <SgClock
-                variant="analog"
-                size={220}
-                showSeconds={showSeconds}
-                secondHandMode="smooth"
-                timezone={timezone}
-              />
-            </div>
-          </SgGrid>
-        </div>
-      </SgClockThemeProvider>
-    </SgTimeProvider>
+        <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
+          <div className="rounded border border-border bg-background p-4">
+            <SgClock
+              variant="digital"
+              size="lg"
+              initialServerTime={initialServerTime}
+              timezone={timezone}
+              format={format}
+              showSeconds={showSeconds}
+              digitalStyle={digitalStyle}
+            />
+          </div>
+          <div className="rounded border border-border bg-background p-4">
+            <SgClock
+              variant="analog"
+              size={220}
+              initialServerTime={initialServerTime}
+              showSeconds={showSeconds}
+              secondHandMode="smooth"
+              timezone={timezone}
+            />
+          </div>
+        </SgGrid>
+      </div>
+    </SgClockThemeProvider>
   );
 }`;
 const CLOCK_PROPS: ShowcasePropRow[] = [
   { prop: "variant", type: '"analog" | "digital"', defaultValue: '"digital"', description: "Seleciona o modo de renderizacao do relogio." },
   { prop: "size", type: 'number | "sm" | "md" | "lg"', defaultValue: '"md" (digital) / 240 (analog)', description: "Define o tamanho do relogio analogico ou digital." },
+  { prop: "initialServerTime", type: "string", defaultValue: "-", description: "Seed opcional de hora ISO para sincronizar o ponto inicial com o servidor." },
   { prop: "timezone", type: "string", defaultValue: "timezone local", description: "Fuso usado para calcular a hora exibida." },
   { prop: "locale", type: "string", defaultValue: '"pt-BR"', description: "Locale usado para formatacao da hora." },
   { prop: "format", type: '"12h" | "24h"', defaultValue: '"24h"', description: "Formato de hora para o modo digital." },
@@ -523,13 +529,12 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
 
   return (
     <I18NReady>
-      <SgTimeProvider initialServerTime={initialServerTime}>
-        <SgClockThemeProvider
-          value={{
-            mode: "fallback",
-            fallbackThemeId: "classic"
-          }}
-        >
+      <SgClockThemeProvider
+        value={{
+          mode: "fallback",
+          fallbackThemeId: "classic"
+        }}
+      >
           <div
             ref={pageRef}
             className="max-w-5xl space-y-8"
@@ -573,6 +578,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
                 <SgClock
                   variant="analog"
                   size={320}
+                  initialServerTime={initialServerTime}
                   themeId={themeId}
                   showSeconds={showSeconds}
                   secondHandMode={secondMode}
@@ -587,7 +593,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
 import { SgButton, SgClock, SgClockThemePicker } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../../i18n";
 
-export function AnalogExample() {
+export function AnalogExample(props: { initialServerTime: string }) {
   const i18n = useShowcaseI18n();
   const [themeId, setThemeId] = React.useState("seedgrid");
   const [secondMode, setSecondMode] = React.useState<"step" | "smooth">("step");
@@ -621,6 +627,7 @@ export function AnalogExample() {
         <SgClock
           variant="analog"
           size={320}
+          initialServerTime={props.initialServerTime}
           themeId={themeId}
           showSeconds={showSeconds}
           secondHandMode={secondMode}
@@ -643,6 +650,7 @@ export function AnalogExample() {
               <SgClock
                 variant="analog"
                 size={260}
+                initialServerTime={initialServerTime}
                 showSeconds
                 secondHandMode="smooth"
                 theme={{
@@ -667,12 +675,13 @@ export function AnalogExample() {
               <CodeBlockBase
                 code={`import { SgClock } from "@seedgrid/fe-components";
 
-export function InlineThemeExample() {
+export function InlineThemeExample(props: { initialServerTime: string }) {
   return (
     <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
       <SgClock
         variant="analog"
         size={260}
+        initialServerTime={props.initialServerTime}
         showSeconds
         secondHandMode="smooth"
         theme={{
@@ -711,15 +720,15 @@ export function InlineThemeExample() {
               </SgButton>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <SgClock variant="digital" size="sm" timezone={timezone} format={format} digitalStyle={digitalStyle} />
-              <SgClock variant="digital" size="md" timezone={timezone} format={format} digitalStyle={digitalStyle} />
-              <SgClock variant="digital" size="lg" timezone={timezone} format={format} digitalStyle={digitalStyle} />
+              <SgClock variant="digital" size="sm" initialServerTime={initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
+              <SgClock variant="digital" size="md" initialServerTime={initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
+              <SgClock variant="digital" size="lg" initialServerTime={initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
             </div>
             <div className="mt-4">
               <div className="text-sm font-medium">{t(i18n, "showcase.component.clock.labels.segmentTitle")}</div>
               <div className="mt-2 flex flex-wrap items-center gap-6">
-                <SgClock variant="digital" digitalStyle="segment" size="md" timezone={timezone} format={format} />
-                <SgClock variant="digital" digitalStyle="segment" size="lg" timezone={timezone} format={format} />
+                <SgClock variant="digital" digitalStyle="segment" size="md" initialServerTime={initialServerTime} timezone={timezone} format={format} />
+                <SgClock variant="digital" digitalStyle="segment" size="lg" initialServerTime={initialServerTime} timezone={timezone} format={format} />
               </div>
             </div>
             <div className="mt-6">
@@ -745,7 +754,7 @@ function nextDigitalStyle(current: SgClockDigitalStyle): SgClockDigitalStyle {
   return DIGITAL_STYLE_OPTIONS[(idx + 1) % DIGITAL_STYLE_OPTIONS.length] ?? "default";
 }
 
-export function DigitalExample() {
+export function DigitalExample(props: { initialServerTime: string }) {
   const i18n = useShowcaseI18n();
   const [timezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
@@ -763,16 +772,16 @@ export function DigitalExample() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <SgClock variant="digital" size="sm" timezone={timezone} format={format} digitalStyle={digitalStyle} />
-        <SgClock variant="digital" size="md" timezone={timezone} format={format} digitalStyle={digitalStyle} />
-        <SgClock variant="digital" size="lg" timezone={timezone} format={format} digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="sm" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="md" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
+        <SgClock variant="digital" size="lg" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle={digitalStyle} />
       </div>
 
       <div className="mt-4">
         <div className="text-sm font-medium">{t(i18n, "showcase.component.clock.labels.segmentTitle")}</div>
         <div className="mt-2 flex flex-wrap items-center gap-6">
-          <SgClock variant="digital" digitalStyle="segment" size="md" timezone={timezone} format={format} />
-          <SgClock variant="digital" digitalStyle="segment" size="lg" timezone={timezone} format={format} />
+          <SgClock variant="digital" digitalStyle="segment" size="md" initialServerTime={props.initialServerTime} timezone={timezone} format={format} />
+          <SgClock variant="digital" digitalStyle="segment" size="lg" initialServerTime={props.initialServerTime} timezone={timezone} format={format} />
         </div>
       </div>
     </>
@@ -783,11 +792,11 @@ export function DigitalExample() {
             </Section>
 
             <Section title="Roller 3D" description="Rolos 3D com AM/PM opcional e segundos sob demanda.">
-              <RollerShowcase timezone={timezone} />
+              <RollerShowcase timezone={timezone} initialServerTime={initialServerTime} />
             </Section>
 
             <Section title="Flip" description="Flip clock em duas folhas, com segundos e 12/24h.">
-              <FlipShowcase timezone={timezone} />
+              <FlipShowcase timezone={timezone} initialServerTime={initialServerTime} />
             </Section>
 
             <Section title="Discard Digit" description="Pilha de folhas com paginacao imperativa via ref: totalNumberPages, increasePage(), decreasePage(), page().">
@@ -798,7 +807,7 @@ export function DigitalExample() {
               title="Outros digitalStyle"
               description="Galeria dedicada para estilos matrix, neon, discard e variacoes relacionadas."
             >
-              <DigitalExtrasShowcase />
+              <DigitalExtrasShowcase initialServerTime={initialServerTime} />
             </Section>
 
             <Section
@@ -816,15 +825,15 @@ export function DigitalExample() {
             </div>
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <SgClock variant="digital" size="lg" timezone={timezone} format={format} showSeconds />
-              <SgClock variant="analog" size={220} themeId={themeId} timezone={timezone} showSeconds={false} />
+              <SgClock variant="digital" size="lg" initialServerTime={initialServerTime} timezone={timezone} format={format} showSeconds />
+              <SgClock variant="analog" size={220} initialServerTime={initialServerTime} themeId={themeId} timezone={timezone} showSeconds={false} />
             </div>
             <div className="mt-6">
               <CodeBlockBase
                 code={`import * as React from "react";
 import { SgButton, SgClock } from "@seedgrid/fe-components";
 
-export function TimezoneExample() {
+export function TimezoneExample(props: { initialServerTime: string }) {
   const [themeId] = React.useState("seedgrid");
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
@@ -842,8 +851,8 @@ export function TimezoneExample() {
       </div>
 
       <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <SgClock variant="digital" size="lg" timezone={timezone} format={format} showSeconds />
-        <SgClock variant="analog" size={220} themeId={themeId} timezone={timezone} showSeconds={false} />
+        <SgClock variant="digital" size="lg" initialServerTime={props.initialServerTime} timezone={timezone} format={format} showSeconds />
+        <SgClock variant="analog" size={220} initialServerTime={props.initialServerTime} themeId={themeId} timezone={timezone} showSeconds={false} />
       </div>
     </>
   );
@@ -869,8 +878,9 @@ export function TimezoneExample() {
             <ShowcasePropsReference rows={CLOCK_PROPS} />
             <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
           </div>
-        </SgClockThemeProvider>
-      </SgTimeProvider>
+      </SgClockThemeProvider>
     </I18NReady>
   );
 }
+
+

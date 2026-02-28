@@ -11,10 +11,22 @@ export type SgTimeContextValue = {
 
 const SgTimeContext = React.createContext<SgTimeContextValue | null>(null);
 
+export function useSgTimeContext() {
+  return React.useContext(SgTimeContext);
+}
+
 export function useSgTime() {
-  const ctx = React.useContext(SgTimeContext);
-  if (!ctx) throw new Error("useSgTime must be used within <SgTimeProvider />");
-  return ctx;
+  const ctx = useSgTimeContext();
+  const localFallback = React.useMemo<SgTimeContextValue>(
+    () => ({
+      serverStartMs: Date.now(),
+      perfStartMs: 0,
+      tick: 0,
+      nowMs: () => Date.now()
+    }),
+    []
+  );
+  return ctx ?? localFallback;
 }
 
 export function SgTimeProvider({
