@@ -1576,10 +1576,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       : isCollapsed
       ? collapsedWidthCss
       : expandedWidthCss;
-  const sidebarWidthStyle =
-    dockMode && isVerticalDockZone && sidebarWidthCss !== "100%"
-      ? `min(100%, ${sidebarWidthCss})`
-      : sidebarWidthCss;
+  const sidebarWidthStyle = sidebarWidthCss;
 
   const sidebarShell = (
     <aside
