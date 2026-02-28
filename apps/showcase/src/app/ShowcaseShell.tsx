@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import {
   SgToaster,
   SgComponentsI18nProvider,
@@ -10,8 +9,10 @@ import {
   componentsMessagesPtPt,
   componentsMessagesEnUs,
   componentsMessagesEs,
-  SgAutocomplete,
-  type SgAutocompleteItem
+  SgDockScreen,
+  SgDockZone,
+  SgMenu,
+  type SgMenuNode
 } from "@seedgrid/fe-components";
 import {
   ShowcaseI18nProvider,
@@ -99,6 +100,28 @@ const THEME_ITEMS = [
   { slug: "credits", label: "Creditos / Licencas", isTheme: true }
 ];
 
+const MENU_GROUP_ORDER = ["Inputs", "Buttons", "Menus", "Layout", "Digits", "Gadgets", "Wizard", "Utils"] as const;
+
+const SHELL_MENU: SgMenuNode[] = [
+  ...THEME_ITEMS.map((item) => ({
+    id: `theme-${item.slug}`,
+    label: item.label,
+    url: `/${item.slug}`
+  })),
+  ...MENU_GROUP_ORDER.map((group) => {
+    const children = COMPONENTS.filter((item) => item.group === group).map((item) => ({
+      id: `component-${item.slug}`,
+      label: item.label,
+      url: `/components/${item.slug}`
+    }));
+    return {
+      id: `group-${group.toLowerCase()}`,
+      label: group,
+      children
+    };
+  }).filter((node) => node.children.length > 0)
+];
+
 const SIDEBAR_THEME_VARS = {
   "--primary": "27 62% 47%",
   "--primary-foreground": "0 0% 100%",
@@ -180,14 +203,7 @@ export default function ShowcaseShell(props: {
   const [messages, setMessages] = React.useState<Record<string, string>>(
     props.initialMessages ?? showcaseMessagesPtBr
   );
-
-  const isPathActive = React.useCallback(
-    (href: string) => {
-      const normalizePath = (value: string) => value.replace(/\/+$/, "") || "/";
-      return normalizePath(pathname ?? "/") === normalizePath(href);
-    },
-    [pathname]
-  );
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(true);
 
   React.useEffect(() => {
     let stored: ShowcaseLocale | null = null;
@@ -232,24 +248,37 @@ export default function ShowcaseShell(props: {
         locale={locale}
         messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr}
       >
-        <div className="flex h-screen">
-          <aside
-            className="sticky top-0 h-screen w-72 shrink-0 border-r border-[#e2cebc] bg-[#f7f3ee] text-[#2b1f14]"
-            style={SIDEBAR_THEME_VARS}
-          >
-            <div className="flex h-full min-h-0 flex-col p-4">
-              <div className="shrink-0">
-                <Link href="/" className="mb-6 block rounded-md px-1 py-1 transition-colors hover:bg-[#efe3d8]/80">
-                  <img
-                    src="/logo-seedgrid.svg"
-                    alt={t({ locale, messages }, "showcase.app.brand")}
-                    className="h-8 w-auto max-w-[160px]"
-                  />
-                  <span className="block text-xs text-[#8b6344]">
-                    {t({ locale, messages }, "showcase.app.subtitle")}
-                  </span>
-                </Link>
-                <div className="mb-4">
+        <SgDockScreen
+          id="showcase-shell-dock"
+          screenId="showcase-shell-screen"
+          fullscreen={false}
+          className="h-screen w-full"
+          layoutClassName="!grid-cols-[auto_minmax(0,1fr)_auto] !grid-rows-[auto_minmax(0,1fr)]"
+        >
+          <SgDockZone zone="top" className="col-span-3 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee]">
+            <div className="h-10 w-full" />
+          </SgDockZone>
+
+          <SgDockZone zone="left" className="col-start-1 row-start-2 !p-0 border-r border-[#e2cebc] bg-[#f7f3ee]">
+            <SgMenu
+              id="showcase-shell-menu-dockable"
+              menu={SHELL_MENU}
+              selection={{ activeUrl: pathname ?? undefined }}
+              brand={{
+                imageSrc: "/logo-seedgrid.svg",
+                title: "Components Showcase",
+                onClick: () => router.push("/")
+              }}
+              variant="sidebar"
+              menuStyle="panel"
+              mode="multiple"
+              defaultExpandedIds={MENU_GROUP_ORDER.map((group) => `group-${group.toLowerCase()}`)}
+              collapsed={sidebarCollapsed}
+              onCollapsedChange={setSidebarCollapsed}
+              showCollapseButton
+              search={{ enabled: true, placeholder: t({ locale, messages }, "showcase.nav.search.placeholder") }}
+              footer={
+                !sidebarCollapsed ? (
                   <LocaleSwitcher
                     value={locale}
                     onChange={(next) => {
@@ -258,110 +287,33 @@ export default function ShowcaseShell(props: {
                       setMessages(nextMessages);
                     }}
                   />
-                </div>
-                <div className="mb-4">
-                  <SgAutocomplete<SgAutocompleteItem>
-                    id="nav-search"
-                    label={t({ locale, messages }, "showcase.nav.search.label")}
-                    placeholder={t({ locale, messages }, "showcase.nav.search.placeholder")}
-                    openOnFocus={false}
-                    showDropDownButton
-                    minLengthForSearch={1}
-                    grouped
-                    clearOnSelect
-                    source={(query) => {
-                      const q = (query ?? "").toLowerCase();
-                      const items: SgAutocompleteItem[] = [
-                        ...THEME_ITEMS.map((item) => ({
-                          id: item.slug,
-                          label: item.label,
-                          value: item.slug,
-                          group: "Theme",
-                          data: { slug: item.slug, path: `/${item.slug}` }
-                        })),
-                        ...COMPONENTS.map((item) => ({
-                          id: item.slug,
-                          label: item.label,
-                          value: item.slug,
-                          group: item.group,
-                          data: { slug: item.slug, path: `/components/${item.slug}` }
-                        }))
-                      ];
-                      if (!q) return items;
-                      return items.filter((item) =>
-                        item.label.toLowerCase().includes(q) ||
-                        item.value?.toLowerCase().includes(q) ||
-                        item.group?.toLowerCase().includes(q)
-                      );
-                    }}
-                    onSelect={(item) => {
-                      const path = (item.data as { path?: string } | undefined)?.path;
-                      if (path) router.push(path);
-                    }}
-                  />
-                </div>
-                <div className="mb-2 border-t border-[#dcc6b2]" />
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
-                <nav className="flex flex-col gap-0.5 pb-4">
-                  {THEME_ITEMS.map((c) => {
-                    const href = `/${c.slug}`;
-                    const isActive = isPathActive(href);
-                    return (
-                      <Link
-                        key={c.slug}
-                        href={href}
-                        aria-current={isActive ? "page" : undefined}
-                        className={[
-                          "rounded-md px-3 py-2 text-sm font-semibold transition-colors",
-                          isActive
-                            ? "bg-[#c56a2d] text-white shadow-sm"
-                            : "text-[#3a2517] hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                        ].join(" ")}
-                      >
-                        {c.label}
-                      </Link>
-                    );
-                  })}
-                  <div className="my-2 border-t border-[#dcc6b2]" />
-                  {(["Inputs", "Buttons", "Menus", "Layout", "Digits", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
-                    const items = COMPONENTS.filter((c) => c.group === group);
-                    if (items.length === 0) return null;
-                    return (
-                      <div key={group} className="mb-2 flex flex-col gap-0.5">
-                        <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-[#a86a3f]">
-                          {group}
-                        </div>
-                        {items.map((c) => {
-                          const href = `/components/${c.slug}`;
-                          const isActive = isPathActive(href);
-                          return (
-                            <Link
-                              key={c.slug}
-                              href={href}
-                              aria-current={isActive ? "page" : undefined}
-                              className={[
-                                "rounded-md px-3 py-2 text-sm transition-colors",
-                                isActive
-                                  ? "bg-[#c56a2d] font-medium text-white shadow-sm"
-                                  : "text-[#4b3221] hover:bg-[#c56a2d]/15 hover:text-[#8f4b1f]"
-                              ].join(" ")}
-                            >
-                              {c.label}
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-          </aside>
-          <main className="flex-1 overflow-y-auto p-8">{props.children}</main>
-          <SgToaster />
-          <ThemeEditor />
-        </div>
+                ) : null
+              }
+              dockable
+              dockZone="left"
+              draggable
+              expandedWidth={288}
+              collapsedWidth={76}
+              border
+              className="h-full bg-[#f7f3ee] text-[#2b1f14]"
+              style={SIDEBAR_THEME_VARS}
+              ariaLabel="Menu do showcase"
+              onNavigate={(node) => {
+                if (node.url) router.push(node.url);
+              }}
+            />
+          </SgDockZone>
+
+          <SgDockZone zone="right" className="col-start-3 row-start-2 !p-0 border-l border-[#e2cebc] bg-[#f7f3ee]">
+            <div className="h-full w-14" />
+          </SgDockZone>
+
+          <SgDockZone zone="free" className="col-start-2 row-start-2 !p-0">
+            <main className="h-full overflow-y-auto p-2">{props.children}</main>
+          </SgDockZone>
+        </SgDockScreen>
+        <SgToaster />
+        <ThemeEditor />
       </SgComponentsI18nProvider>
     </ShowcaseI18nProvider>
   );
