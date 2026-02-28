@@ -64,6 +64,7 @@ const COMPONENTS = [
       { slug: "gadgets/sg-roller3d-digit", name: "SgRoller3DDigit", desc: "Digito em tambor vertical com transicao 3D suave" },
       { slug: "gadgets/sg-matrix-digit", name: "SgMatrixDigit", desc: "Caracteres matriciais em pontos com color e backgroundColor" },
       { slug: "gadgets/sg-neon-digit", name: "SgNeonDigit", desc: "Texto em neon com glow configuravel (color, font, backgroundColor e shadowColor)" },
+      { slug: "gadgets/sg-discard-digit", name: "SgDiscardDigit", desc: "Bloco de folhas com animacao 3D de descarte e troca de valor" },
       { slug: "gadgets/sg-string-animator", name: "SgStringAnimator", desc: "Animador de texto para transicoes de caracteres" },
       { slug: "gadgets/sg-qr-code", name: "SgQRCode", desc: "QR Code com valor dinamico e logo central" },
       { slug: "gadgets/sg-linear-gauge", name: "SgLinearGauge", desc: "Gauge linear com ranges e pointers" },

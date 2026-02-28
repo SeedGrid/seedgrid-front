@@ -82,6 +82,8 @@ const COMPONENTS = [
   { group: "Gadgets", slug: "gadgets/sg-roller3d-digit", label: "SgRoller3DDigit" },
   { group: "Gadgets", slug: "gadgets/sg-matrix-digit", label: "SgMatrixDigit" },
   { group: "Gadgets", slug: "gadgets/sg-neon-digit", label: "SgNeonDigit" },
+  { group: "Gadgets", slug: "gadgets/sg-discard-digit", label: "SgDiscardDigit" },
+  { group: "Gadgets", slug: "gadgets/sg-fade-digit", label: "SgFadeDigit" },
   { group: "Gadgets", slug: "gadgets/sg-string-animator", label: "SgStringAnimator" },
   { group: "Gadgets", slug: "gadgets/sg-qr-code", label: "SgQRCode" },
   { group: "Gadgets", slug: "gadgets/sg-linear-gauge", label: "SgLinearGauge" },

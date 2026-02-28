@@ -223,12 +223,16 @@ export type { SgTimeContextValue } from "./gadgets/clock/SgTimeProvider";
 export type { SgClockProps } from "./gadgets/clock/SgClock";
 export { SgFlipDigit } from "./gadgets/flip-digit";
 export type { SgFlipDigitProps } from "./gadgets/flip-digit";
+export { SgFadeDigit } from "./gadgets/fade-digit";
+export type { SgFadeDigitProps } from "./gadgets/fade-digit";
 export { SgRoller3DDigit } from "./gadgets/roller3d-digit";
 export type { SgRoller3DDigitProps } from "./gadgets/roller3d-digit";
 export { SgMatrixDigit } from "./gadgets/matrix-digit";
 export type { SgMatrixDigitProps } from "./gadgets/matrix-digit";
 export { SgNeonDigit } from "./gadgets/neon-digit";
 export type { SgNeonDigitProps } from "./gadgets/neon-digit";
+export { SgDiscardDigit } from "./gadgets/discard-digit";
+export type { SgDiscardDigitProps } from "./gadgets/discard-digit";
 export { SgStringAnimator, SG_STRING_ANIMATOR_DEFAULT_CHARSET } from "./gadgets/string-animator";
 export type {
   SgStringAnimatorProps,
