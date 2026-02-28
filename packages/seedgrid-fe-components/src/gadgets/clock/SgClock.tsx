@@ -542,11 +542,27 @@ function DigitalClock({
             ? 56
             : 44;
 
+    const pagesForDigit = (digit: string) => {
+      const n = Number.parseInt(digit, 10);
+      if (!Number.isFinite(n)) return 1;
+      return Math.max(1, Math.min(30, n));
+    };
+
     const Colon = () => (
       <SgDiscardDigit
         value=":"
         fontSize={Math.max(26, Math.round(digitFont * 0.72))}
-        stackDepth={12}
+        totalNumberPages={1}
+        transitionMs={560}
+        animateOnChange={false}
+      />
+    );
+
+    const PeriodCell = ({ value }: { value: string }) => (
+      <SgDiscardDigit
+        value={value}
+        fontSize={Math.max(20, Math.round(digitFont * 0.52))}
+        totalNumberPages={1}
         transitionMs={560}
         animateOnChange={false}
       />
@@ -554,21 +570,19 @@ function DigitalClock({
 
     return (
       <div className={cn("flex items-end gap-2", className)} aria-label="Digital clock">
-        <SgDiscardDigit value={hh.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
-        <SgDiscardDigit value={hh.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        <SgDiscardDigit value={hh.charAt(0)} fontSize={digitFont} totalNumberPages={pagesForDigit(hh.charAt(0))} transitionMs={560} changeAnimationMode="incoming" />
+        <SgDiscardDigit value={hh.charAt(1)} fontSize={digitFont} totalNumberPages={pagesForDigit(hh.charAt(1))} transitionMs={560} changeAnimationMode="incoming" />
         <Colon />
-        <SgDiscardDigit value={mm.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
-        <SgDiscardDigit value={mm.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        <SgDiscardDigit value={mm.charAt(0)} fontSize={digitFont} totalNumberPages={pagesForDigit(mm.charAt(0))} transitionMs={560} changeAnimationMode="incoming" />
+        <SgDiscardDigit value={mm.charAt(1)} fontSize={digitFont} totalNumberPages={pagesForDigit(mm.charAt(1))} transitionMs={560} changeAnimationMode="incoming" />
         {showSeconds ? (
           <>
             <Colon />
-            <SgDiscardDigit value={ss.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
-            <SgDiscardDigit value={ss.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+            <SgDiscardDigit value={ss.charAt(0)} fontSize={digitFont} totalNumberPages={pagesForDigit(ss.charAt(0))} transitionMs={560} changeAnimationMode="incoming" />
+            <SgDiscardDigit value={ss.charAt(1)} fontSize={digitFont} totalNumberPages={pagesForDigit(ss.charAt(1))} transitionMs={560} changeAnimationMode="incoming" />
           </>
         ) : null}
-        {format === "12h" && dayPeriod ? (
-          <span className="text-xs font-semibold text-muted-foreground">{dayPeriod.toUpperCase()}</span>
-        ) : null}
+        {format === "12h" && dayPeriod ? <PeriodCell value={dayPeriod.toUpperCase()} /> : null}
       </div>
     );
   }

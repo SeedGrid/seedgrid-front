@@ -19,6 +19,13 @@ type ActiveDiscard = {
   started: boolean;
 };
 
+type ActiveIncoming = {
+  id: number;
+  value: string;
+  motion: DiscardMotion;
+  started: boolean;
+};
+
 export type SgDiscardDigitProps = {
   /** Texto/valor exibido na folha do topo. */
   value: string;
@@ -36,12 +43,25 @@ export type SgDiscardDigitProps = {
   animateOnChange?: boolean;
   /** Duracao total da animacao em ms. */
   transitionMs?: number;
-  /** Quantidade de folhas visiveis na pilha (min 2, max 30). */
+  /** Quantidade de folhas visiveis na pilha (min 2, max 30). Ignorado se totalNumberPages for definido. */
   stackDepth?: number;
+  /** Total de paginas do monte. Quando definido, a pilha visual encolhe a cada increasePage(). */
+  totalNumberPages?: number;
+  /** Estrategia de animacao para mudancas por prop `value`. */
+  changeAnimationMode?: "discard" | "incoming";
   /** Classes CSS adicionais. */
   className?: string;
   /** Estilo inline adicional. */
   style?: React.CSSProperties;
+};
+
+export type SgDiscardDigitHandle = {
+  /** Decrementa a pagina atual (minimo 1). */
+  decreasePage(): void;
+  /** Incrementa a pagina atual (maximo totalNumberPages). */
+  increasePage(): void;
+  /** Retorna a pagina atual (1-indexed). */
+  page(): number;
 };
 
 function createRandomMotion(fontSize: number): DiscardMotion {
@@ -61,7 +81,8 @@ const PER_LAYER_Y = 3;
 /** horizontal drift per layer — subtle perspective illusion */
 const PER_LAYER_X = 0;
 
-export function SgDiscardDigit({
+export const SgDiscardDigit = React.forwardRef<SgDiscardDigitHandle, SgDiscardDigitProps>(
+function SgDiscardDigit({
   value,
   color = "#0f172a",
   font,
@@ -71,10 +92,31 @@ export function SgDiscardDigit({
   animateOnChange = true,
   transitionMs = 640,
   stackDepth = 20,
+  totalNumberPages,
+  changeAnimationMode = "discard",
   className,
   style,
-}: Readonly<SgDiscardDigitProps>) {
-  const depth = Math.max(2, Math.min(30, stackDepth));
+}: Readonly<SgDiscardDigitProps>, ref) {
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const directionRef = React.useRef<"next" | "prev">("next");
+
+  React.useImperativeHandle(ref, () => ({
+    decreasePage() {
+      directionRef.current = "prev";
+      setCurrentPage((p) => Math.max(1, p - 1));
+    },
+    increasePage() {
+      directionRef.current = "next";
+      setCurrentPage((p) => (totalNumberPages != null ? Math.min(totalNumberPages, p + 1) : p + 1));
+    },
+    page() {
+      return currentPage;
+    },
+  }), [currentPage, totalNumberPages]);
+
+  const depth = totalNumberPages != null
+    ? Math.max(1, Math.min(30, totalNumberPages - currentPage + 1))
+    : Math.max(2, Math.min(30, stackDepth));
 
   // ── Dimensions ─────────────────────────────────────────────────────────────
   const cardW = Math.max(74, Math.round(fontSize * 1.14));
@@ -99,6 +141,7 @@ export function SgDiscardDigit({
   // ── State ───────────────────────────────────────────────────────────────────
   const [displayValue, setDisplayValue] = React.useState(value);
   const [activeDiscard, setActiveDiscard] = React.useState<ActiveDiscard | null>(null);
+  const [activeIncoming, setActiveIncoming] = React.useState<ActiveIncoming | null>(null);
   const discardIdRef = React.useRef(0);
   const latestValueRef = React.useRef(value);
 
@@ -109,22 +152,46 @@ export function SgDiscardDigit({
   React.useEffect(() => {
     if (!animateOnChange) {
       setActiveDiscard(null);
+      setActiveIncoming(null);
       setDisplayValue(value);
       return;
     }
-    if (value === displayValue && activeDiscard === null) return;
-    if (activeDiscard === null) {
-      const nextId = ++discardIdRef.current;
-      setActiveDiscard({
-        id: nextId,
-        value: displayValue,
-        motion: createRandomMotion(fontSize),
-        started: false,
-      });
-    }
-    setDisplayValue(value);
-  }, [activeDiscard, animateOnChange, displayValue, fontSize, value]);
+    if (value === displayValue && activeDiscard === null && activeIncoming === null) return;
 
+    const shouldUseIncoming =
+      directionRef.current === "prev" || changeAnimationMode === "incoming";
+
+    if (shouldUseIncoming) {
+      // Incoming: nova folha sobe por baixo revelando o valor anterior
+      if (activeIncoming === null && value !== displayValue) {
+        const nextId = ++discardIdRef.current;
+        setActiveIncoming({
+          id: nextId,
+          value,
+          motion: createRandomMotion(fontSize),
+          started: false,
+        });
+        // displayValue permanece no valor antigo; atualiza só ao fim da animacao
+      }
+    } else {
+      // Discard: folha atual voa para fora, revelando o novo valor
+      if (activeIncoming === null) {
+        if (activeDiscard === null) {
+          const nextId = ++discardIdRef.current;
+          setActiveDiscard({
+            id: nextId,
+            value: displayValue,
+            motion: createRandomMotion(fontSize),
+            started: false,
+          });
+        }
+        setDisplayValue(value);
+      }
+    }
+    directionRef.current = "next";
+  }, [activeDiscard, activeIncoming, animateOnChange, changeAnimationMode, displayValue, fontSize, value]);
+
+  // ── RAF: discard ─────────────────────────────────────────────────────────
   React.useEffect(() => {
     if (!activeDiscard || activeDiscard.started) return;
     let raf = 0;
@@ -136,6 +203,19 @@ export function SgDiscardDigit({
     return () => window.cancelAnimationFrame(raf);
   }, [activeDiscard]);
 
+  // ── RAF: incoming ────────────────────────────────────────────────────────
+  React.useEffect(() => {
+    if (!activeIncoming || activeIncoming.started) return;
+    let raf = 0;
+    raf = window.requestAnimationFrame(() => {
+      setActiveIncoming((prev) =>
+        prev && prev.id === activeIncoming.id ? { ...prev, started: true } : prev,
+      );
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [activeIncoming]);
+
+  // ── Cleanup: discard ─────────────────────────────────────────────────────
   React.useEffect(() => {
     if (!activeDiscard || !activeDiscard.started) return;
     const currentId = activeDiscard.id;
@@ -146,6 +226,17 @@ export function SgDiscardDigit({
     }, Math.max(120, transitionMs));
     return () => window.clearTimeout(timer);
   }, [activeDiscard, transitionMs]);
+
+  // ── Cleanup: incoming ────────────────────────────────────────────────────
+  React.useEffect(() => {
+    if (!activeIncoming || !activeIncoming.started) return;
+    const currentId = activeIncoming.id;
+    const timer = window.setTimeout(() => {
+      setActiveIncoming((prev) => (prev && prev.id === currentId ? null : prev));
+      setDisplayValue(latestValueRef.current);
+    }, Math.max(120, transitionMs));
+    return () => window.clearTimeout(timer);
+  }, [activeIncoming, transitionMs]);
 
   // ── Stack layers ────────────────────────────────────────────────────────────
   // i=0 → BOTTOM of stack (most displaced, lowest z-index = 1)
@@ -267,6 +358,59 @@ export function SgDiscardDigit({
         </span>
       </div>
 
+      {/* ── Incoming card (slides in from below on decreasePage) ──────────── */}
+      {activeIncoming ? (
+        <div
+          style={{
+            position: "absolute",
+            top: PAD,
+            left: cardLeft,
+            width: cardW,
+            height: cardH,
+            borderRadius: radius,
+            backgroundColor,
+            border: `1px solid ${paperEdgeMid}`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: activeIncoming.started
+              ? "translate3d(0, 0, 80px) rotateX(0deg) rotateZ(0deg) scale(1)"
+              : `translate3d(${activeIncoming.motion.tx}px, ${activeIncoming.motion.ty}px, 74px) rotateX(${activeIncoming.motion.rotateX}deg) rotateZ(${activeIncoming.motion.rotateZ}deg) scale(${activeIncoming.motion.scale})`,
+            transformOrigin: "50% 80%",
+            opacity: activeIncoming.started ? 1 : 0,
+            boxShadow: `0 16px 22px ${shadowTone}, 0 30px 30px rgba(2,8,23,0.18), 0 0 0 1px rgba(255,255,255,0.26), inset 0 1px 0 rgba(255,255,255,0.82), inset 0 -1px 0 rgba(15,23,42,0.10)`,
+            transition: `transform ${transitionMs}ms cubic-bezier(0.18, 0.78, 0.18, 1), opacity ${Math.round(transitionMs * 0.6)}ms ease`,
+            zIndex: numStack + 20,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: `linear-gradient(160deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.16) 30%, rgba(255,255,255,0) 58%), linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.12) 100%), ${paperTexture}`,
+              pointerEvents: "none",
+            }}
+          />
+          <span
+            style={{
+              position: "relative",
+              zIndex: 1,
+              color,
+              fontFamily: font,
+              fontSize: textSize,
+              fontWeight,
+              lineHeight: 1,
+              userSelect: "none",
+              textShadow: `0 1px 0 rgba(255,255,255,0.45), 0 12px 18px rgba(2,8,23,0.13)`,
+            }}
+          >
+            {activeIncoming.value}
+          </span>
+        </div>
+      ) : null}
+
       {/* ── Discarded card (flies off on change) ──────────────────────────── */}
       {activeDiscard ? (
         <div
@@ -323,4 +467,6 @@ export function SgDiscardDigit({
       ) : null}
     </div>
   );
-}
+});
+
+SgDiscardDigit.displayName = "SgDiscardDigit";

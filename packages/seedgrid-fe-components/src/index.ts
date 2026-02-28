@@ -232,7 +232,7 @@ export type { SgMatrixDigitProps } from "./digits/matrix-digit";
 export { SgNeonDigit } from "./digits/neon-digit";
 export type { SgNeonDigitProps } from "./digits/neon-digit";
 export { SgDiscardDigit } from "./digits/discard-digit";
-export type { SgDiscardDigitProps } from "./digits/discard-digit";
+export type { SgDiscardDigitProps, SgDiscardDigitHandle } from "./digits/discard-digit";
 export { SgStringAnimator, SG_STRING_ANIMATOR_DEFAULT_CHARSET } from "./gadgets/string-animator";
 export type {
   SgStringAnimatorProps,

@@ -7,7 +7,8 @@ import {
   SgGrid,
   SgInputText,
   SgPlayground,
-  SgSlider
+  SgSlider,
+  type SgDiscardDigitHandle
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../../CodeBlockBase";
 import I18NReady from "../../I18NReady";
@@ -120,6 +121,38 @@ const FONT_CODE = `<SgGrid columns={{ base: 1, md: 2 }} gap={12}>
   </div>
 </SgGrid>`;
 
+const PAGINATION_CODE = `const TOTAL_PAGES = 10;
+const ref = React.useRef<SgDiscardDigitHandle>(null);
+const [pagina, setPagina] = React.useState(1);
+
+const anterior = () => {
+  ref.current?.decreasePage();
+  setPagina((p) => Math.max(1, p - 1));
+};
+
+const proxima = () => {
+  ref.current?.increasePage();
+  setPagina((p) => Math.min(TOTAL_PAGES, p + 1));
+};
+
+<div className="flex flex-wrap items-end gap-8">
+  <SgDiscardDigit
+    ref={ref}
+    value={String(pagina)}
+    totalNumberPages={TOTAL_PAGES}
+    fontSize={64}
+  />
+  <div className="space-y-3">
+    <p className="text-sm text-muted-foreground">
+      Pagina <strong>{pagina}</strong> de {TOTAL_PAGES}
+    </p>
+    <div className="flex gap-2">
+      <SgButton size="sm" onClick={anterior} disabled={pagina <= 1}>Anterior</SgButton>
+      <SgButton size="sm" onClick={proxima} disabled={pagina >= TOTAL_PAGES}>Proxima</SgButton>
+    </div>
+  </div>
+</div>`;
+
 const AUTO_CODE = `const [running, setRunning] = React.useState(false);
 const [counter, setCounter] = React.useState("00");
 
@@ -147,17 +180,29 @@ React.useEffect(() => {
 </div>`;
 
 const PLAYGROUND_CODE = `import * as React from "react";
-import { SgButton, SgDiscardDigit, SgGrid, SgInputText, SgSlider } from "@seedgrid/fe-components";
+import { SgButton, SgDiscardDigit, SgGrid, SgInputText, SgSlider, type SgDiscardDigitHandle } from "@seedgrid/fe-components";
 
 export default function App() {
+  const ref = React.useRef<SgDiscardDigitHandle>(null);
   const [value, setValue] = React.useState("42");
   const [color, setColor] = React.useState("#0f172a");
   const [backgroundColor, setBackgroundColor] = React.useState("#f8fafc");
   const [font, setFont] = React.useState("\\"Inter\\", \\"Segoe UI\\", sans-serif");
   const [fontSize, setFontSize] = React.useState(64);
   const [transitionMs, setTransitionMs] = React.useState(640);
-  const [stackDepth, setStackDepth] = React.useState(15);
+  const [totalNumberPages, setTotalNumberPages] = React.useState(15);
   const [animateOnChange, setAnimateOnChange] = React.useState(true);
+  const [pagina, setPagina] = React.useState(1);
+
+  const anterior = () => {
+    ref.current?.decreasePage();
+    setPagina((p) => Math.max(1, p - 1));
+  };
+
+  const proxima = () => {
+    ref.current?.increasePage();
+    setPagina((p) => Math.min(totalNumberPages, p + 1));
+  };
 
   return (
     <div className="space-y-4 p-2">
@@ -181,8 +226,8 @@ export default function App() {
           <SgSlider id="discard-transition" minValue={180} maxValue={1300} value={transitionMs} onChange={setTransitionMs} />
         </div>
         <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">stackDepth: {stackDepth}</p>
-          <SgSlider id="discard-depth" minValue={2} maxValue={24} value={stackDepth} onChange={setStackDepth} />
+          <p className="text-xs text-muted-foreground">totalNumberPages: {totalNumberPages}</p>
+          <SgSlider id="discard-pages" minValue={2} maxValue={30} value={totalNumberPages} onChange={(v) => { setTotalNumberPages(v); setPagina(1); }} />
         </div>
       </SgGrid>
 
@@ -191,16 +236,26 @@ export default function App() {
       </SgButton>
 
       <div className="rounded border border-border p-4">
-        <SgDiscardDigit
-          value={value}
-          color={color}
-          font={font}
-          backgroundColor={backgroundColor}
-          fontSize={fontSize}
-          transitionMs={transitionMs}
-          stackDepth={stackDepth}
-          animateOnChange={animateOnChange}
-        />
+        <div className="flex flex-wrap items-end gap-8">
+          <SgDiscardDigit
+            ref={ref}
+            value={value}
+            color={color}
+            font={font}
+            backgroundColor={backgroundColor}
+            fontSize={fontSize}
+            transitionMs={transitionMs}
+            totalNumberPages={totalNumberPages}
+            animateOnChange={animateOnChange}
+          />
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Pagina {pagina} de {totalNumberPages}</p>
+            <div className="flex gap-2">
+              <SgButton size="sm" onClick={anterior} disabled={pagina <= 1}>Anterior</SgButton>
+              <SgButton size="sm" onClick={proxima} disabled={pagina >= totalNumberPages}>Proxima</SgButton>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -215,7 +270,8 @@ const PROPS: ShowcasePropRow[] = [
   { prop: "fontWeight", type: "number | string", defaultValue: "700", description: "Peso da fonte." },
   { prop: "animateOnChange", type: "boolean", defaultValue: "true", description: "Ativa animacao de descarte quando o valor muda." },
   { prop: "transitionMs", type: "number", defaultValue: "640", description: "Duracao total da animacao em ms." },
-  { prop: "stackDepth", type: "number", defaultValue: "15", description: "Quantidade de folhas visiveis na pilha (2 a 24)." },
+  { prop: "stackDepth", type: "number", defaultValue: "20", description: "Quantidade de folhas visiveis na pilha (2 a 30). Ignorado se totalNumberPages for definido." },
+  { prop: "totalNumberPages", type: "number", defaultValue: "-", description: "Total de paginas do monte. A pilha visual encolhe a cada increasePage() via ref." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
   { prop: "style", type: "React.CSSProperties", defaultValue: "-", description: "Estilo inline adicional." }
 ];
@@ -227,6 +283,20 @@ export default function SgDiscardDigitShowcase() {
   const [pageIndex, setPageIndex] = React.useState(0);
   const [running, setRunning] = React.useState(false);
   const [counter, setCounter] = React.useState("00");
+
+  const TOTAL_PAGES = 10;
+  const discardRef = React.useRef<SgDiscardDigitHandle>(null);
+  const [paginaAtual, setPaginaAtual] = React.useState(1);
+
+  const handleAnterior = React.useCallback(() => {
+    discardRef.current?.decreasePage();
+    setPaginaAtual((p) => Math.max(1, p - 1));
+  }, []);
+
+  const handleProxima = React.useCallback(() => {
+    discardRef.current?.increasePage();
+    setPaginaAtual((p) => Math.min(TOTAL_PAGES, p + 1));
+  }, []);
 
   const currentPage = PAGE_VALUES[pageIndex] ?? PAGE_VALUES[0];
 
@@ -366,7 +436,28 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={AUTO_CODE} />
         </Section>
 
-        <Section title="6) Playground (SgPlayground)" description="Ajuste em tempo real de color, font, backgroundColor e animacao.">
+        <Section title="6) Paginacao imperativa (ref)" description="totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().">
+          <div className="flex flex-wrap items-end gap-8">
+            <SgDiscardDigit
+              ref={discardRef}
+              value={String(paginaAtual)}
+              totalNumberPages={TOTAL_PAGES}
+              fontSize={64}
+            />
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Pagina <span className="font-semibold text-foreground">{paginaAtual}</span> de {TOTAL_PAGES}
+              </p>
+              <div className="flex gap-2">
+                <SgButton size="sm" onClick={handleAnterior} disabled={paginaAtual <= 1}>Anterior</SgButton>
+                <SgButton size="sm" onClick={handleProxima} disabled={paginaAtual >= TOTAL_PAGES}>Proxima</SgButton>
+              </div>
+            </div>
+          </div>
+          <CodeBlockBase code={PAGINATION_CODE} />
+        </Section>
+
+        <Section title="7) Playground (SgPlayground)" description="Ajuste em tempo real de color, font, backgroundColor e animacao.">
           <SgPlayground
             title="SgDiscardDigit Playground"
             interactive
