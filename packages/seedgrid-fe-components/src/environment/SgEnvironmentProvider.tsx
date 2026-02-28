@@ -149,15 +149,27 @@ export function useSgPersistentState<T>(args: {
     () => args.deserialize ?? ((value: unknown) => value as T),
     [args.deserialize]
   );
+  const hasProvider = useHasSgEnvironmentProvider();
   const persistence = useSgPersistence();
   const [value, setValue] = React.useState<T>(defaultValue);
   const [hydrated, setHydrated] = React.useState(false);
 
+  // Load from persistence on mount
   React.useEffect(() => {
     let alive = true;
     (async () => {
       try {
-        const loaded = await persistence.load(baseKey);
+        let loaded: unknown;
+        if (hasProvider) {
+          loaded = await persistence.load(baseKey);
+        } else {
+          try {
+            const raw = localStorage.getItem(baseKey);
+            loaded = raw !== null ? JSON.parse(raw) : null;
+          } catch {
+            loaded = null;
+          }
+        }
         if (!alive) return;
         if (loaded !== null && loaded !== undefined) {
           setValue(deserialize(loaded));
@@ -174,23 +186,41 @@ export function useSgPersistentState<T>(args: {
     return () => {
       alive = false;
     };
-  }, [baseKey, defaultValue, persistence.load, deserialize]);
+  }, [baseKey, defaultValue, hasProvider, persistence.load, deserialize]);
+
+  // Save to persistence whenever value changes after hydration
+  React.useEffect(() => {
+    if (!hydrated) return;
+    if (hasProvider) {
+      void persistence.save(baseKey, serialize(value));
+    } else {
+      try {
+        localStorage.setItem(baseKey, JSON.stringify(value));
+      } catch {
+        // ignore
+      }
+    }
+  }, [value, hydrated, hasProvider, baseKey, persistence.save, serialize]);
 
   const setAndPersist = React.useCallback(
     (next: T | ((prev: T) => T)) => {
-      setValue((prev) => {
-        const computed = typeof next === "function" ? (next as (p: T) => T)(prev) : next;
-        void persistence.save(baseKey, serialize(computed));
-        return computed;
-      });
+      setValue(next);
     },
-    [baseKey, persistence.save, serialize]
+    []
   );
 
   const clear = React.useCallback(async () => {
-    await persistence.clear(baseKey);
+    if (hasProvider) {
+      await persistence.clear(baseKey);
+    } else {
+      try {
+        localStorage.removeItem(baseKey);
+      } catch {
+        // ignore
+      }
+    }
     setValue(defaultValue);
-  }, [baseKey, persistence.clear, defaultValue]);
+  }, [baseKey, hasProvider, persistence.clear, defaultValue]);
 
   return { value, setValue: setAndPersist, clear, hydrated };
 }

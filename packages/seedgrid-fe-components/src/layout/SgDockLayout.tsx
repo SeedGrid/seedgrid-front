@@ -64,7 +64,7 @@ const EMPTY_STATE: SgDockLayoutState = { version: 1, toolbars: {} };
 
 export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
   const { id, className, children, defaultState } = props;
-  const { value: persisted, setValue } = useSgPersistentState<SgDockLayoutState>({
+  const { value: persisted, setValue, hydrated } = useSgPersistentState<SgDockLayoutState>({
     baseKey: `dock-layout:${id}`,
     defaultValue: defaultState ?? EMPTY_STATE
   });
@@ -223,6 +223,7 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
 
   const ensureToolbar = React.useCallback(
     (toolbarId: string, state: Partial<SgDockToolbarState>) => {
+      if (!hydrated) return;
       setValue((prev) => {
         if (prev.toolbars[toolbarId]) return prev;
         const targetZone = state.zone ?? "free";
@@ -242,7 +243,7 @@ export function SgDockLayout(props: Readonly<SgDockLayoutProps>) {
         };
       });
     },
-    [getSortedZoneToolbarIds, setValue]
+    [getSortedZoneToolbarIds, hydrated, setValue]
   );
 
   const placeToolbar = React.useCallback(

@@ -1,0 +1,22 @@
+FROM node:20-alpine AS build
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+COPY . .
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+ENV NODE_ENV=production
+ENV PORT=3100
+ENV HOSTNAME=0.0.0.0
+
+COPY --from=build /app /app
+
+EXPOSE 3100
+
+CMD ["pnpm", "-C", "apps/showcase", "start", "--hostname", "0.0.0.0", "--port", "3100"]

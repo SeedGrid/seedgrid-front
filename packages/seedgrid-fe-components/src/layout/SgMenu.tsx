@@ -8,6 +8,7 @@ import { SgExpandablePanel, type SgExpandablePanelSize } from "./SgExpandablePan
 import { SgAutocomplete, type SgAutocompleteItem } from "../inputs/SgAutocomplete";
 import { SgCard } from "./SgCard";
 import { useSgDockLayout, type SgDockZoneId } from "./SgDockLayout";
+import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 export type SgMenuNode = {
   id: string;
@@ -460,10 +461,55 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   );
   const expandedSet = React.useMemo(() => new Set(expandedIds), [expandedIds]);
 
-  const [collapsedState, setCollapsedState] = useControllableState<boolean>(
-    collapsed,
-    defaultCollapsed,
-    onCollapsedChange
+  const hasEnvironmentProvider = useHasSgEnvironmentProvider();
+  const { load: loadPersistedState, save: savePersistedState } = useSgPersistence();
+  const collapsePersistKey = id ? `sg-menu:${id}:collapsed` : null;
+  const isCollapsedPropControlled = collapsed !== undefined;
+  const [collapsedInternal, setCollapsedInternal] = React.useState(defaultCollapsed);
+
+  React.useEffect(() => {
+    if (!collapsePersistKey || isCollapsedPropControlled) return;
+    let alive = true;
+    (async () => {
+      try {
+        let loaded: unknown;
+        if (hasEnvironmentProvider) {
+          loaded = await loadPersistedState(collapsePersistKey);
+        } else {
+          const raw = localStorage.getItem(collapsePersistKey);
+          loaded = raw !== null ? (() => { try { return JSON.parse(raw); } catch { return null; } })() : null;
+        }
+        if (!alive || loaded === null || loaded === undefined) return;
+        if (typeof loaded === "boolean") setCollapsedInternal(loaded);
+      } catch {
+        // ignore
+      }
+    })();
+    return () => { alive = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collapsePersistKey]);
+
+  const collapsedState = isCollapsedPropControlled ? (collapsed as boolean) : collapsedInternal;
+
+  const setCollapsedState = React.useCallback(
+    (next: boolean) => {
+      if (!isCollapsedPropControlled) {
+        setCollapsedInternal(next);
+        if (collapsePersistKey) {
+          if (hasEnvironmentProvider) {
+            void savePersistedState(collapsePersistKey, next);
+          } else {
+            try {
+              localStorage.setItem(collapsePersistKey, JSON.stringify(next));
+            } catch {
+              // ignore
+            }
+          }
+        }
+      }
+      onCollapsedChange?.(next);
+    },
+    [isCollapsedPropControlled, collapsePersistKey, hasEnvironmentProvider, savePersistedState, onCollapsedChange]
   );
 
   const [drawerOpen, setDrawerOpen] = useControllableState<boolean>(open, defaultOpen, onOpenChange);
@@ -707,23 +753,27 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
       event.preventDefault();
       event.stopPropagation();
+      const shellRectBeforeDrag = sidebarShellRef.current?.getBoundingClientRect() ?? null;
       dock.setDropPreviewActive(true);
       setDockDragActive(true);
       dockDragStartRef.current = { x: event.clientX, y: event.clientY };
       dockDragMovedRef.current = false;
       dockHoverZoneRef.current = dock.getZoneAtPoint(event.clientX, event.clientY) ?? effectiveDockZone;
+      applyDockDragVisual(0, 0);
 
-      if (isHorizontalDockZone && sidebarShellRef.current) {
-        const compactWidth = parseFloat(isCollapsed ? collapsedWidthCss : expandedWidthCss) || 280;
-        // After dockDragActive=true, ml-auto is removed and element's natural left = zone's left edge.
-        // Use zone left (not element rect.left) so the offset is correct regardless of current alignment.
-        const zoneEl = effectiveDockZone ? dock.getZoneElement(effectiveDockZone) : null;
-        const zoneLeft = zoneEl ? zoneEl.getBoundingClientRect().left : 0;
-        const initialDx = event.clientX - zoneLeft - Math.max(0, compactWidth - 40);
-        dockDragStartRef.current.x = event.clientX - initialDx;
-        applyDockDragVisual(initialDx, 0);
-      } else {
-        applyDockDragVisual(0, 0);
+      if (shellRectBeforeDrag) {
+        window.requestAnimationFrame(() => {
+          const shell = sidebarShellRef.current;
+          const start = dockDragStartRef.current;
+          if (!shell || !start) return;
+          const shellRectAfterDrag = shell.getBoundingClientRect();
+          const adjustDx = shellRectBeforeDrag.left - shellRectAfterDrag.left;
+          const adjustDy = shellRectBeforeDrag.top - shellRectAfterDrag.top;
+          if (Math.abs(adjustDx) < 0.5 && Math.abs(adjustDy) < 0.5) return;
+          start.x -= adjustDx;
+          start.y -= adjustDy;
+          applyDockDragVisual(adjustDx, adjustDy);
+        });
       }
 
       const handleMove = (moveEvent: PointerEvent) => {
@@ -1565,7 +1615,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       : undefined;
 
   const sidebarWidthCss =
-    dockMode && isHorizontalDockZone
+    dockMode && isHorizontalDockZone && variant !== "sidebar"
       ? "100%"
       : variant === "inline" && isMegaMenuStyle
       ? "100%"

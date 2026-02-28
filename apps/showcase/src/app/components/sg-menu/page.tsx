@@ -580,7 +580,7 @@ const DOCKABLE_MENU_STYLE_OPTIONS = [
   { label: "Tiered Menu", value: "Tiered" }
 ];
 
-const SHELL_STYLE = {
+const DOCKABLE_SHELL_STYLE = {
   "--primary": "27 62% 47%",
   "--primary-foreground": "0 0% 100%",
   "--muted": "35 55% 94%",
@@ -592,7 +592,7 @@ const SHELL_STYLE = {
 };
 
 export default function Example() {
-  const [activeId, setActiveId] = React.useState("dk-dashboard");
+  const [dockActiveId, setDockActiveId] = React.useState("dk-dashboard");
   const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
 
   return (
@@ -608,25 +608,25 @@ export default function Example() {
       />
 
       <div
-        className="relative h-[520px] overflow-hidden rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
-        style={SHELL_STYLE}
+        className="relative min-h-[520px] overflow-visible rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
+        style={DOCKABLE_SHELL_STYLE}
       >
         <SgDockLayout
           id="showcase-menu-dock-v2"
-          className="grid h-full grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_1fr_4rem]"
+          className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_auto_auto]"
         >
-          <SgDockZone zone="top" className="col-span-3 row-start-1 items-center border-b border-[#e2cebc] bg-[#f7f3ee]" />
-          <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-[#e2cebc]" />
-          <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-[#e2cebc]" />
-          <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-[#e2cebc]" />
-          <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+          <SgDockZone zone="top" />
+          <SgDockZone zone="left" />
+          <SgDockZone zone="right" />
+          <SgDockZone zone="bottom" />
+          <SgDockZone zone="free">
             <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
           </SgDockZone>
 
           <SgMenu
             id="menu-dock-sidebar-v2"
             menu={DOCKABLE_MENU}
-            selection={{ activeId }}
+            selection={{ activeId: dockActiveId }}
             variant="sidebar"
             menuStyle={dockMenuStyle}
             mode="accordion"
@@ -639,7 +639,7 @@ export default function Example() {
             user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
             userMenu={DOCKABLE_USER_MENU}
             userSectionStyle={{ backgroundColor: "#ebe0d4" }}
-            onNavigate={(node) => setActiveId(node.id)}
+            onNavigate={(node) => setDockActiveId(node.id)}
           />
 
           <SgToolBar
@@ -928,18 +928,18 @@ export default function SgMenuPage() {
             />
 
             <div
-              className="relative h-[520px] overflow-hidden rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
+              className="relative min-h-[520px] overflow-visible rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
               style={DOCKABLE_SHELL_STYLE}
             >
               <SgDockLayout
                 id="showcase-menu-dock-v2"
-                className="grid h-full grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_1fr_4rem]"
+                className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_auto_auto]"
               >
-                <SgDockZone zone="top" className="col-span-3 row-start-1 items-center border-b border-[#e2cebc] bg-[#f7f3ee]" />
-                <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-[#e2cebc]" />
-                <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-[#e2cebc]" />
-                <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-[#e2cebc]" />
-                <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
+                <SgDockZone zone="top" />
+                <SgDockZone zone="left" />
+                <SgDockZone zone="right" />
+                <SgDockZone zone="bottom" />
+                <SgDockZone zone="free">
                   <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
                 </SgDockZone>
 
