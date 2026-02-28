@@ -225,6 +225,15 @@ export { SgFlipDigit } from "./gadgets/flip-digit";
 export type { SgFlipDigitProps } from "./gadgets/flip-digit";
 export { SgRoller3DDigit } from "./gadgets/roller3d-digit";
 export type { SgRoller3DDigitProps } from "./gadgets/roller3d-digit";
+export { SgMatrixDigit } from "./gadgets/matrix-digit";
+export type { SgMatrixDigitProps } from "./gadgets/matrix-digit";
+export { SgStringAnimator, SG_STRING_ANIMATOR_DEFAULT_CHARSET } from "./gadgets/string-animator";
+export type {
+  SgStringAnimatorProps,
+  SgStringAnimatorRef,
+  SgStringAnimatorStyle,
+  SgStringAnimatorAlign,
+} from "./gadgets/string-animator";
 export { SgQRCode } from "./gadgets/qr-code";
 export type { SgQRCodeProps, SgQRCodeErrorCorrectionLevel } from "./gadgets/qr-code";
 export { SgLinearGauge, SgRadialGauge } from "./gadgets/gauge";

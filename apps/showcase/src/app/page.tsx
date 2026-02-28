@@ -60,6 +60,7 @@ const COMPONENTS = [
     categoryKey: "showcase.nav.gadgets",
     items: [
       { slug: "gadgets/sg-clock", name: "SgClock", desc: "Relogio digital e analogico com themes" },
+      { slug: "gadgets/sg-matrix-digit", name: "SgMatrixDigit", desc: "Caracteres matriciais em pontos com color e backgroundColor" },
       { slug: "gadgets/sg-qr-code", name: "SgQRCode", desc: "QR Code com valor dinamico e logo central" },
       { slug: "gadgets/sg-linear-gauge", name: "SgLinearGauge", desc: "Gauge linear com ranges e pointers" },
       { slug: "gadgets/sg-radial-gauge", name: "SgRadialGauge", desc: "Gauge radial com needle, marker e annotations" }
