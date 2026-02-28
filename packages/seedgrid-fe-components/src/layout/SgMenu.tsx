@@ -114,6 +114,8 @@ export type SgMenuProps = {
   border?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  userSectionClassName?: string;
+  userSectionStyle?: React.CSSProperties;
 
   footer?: React.ReactNode;
 };
@@ -415,6 +417,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     border = true,
     className,
     style,
+    userSectionClassName,
+    userSectionStyle,
     footer
   } = props;
 
@@ -1471,7 +1475,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       </div>
 
       {(user || (userMenu && userMenu.length > 0) || footer) ? (
-        <div className={cn("border-t border-border", densityCfg.section)}>
+        <div className={cn("border-t border-border", densityCfg.section, userSectionClassName)} style={userSectionStyle}>
           {user ? (
             isCollapsed ? (
               <button

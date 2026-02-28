@@ -8,10 +8,12 @@ import {
   SgMenu,
   SgPlayground,
   SgRadioGroup,
+  SgToolBar,
+  SgToolbarIconButton,
   type SgMenuNode,
   type SgRadioGroupOption
 } from "@seedgrid/fe-components";
-import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+import { BarChart2, ClipboardList, CreditCard, DollarSign, Download, Home, LayoutGrid, Plus, Printer, Save, Search, Settings, ShoppingCart, Trash2, Users, Wallet } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
@@ -119,6 +121,98 @@ const USER_MENU: SgMenuNode[] = [
   { id: "preferencias", label: "Preferencias", onClick: () => {} },
   { id: "logout", label: "Sair", onClick: () => {} }
 ];
+
+const DOCKABLE_MENU: SgMenuNode[] = [
+  { id: "dk-dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
+  {
+    id: "dk-financeiro",
+    label: "Financeiro",
+    icon: <DollarSign className="size-4" />,
+    children: [
+      {
+        id: "dk-contas-pagar",
+        label: "Contas a Pagar",
+        icon: <CreditCard className="size-4" />,
+        children: [
+          { id: "dk-pagar-aberto", label: "Em Aberto", url: "/financeiro/pagar/aberto", badge: 12 },
+          { id: "dk-pagar-vencidas", label: "Vencidas", url: "/financeiro/pagar/vencidas", badge: 3 }
+        ]
+      },
+      {
+        id: "dk-contas-receber",
+        label: "Contas a Receber",
+        icon: <Wallet className="size-4" />,
+        children: [
+          { id: "dk-receber-aberto", label: "Em Aberto", url: "/financeiro/receber/aberto", badge: 8 },
+          { id: "dk-receber-recebidas", label: "Recebidas", url: "/financeiro/receber/recebidas" }
+        ]
+      },
+      { id: "dk-financeiro-rel", label: "Relatórios", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
+    ]
+  },
+  {
+    id: "dk-clientes",
+    label: "Clientes",
+    icon: <Users className="size-4" />,
+    children: [
+      { id: "dk-clientes-cadastro", label: "Cadastro", url: "/clientes/cadastro" },
+      {
+        id: "dk-clientes-relatorios",
+        label: "Relatórios",
+        icon: <ClipboardList className="size-4" />,
+        children: [
+          { id: "dk-clientes-cohort", label: "Cohort", url: "/clientes/relatorios/cohort" },
+          { id: "dk-clientes-churn", label: "Churn", url: "/clientes/relatorios/churn" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "dk-pedidos",
+    label: "Pedidos",
+    icon: <ShoppingCart className="size-4" />,
+    children: [
+      {
+        id: "dk-pedidos-vendas",
+        label: "Vendas",
+        icon: <Search className="size-4" />,
+        children: [
+          { id: "dk-pedidos-abertos", label: "Em Aberto", url: "/pedidos/vendas/aberto", badge: 4 },
+          { id: "dk-pedidos-fechados", label: "Encerrados", url: "/pedidos/vendas/encerrados" }
+        ]
+      },
+      { id: "dk-pedidos-devolucoes", label: "Devoluções", url: "/pedidos/devolucoes", badge: 7 }
+    ]
+  },
+  {
+    id: "dk-configuracoes",
+    label: "Configurações",
+    icon: <Settings className="size-4" />,
+    children: [
+      { id: "dk-config-usuarios", label: "Usuários", url: "/configuracoes/usuarios" },
+      { id: "dk-config-perfis", label: "Perfis de Acesso", url: "/configuracoes/perfis" },
+      { id: "dk-config-sistema", label: "Sistema", url: "/configuracoes/sistema" }
+    ]
+  }
+];
+
+const DOCKABLE_USER_MENU: SgMenuNode[] = [
+  { id: "dk-meu-perfil", label: "Meu Perfil", onClick: () => {} },
+  { id: "dk-preferencias", label: "Preferências", onClick: () => {} },
+  { id: "dk-trocar-empresa", label: "Trocar Empresa", onClick: () => {} },
+  { id: "dk-logout", label: "Sair", onClick: () => {} }
+];
+
+const DOCKABLE_SHELL_STYLE = {
+  "--primary": "27 62% 47%",
+  "--primary-foreground": "0 0% 100%",
+  "--muted": "35 55% 94%",
+  "--muted-foreground": "28 30% 36%",
+  "--border": "32 42% 83%",
+  "--ring": "27 62% 47%",
+  "--background": "40 33% 97%",
+  "--card": "40 33% 97%"
+} as React.CSSProperties;
 
 const DOCKABLE_MENU_STYLE_OPTIONS: SgRadioGroupOption[] = [
   { label: "PanelMenu", value: "PanelMenu" },
@@ -397,18 +491,108 @@ export default function Example() {
 }`;
 
 const EXAMPLE_DOCKABLE_CODE = `import React from "react";
-import { SgDockLayout, SgDockZone, SgMenu, SgRadioGroup } from "@seedgrid/fe-components";
-import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+import { SgDockLayout, SgDockZone, SgMenu, SgRadioGroup, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { BarChart2, ClipboardList, CreditCard, DollarSign, Download, Home, Plus, Printer, Save, Search, Settings, ShoppingCart, Trash2, Users, Wallet } from "lucide-react";
 
-${MENU_CODE_SNIPPET}
+const DOCKABLE_MENU = [
+  { id: "dk-dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
+  {
+    id: "dk-financeiro",
+    label: "Financeiro",
+    icon: <DollarSign className="size-4" />,
+    children: [
+      {
+        id: "dk-contas-pagar",
+        label: "Contas a Pagar",
+        icon: <CreditCard className="size-4" />,
+        children: [
+          { id: "dk-pagar-aberto", label: "Em Aberto", url: "/financeiro/pagar/aberto", badge: 12 },
+          { id: "dk-pagar-vencidas", label: "Vencidas", url: "/financeiro/pagar/vencidas", badge: 3 }
+        ]
+      },
+      {
+        id: "dk-contas-receber",
+        label: "Contas a Receber",
+        icon: <Wallet className="size-4" />,
+        children: [
+          { id: "dk-receber-aberto", label: "Em Aberto", url: "/financeiro/receber/aberto", badge: 8 },
+          { id: "dk-receber-recebidas", label: "Recebidas", url: "/financeiro/receber/recebidas" }
+        ]
+      },
+      { id: "dk-financeiro-rel", label: "Relatórios", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
+    ]
+  },
+  {
+    id: "dk-clientes",
+    label: "Clientes",
+    icon: <Users className="size-4" />,
+    children: [
+      { id: "dk-clientes-cadastro", label: "Cadastro", url: "/clientes/cadastro" },
+      {
+        id: "dk-clientes-relatorios",
+        label: "Relatórios",
+        icon: <ClipboardList className="size-4" />,
+        children: [
+          { id: "dk-clientes-cohort", label: "Cohort", url: "/clientes/relatorios/cohort" },
+          { id: "dk-clientes-churn", label: "Churn", url: "/clientes/relatorios/churn" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "dk-pedidos",
+    label: "Pedidos",
+    icon: <ShoppingCart className="size-4" />,
+    children: [
+      {
+        id: "dk-pedidos-vendas",
+        label: "Vendas",
+        icon: <Search className="size-4" />,
+        children: [
+          { id: "dk-pedidos-abertos", label: "Em Aberto", url: "/pedidos/vendas/aberto", badge: 4 },
+          { id: "dk-pedidos-fechados", label: "Encerrados", url: "/pedidos/vendas/encerrados" }
+        ]
+      },
+      { id: "dk-pedidos-devolucoes", label: "Devoluções", url: "/pedidos/devolucoes", badge: 7 }
+    ]
+  },
+  {
+    id: "dk-configuracoes",
+    label: "Configurações",
+    icon: <Settings className="size-4" />,
+    children: [
+      { id: "dk-config-usuarios", label: "Usuários", url: "/configuracoes/usuarios" },
+      { id: "dk-config-perfis", label: "Perfis de Acesso", url: "/configuracoes/perfis" },
+      { id: "dk-config-sistema", label: "Sistema", url: "/configuracoes/sistema" }
+    ]
+  }
+];
+
+const DOCKABLE_USER_MENU = [
+  { id: "dk-meu-perfil", label: "Meu Perfil", onClick: () => {} },
+  { id: "dk-preferencias", label: "Preferências", onClick: () => {} },
+  { id: "dk-trocar-empresa", label: "Trocar Empresa", onClick: () => {} },
+  { id: "dk-logout", label: "Sair", onClick: () => {} }
+];
 
 const DOCKABLE_MENU_STYLE_OPTIONS = [
   { label: "PanelMenu", value: "PanelMenu" },
   { label: "Tiered Menu", value: "Tiered" }
 ];
 
+const SHELL_STYLE = {
+  "--primary": "27 62% 47%",
+  "--primary-foreground": "0 0% 100%",
+  "--muted": "35 55% 94%",
+  "--muted-foreground": "28 30% 36%",
+  "--border": "32 42% 83%",
+  "--ring": "27 62% 47%",
+  "--background": "40 33% 97%",
+  "--card": "40 33% 97%"
+};
+
 export default function Example() {
-  const [activeId, setActiveId] = React.useState("dashboard");
+  const [activeId, setActiveId] = React.useState("dk-dashboard");
   const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
 
   return (
@@ -423,19 +607,25 @@ export default function Example() {
         }}
       />
 
-      <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
-        <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
-          <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
-          <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-          <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
-          <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+      <div
+        className="relative h-[520px] overflow-hidden rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
+        style={SHELL_STYLE}
+      >
+        <SgDockLayout
+          id="showcase-menu-dock-v2"
+          className="grid h-full grid-cols-[17.5rem_1fr_17.5rem] grid-rows-[3.5rem_1fr_4rem]"
+        >
+          <SgDockZone zone="top" className="col-span-3 row-start-1 items-center border-b border-[#e2cebc] bg-[#f7f3ee]" />
+          <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-[#e2cebc]" />
+          <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-[#e2cebc]" />
+          <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-[#e2cebc]" />
           <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
-            <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+            <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
           </SgDockZone>
 
           <SgMenu
-            id="menu-dock-sidebar-v1"
-            menu={MENU}
+            id="menu-dock-sidebar-v2"
+            menu={DOCKABLE_MENU}
             selection={{ activeId }}
             variant="sidebar"
             menuStyle={dockMenuStyle}
@@ -444,10 +634,28 @@ export default function Example() {
             dockZone="left"
             draggable
             showCollapseButton
-            search={{ enabled: true, placeholder: "Buscar modulo..." }}
-            brand={{ title: "SeedGrid ERP" }}
+            search={{ enabled: true, placeholder: "Buscar módulo..." }}
+            brand={{ title: "SeedGrid ERP", imageSrc: "/logo-seedgrid.svg" }}
+            user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+            userMenu={DOCKABLE_USER_MENU}
+            userSectionStyle={{ backgroundColor: "#ebe0d4" }}
             onNavigate={(node) => setActiveId(node.id)}
           />
+
+          <SgToolBar
+            id="toolbar-dock-v1"
+            dockZone="top"
+            orientationDirection="horizontal-left"
+            title="Ferramentas"
+            draggable
+            collapsible={false}
+          >
+            <SgToolbarIconButton icon={<Plus className="size-4" />} hint="Novo registro" severity="primary" />
+            <SgToolbarIconButton icon={<Save className="size-4" />} hint="Salvar" />
+            <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Imprimir" />
+            <SgToolbarIconButton icon={<Download className="size-4" />} hint="Exportar" />
+            <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="Excluir" severity="danger" />
+          </SgToolBar>
         </SgDockLayout>
       </div>
     </div>
@@ -552,6 +760,8 @@ const MENU_PROPS: ShowcasePropRow[] = [
   { prop: "border", type: "boolean", defaultValue: "true", description: "Exibe borda externa do menu." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no root." },
   { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilos inline no root." },
+  { prop: "userSectionClassName", type: "string", defaultValue: "-", description: "Classes CSS adicionais na secao do usuario (area de footer do menu)." },
+  { prop: "userSectionStyle", type: "CSSProperties", defaultValue: "-", description: "Estilos inline na secao do usuario, util para customizar cor de fundo." },
   { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Conteudo de rodape do menu." }
 ];
 
@@ -705,7 +915,7 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />
         </Section>
 
-        <Section title="7) Sidebar Dockable" description="SgMenu dockable dentro do SgDockLayout, com drag entre zonas.">
+        <Section title="7) Sidebar Dockable" description="SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.">
           <div className="space-y-3">
             <SgRadioGroup
               title="Menu Style"
@@ -717,19 +927,25 @@ export default function SgMenuPage() {
               }}
             />
 
-            <div className="relative h-[460px] overflow-hidden rounded-lg border border-border bg-black">
-              <SgDockLayout id="showcase-menu-dock-v1" className="grid h-full grid-cols-[15rem_1fr_15rem] grid-rows-[5rem_1fr_5rem]">
-                <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/15" />
-                <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/15" />
-                <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-white/15" />
-                <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/15" />
+            <div
+              className="relative h-[520px] overflow-hidden rounded-lg border border-[#e2cebc] bg-[#f0ebe4]"
+              style={DOCKABLE_SHELL_STYLE}
+            >
+              <SgDockLayout
+                id="showcase-menu-dock-v2"
+                className="grid h-full grid-cols-[17.5rem_1fr_17.5rem] grid-rows-[3.5rem_1fr_4rem]"
+              >
+                <SgDockZone zone="top" className="col-span-3 row-start-1 items-center border-b border-[#e2cebc] bg-[#f7f3ee]" />
+                <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-[#e2cebc]" />
+                <SgDockZone zone="right" className="col-start-3 row-start-2 border-l border-[#e2cebc]" />
+                <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-[#e2cebc]" />
                 <SgDockZone zone="free" className="col-start-2 row-start-2 items-center justify-center">
-                  <div className="pointer-events-none text-sm text-white/70">Area central livre</div>
+                  <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
                 </SgDockZone>
 
                 <SgMenu
-                  id="menu-dock-sidebar-v1"
-                  menu={MENU}
+                  id="menu-dock-sidebar-v2"
+                  menu={DOCKABLE_MENU}
                   selection={{ activeId: dockActiveId }}
                   variant="sidebar"
                   menuStyle={dockMenuStyle}
@@ -738,10 +954,28 @@ export default function SgMenuPage() {
                   dockZone="left"
                   draggable
                   showCollapseButton
-                  search={{ enabled: true, placeholder: "Buscar modulo..." }}
-                  brand={{ title: "SeedGrid ERP" }}
+                  search={{ enabled: true, placeholder: "Buscar módulo..." }}
+                  brand={{ title: "SeedGrid ERP", imageSrc: "/logo-seedgrid.svg" }}
+                  user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+                  userMenu={DOCKABLE_USER_MENU}
+                  userSectionStyle={{ backgroundColor: "#ebe0d4" }}
                   onNavigate={(node) => setDockActiveId(node.id)}
                 />
+
+                <SgToolBar
+                  id="toolbar-dock-v1"
+                  dockZone="top"
+                  orientationDirection="horizontal-left"
+                  title="Ferramentas"
+                  draggable
+                  collapsible={false}
+                >
+                  <SgToolbarIconButton icon={<Plus className="size-4" />} hint="Novo registro" severity="primary" />
+                  <SgToolbarIconButton icon={<Save className="size-4" />} hint="Salvar" />
+                  <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Imprimir" />
+                  <SgToolbarIconButton icon={<Download className="size-4" />} hint="Exportar" />
+                  <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="Excluir" severity="danger" />
+                </SgToolBar>
               </SgDockLayout>
             </div>
           </div>
