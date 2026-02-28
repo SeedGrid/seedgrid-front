@@ -83,7 +83,8 @@ const [letter, setLetter] = React.useState("A");
 
 const nextLetter = () => {
   const i = ALPHA.indexOf(letter);
-  setLetter(ALPHA[(i + 1) % ALPHA.length]);
+  const next = ALPHA[(i + 1) % ALPHA.length] ?? ALPHA[0] ?? "A";
+  setLetter(next);
 };
 
 <div className="flex items-center gap-4">
@@ -91,13 +92,14 @@ const nextLetter = () => {
   <SgButton size="sm" onClick={nextLetter}>Proxima letra</SgButton>
 </div>`;
 
-const ALPHA_LIST = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+const ALPHA = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
 function Ex2() {
   const [letter, setLetter] = React.useState("A");
   const nextLetter = () => {
-    const i = ALPHA_LIST.indexOf(letter);
-    setLetter(ALPHA_LIST[(i + 1) % ALPHA_LIST.length]);
+    const i = ALPHA.indexOf(letter);
+    const next = ALPHA[(i + 1) % ALPHA.length] ?? ALPHA[0] ?? "A";
+    setLetter(next);
   };
   return (
     <div className="flex items-center gap-4">

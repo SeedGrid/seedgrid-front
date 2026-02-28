@@ -613,7 +613,7 @@ export default function Example() {
       >
         <SgDockLayout
           id="showcase-menu-dock-v2"
-          className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_auto_auto]"
+          className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_1fr_auto]"
         >
           <SgDockZone zone="top" />
           <SgDockZone zone="left" />
@@ -933,7 +933,7 @@ export default function SgMenuPage() {
             >
               <SgDockLayout
                 id="showcase-menu-dock-v2"
-                className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_auto_auto]"
+                className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_1fr_auto]"
               >
                 <SgDockZone zone="top" />
                 <SgDockZone zone="left" />

@@ -308,17 +308,18 @@ function Ex7() {
 // ---------------------------------------------------------------------------
 const EX8_CODE = `const NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
 const [idx, setIdx] = React.useState(0);
-const [target, setTarget] = React.useState(NAMES[0]);
+const [target, setTarget] = React.useState(NAMES[0] ?? "");
 
 const next = () => {
   const nextIdx = (idx + 1) % NAMES.length;
+  const nextName = NAMES[nextIdx] ?? NAMES[0] ?? "";
   setIdx(nextIdx);
-  setTarget(NAMES[nextIdx]);
+  setTarget(nextName);
 };
 
 <div className="flex flex-col gap-4">
   <SgStringAnimator
-    sourceString={NAMES[(idx - 1 + NAMES.length) % NAMES.length]}
+    sourceString={NAMES[(idx - 1 + NAMES.length) % NAMES.length] ?? target}
     targetString={target}
     style="roller3d"
     alignTo="left"
@@ -335,18 +336,19 @@ const EX8_NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
 
 function Ex8() {
   const [idx, setIdx] = React.useState(0);
-  const [target, setTarget] = React.useState(EX8_NAMES[0]);
+  const [target, setTarget] = React.useState(EX8_NAMES[0] ?? "");
 
   const next = () => {
     const nextIdx = (idx + 1) % EX8_NAMES.length;
+    const nextName = EX8_NAMES[nextIdx] ?? EX8_NAMES[0] ?? "";
     setIdx(nextIdx);
-    setTarget(EX8_NAMES[nextIdx]);
+    setTarget(nextName);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <SgStringAnimator
-        sourceString={EX8_NAMES[(idx - 1 + EX8_NAMES.length) % EX8_NAMES.length]}
+        sourceString={EX8_NAMES[(idx - 1 + EX8_NAMES.length) % EX8_NAMES.length] ?? target}
         targetString={target}
         style="roller3d"
         alignTo="left"
@@ -404,23 +406,26 @@ function Ex9() {
 
   return (
     <SgGrid columns={{ base: 1, md: 3 }} gap={24}>
-      {VELOCITY_CASES.map(({ label, velocity }, i) => (
-        <div key={label} className="flex flex-col gap-2">
-          <span className="text-xs text-muted-foreground">{label}</span>
-          <SgStringAnimator
-            ref={refs[i]}
-            sourceString="ORIGEM"
-            targetString="DESTINO"
-            style="roller3d"
-            alignTo="left"
-            fontSize={22}
-            velocity={velocity}
-          />
-          <SgButton size="sm" onClick={() => refs[i].current?.startAnimation()}>
-            Animar
-          </SgButton>
-        </div>
-      ))}
+      {VELOCITY_CASES.map(({ label, velocity }, i) => {
+        const ref = refs[i] ?? refs[0];
+        return (
+          <div key={label} className="flex flex-col gap-2">
+            <span className="text-xs text-muted-foreground">{label}</span>
+            <SgStringAnimator
+              ref={ref}
+              sourceString="ORIGEM"
+              targetString="DESTINO"
+              style="roller3d"
+              alignTo="left"
+              fontSize={22}
+              velocity={velocity}
+            />
+            <SgButton size="sm" onClick={() => ref.current?.startAnimation()}>
+              Animar
+            </SgButton>
+          </div>
+        );
+      })}
     </SgGrid>
   );
 }

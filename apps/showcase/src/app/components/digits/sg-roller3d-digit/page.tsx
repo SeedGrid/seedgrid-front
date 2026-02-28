@@ -53,7 +53,8 @@ const [letter, setLetter] = React.useState("A");
 
 const next = () => {
   const i = ALPHA.indexOf(letter);
-  setLetter(ALPHA[(i + 1) % ALPHA.length]);
+  const nextLetter = ALPHA[(i + 1) % ALPHA.length] ?? ALPHA[0] ?? "A";
+  setLetter(nextLetter);
 };
 
 <div className="flex items-center gap-4">
@@ -173,25 +174,26 @@ function NameAnimator() {
   const [nameIdx, setNameIdx] = React.useState(0);
   const [step, setStep] = React.useState(7);
 
-  const currentName = NAMES_LIST[nameIdx];
-  const prevName = NAMES_LIST[(nameIdx - 1 + NAMES_LIST.length) % NAMES_LIST.length];
+  const currentName = NAMES_LIST[nameIdx] ?? NAMES_LIST[0] ?? "";
+  const prevName = NAMES_LIST[(nameIdx - 1 + NAMES_LIST.length) % NAMES_LIST.length] ?? currentName;
   const maxLen = Math.max(currentName.length, prevName.length);
   const padA = prevName.toUpperCase().padEnd(maxLen, " ");
   const padB = currentName.toUpperCase().padEnd(maxLen, " ");
-  const chars = Array.from({ length: maxLen }, (_, i) => (i <= step ? padB[i] : padA[i]));
+  const chars = Array.from({ length: maxLen }, (_, i) => (i <= step ? (padB[i] ?? " ") : (padA[i] ?? " ")));
 
   const animate = React.useCallback(() => {
     const next = (nameIdx + 1) % NAMES_LIST.length;
     setStep(0);
     setNameIdx(next);
+    const nextName = NAMES_LIST[next] ?? currentName;
     let s = 0;
     const id = window.setInterval(() => {
       s++;
       setStep(s);
-      if (s >= NAMES_LIST[next].length) window.clearInterval(id);
+      if (s >= nextName.length) window.clearInterval(id);
     }, 120);
     return () => window.clearInterval(id);
-  }, [nameIdx]);
+  }, [currentName, nameIdx]);
 
   const ALPHA_WITH_SPACE = [" ", ...ALPHA];
 
@@ -219,7 +221,8 @@ export default function SgRoller3DDigitShowcase() {
   const nextMinute = React.useCallback(() => setMinuteVal((p) => String((Number(p) + 1) % 60).padStart(2, "0")), []);
   const nextLetter = React.useCallback(() => {
     const i = ALPHA.indexOf(letter);
-    setLetter(ALPHA[(i + 1) % ALPHA.length]);
+    const next = ALPHA[(i + 1) % ALPHA.length] ?? ALPHA[0] ?? "A";
+    setLetter(next);
   }, [letter]);
 
   return (
