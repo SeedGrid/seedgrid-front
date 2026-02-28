@@ -6,10 +6,12 @@ import {
   SgClockThemePicker,
   SgClockThemeProvider,
   SgButton,
+  SgGrid,
   SgPlayground,
   SgTimeProvider,
   registerThemes,
-  sgClockThemesBuiltIn
+  sgClockThemesBuiltIn,
+  type SgClockDigitalStyle
 } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../../../../i18n";
 import CodeBlockBase from "../../CodeBlockBase";
@@ -19,6 +21,23 @@ import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../../useShowcaseAnchors";
 
 let themesRegistered = false;
+
+const DIGITAL_STYLE_OPTIONS: SgClockDigitalStyle[] = [
+  "default",
+  "segment",
+  "roller3d",
+  "flip",
+  "fade",
+  "matrix",
+  "neon",
+  "discard"
+];
+
+function nextDigitalStyle(current: SgClockDigitalStyle): SgClockDigitalStyle {
+  const idx = DIGITAL_STYLE_OPTIONS.indexOf(current);
+  if (idx < 0) return DIGITAL_STYLE_OPTIONS[0] ?? "default";
+  return DIGITAL_STYLE_OPTIONS[(idx + 1) % DIGITAL_STYLE_OPTIONS.length] ?? "default";
+}
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -151,6 +170,139 @@ export default function Example({ initialServerTime }) {
   );
 }
 
+const DIGITAL_STYLE_GALLERY_OPTIONS: Array<{ label: string; style: SgClockDigitalStyle }> = [
+  { label: "Default", style: "default" },
+  { label: "Segment", style: "segment" },
+  { label: "Fade", style: "fade" },
+  { label: "Matrix", style: "matrix" },
+  { label: "Neon", style: "neon" },
+  { label: "Discard", style: "discard" }
+];
+
+function DigitalExtrasShowcase() {
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
+  const discardScale = showSeconds ? (format === "12h" ? 0.34 : 0.38) : format === "12h" ? 0.42 : 0.46;
+  const matrixScale = showSeconds ? (format === "12h" ? 0.84 : 0.9) : 1;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <SgButton onClick={() => setShowSeconds((v) => !v)}>
+          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+        </SgButton>
+        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+          {format === "24h" ? "24h" : "12h"}
+        </SgButton>
+      </div>
+
+      <SgGrid columns={{ base: 1, sm: 2, xl: 3 }} gap={12}>
+        {DIGITAL_STYLE_GALLERY_OPTIONS.map((item) => (
+          <div key={item.style} className="space-y-3 rounded-xl border border-border bg-background p-4">
+            <div className="text-sm font-medium">{item.label}</div>
+            <div
+              className={`flex items-center justify-center ${
+                item.style === "discard" || item.style === "matrix" ? "overflow-hidden rounded-lg py-2" : ""
+              }`}
+            >
+              <div
+                style={{
+                  transform:
+                    item.style === "discard"
+                      ? `scale(${discardScale})`
+                      : item.style === "matrix"
+                        ? `scale(${matrixScale})`
+                        : undefined,
+                  transformOrigin: item.style === "discard" || item.style === "matrix" ? "center" : undefined
+                }}
+              >
+                <SgClock
+                  variant="digital"
+                  digitalStyle={item.style}
+                  size={item.style === "matrix" || item.style === "discard" ? "sm" : "md"}
+                  timezone="America/Sao_Paulo"
+                  format={format}
+                  showSeconds={showSeconds}
+                  className={item.style === "discard" ? "gap-0" : undefined}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </SgGrid>
+
+      <CodeBlockBase
+        code={`import React from "react";
+import { SgClock, SgButton, SgGrid, SgTimeProvider } from "@seedgrid/fe-components";
+
+const DIGITAL_STYLE_GALLERY_OPTIONS = [
+  { label: "Default", style: "default" },
+  { label: "Segment", style: "segment" },
+  { label: "Fade", style: "fade" },
+  { label: "Matrix", style: "matrix" },
+  { label: "Neon", style: "neon" },
+  { label: "Discard", style: "discard" }
+];
+
+export default function Example({ initialServerTime }) {
+  const [showSeconds, setShowSeconds] = React.useState(true);
+  const [format, setFormat] = React.useState("24h");
+  const discardScale = showSeconds ? (format === "12h" ? 0.34 : 0.38) : format === "12h" ? 0.42 : 0.46;
+  const matrixScale = showSeconds ? (format === "12h" ? 0.84 : 0.9) : 1;
+
+  return (
+    <SgTimeProvider initialServerTime={initialServerTime}>
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <SgButton onClick={() => setShowSeconds((v) => !v)}>
+            {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
+          </SgButton>
+          <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
+            {format === "24h" ? "24h" : "12h"}
+          </SgButton>
+        </div>
+
+        <SgGrid columns={{ base: 1, sm: 2, xl: 3 }} gap={12}>
+          {DIGITAL_STYLE_GALLERY_OPTIONS.map((item) => (
+            <div key={item.style} className="space-y-3 rounded-xl border border-border bg-background p-4">
+              <div className="text-sm font-medium">{item.label}</div>
+              <div
+                className={\`flex items-center justify-center \${item.style === "discard" || item.style === "matrix" ? "overflow-hidden rounded-lg py-2" : ""}\`}
+              >
+                <div
+                  style={{
+                    transform:
+                      item.style === "discard"
+                        ? \`scale(\${discardScale})\`
+                        : item.style === "matrix"
+                          ? \`scale(\${matrixScale})\`
+                          : undefined,
+                    transformOrigin: item.style === "discard" || item.style === "matrix" ? "center" : undefined
+                  }}
+                >
+                  <SgClock
+                    variant="digital"
+                    digitalStyle={item.style}
+                    size={item.style === "matrix" || item.style === "discard" ? "sm" : "md"}
+                    timezone="America/Sao_Paulo"
+                    format={format}
+                    showSeconds={showSeconds}
+                    className={item.style === "discard" ? "gap-0" : undefined}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </SgGrid>
+      </div>
+    </SgTimeProvider>
+  );
+}`}
+      />
+    </div>
+  );
+}
+
 const CLOCK_PLAYGROUND_APP_FILE = `import * as React from "react";
 import { SgButton, SgClock, SgClockThemeProvider, SgGrid, SgTimeProvider } from "@seedgrid/fe-components";
 
@@ -158,7 +310,7 @@ export default function App() {
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
   const [showSeconds, setShowSeconds] = React.useState(true);
-  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment" | "roller3d" | "flip">("default");
+  const [digitalStyle, setDigitalStyle] = React.useState<SgClockDigitalStyle>("default");
 
   return (
     <SgTimeProvider initialServerTime={new Date().toISOString()}>
@@ -171,7 +323,7 @@ export default function App() {
             <SgButton size="sm" appearance="outline" onClick={() => setFormat((prev) => (prev === "24h" ? "12h" : "24h"))}>
               {format}
             </SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => (prev === "default" ? "segment" : "default"))}>
+            <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => nextDigitalStyle(prev))}>
               {digitalStyle}
             </SgButton>
             <SgButton size="sm" appearance="outline" onClick={() => setTimezone((prev) => (prev === "America/Sao_Paulo" ? "Europe/Lisbon" : "America/Sao_Paulo"))}>
@@ -212,7 +364,7 @@ const CLOCK_PROPS: ShowcasePropRow[] = [
   { prop: "timezone", type: "string", defaultValue: "timezone local", description: "Fuso usado para calcular a hora exibida." },
   { prop: "format", type: "\"12h\" | \"24h\"", defaultValue: "\"24h\"", description: "Formato de hora para o modo digital." },
   { prop: "showSeconds", type: "boolean", defaultValue: "true", description: "Exibe ou oculta os segundos." },
-  { prop: "digitalStyle", type: "\"default\" | \"segment\" | \"roller3d\" | \"flip\"", defaultValue: "\"default\"", description: "Estilo visual do relogio digital." },
+  { prop: "digitalStyle", type: "\"default\" | \"segment\" | \"roller3d\" | \"flip\" | \"fade\" | \"matrix\" | \"neon\" | \"discard\"", defaultValue: "\"default\"", description: "Estilo visual do relogio digital." },
   { prop: "secondHandMode", type: "\"step\" | \"smooth\"", defaultValue: "\"step\"", description: "Comportamento do ponteiro de segundos no analogico." },
   { prop: "themeId / theme", type: "string / SgClockTheme", defaultValue: "- / -", description: "Seleciona tema registrado ou tema inline para o analogico." },
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customizacao visual adicional do container." }
@@ -226,7 +378,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
   const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-  const [digitalStyle, setDigitalStyle] = React.useState<"default" | "segment" | "roller3d">("default");
+  const [digitalStyle, setDigitalStyle] = React.useState<SgClockDigitalStyle>("default");
 
   if (!themesRegistered) {
     themesRegistered = true;
@@ -413,10 +565,8 @@ export default function Example({ initialServerTime }) {
               description={t(i18n, "showcase.component.clock.sections.digital.description")}
             >
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
-                {digitalStyle === "default"
-                  ? t(i18n, "showcase.component.clock.labels.segmentToggleOn")
-                  : t(i18n, "showcase.component.clock.labels.segmentToggleOff")}
+              <SgButton onClick={() => setDigitalStyle((v) => nextDigitalStyle(v))}>
+                {`Style: ${digitalStyle}`}
               </SgButton>
               <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
                 {format === "24h" ? "24h" : "12h"}
@@ -441,13 +591,19 @@ import React from "react";
 import { SgClock, SgTimeProvider, SgButton } from "@seedgrid/fe-components";
 
 export default function Example({ initialServerTime }) {
+  const DIGITAL_STYLE_OPTIONS = ["default", "segment", "roller3d", "flip", "fade", "matrix", "neon", "discard"];
   const [digitalStyle, setDigitalStyle] = React.useState("default");
   const [format, setFormat] = React.useState("24h");
 
+  const nextDigitalStyle = (current) => {
+    const idx = DIGITAL_STYLE_OPTIONS.indexOf(current);
+    return DIGITAL_STYLE_OPTIONS[(idx + 1) % DIGITAL_STYLE_OPTIONS.length];
+  };
+
   return (
     <SgTimeProvider initialServerTime={initialServerTime}>
-      <SgButton onClick={() => setDigitalStyle((v) => (v === "default" ? "segment" : "default"))}>
-        {digitalStyle === "default" ? "Ativar segmentado" : "Desativar segmentado"}
+      <SgButton onClick={() => setDigitalStyle((v) => nextDigitalStyle(v))}>
+        {"Style: " + digitalStyle}
       </SgButton>
       <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
         {format === "24h" ? "24h" : "12h"}
@@ -476,6 +632,13 @@ export default function Example({ initialServerTime }) {
 
             <Section title="Flip" description="Flip clock em duas folhas, com segundos e 12/24h.">
               <FlipShowcase timezone={timezone} />
+            </Section>
+
+            <Section
+              title="Outros digitalStyle"
+              description="Galeria dedicada para estilos matrix, neon, discard e variacoes relacionadas."
+            >
+              <DigitalExtrasShowcase />
             </Section>
 
             <Section

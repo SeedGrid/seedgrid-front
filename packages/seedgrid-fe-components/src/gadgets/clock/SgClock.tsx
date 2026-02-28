@@ -9,6 +9,10 @@ import type { SgClockTheme } from "./themes/types";
 import { getTheme } from "./themes/registry";
 import { SgFlipDigit } from "../../digits/flip-digit";
 import { SgRoller3DDigit } from "../../digits/roller3d-digit";
+import { SgFadeDigit } from "../../digits/fade-digit";
+import { SgMatrixDigit } from "../../digits/matrix-digit";
+import { SgNeonDigit } from "../../digits/neon-digit";
+import { SgDiscardDigit } from "../../digits/discard-digit";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -29,13 +33,23 @@ export type SgClockProps = {
   locale?: string;
   format?: "12h" | "24h";
   showSeconds?: boolean;
-  digitalStyle?: "default" | "segment" | "roller3d" | "flip";
+  digitalStyle?: SgClockDigitalStyle;
   secondHandMode?: "step" | "smooth";
   themeId?: string;
   theme?: SgClockTheme;
   className?: string;
   centerOverlay?: React.ReactNode;
 };
+
+export type SgClockDigitalStyle =
+  | "default"
+  | "segment"
+  | "roller3d"
+  | "flip"
+  | "fade"
+  | "matrix"
+  | "neon"
+  | "discard";
 
 function getHmsForTimezone(date: Date, locale: string, timeZone?: string) {
   const parts = new Intl.DateTimeFormat(locale, {
@@ -384,6 +398,8 @@ function DigitalClock({
   const fontSize =
     typeof size === "number" ? { fontSize: `${size}px`, lineHeight: 1 } : undefined;
   const sizePx = digitalSizeToNumber(size);
+  const withPeriod =
+    format === "12h" && dayPeriod ? `${text} ${dayPeriod.toUpperCase()}` : text;
 
   if (digitalStyle === "flip") {
     const hNum = Number.parseInt(hour, 10) || 0;
@@ -466,6 +482,123 @@ function DigitalClock({
         {format === "12h" && dayPeriod ? (
           <SgRoller3DDigit value={dayPeriod.toUpperCase()} items={periodItems} fontSize={digitFont} />
         ) : null}
+      </div>
+    );
+  }
+
+  if (digitalStyle === "fade") {
+    const hNum = Number.parseInt(hour, 10) || 0;
+    const mNum = Number.parseInt(minute, 10) || 0;
+    const sNum = Number.parseInt(second || "0", 10) || 0;
+    const safeHour = format === "12h" ? (hNum === 0 ? 12 : hNum) : hNum;
+    const hh = String(safeHour).padStart(2, "0");
+    const mm = String(mNum).padStart(2, "0");
+    const ss = String(sNum).padStart(2, "0");
+    const digitFont = Math.round(sizePx * 1.35);
+    const cardH = Math.round(digitFont * 1.4);
+
+    const Colon = () => (
+      <div className="flex flex-col items-center justify-center gap-2" style={{ height: cardH }}>
+        <div className="h-2 w-2 rounded-full bg-neutral-500/70" />
+        <div className="h-2 w-2 rounded-full bg-neutral-500/70" />
+      </div>
+    );
+
+    return (
+      <div className={cn("flex items-center gap-2", className)} aria-label="Digital clock">
+        <SgFadeDigit value={hh.charAt(0)} fontSize={digitFont} />
+        <SgFadeDigit value={hh.charAt(1)} fontSize={digitFont} />
+        <Colon />
+        <SgFadeDigit value={mm.charAt(0)} fontSize={digitFont} />
+        <SgFadeDigit value={mm.charAt(1)} fontSize={digitFont} />
+        {showSeconds ? (
+          <>
+            <Colon />
+            <SgFadeDigit value={ss.charAt(0)} fontSize={digitFont} />
+            <SgFadeDigit value={ss.charAt(1)} fontSize={digitFont} />
+          </>
+        ) : null}
+        {format === "12h" && dayPeriod ? (
+          <span className="text-xs font-semibold text-muted-foreground">{dayPeriod.toUpperCase()}</span>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (digitalStyle === "discard") {
+    const hNum = Number.parseInt(hour, 10) || 0;
+    const mNum = Number.parseInt(minute, 10) || 0;
+    const sNum = Number.parseInt(second || "0", 10) || 0;
+    const safeHour = format === "12h" ? (hNum === 0 ? 12 : hNum) : hNum;
+    const hh = String(safeHour).padStart(2, "0");
+    const mm = String(mNum).padStart(2, "0");
+    const ss = String(sNum).padStart(2, "0");
+    const digitFont =
+      typeof size === "number"
+        ? Math.max(36, Math.round(sizePx * 2.2))
+        : size === "sm"
+          ? 38
+          : size === "lg"
+            ? 56
+            : 44;
+
+    const Colon = () => (
+      <SgDiscardDigit
+        value=":"
+        fontSize={Math.max(26, Math.round(digitFont * 0.72))}
+        stackDepth={12}
+        transitionMs={560}
+        animateOnChange={false}
+      />
+    );
+
+    return (
+      <div className={cn("flex items-end gap-2", className)} aria-label="Digital clock">
+        <SgDiscardDigit value={hh.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        <SgDiscardDigit value={hh.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        <Colon />
+        <SgDiscardDigit value={mm.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        <SgDiscardDigit value={mm.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+        {showSeconds ? (
+          <>
+            <Colon />
+            <SgDiscardDigit value={ss.charAt(0)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+            <SgDiscardDigit value={ss.charAt(1)} fontSize={digitFont} stackDepth={12} transitionMs={560} />
+          </>
+        ) : null}
+        {format === "12h" && dayPeriod ? (
+          <span className="text-xs font-semibold text-muted-foreground">{dayPeriod.toUpperCase()}</span>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (digitalStyle === "matrix") {
+    const dotSize = Math.max(3, Math.round(sizePx * 0.32));
+    return (
+      <div className={cn("flex items-center", className)} aria-label="Digital clock">
+        <SgMatrixDigit
+          value={withPeriod}
+          dotSize={dotSize}
+          gap={Math.max(1, Math.round(dotSize * 0.35))}
+          charGap={Math.max(3, Math.round(dotSize * 0.9))}
+          padding={Math.max(6, Math.round(dotSize * 1.3))}
+          rounded={Math.max(8, Math.round(dotSize * 1.1))}
+        />
+      </div>
+    );
+  }
+
+  if (digitalStyle === "neon") {
+    const neonFont = Math.max(18, Math.round(sizePx * 1.35));
+    return (
+      <div className={cn("flex items-center", className)} aria-label="Digital clock">
+        <SgNeonDigit
+          value={withPeriod}
+          fontSize={neonFont}
+          padding={Math.max(8, Math.round(sizePx * 0.6))}
+          rounded={Math.max(10, Math.round(sizePx * 0.45))}
+        />
       </div>
     );
   }

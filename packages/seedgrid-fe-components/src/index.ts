@@ -220,7 +220,7 @@ export type {
 export { SgTimeProvider, useSgTime } from "./gadgets/clock/SgTimeProvider";
 export { SgClock } from "./gadgets/clock/SgClock";
 export type { SgTimeContextValue } from "./gadgets/clock/SgTimeProvider";
-export type { SgClockProps } from "./gadgets/clock/SgClock";
+export type { SgClockProps, SgClockDigitalStyle } from "./gadgets/clock/SgClock";
 export { SgFlipDigit } from "./digits/flip-digit";
 export type { SgFlipDigitProps } from "./digits/flip-digit";
 export { SgFadeDigit } from "./digits/fade-digit";
