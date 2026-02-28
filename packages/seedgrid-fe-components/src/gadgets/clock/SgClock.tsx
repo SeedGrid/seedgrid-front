@@ -7,8 +7,8 @@ import { ThemeLayer, resolveTheme } from "./themes/renderTheme";
 import { useDarkFlag } from "./themes/useDarkFlag";
 import type { SgClockTheme } from "./themes/types";
 import { getTheme } from "./themes/registry";
-import { SgFlipDigit } from "../flip-digit";
-import { SgRoller3DDigit } from "../roller3d-digit";
+import { SgFlipDigit } from "../../digits/flip-digit";
+import { SgRoller3DDigit } from "../../digits/roller3d-digit";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");

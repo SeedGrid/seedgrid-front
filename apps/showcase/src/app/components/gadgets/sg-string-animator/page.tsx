@@ -146,9 +146,167 @@ function Ex3() {
 }
 
 // ---------------------------------------------------------------------------
-// Example 4 — autoStart: troca automatica ao mudar targetString
+// Example 4 — Estilo Neon
 // ---------------------------------------------------------------------------
-const EX4_CODE = `const NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
+const EX4_CODE = `const animRef = React.useRef<SgStringAnimatorRef>(null);
+
+<div className="flex flex-col gap-4">
+  <SgStringAnimator
+    ref={animRef}
+    sourceString="LUCIANO"
+    targetString="MARTA"
+    style="neon"
+    alignTo="left"
+    fontSize={28}
+    color="#e4fbff"
+    backgroundColor="#090f22"
+  />
+  <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+    Animar
+  </SgButton>
+</div>`;
+
+function Ex4() {
+  const animRef = React.useRef<SgStringAnimatorRef>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <SgStringAnimator
+        ref={animRef}
+        sourceString="LUCIANO"
+        targetString="MARTA"
+        style="neon"
+        alignTo="left"
+        fontSize={28}
+        color="#e4fbff"
+        backgroundColor="#090f22"
+      />
+      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+        Animar
+      </SgButton>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Example 5 — Estilo Fade
+// ---------------------------------------------------------------------------
+const EX5_CODE = `const animRef = React.useRef<SgStringAnimatorRef>(null);
+
+<div className="flex flex-col gap-4">
+  <SgStringAnimator
+    ref={animRef}
+    sourceString="LUCIANO"
+    targetString="MARTA"
+    style="fade"
+    alignTo="left"
+    fontSize={28}
+  />
+  <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+    Animar
+  </SgButton>
+</div>`;
+
+function Ex5() {
+  const animRef = React.useRef<SgStringAnimatorRef>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <SgStringAnimator
+        ref={animRef}
+        sourceString="LUCIANO"
+        targetString="MARTA"
+        style="fade"
+        alignTo="left"
+        fontSize={28}
+      />
+      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+        Animar
+      </SgButton>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Example 6 — Estilo Discard
+// ---------------------------------------------------------------------------
+const EX6_CODE = `const animRef = React.useRef<SgStringAnimatorRef>(null);
+
+<div className="flex flex-col gap-4">
+  <SgStringAnimator
+    ref={animRef}
+    sourceString="LUCIANO"
+    targetString="MARTA"
+    style="discard"
+    alignTo="left"
+    fontSize={28}
+  />
+  <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+    Animar
+  </SgButton>
+</div>`;
+
+function Ex6() {
+  const animRef = React.useRef<SgStringAnimatorRef>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <SgStringAnimator
+        ref={animRef}
+        sourceString="LUCIANO"
+        targetString="MARTA"
+        style="discard"
+        alignTo="left"
+        fontSize={28}
+      />
+      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+        Animar
+      </SgButton>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Example 7 — Estilo Matrix
+// ---------------------------------------------------------------------------
+const EX7_CODE = `const animRef = React.useRef<SgStringAnimatorRef>(null);
+
+<div className="flex flex-col gap-4">
+  <SgStringAnimator
+    ref={animRef}
+    sourceString="LUCIANO"
+    targetString="MARTA"
+    style="matrix"
+    alignTo="left"
+    color="#22d3ee"
+    backgroundColor="#0b1220"
+  />
+  <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+    Animar
+  </SgButton>
+</div>`;
+
+function Ex7() {
+  const animRef = React.useRef<SgStringAnimatorRef>(null);
+  return (
+    <div className="flex flex-col gap-4">
+      <SgStringAnimator
+        ref={animRef}
+        sourceString="LUCIANO"
+        targetString="MARTA"
+        style="matrix"
+        alignTo="left"
+        color="#22d3ee"
+        backgroundColor="#0b1220"
+      />
+      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
+        Animar
+      </SgButton>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Example 8 — autoStart: troca automatica ao mudar targetString
+// ---------------------------------------------------------------------------
+const EX8_CODE = `const NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
 const [idx, setIdx] = React.useState(0);
 const [target, setTarget] = React.useState(NAMES[0]);
 
@@ -173,22 +331,22 @@ const next = () => {
   </SgButton>
 </div>`;
 
-const EX4_NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
+const EX8_NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
 
-function Ex4() {
+function Ex8() {
   const [idx, setIdx] = React.useState(0);
-  const [target, setTarget] = React.useState(EX4_NAMES[0]);
+  const [target, setTarget] = React.useState(EX8_NAMES[0]);
 
   const next = () => {
-    const nextIdx = (idx + 1) % EX4_NAMES.length;
+    const nextIdx = (idx + 1) % EX8_NAMES.length;
     setIdx(nextIdx);
-    setTarget(EX4_NAMES[nextIdx]);
+    setTarget(EX8_NAMES[nextIdx]);
   };
 
   return (
     <div className="flex flex-col gap-4">
       <SgStringAnimator
-        sourceString={EX4_NAMES[(idx - 1 + EX4_NAMES.length) % EX4_NAMES.length]}
+        sourceString={EX8_NAMES[(idx - 1 + EX8_NAMES.length) % EX8_NAMES.length]}
         targetString={target}
         style="roller3d"
         alignTo="left"
@@ -204,50 +362,9 @@ function Ex4() {
 }
 
 // ---------------------------------------------------------------------------
-// Example 5 — emptyChar: preenchimento de posicoes vazias
+// Example 9 — Velocidades
 // ---------------------------------------------------------------------------
-const EX5_CODE = `const animRef = React.useRef<SgStringAnimatorRef>(null);
-
-{/* emptyChar="-": posicoes extras preenchidas com traco */}
-<div className="flex flex-col gap-4">
-  <SgStringAnimator
-    ref={animRef}
-    sourceString="ABC"
-    targetString="SEEDGRID"
-    style="roller3d"
-    alignTo="left"
-    emptyChar="-"
-    fontSize={24}
-  />
-  <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
-    Animar (emptyChar="-")
-  </SgButton>
-</div>`;
-
-function Ex5() {
-  const animRef = React.useRef<SgStringAnimatorRef>(null);
-  return (
-    <div className="flex flex-col gap-4">
-      <SgStringAnimator
-        ref={animRef}
-        sourceString="ABC"
-        targetString="SEEDGRID"
-        style="roller3d"
-        alignTo="left"
-        emptyChar="-"
-        fontSize={24}
-      />
-      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
-        Animar (emptyChar="-")
-      </SgButton>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Example 6 — Velocidades
-// ---------------------------------------------------------------------------
-const EX6_CODE = `{[
+const EX9_CODE = `{[
   { label: "Lento (velocity=10)",  velocity: 10 },
   { label: "Medio (velocity=50)",  velocity: 50 },
   { label: "Rapido (velocity=90)", velocity: 90 },
@@ -278,7 +395,7 @@ const VELOCITY_CASES = [
   { label: "Rapido (velocity=90)", velocity: 90 },
 ] as const;
 
-function Ex6() {
+function Ex9() {
   const refs = [
     React.useRef<SgStringAnimatorRef>(null),
     React.useRef<SgStringAnimatorRef>(null),
@@ -332,6 +449,8 @@ export default function App() {
   const [fontSize, setFontSize] = React.useState(28);
   const [emptyChar, setEmptyChar] = React.useState(" ");
   const [autoStart, setAutoStart] = React.useState(false);
+  const [color, setColor] = React.useState("");
+  const [backgroundColor, setBackgroundColor] = React.useState("");
 
   return (
     <div className="space-y-6 p-4">
@@ -360,6 +479,10 @@ export default function App() {
           >
             <option value="roller3d">roller3d</option>
             <option value="flip">flip</option>
+            <option value="neon">neon</option>
+            <option value="fade">fade</option>
+            <option value="discard">discard</option>
+            <option value="matrix">matrix</option>
           </select>
         </label>
 
@@ -390,6 +513,23 @@ export default function App() {
           label="autoStart"
           checked={autoStart}
           onChange={setAutoStart}
+        />
+      </SgGrid>
+
+      <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
+        <SgInputText
+          id="pg-color"
+          label="color (neon/fade/discard/matrix)"
+          value={color}
+          onChange={setColor}
+          placeholder="ex: #e4fbff"
+        />
+        <SgInputText
+          id="pg-bg"
+          label="backgroundColor (neon/fade/discard/matrix)"
+          value={backgroundColor}
+          onChange={setBackgroundColor}
+          placeholder="ex: #090f22"
         />
       </SgGrid>
 
@@ -429,6 +569,8 @@ export default function App() {
           fontSize={fontSize}
           emptyChar={emptyChar}
           autoStart={autoStart}
+          {...(color ? { color } : {})}
+          {...(backgroundColor ? { backgroundColor } : {})}
         />
         <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>
           startAnimation()
@@ -456,9 +598,10 @@ const PROPS: ShowcasePropRow[] = [
   },
   {
     prop: "style",
-    type: '"roller3d" | "flip"',
+    type: '"roller3d" | "flip" | "neon" | "fade" | "discard" | "matrix"',
     defaultValue: '"roller3d"',
-    description: "Estilo de animacao por caractere: tambor vertical ou flip card.",
+    description:
+      'Estilo de animacao por caractere: tambor vertical, flip card, neon, fade, discard (folha voadora) ou matrix LED.',
   },
   {
     prop: "velocity",
@@ -494,11 +637,24 @@ const PROPS: ShowcasePropRow[] = [
     description: "Tamanho da fonte em pixels. Controla a escala de cada digito.",
   },
   {
+    prop: "color",
+    type: "string",
+    defaultValue: "-",
+    description:
+      "Cor principal do texto/ponto. Aplicada nos estilos neon, fade, discard e matrix.",
+  },
+  {
+    prop: "backgroundColor",
+    type: "string",
+    defaultValue: "-",
+    description: "Cor de fundo de cada digito. Aplicada nos estilos neon, fade, discard e matrix.",
+  },
+  {
     prop: "charset",
     type: "string[]",
     defaultValue: "DEFAULT_CHARSET",
     description:
-      "Conjunto de caracteres validos para o SgRoller3DDigit. Deve incluir todos os chars de sourceString, targetString e emptyChar.",
+      'Conjunto de caracteres validos para o SgRoller3DDigit. Ignorado quando style != "roller3d".',
   },
   {
     prop: "className",
@@ -510,7 +666,7 @@ const PROPS: ShowcasePropRow[] = [
     prop: "ref",
     type: "SgStringAnimatorRef",
     defaultValue: "-",
-    description: 'Ref imperativa. Expoe o metodo startAnimation() para acionar a animacao manualmente.',
+    description: "Ref imperativa. Expoe o metodo startAnimation() para acionar a animacao manualmente.",
   },
 ];
 
@@ -533,14 +689,14 @@ export default function SgStringAnimatorShowcase() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgStringAnimator"
-          subtitle="Anima caracter a caracter de uma string para outra, usando SgRoller3DDigit (tambor) ou SgFlipDigit (flip). Suporta textos, numeros, alinhamento e velocidade configuravel."
+          subtitle="Anima caracter a caracter de uma string para outra. Suporta seis estilos: roller3d, flip, neon, fade, discard e matrix. Configuravel em velocidade, alinhamento e cores."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
         {/* 1 */}
         <Section
-          title="Nomes (Roller 3D, alinhado a esquerda)"
+          title="Roller 3D — nomes (left-aligned)"
           description='Anima "LUCIANO" ate "MARTA". Posicoes extras preenchidas com espaco a direita (alignTo="left").'
         >
           <Ex1 />
@@ -549,8 +705,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 2 */}
         <Section
-          title="Numeros (Roller 3D, alinhado a direita)"
-          description='Anima "42" ate "1337". Espacos sao inseridos a esquerda (alignTo="right") e os digitos animam da direita para a esquerda (unidades primeiro).'
+          title="Roller 3D — numeros (right-aligned)"
+          description='Anima "42" ate "1337". Espacos sao inseridos a esquerda (alignTo="right") e os digitos animam da direita para a esquerda.'
         >
           <Ex2 />
           <CodeBlockBase code={EX2_CODE} />
@@ -559,7 +715,7 @@ export default function SgStringAnimatorShowcase() {
         {/* 3 */}
         <Section
           title="Estilo Flip"
-          description='Mesma animacao de nomes, mas usando SgFlipDigit (flip card) em vez do tambor.'
+          description="Animacao de nomes usando SgFlipDigit (flip card)."
         >
           <Ex3 />
           <CodeBlockBase code={EX3_CODE} />
@@ -567,8 +723,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 4 */}
         <Section
-          title="autoStart — animacao automatica"
-          description="Com autoStart=true, a animacao e iniciada automaticamente sempre que targetString mudar."
+          title="Estilo Neon"
+          description="Cada caractere usa SgNeonDigit com efeito de brilho neon. Use color e backgroundColor para personalizar."
         >
           <Ex4 />
           <CodeBlockBase code={EX4_CODE} />
@@ -576,8 +732,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 5 */}
         <Section
-          title="emptyChar — preenchimento de posicoes"
-          description='Quando as strings tem comprimentos diferentes, as posicoes extras sao preenchidas com emptyChar. Aqui usamos "-" para deixar o efeito visivel.'
+          title="Estilo Fade"
+          description="Cada caractere usa SgFadeDigit: apaga o digito atual e acende o novo (efeito bulbo/display)."
         >
           <Ex5 />
           <CodeBlockBase code={EX5_CODE} />
@@ -585,24 +741,51 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 6 */}
         <Section
-          title="Velocidades"
-          description="Comparacao de velocity=10, 50 e 90 na mesma animacao."
+          title="Estilo Discard"
+          description="Cada caractere usa SgDiscardDigit: a folha com o valor antigo e descartada voando para fora."
         >
           <Ex6 />
           <CodeBlockBase code={EX6_CODE} />
         </Section>
 
+        {/* 7 */}
+        <Section
+          title="Estilo Matrix"
+          description="Cada caractere usa SgMatrixDigit: renderizado em pontos de LED 5x7. Ideal para placares e paineis digitais."
+        >
+          <Ex7 />
+          <CodeBlockBase code={EX7_CODE} />
+        </Section>
+
+        {/* 8 */}
+        <Section
+          title="autoStart — animacao automatica"
+          description="Com autoStart=true, a animacao e iniciada automaticamente sempre que targetString mudar. Funciona com todos os estilos."
+        >
+          <Ex8 />
+          <CodeBlockBase code={EX8_CODE} />
+        </Section>
+
+        {/* 9 */}
+        <Section
+          title="Velocidades"
+          description="Comparacao de velocity=10, 50 e 90 na mesma animacao."
+        >
+          <Ex9 />
+          <CodeBlockBase code={EX9_CODE} />
+        </Section>
+
         {/* Playground */}
         <Section
           title="Playground"
-          description="Configure todas as props em tempo real."
+          description="Configure todas as props em tempo real, incluindo os novos estilos e cores."
         >
           <SgPlayground
             title="SgStringAnimator Playground"
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
-            height={700}
+            height={760}
             defaultOpen
           />
         </Section>

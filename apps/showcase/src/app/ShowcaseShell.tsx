@@ -78,12 +78,12 @@ const COMPONENTS = [
   { group: "Layout", slug: "sg-expandable-panel", label: "SgExpandablePanel" },
   { group: "Layout", slug: "sg-page-control", label: "SgPageControl" },
   { group: "Gadgets", slug: "gadgets/sg-clock", label: "SgClock" },
-  { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
-  { group: "Gadgets", slug: "gadgets/sg-roller3d-digit", label: "SgRoller3DDigit" },
-  { group: "Gadgets", slug: "gadgets/sg-matrix-digit", label: "SgMatrixDigit" },
-  { group: "Gadgets", slug: "gadgets/sg-neon-digit", label: "SgNeonDigit" },
-  { group: "Gadgets", slug: "gadgets/sg-discard-digit", label: "SgDiscardDigit" },
-  { group: "Gadgets", slug: "gadgets/sg-fade-digit", label: "SgFadeDigit" },
+  { group: "Digits", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
+  { group: "Digits", slug: "gadgets/sg-fade-digit", label: "SgFadeDigit" },
+  { group: "Digits", slug: "gadgets/sg-roller3d-digit", label: "SgRoller3DDigit" },
+  { group: "Digits", slug: "gadgets/sg-matrix-digit", label: "SgMatrixDigit" },
+  { group: "Digits", slug: "gadgets/sg-neon-digit", label: "SgNeonDigit" },
+  { group: "Digits", slug: "gadgets/sg-discard-digit", label: "SgDiscardDigit" },
   { group: "Gadgets", slug: "gadgets/sg-string-animator", label: "SgStringAnimator" },
   { group: "Gadgets", slug: "gadgets/sg-qr-code", label: "SgQRCode" },
   { group: "Gadgets", slug: "gadgets/sg-linear-gauge", label: "SgLinearGauge" },
@@ -324,7 +324,7 @@ export default function ShowcaseShell(props: {
                     );
                   })}
                   <div className="my-2 border-t border-[#dcc6b2]" />
-                  {(["Inputs", "Buttons", "Menus", "Layout", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
+                  {(["Inputs", "Buttons", "Menus", "Layout", "Digits", "Gadgets", "Wizard", "Utils"] as const).map((group) => {
                     const items = COMPONENTS.filter((c) => c.group === group);
                     if (items.length === 0) return null;
                     return (

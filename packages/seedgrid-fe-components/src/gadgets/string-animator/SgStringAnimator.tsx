@@ -1,8 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { SgFlipDigit } from "../flip-digit";
-import { SgRoller3DDigit } from "../roller3d-digit";
+import { SgFlipDigit } from "../../digits/flip-digit";
+import { SgRoller3DDigit } from "../../digits/roller3d-digit";
+import { SgNeonDigit } from "../../digits/neon-digit";
+import { SgFadeDigit } from "../../digits/fade-digit";
+import { SgDiscardDigit } from "../../digits/discard-digit";
+import { SgMatrixDigit } from "../../digits/matrix-digit";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -20,7 +24,14 @@ export const SG_STRING_ANIMATOR_DEFAULT_CHARSET: string[] = [
   ".","!","?","-","+","#","@","$","%","&","/","*","(",")",
 ];
 
-export type SgStringAnimatorStyle = "roller3d" | "flip";
+export type SgStringAnimatorStyle =
+  | "roller3d"
+  | "flip"
+  | "neon"
+  | "fade"
+  | "discard"
+  | "matrix";
+
 export type SgStringAnimatorAlign = "left" | "right";
 
 export type SgStringAnimatorRef = {
@@ -37,6 +48,10 @@ export type SgStringAnimatorProps = {
    * Estilo de animacao por caractere.
    * - "roller3d": tambor vertical (SgRoller3DDigit)
    * - "flip": vira o card (SgFlipDigit)
+   * - "neon": brilho neon com fade (SgNeonDigit)
+   * - "fade": apaga e acende (SgFadeDigit)
+   * - "discard": folha descartada voando (SgDiscardDigit)
+   * - "matrix": pontos em matriz LED (SgMatrixDigit)
    * @default "roller3d"
    */
   style?: SgStringAnimatorStyle;
@@ -70,30 +85,49 @@ export type SgStringAnimatorProps = {
   /**
    * Conjunto de caracteres validos para o SgRoller3DDigit.
    * Deve conter todos os caracteres que podem aparecer em sourceString,
-   * targetString e emptyChar. Ignorado quando style="flip".
+   * targetString e emptyChar. Ignorado quando style != "roller3d".
    * @default SG_STRING_ANIMATOR_DEFAULT_CHARSET
    */
   charset?: string[];
+  /**
+   * Cor principal do texto/ponto — aplicada nos estilos "neon", "fade",
+   * "discard" e "matrix".
+   */
+  color?: string;
+  /**
+   * Cor de fundo — aplicada nos estilos "neon", "fade", "discard" e "matrix".
+   */
+  backgroundColor?: string;
   /** Classes CSS adicionais no container externo */
   className?: string;
+};
+
+const GAP_BY_STYLE: Record<SgStringAnimatorStyle, string> = {
+  roller3d: "gap-1",
+  flip: "gap-0.5",
+  neon: "gap-1",
+  fade: "gap-0.5",
+  discard: "gap-2",
+  matrix: "gap-0.5",
 };
 
 /**
  * SgStringAnimator — anima caracter a caracter de uma string para outra.
  *
- * Usa SgRoller3DDigit (estilo tambor) ou SgFlipDigit (estilo flip) por posicao.
- * A animacao e acionada via prop `autoStart` ou pelo metodo imperativo `startAnimation()`.
+ * Suporta seis estilos de digit: "roller3d", "flip", "neon", "fade",
+ * "discard" e "matrix". A animacao e acionada via prop `autoStart` ou
+ * pelo metodo imperativo `startAnimation()`.
  *
  * @example
  * // Animacao manual via ref
  * const ref = React.useRef<SgStringAnimatorRef>(null);
- * <SgStringAnimator ref={ref} sourceString="LUCIANO" targetString="MARTA" />
+ * <SgStringAnimator ref={ref} sourceString="LUCIANO" targetString="MARTA" style="neon" />
  * <button onClick={() => ref.current?.startAnimation()}>Animar</button>
  *
  * @example
  * // Animacao automatica ao trocar o alvo
  * const [target, setTarget] = React.useState("LUCIANO");
- * <SgStringAnimator sourceString="LUCIANO" targetString={target} autoStart />
+ * <SgStringAnimator sourceString="LUCIANO" targetString={target} style="fade" autoStart />
  * <button onClick={() => setTarget("MARTA")}>Trocar</button>
  */
 export const SgStringAnimator = React.forwardRef<SgStringAnimatorRef, SgStringAnimatorProps>(
@@ -108,6 +142,8 @@ export const SgStringAnimator = React.forwardRef<SgStringAnimatorRef, SgStringAn
       autoStart = false,
       fontSize = 32,
       charset = SG_STRING_ANIMATOR_DEFAULT_CHARSET,
+      color,
+      backgroundColor,
       className,
     },
     ref
@@ -210,22 +246,74 @@ export const SgStringAnimator = React.forwardRef<SgStringAnimatorRef, SgStringAn
       };
     }, []);
 
-    const gapClass = style === "flip" ? "gap-0.5" : "gap-1";
+    const gapClass = GAP_BY_STYLE[style] ?? "gap-1";
 
-    return (
-      <div className={cn("flex items-center", gapClass, className)}>
-        {displayChars.map((ch, i) =>
-          style === "flip" ? (
-            <SgFlipDigit key={i} value={ch || safeEmpty} fontSize={fontSize} />
-          ) : (
+    function renderDigit(ch: string, i: number) {
+      const safeChar = ch || safeEmpty;
+
+      switch (style) {
+        case "flip":
+          return <SgFlipDigit key={i} value={safeChar} fontSize={fontSize} />;
+
+        case "neon":
+          return (
+            <SgNeonDigit
+              key={i}
+              value={safeChar}
+              fontSize={fontSize}
+              color={color}
+              backgroundColor={backgroundColor}
+            />
+          );
+
+        case "fade":
+          return (
+            <SgFadeDigit
+              key={i}
+              value={safeChar}
+              fontSize={fontSize}
+              color={color}
+              backgroundColor={backgroundColor}
+            />
+          );
+
+        case "discard":
+          return (
+            <SgDiscardDigit
+              key={i}
+              value={safeChar}
+              fontSize={fontSize}
+              color={color}
+              backgroundColor={backgroundColor}
+            />
+          );
+
+        case "matrix":
+          return (
+            <SgMatrixDigit
+              key={i}
+              value={safeChar}
+              color={color}
+              backgroundColor={backgroundColor}
+            />
+          );
+
+        case "roller3d":
+        default:
+          return (
             <SgRoller3DDigit
               key={i}
-              value={effectiveCharset.includes(ch) ? ch : (effectiveCharset[0] ?? " ")}
+              value={effectiveCharset.includes(safeChar) ? safeChar : (effectiveCharset[0] ?? " ")}
               items={effectiveCharset}
               fontSize={fontSize}
             />
-          )
-        )}
+          );
+      }
+    }
+
+    return (
+      <div className={cn("flex items-center", gapClass, className)}>
+        {displayChars.map((ch, i) => renderDigit(ch, i))}
       </div>
     );
   }
