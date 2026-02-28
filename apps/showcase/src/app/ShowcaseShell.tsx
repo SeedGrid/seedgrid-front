@@ -81,6 +81,7 @@ const COMPONENTS = [
   { group: "Gadgets", slug: "gadgets/sg-flip-digit", label: "SgFlipDigit" },
   { group: "Gadgets", slug: "gadgets/sg-roller3d-digit", label: "SgRoller3DDigit" },
   { group: "Gadgets", slug: "gadgets/sg-matrix-digit", label: "SgMatrixDigit" },
+  { group: "Gadgets", slug: "gadgets/sg-neon-digit", label: "SgNeonDigit" },
   { group: "Gadgets", slug: "gadgets/sg-string-animator", label: "SgStringAnimator" },
   { group: "Gadgets", slug: "gadgets/sg-qr-code", label: "SgQRCode" },
   { group: "Gadgets", slug: "gadgets/sg-linear-gauge", label: "SgLinearGauge" },

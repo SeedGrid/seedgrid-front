@@ -227,6 +227,8 @@ export { SgRoller3DDigit } from "./gadgets/roller3d-digit";
 export type { SgRoller3DDigitProps } from "./gadgets/roller3d-digit";
 export { SgMatrixDigit } from "./gadgets/matrix-digit";
 export type { SgMatrixDigitProps } from "./gadgets/matrix-digit";
+export { SgNeonDigit } from "./gadgets/neon-digit";
+export type { SgNeonDigitProps } from "./gadgets/neon-digit";
 export { SgStringAnimator, SG_STRING_ANIMATOR_DEFAULT_CHARSET } from "./gadgets/string-animator";
 export type {
   SgStringAnimatorProps,
