@@ -6,7 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-# Coloque o id-token AQUI também (top-level)
 permissions:
   contents: read
   id-token: write
@@ -15,7 +14,6 @@ jobs:
   publish-components:
     runs-on: ubuntu-latest
 
-    # Reforça também no job
     permissions:
       contents: read
       id-token: write
@@ -70,19 +68,45 @@ jobs:
           echo "resolved_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Publishing ${PACKAGE_NAME}@${PACKAGE_VERSION}"
 
-      - name: Publish components package to npm (OIDC Trusted Publisher)
+      - name: Debug npm auth sources (safe)
+        shell: bash
+        run: |
+          echo "== repo .npmrc =="
+          test -f .npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' .npmrc || echo "(none)"
+
+          echo "== package .npmrc =="
+          test -f packages/seedgrid-fe-components/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' packages/seedgrid-fe-components/.npmrc || echo "(none)"
+
+          echo "== ~/.npmrc =="
+          test -f ~/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' ~/.npmrc || echo "(none)"
+
+          echo "== env hints =="
+          env | grep -E 'NPM|NODE_AUTH_TOKEN' || true
+
+      - name: Publish components package to npm (OIDC Trusted Publisher, NO TOKEN)
         shell: bash
         env:
-          # Força provenance (necessário pro OIDC do npm)
           NPM_CONFIG_PROVENANCE: "true"
         run: |
-          # ⚠️ Força publish a partir do diretório do pacote (mais confiável para OIDC)
+          # Força npm a NÃO ler configs antigas (token fantasma)
+          CLEAN_NPMRC="${RUNNER_TEMP}/npmrc-clean"
+          cat > "${CLEAN_NPMRC}" <<'EOF'
+          registry=https://registry.npmjs.org/
+          always-auth=false
+          EOF
+
+          export NPM_CONFIG_USERCONFIG="${CLEAN_NPMRC}"
+
+          # GARANTIR que nenhum token esteja setado no ambiente
+          unset NODE_AUTH_TOKEN
+          unset NPM_TOKEN
+
+          # Publicar a partir do diretório do pacote
           cd packages/seedgrid-fe-components
 
-          # Garantir registry certo
-          npm config set registry https://registry.npmjs.org/
+          echo "Using NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
+          npm config get registry
 
-          # Publica (OIDC)
           npm publish --access public --provenance
 
   build-and-push-showcase-image:
