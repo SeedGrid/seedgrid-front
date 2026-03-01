@@ -36,7 +36,6 @@ jobs:
         shell: bash
         run: |
           npm i -g npm@^11
-          echo "npm version:"
           npm -v
 
       - name: Install dependencies
@@ -45,11 +44,26 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
-      - name: Print workflow ref (must match Trusted Publisher)
+      - name: Resolve CalVer version (YYYY.MM.DD, then -1, -2...)
+        id: calver
         shell: bash
         run: |
-          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
-          echo "GITHUB_WORKFLOW_REF=$GITHUB_WORKFLOW_REF"
+          PKG_DIR="packages/seedgrid-fe-components"
+          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
+
+          BASE=$(date +"%Y.%m.%d")
+          VERSION="$BASE"
+          N=1
+
+          # Se a versão base já existir, usa sufixo -1, -2, ...
+          while npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; do
+            VERSION="${BASE}-${N}"
+            N=$((N + 1))
+          done
+
+          echo "Publishing ${NAME}@${VERSION}"
+          npm --prefix "${PKG_DIR}" version "${VERSION}" --no-git-tag-version
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Publish components package (OIDC)
         shell: bash
@@ -58,7 +72,6 @@ jobs:
           NPM_TOKEN: ""
         run: |
           cd packages/seedgrid-fe-components
-          npm config set registry https://registry.npmjs.org/
           npm publish --access public --provenance --tag latest --loglevel verbose
 
   build-and-push-showcase-image:
