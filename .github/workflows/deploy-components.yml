@@ -27,42 +27,33 @@ jobs:
         with:
           version: 9.12.0
 
-      # IMPORTANT: sem registry-url aqui (evita caminho de token auth)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
 
-      - name: Show tool versions
+      - name: Show versions and OIDC availability (safe)
+        shell: bash
         run: |
           node -v
           npm -v
           pnpm -v
 
-      - name: Detect token env (safe)
-        shell: bash
-        run: |
-          echo "== Token env presence (values hidden) =="
-          if [[ -n "${NODE_AUTH_TOKEN:-}" ]]; then
-            echo "NODE_AUTH_TOKEN is SET (this breaks OIDC and triggers 'token expired/revoked')"
+          echo "== OIDC env presence =="
+          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
+            echo "ACTIONS_ID_TOKEN_REQUEST_URL is PRESENT ✅"
           else
-            echo "NODE_AUTH_TOKEN is NOT set"
+            echo "ACTIONS_ID_TOKEN_REQUEST_URL is MISSING ❌"
           fi
 
-          if [[ -n "${NPM_TOKEN:-}" ]]; then
-            echo "NPM_TOKEN is SET"
+          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
+            echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is PRESENT ✅"
           else
-            echo "NPM_TOKEN is NOT set"
+            echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is MISSING ❌"
           fi
 
-          if [[ -n "${NPM_CONFIG_USERCONFIG:-}" ]]; then
-            echo "NPM_CONFIG_USERCONFIG is SET: ${NPM_CONFIG_USERCONFIG}"
-          else
-            echo "NPM_CONFIG_USERCONFIG is NOT set"
-          fi
-
-          echo "== npm registry =="
+          echo "== registry =="
           npm config get registry || true
 
       - name: Install dependencies
@@ -96,17 +87,17 @@ jobs:
       - name: Publish components package to npm (OIDC Trusted Publisher)
         shell: bash
         env:
-          NPM_CONFIG_PROVENANCE: "true"
+          # não deixa token clássico interferir
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
         run: |
-          # mata qualquer token injetado por secrets/vars/environment
-          unset NODE_AUTH_TOKEN
-          unset NPM_TOKEN
-
-          # garante registry correto
+          # registry canônico
           npm config set registry https://registry.npmjs.org/
 
           cd packages/seedgrid-fe-components
-          npm publish --access public --provenance
+
+          # publish canônico com provenance (requerido pro OIDC)
+          npm publish --access public --provenance --tag latest
 
   build-and-push-showcase-image:
     runs-on: ubuntu-latest
