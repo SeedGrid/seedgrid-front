@@ -2,7 +2,8 @@ name: Publish Components and Showcase
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -11,7 +12,9 @@ permissions:
 
 jobs:
   publish-components:
+    name: Publish NPM Package (OIDC)
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       contents: read
       id-token: write
@@ -23,7 +26,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.12.0
+          version: 9
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -39,15 +42,13 @@ jobs:
 
       - name: Publish components package (OIDC)
         shell: bash
-        env:
-          NODE_AUTH_TOKEN: ""
-          NPM_TOKEN: ""
         run: |
           cd packages/seedgrid-fe-components
           npm config set registry https://registry.npmjs.org/
           npm publish --access public --provenance --tag latest
 
   build-and-push-showcase-image:
+    name: Build & Push Showcase Docker Image
     runs-on: ubuntu-latest
     needs: publish-components
     permissions:
