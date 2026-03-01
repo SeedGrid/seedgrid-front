@@ -32,7 +32,6 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -62,7 +61,10 @@ jobs:
 
       - name: Publish components package to npm (OIDC)
         shell: bash
+        env:
+          NODE_AUTH_TOKEN: ""
         run: |
+          npm config delete //registry.npmjs.org/:_authToken || true
           npm publish ./packages/seedgrid-fe-components --access public --provenance
 
   build-and-push-showcase-image:
