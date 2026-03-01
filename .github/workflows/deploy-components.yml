@@ -18,6 +18,9 @@ jobs:
       contents: read
       id-token: write
 
+    outputs:
+      calver: ${{ steps.calver.outputs.version }}
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -44,6 +47,12 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
+      - name: Print workflow ref (must match Trusted Publisher)
+        shell: bash
+        run: |
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_WORKFLOW_REF=$GITHUB_WORKFLOW_REF"
+
       - name: Resolve CalVer version (YYYY.MM.DD, then -1, -2...)
         id: calver
         shell: bash
@@ -55,7 +64,6 @@ jobs:
           VERSION="$BASE"
           N=1
 
-          # Se a versão base já existir, usa sufixo -1, -2, ...
           while npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; do
             VERSION="${BASE}-${N}"
             N=$((N + 1))
@@ -72,12 +80,14 @@ jobs:
           NPM_TOKEN: ""
         run: |
           cd packages/seedgrid-fe-components
+          npm config set registry https://registry.npmjs.org/
           npm publish --access public --provenance --tag latest --loglevel verbose
 
   build-and-push-showcase-image:
-    name: Build & Push Showcase Docker Image
+    name: Build & Push Showcase Docker Image + Deploy EasyPanel
     runs-on: ubuntu-latest
     needs: publish-components
+
     permissions:
       contents: read
       packages: write
@@ -96,13 +106,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
+      - name: Extract Docker metadata (CalVer + latest + sha)
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository_owner }}/seedgrid-showcase
           tags: |
             type=raw,value=latest
+            type=raw,value=${{ needs.publish-components.outputs.calver }}
             type=sha
 
       - name: Build and push showcase image
@@ -115,3 +126,19 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Deploy on EasyPanel
+        shell: bash
+        env:
+          EASYPANEL_DEPLOY_URL: ${{ secrets.EASYPANEL_DEPLOY_URL }}
+          CALVER: ${{ needs.publish-components.outputs.calver }}
+        run: |
+          if [[ -z "${EASYPANEL_DEPLOY_URL}" ]]; then
+            echo "::error::Missing secret EASYPANEL_DEPLOY_URL"
+            exit 1
+          fi
+
+          echo "Triggering EasyPanel deploy for version: ${CALVER}"
+          # EasyPanel normalmente aceita GET nesse endpoint, mas POST também funciona em alguns setups.
+          # Se o seu endpoint for GET, deixe como está.
+          curl -fsSL "${EASYPANEL_DEPLOY_URL}"
