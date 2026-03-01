@@ -13,6 +13,7 @@ jobs:
   publish-components:
     name: Publish NPM Package (OIDC)
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       contents: read
       id-token: write
@@ -21,6 +22,8 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      # Se o seu package.json raiz tem "packageManager": "pnpm@9.12.0"
+      # NÃO coloque version: no action-setup (evita conflito)
       - name: Setup pnpm (uses packageManager from package.json)
         uses: pnpm/action-setup@v4
 
@@ -30,30 +33,30 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Show OIDC availability (safe)
-        shell: bash
-        run: |
-          echo "ACTIONS_ID_TOKEN_REQUEST_URL present? " $([[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]] && echo YES || echo NO)
-          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN present? " $([[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]] && echo YES || echo NO)
-          node -v
-          npm -v
-
-      - name: Upgrade npm (recommended for OIDC)
-        shell: bash
-        run: |
-          npm i -g npm@latest
-          npm -v
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
+      - name: Debug OIDC present?
+        shell: bash
+        run: |
+          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
+            echo "OIDC URL PRESENT ✅"
+          else
+            echo "OIDC URL MISSING ❌"
+          fi
+
+          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
+            echo "OIDC TOKEN PRESENT ✅"
+          else
+            echo "OIDC TOKEN MISSING ❌"
+          fi
+
       - name: Publish components package (OIDC)
         shell: bash
         env:
-          # garante que nenhum token “clássico” vai interferir
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
         run: |
