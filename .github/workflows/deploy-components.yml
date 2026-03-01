@@ -1,4 +1,3 @@
-#
 name: Publish Components and Showcase
 
 on:
@@ -14,10 +13,7 @@ jobs:
   publish-components:
     name: Publish NPM Package (OIDC)
     runs-on: ubuntu-latest
-
-    # IMPORTANTE: precisa bater com o Environment name configurado no npm (Trusted Publisher)
     environment: npm
-
     permissions:
       contents: read
       id-token: write
@@ -26,15 +22,22 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # Evita conflito de versão quando existe "packageManager": "pnpm@x.y.z" no package.json
       - name: Setup pnpm (uses packageManager from package.json)
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node
+      - name: Setup Node (registry)
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Force npm v11 (OIDC friendly)
+        shell: bash
+        run: |
+          npm i -g npm@^11
+          echo "npm version:"
+          npm -v
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -42,24 +45,14 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
-      - name: Debug OIDC env vars
+      - name: Print workflow ref (must match Trusted Publisher)
         shell: bash
         run: |
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
-            echo "OIDC URL PRESENT ✅"
-          else
-            echo "OIDC URL MISSING ❌"
-          fi
-
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
-            echo "OIDC TOKEN PRESENT ✅"
-          else
-            echo "OIDC TOKEN MISSING ❌"
-          fi
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_WORKFLOW_REF=$GITHUB_WORKFLOW_REF"
 
       - name: Publish components package (OIDC)
         shell: bash
-        # Garantia extra: não deixar token residual atrapalhar
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
@@ -72,7 +65,6 @@ jobs:
     name: Build & Push Showcase Docker Image
     runs-on: ubuntu-latest
     needs: publish-components
-
     permissions:
       contents: read
       packages: write
