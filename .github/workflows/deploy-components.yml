@@ -13,7 +13,6 @@ jobs:
   publish-components:
     name: Publish NPM Package (OIDC)
     runs-on: ubuntu-latest
-    environment: npm
     permissions:
       contents: read
       id-token: write
@@ -31,20 +30,19 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Check OIDC availability (safe)
+      - name: Show OIDC availability (safe)
         shell: bash
         run: |
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
-            echo "OIDC URL PRESENT ✅"
-          else
-            echo "OIDC URL MISSING ❌"
-          fi
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL present? " $([[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]] && echo YES || echo NO)
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN present? " $([[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]] && echo YES || echo NO)
+          node -v
+          npm -v
 
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
-            echo "OIDC TOKEN PRESENT ✅"
-          else
-            echo "OIDC TOKEN MISSING ❌"
-          fi
+      - name: Upgrade npm (recommended for OIDC)
+        shell: bash
+        run: |
+          npm i -g npm@latest
+          npm -v
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -52,27 +50,15 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
-      - name: Publish components package (OIDC, clean npmrc)
+      - name: Publish components package (OIDC)
         shell: bash
         env:
-          # força o npm a usar um userconfig limpo (não o /_temp/.npmrc)
-          NPM_CONFIG_USERCONFIG: ${{ github.workspace }}/.npmrc
+          # garante que nenhum token “clássico” vai interferir
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
         run: |
-          # cria um .npmrc limpo (SEM _authToken)
-          cat > "$NPM_CONFIG_USERCONFIG" <<'EOF'
-          registry=https://registry.npmjs.org/
-          always-auth=false
-          @seedgrid:registry=https://registry.npmjs.org/
-          EOF
-
-          echo "== Using npmrc =="
-          cat "$NPM_CONFIG_USERCONFIG"
-          echo "== registry =="
-          npm config get registry
-
           cd packages/seedgrid-fe-components
-
-          # publish via OIDC Trusted Publisher
+          npm config set registry https://registry.npmjs.org/
           npm publish --access public --provenance --tag latest --loglevel verbose
 
   build-and-push-showcase-image:
