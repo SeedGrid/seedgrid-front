@@ -68,45 +68,37 @@ jobs:
           echo "resolved_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Publishing ${PACKAGE_NAME}@${PACKAGE_VERSION}"
 
-      - name: Debug npm auth sources (safe)
+      - name: Ensure no token auth is present (remove .npmrc)
         shell: bash
         run: |
-          echo "== repo .npmrc =="
+          echo "== BEFORE: .npmrc repo =="
           test -f .npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' .npmrc || echo "(none)"
-
-          echo "== package .npmrc =="
+          echo "== BEFORE: .npmrc package =="
           test -f packages/seedgrid-fe-components/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' packages/seedgrid-fe-components/.npmrc || echo "(none)"
-
-          echo "== ~/.npmrc =="
+          echo "== BEFORE: ~/.npmrc =="
           test -f ~/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' ~/.npmrc || echo "(none)"
 
-          echo "== env hints =="
-          env | grep -E 'NPM|NODE_AUTH_TOKEN' || true
+          # Remove arquivos .npmrc que podem forçar token velho
+          rm -f .npmrc || true
+          rm -f packages/seedgrid-fe-components/.npmrc || true
+          rm -f ~/.npmrc || true
 
-      - name: Publish components package to npm (OIDC Trusted Publisher, NO TOKEN)
+          echo "== AFTER: .npmrc repo =="
+          test -f .npmrc && cat .npmrc || echo "(none)"
+          echo "== AFTER: .npmrc package =="
+          test -f packages/seedgrid-fe-components/.npmrc && cat packages/seedgrid-fe-components/.npmrc || echo "(none)"
+          echo "== AFTER: ~/.npmrc =="
+          test -f ~/.npmrc && cat ~/.npmrc || echo "(none)"
+
+      - name: Publish components package to npm (OIDC Trusted Publisher)
         shell: bash
         env:
-          NPM_CONFIG_PROVENANCE: "true"
+          # garante que não tem token no env
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
         run: |
-          # Força npm a NÃO ler configs antigas (token fantasma)
-          CLEAN_NPMRC="${RUNNER_TEMP}/npmrc-clean"
-          cat > "${CLEAN_NPMRC}" <<'EOF'
-          registry=https://registry.npmjs.org/
-          always-auth=false
-          EOF
-
-          export NPM_CONFIG_USERCONFIG="${CLEAN_NPMRC}"
-
-          # GARANTIR que nenhum token esteja setado no ambiente
-          unset NODE_AUTH_TOKEN
-          unset NPM_TOKEN
-
-          # Publicar a partir do diretório do pacote
           cd packages/seedgrid-fe-components
-
-          echo "Using NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
-          npm config get registry
-
+          npm config set registry https://registry.npmjs.org/
           npm publish --access public --provenance
 
   build-and-push-showcase-image:
