@@ -6,14 +6,16 @@ on:
       - main
   workflow_dispatch:
 
+# Coloque o id-token AQUI também (top-level)
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   publish-components:
     runs-on: ubuntu-latest
 
-    # OIDC (Trusted Publisher) exige id-token: write
+    # Reforça também no job
     permissions:
       contents: read
       id-token: write
@@ -34,6 +36,12 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      - name: Show tool versions
+        run: |
+          node -v
+          npm -v
+          pnpm -v
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -53,7 +61,6 @@ jobs:
           echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "initial_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
 
-          # Auto bump patch se já existir no npm
           while npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version >/dev/null 2>&1; do
             echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} already exists. Bumping patch..."
             npm --prefix "${PKG_DIR}" version patch --no-git-tag-version
@@ -63,37 +70,20 @@ jobs:
           echo "resolved_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Publishing ${PACKAGE_NAME}@${PACKAGE_VERSION}"
 
-      - name: Debug npm auth sources (safe)
-        shell: bash
-        run: |
-          echo "== .npmrc repo =="
-          test -f .npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' .npmrc || echo "(none)"
-
-          echo "== .npmrc package =="
-          test -f packages/seedgrid-fe-components/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' packages/seedgrid-fe-components/.npmrc || echo "(none)"
-
-          echo "== ~/.npmrc =="
-          test -f ~/.npmrc && sed -E 's/(_authToken=).+/\1***hidden***/' ~/.npmrc || echo "(none)"
-
       - name: Publish components package to npm (OIDC Trusted Publisher)
         shell: bash
         env:
+          # Força provenance (necessário pro OIDC do npm)
           NPM_CONFIG_PROVENANCE: "true"
         run: |
-          # Criar config limpa para evitar token fantasma
-          NPMRC_PATH="${RUNNER_TEMP}/.npmrc-oidc"
+          # ⚠️ Força publish a partir do diretório do pacote (mais confiável para OIDC)
+          cd packages/seedgrid-fe-components
 
-          cat > "${NPMRC_PATH}" <<'EOF'
-          registry=https://registry.npmjs.org/
-          always-auth=false
-          EOF
+          # Garantir registry certo
+          npm config set registry https://registry.npmjs.org/
 
-          export NPM_CONFIG_USERCONFIG="${NPMRC_PATH}"
-
-          echo "Using clean npm config:"
-          npm config get registry
-
-          npm publish ./packages/seedgrid-fe-components --access public --provenance
+          # Publica (OIDC)
+          npm publish --access public --provenance
 
   build-and-push-showcase-image:
     runs-on: ubuntu-latest
