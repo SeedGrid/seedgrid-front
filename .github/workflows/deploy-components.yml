@@ -13,7 +13,11 @@ jobs:
   publish-components:
     runs-on: ubuntu-latest
 
-    # OIDC precisa disso aqui:
+    # IMPORTANTE:
+    # - OIDC (Trusted Publisher) precisa de id-token: write
+    # - Garanta que o arquivo deste workflow esteja em:
+    #   .github/workflows/deploy-components.yml
+    #   (ou então ajuste no NPM o "Workflow filename" para bater com o nome real)
     permissions:
       contents: read
       id-token: write
@@ -32,6 +36,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -44,28 +49,27 @@ jobs:
         shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-components"
-          PACKAGE_NAME=$(node -p "require('./packages/seedgrid-fe-components/package.json').name")
-          PACKAGE_VERSION=$(node -p "require('./packages/seedgrid-fe-components/package.json').version")
+          PACKAGE_JSON="./packages/seedgrid-fe-components/package.json"
+
+          PACKAGE_NAME=$(node -p "require('${PACKAGE_JSON}').name")
+          PACKAGE_VERSION=$(node -p "require('${PACKAGE_JSON}').version")
 
           echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "initial_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
 
+          # Se a versão já existir no npm, incrementa patch automaticamente
           while npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version >/dev/null 2>&1; do
             echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} already exists on npm. Bumping patch..."
             npm --prefix "${PKG_DIR}" version patch --no-git-tag-version
-            PACKAGE_VERSION=$(node -p "require('./packages/seedgrid-fe-components/package.json').version")
+            PACKAGE_VERSION=$(node -p "require('${PACKAGE_JSON}').version")
           done
 
           echo "resolved_package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Publishing ${PACKAGE_NAME}@${PACKAGE_VERSION}"
 
-      - name: Publish components package to npm (OIDC)
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ""
-        run: |
-          npm config delete //registry.npmjs.org/:_authToken || true
-          npm publish ./packages/seedgrid-fe-components --access public --provenance
+      - name: Publish components package to npm (OIDC Trusted Publisher)
+        # OIDC exige provenance
+        run: npm publish ./packages/seedgrid-fe-components --access public --provenance
 
   build-and-push-showcase-image:
     runs-on: ubuntu-latest
@@ -73,7 +77,7 @@ jobs:
 
     permissions:
       contents: read
-      packages: write   # isso é pro GHCR
+      packages: write # GHCR
 
     steps:
       - name: Checkout source
