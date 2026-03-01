@@ -13,7 +13,10 @@ jobs:
   publish-components:
     name: Publish NPM Package (OIDC)
     runs-on: ubuntu-latest
+
+    # IMPORTANTE: precisa bater com o Environment name configurado no npm (Trusted Publisher)
     environment: npm
+
     permissions:
       contents: read
       id-token: write
@@ -22,8 +25,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # Se o seu package.json raiz tem "packageManager": "pnpm@9.12.0"
-      # NÃO coloque version: no action-setup (evita conflito)
+      # Evita conflito de versão quando existe "packageManager": "pnpm@x.y.z" no package.json
       - name: Setup pnpm (uses packageManager from package.json)
         uses: pnpm/action-setup@v4
 
@@ -39,7 +41,7 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
-      - name: Debug OIDC present?
+      - name: Debug OIDC env vars
         shell: bash
         run: |
           if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
@@ -56,6 +58,7 @@ jobs:
 
       - name: Publish components package (OIDC)
         shell: bash
+        # Garantia extra: não deixar token residual atrapalhar
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
@@ -68,6 +71,7 @@ jobs:
     name: Build & Push Showcase Docker Image
     runs-on: ubuntu-latest
     needs: publish-components
+
     permissions:
       contents: read
       packages: write
