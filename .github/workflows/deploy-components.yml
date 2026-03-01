@@ -31,21 +31,6 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Check OIDC availability (safe)
-        shell: bash
-        run: |
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]]; then
-            echo "OIDC URL PRESENT ✅"
-          else
-            echo "OIDC URL MISSING ❌"
-          fi
-
-          if [[ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]]; then
-            echo "OIDC TOKEN PRESENT ✅"
-          else
-            echo "OIDC TOKEN MISSING ❌"
-          fi
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -60,5 +45,45 @@ jobs:
         run: |
           cd packages/seedgrid-fe-components
           npm config set registry https://registry.npmjs.org/
-          npm publish --access public --provenance --tag latest --loglevel verbose
-          
+          npm publish --access public --provenance --tag latest
+
+  build-and-push-showcase-image:
+    runs-on: ubuntu-latest
+    needs: publish-components
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/seedgrid-showcase
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push showcase image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/showcase/dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
