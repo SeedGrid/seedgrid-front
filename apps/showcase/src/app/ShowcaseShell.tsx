@@ -12,6 +12,8 @@ import {
   SgDockScreen,
   SgDockZone,
   SgMenu,
+  SgToolBar,
+  SgToolbarIconButton,
   type SgMenuNode
 } from "@seedgrid/fe-components";
 import {
@@ -167,31 +169,6 @@ const COMPONENTS_MESSAGES_BY_LOCALE: Record<ShowcaseLocale, Record<string, strin
   es: componentsMessagesEs
 };
 
-function LocaleSwitcher(props: {
-  value: ShowcaseLocale;
-  onChange: (next: ShowcaseLocale) => void;
-}) {
-  return (
-    <label className="flex items-center gap-2 text-xs text-[#7e5f46]">
-      <span>Idioma</span>
-      <select
-        className="rounded border border-[#d7b79a] bg-[#fffaf4] px-2 py-1 text-xs text-[#5b3b23] outline-none transition-colors focus:border-[#c56a2d] focus:ring-2 focus:ring-[#c56a2d]/25"
-        value={props.value}
-        onChange={(event) => {
-          const next = event.target.value as ShowcaseLocale;
-          props.onChange(next);
-        }}
-      >
-        {LOCALES.map((locale) => (
-          <option key={locale.value} value={locale.value}>
-            {locale.label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
 export default function ShowcaseShell(props: {
   children: React.ReactNode;
   initialLocale?: ShowcaseLocale;
@@ -204,6 +181,12 @@ export default function ShowcaseShell(props: {
     props.initialMessages ?? showcaseMessagesPtBr
   );
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(true);
+
+  const applyLocale = React.useCallback((next: ShowcaseLocale) => {
+    const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
+    setLocale(next);
+    setMessages(nextMessages);
+  }, []);
 
   React.useEffect(() => {
     let stored: ShowcaseLocale | null = null;
@@ -256,7 +239,26 @@ export default function ShowcaseShell(props: {
           layoutClassName="!grid-cols-[auto_minmax(0,1fr)_auto] !grid-rows-[auto_minmax(0,1fr)]"
         >
           <SgDockZone zone="top" className="col-span-3 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee]">
-            <div className="h-10 w-full" />
+            <div className="px-2 py-1">
+              <SgToolBar
+                id="showcase-locale-toolbar"
+                title="Idioma"
+                orientationDirection="horizontal-left"
+                collapsible={false}
+                dockZone="top"
+              >
+                {LOCALES.map((item) => (
+                  <SgToolbarIconButton
+                    key={item.value}
+                    icon={item.value.split("-")[0]?.toUpperCase()}
+                    label={item.value}
+                    hint={item.label}
+                    severity={locale === item.value ? "primary" : "plain"}
+                    onClick={() => applyLocale(item.value)}
+                  />
+                ))}
+              </SgToolBar>
+            </div>
           </SgDockZone>
 
           <SgDockZone zone="left" className="col-start-1 row-start-2 !p-0 border-r border-[#e2cebc] bg-[#f7f3ee]">
@@ -272,23 +274,11 @@ export default function ShowcaseShell(props: {
               variant="sidebar"
               menuStyle="panel"
               mode="multiple"
-              defaultExpandedIds={MENU_GROUP_ORDER.map((group) => `group-${group.toLowerCase()}`)}
+              defaultExpandedIds={[]}
               collapsed={sidebarCollapsed}
               onCollapsedChange={setSidebarCollapsed}
               showCollapseButton
               search={{ enabled: true, placeholder: t({ locale, messages }, "showcase.nav.search.placeholder") }}
-              footer={
-                !sidebarCollapsed ? (
-                  <LocaleSwitcher
-                    value={locale}
-                    onChange={(next) => {
-                      const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
-                      setLocale(next);
-                      setMessages(nextMessages);
-                    }}
-                  />
-                ) : null
-              }
               dockable
               dockZone="left"
               draggable
@@ -308,8 +298,8 @@ export default function ShowcaseShell(props: {
             <div className="h-full w-14" />
           </SgDockZone>
 
-          <SgDockZone zone="free" className="col-start-2 row-start-2 !p-0">
-            <main className="h-full overflow-y-auto p-2">{props.children}</main>
+          <SgDockZone zone="free" className="col-start-2 row-start-2 !p-0 !items-stretch !justify-start">
+            <main className="h-full w-full overflow-y-auto p-2">{props.children}</main>
           </SgDockZone>
         </SgDockScreen>
         <SgToaster />
