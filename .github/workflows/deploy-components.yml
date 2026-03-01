@@ -61,7 +61,9 @@ jobs:
           echo "Publishing ${PACKAGE_NAME}@${PACKAGE_VERSION}"
 
       - name: Publish components package to npm (OIDC)
-        run: pnpm -C packages/seedgrid-fe-components publish --access public --no-git-checks
+        shell: bash
+        run: |
+          npm publish ./packages/seedgrid-fe-components --access public --provenance
 
   build-and-push-showcase-image:
     runs-on: ubuntu-latest
