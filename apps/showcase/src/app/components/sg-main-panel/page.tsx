@@ -17,6 +17,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -258,8 +259,61 @@ const MAIN_PANEL_PROPS: ShowcasePropRow[] = [
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "CustomizaÃ§Ã£o visual e layout adicional." }
 ];
 
+type MainPanelTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  playgroundTitle: string;
+};
+
+const MAIN_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MainPanelTexts> = {
+  "pt-BR": {
+    subtitle: "Layout estilo Delphi com align=\"top|left|bottom|right|client\". width e height numericos viram porcentagem.",
+    section1Title: "1) Exemplo Completo",
+    section1Description: "Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack em uma tela de dashboard.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Teste rapido das principais props do SgMainPanel.",
+    playgroundTitle: "SgMainPanel Playground"
+  },
+  "pt-PT": {
+    subtitle: "Layout estilo Delphi com align=\"top|left|bottom|right|client\". width e height numericos viram percentagem.",
+    section1Title: "1) Exemplo Completo",
+    section1Description: "Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack num ecra de dashboard.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Teste rapido das principais props do SgMainPanel.",
+    playgroundTitle: "SgMainPanel Playground"
+  },
+  "en-US": {
+    subtitle: "Delphi-style layout with align=\"top|left|bottom|right|client\". Numeric width and height are treated as percentages.",
+    section1Title: "1) Full Example",
+    section1Description: "Combines SgScreen, SgMainPanel, SgPanel, SgGrid and SgStack in a dashboard screen.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Quick test for the main SgMainPanel props.",
+    playgroundTitle: "SgMainPanel Playground"
+  },
+  es: {
+    subtitle: "Layout estilo Delphi con align=\"top|left|bottom|right|client\". width y height numericos se tratan como porcentaje.",
+    section1Title: "1) Ejemplo Completo",
+    section1Description: "Combina SgScreen, SgMainPanel, SgPanel, SgGrid y SgStack en una pantalla dashboard.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Prueba rapida de las props principales de SgMainPanel.",
+    playgroundTitle: "SgMainPanel Playground"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof MAIN_PANEL_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgMainPanelPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof MAIN_PANEL_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = MAIN_PANEL_TEXTS[locale];
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
   const [mode, setMode] = React.useState<"columns" | "autofit">("columns");
   const [search, setSearch] = React.useState("");
 
@@ -273,14 +327,14 @@ export default function SgMainPanelPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgMainPanel"
-          subtitle='Layout estilo Delphi com align="top|left|bottom|right|client". width e height numÃ©ricos viram porcentagem.'
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) Exemplo Completo"
-        description="Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack em uma tela de dashboard."
+        title={texts.section1Title}
+        description={texts.section1Description}
       >
         <SgPanel className="h-[780px] rounded-xl bg-muted/30" padding={12}>
           <SgScreen fullscreen={false} padding={10} className="rounded-lg bg-zinc-100">
@@ -418,9 +472,9 @@ export default function SgMainPanelPage() {
         </SgStack>
       </Section>
 
-        <Section title="2) Playground (SgPlayground)" description="Teste rÃ¡pido das principais props do SgMainPanel.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <SgPlayground
-            title="SgMainPanel Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={MAIN_PANEL_PLAYGROUND_CODE}

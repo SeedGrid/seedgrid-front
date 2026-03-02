@@ -14,6 +14,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -134,8 +135,66 @@ const DOCK_SCREEN_PROPS: ShowcasePropRow[] = [
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteudo interno (normalmente SgDockZone)." }
 ];
 
+type DockScreenTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  playgroundTitle: string;
+  propsTitle: string;
+};
+
+const DOCK_SCREEN_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockScreenTexts> = {
+  "pt-BR": {
+    subtitle: "Componente de conveniencia que combina SgScreen + SgDockLayout no mesmo root.",
+    section1Title: "1) Basico",
+    section1Description: "Uso direto do SgDockScreen com quatro dock zones e area livre central, sem posicionamento manual.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Exemplo interativo para testar drag/drop entre zonas.",
+    playgroundTitle: "SgDockScreen Playground",
+    propsTitle: "Referencia de Props - SgDockScreen"
+  },
+  "pt-PT": {
+    subtitle: "Componente de conveniencia que combina SgScreen + SgDockLayout no mesmo root.",
+    section1Title: "1) Basico",
+    section1Description: "Uso direto do SgDockScreen com quatro dock zones e area livre central, sem posicionamento manual.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Exemplo interativo para testar drag/drop entre zonas.",
+    playgroundTitle: "SgDockScreen Playground",
+    propsTitle: "Referencia de Props - SgDockScreen"
+  },
+  "en-US": {
+    subtitle: "Convenience component that combines SgScreen + SgDockLayout in a single root.",
+    section1Title: "1) Basic",
+    section1Description: "Direct SgDockScreen usage with four dock zones and a central free area, without manual positioning.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Interactive example to test drag/drop across zones.",
+    playgroundTitle: "SgDockScreen Playground",
+    propsTitle: "Props Reference - SgDockScreen"
+  },
+  es: {
+    subtitle: "Componente de conveniencia que combina SgScreen + SgDockLayout en el mismo root.",
+    section1Title: "1) Basico",
+    section1Description: "Uso directo de SgDockScreen con cuatro dock zones y area central libre, sin posicionamiento manual.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Ejemplo interactivo para probar drag/drop entre zonas.",
+    playgroundTitle: "SgDockScreen Playground",
+    propsTitle: "Referencia de Props - SgDockScreen"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof DOCK_SCREEN_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgDockScreenPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof DOCK_SCREEN_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = DOCK_SCREEN_TEXTS[locale];
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
 
   return (
     <I18NReady>
@@ -147,15 +206,12 @@ export default function SgDockScreenPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgDockScreen"
-          subtitle="Componente de conveniencia que combina SgScreen + SgDockLayout no mesmo root."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section
-          title="1) Basico"
-          description="Uso direto do SgDockScreen com quatro dock zones e area livre central, sem posicionamento manual."
-        >
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <SgDockScreen
             id="showcase-dock-screen-basic-v1"
             fullscreen={false}
@@ -197,9 +253,9 @@ export default function SgDockScreenPage() {
           <CodeBlockBase code={DOCK_SCREEN_BASIC_CODE} />
         </Section>
 
-        <Section title="2) Playground (SgPlayground)" description="Exemplo interativo para testar drag/drop entre zonas.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <SgPlayground
-            title="SgDockScreen Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={DOCK_SCREEN_PLAYGROUND_CODE}
@@ -210,7 +266,7 @@ export default function SgDockScreenPage() {
 
         <ShowcasePropsReference
           id="props-reference"
-          title="Referencia de Props - SgDockScreen"
+          title={texts.propsTitle}
           rows={DOCK_SCREEN_PROPS}
         />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
@@ -218,3 +274,4 @@ export default function SgDockScreenPage() {
     </I18NReady>
   );
 }
+

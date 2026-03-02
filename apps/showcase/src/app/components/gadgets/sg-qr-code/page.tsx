@@ -7,6 +7,7 @@ import I18NReady from "../../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -219,8 +220,106 @@ const QR_CODE_PROPS: ShowcasePropRow[] = [
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual." }
 ];
 
+type QrCodeTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  playgroundTitle: string;
+  qrValueLabel: string;
+  qrValuePlaceholder: string;
+  logoLabel: string;
+  logoPlaceholder: string;
+  sizeLabel: string;
+  presetUrl: string;
+  presetPix: string;
+  presetNoLogo: string;
+  emptyFallback: string;
+};
+
+const QR_CODE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", QrCodeTexts> = {
+  "pt-BR": {
+    subtitle: "Gera QR Code a partir de um valor e permite configurar um logo no centro.",
+    section1Title: "1) Exemplo interativo",
+    section1Description: "Troque o valor do QR Code, o logo central e o tamanho.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Sandbox interativo para simular cenarios com valor, logo, tamanho, cores, margem e nivel de correcao.",
+    playgroundTitle: "SgQRCode Playground",
+    qrValueLabel: "Valor do QR Code",
+    qrValuePlaceholder: "Digite texto, URL ou payload PIX",
+    logoLabel: "Logo central (URL)",
+    logoPlaceholder: "https://exemplo.com/logo.png",
+    sizeLabel: "Tamanho",
+    presetUrl: "URL",
+    presetPix: "Exemplo PIX",
+    presetNoLogo: "Sem logo",
+    emptyFallback: "Informe um valor"
+  },
+  "pt-PT": {
+    subtitle: "Gera QR Code a partir de um valor e permite configurar um logo no centro.",
+    section1Title: "1) Exemplo interativo",
+    section1Description: "Troque o valor do QR Code, o logo central e o tamanho.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Sandbox interativo para simular cenarios com valor, logo, tamanho, cores, margem e nivel de correcao.",
+    playgroundTitle: "SgQRCode Playground",
+    qrValueLabel: "Valor do QR Code",
+    qrValuePlaceholder: "Digite texto, URL ou payload PIX",
+    logoLabel: "Logo central (URL)",
+    logoPlaceholder: "https://exemplo.com/logo.png",
+    sizeLabel: "Tamanho",
+    presetUrl: "URL",
+    presetPix: "Exemplo PIX",
+    presetNoLogo: "Sem logo",
+    emptyFallback: "Informe um valor"
+  },
+  "en-US": {
+    subtitle: "Generates QR Code from a value and allows configuring a centered logo.",
+    section1Title: "1) Interactive example",
+    section1Description: "Change QR value, centered logo, and size.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Interactive sandbox to simulate value, logo, size, colors, margin and error-correction level.",
+    playgroundTitle: "SgQRCode Playground",
+    qrValueLabel: "QR Code value",
+    qrValuePlaceholder: "Type text, URL, or PIX payload",
+    logoLabel: "Centered logo (URL)",
+    logoPlaceholder: "https://example.com/logo.png",
+    sizeLabel: "Size",
+    presetUrl: "URL",
+    presetPix: "PIX sample",
+    presetNoLogo: "No logo",
+    emptyFallback: "Provide a value"
+  },
+  es: {
+    subtitle: "Genera QR Code a partir de un valor y permite configurar un logo centrado.",
+    section1Title: "1) Ejemplo interactivo",
+    section1Description: "Cambia el valor del QR Code, el logo central y el tamano.",
+    section2Title: "2) Playground (SgPlayground)",
+    section2Description: "Sandbox interactivo para simular valor, logo, tamano, colores, margen y nivel de correccion.",
+    playgroundTitle: "SgQRCode Playground",
+    qrValueLabel: "Valor del QR Code",
+    qrValuePlaceholder: "Escribe texto, URL o payload PIX",
+    logoLabel: "Logo central (URL)",
+    logoPlaceholder: "https://ejemplo.com/logo.png",
+    sizeLabel: "Tamano",
+    presetUrl: "URL",
+    presetPix: "Ejemplo PIX",
+    presetNoLogo: "Sin logo",
+    emptyFallback: "Ingresa un valor"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof QR_CODE_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgQRCodePage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof QR_CODE_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = QR_CODE_TEXTS[locale];
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
   const [value, setValue] = React.useState("https://seedgrid.com.br");
   const [logoSrc, setLogoSrc] = React.useState("/logo-seedgrid.svg");
   const [size, setSize] = React.useState(220);
@@ -235,41 +334,41 @@ export default function SgQRCodePage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgQRCode"
-          subtitle="Gera QR Code a partir de um valor e permite configurar um logo no centro."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) Exemplo interativo"
-        description="Troque o valor do QR Code, o logo central e o tamanho."
+        title={texts.section1Title}
+        description={texts.section1Description}
       >
         <div className="grid gap-6 md:grid-cols-[1fr_auto]">
           <div className="space-y-4">
             <label className="block space-y-1">
-              <span className="text-sm font-medium">Valor do QR Code</span>
+              <span className="text-sm font-medium">{texts.qrValueLabel}</span>
               <textarea
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
                 rows={3}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="Digite texto, URL ou payload PIX"
+                placeholder={texts.qrValuePlaceholder}
               />
             </label>
 
             <label className="block space-y-1">
-              <span className="text-sm font-medium">Logo central (URL)</span>
+              <span className="text-sm font-medium">{texts.logoLabel}</span>
               <input
                 type="text"
                 value={logoSrc}
                 onChange={(event) => setLogoSrc(event.target.value)}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="https://exemplo.com/logo.png"
+                placeholder={texts.logoPlaceholder}
               />
             </label>
 
             <label className="block space-y-1">
-              <span className="text-sm font-medium">Tamanho: {size}px</span>
+              <span className="text-sm font-medium">{texts.sizeLabel}: {size}px</span>
               <input
                 type="range"
                 min={140}
@@ -282,7 +381,7 @@ export default function SgQRCodePage() {
             </label>
 
             <div className="flex flex-wrap gap-2">
-              <SgButton onClick={() => setValue("https://seedgrid.com.br")}>URL</SgButton>
+              <SgButton onClick={() => setValue("https://seedgrid.com.br")}>{texts.presetUrl}</SgButton>
               <SgButton
                 severity="secondary"
                 onClick={() =>
@@ -291,9 +390,9 @@ export default function SgQRCodePage() {
                   )
                 }
               >
-                Exemplo PIX
+                {texts.presetPix}
               </SgButton>
-              <SgButton severity="warning" onClick={() => setLogoSrc("")}>Sem logo</SgButton>
+              <SgButton severity="warning" onClick={() => setLogoSrc("")}>{texts.presetNoLogo}</SgButton>
             </div>
           </div>
 
@@ -303,7 +402,7 @@ export default function SgQRCodePage() {
               size={size}
               logoSrc={logoSrc || undefined}
               logoAlt="Logo SeedGrid"
-              emptyFallback={<span className="text-sm text-muted-foreground">Informe um valor</span>}
+              emptyFallback={<span className="text-sm text-muted-foreground">{texts.emptyFallback}</span>}
             />
           </div>
         </div>
@@ -314,11 +413,11 @@ export default function SgQRCodePage() {
       </Section>
 
       <Section
-        title="2) Playground (SgPlayground)"
-        description="Sandbox interativo para simular cenarios com valor, logo, tamanho, cores, margem e nivel de correcao."
+        title={texts.section2Title}
+        description={texts.section2Description}
       >
         <SgPlayground
-          title="SgQRCode Playground"
+          title={texts.playgroundTitle}
           interactive
           codeContract="appFile"
           code={QRCODE_PLAYGROUND_APP_FILE}

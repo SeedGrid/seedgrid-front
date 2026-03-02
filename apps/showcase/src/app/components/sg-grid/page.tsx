@@ -7,6 +7,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -62,16 +63,79 @@ export default function App() {
 
 const GRID_PROPS: ShowcasePropRow[] = [
   { prop: "columns", type: "number | breakpoint map", defaultValue: "12", description: "Quantidade de colunas no grid." },
-  { prop: "minItemWidth", type: "number | string", defaultValue: "-", description: "Habilita modo auto-fit por largura mínima." },
-  { prop: "gap / padding", type: "number", defaultValue: "0 / 0", description: "Espaçamento entre itens e interno." },
+  { prop: "minItemWidth", type: "number | string", defaultValue: "-", description: "Habilita modo auto-fit por largura minima." },
+  { prop: "gap / padding", type: "number", defaultValue: "0 / 0", description: "Espacamento entre itens e interno." },
   { prop: "dense", type: "boolean", defaultValue: "false", description: "Preenche lacunas no fluxo do grid." },
   { prop: "rowHeight", type: "number | string", defaultValue: "auto", description: "Altura base para uso com rowSpan." },
   { prop: "justify / align", type: "CSS justify/align", defaultValue: "-", description: "Alinhamento do grid." },
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Itens do grid (ex.: SgPanel)." }
 ];
 
+type GridTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  playgroundTitle: string;
+};
+
+const GRID_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", GridTexts> = {
+  "pt-BR": {
+    subtitle: "Grid com colunas responsivas, auto-fit, span, rowSpan, dense e rowHeight.",
+    section1Title: "1) Columns Responsivo",
+    section1Description: "`columns` com breakpoints e `span` por item.",
+    section2Title: "2) Auto-Fit + RowSpan",
+    section2Description: "Grid fluido com `minItemWidth`, `dense` e `rowHeight`.",
+    section3Title: "3) Playground (SgPlayground)",
+    section3Description: "Teste das props principais do SgGrid.",
+    playgroundTitle: "SgGrid Playground"
+  },
+  "pt-PT": {
+    subtitle: "Grid com colunas responsivas, auto-fit, span, rowSpan, dense e rowHeight.",
+    section1Title: "1) Columns Responsivo",
+    section1Description: "`columns` com breakpoints e `span` por item.",
+    section2Title: "2) Auto-Fit + RowSpan",
+    section2Description: "Grid fluido com `minItemWidth`, `dense` e `rowHeight`.",
+    section3Title: "3) Playground (SgPlayground)",
+    section3Description: "Teste das props principais do SgGrid.",
+    playgroundTitle: "SgGrid Playground"
+  },
+  "en-US": {
+    subtitle: "Grid with responsive columns, auto-fit, span, rowSpan, dense mode and rowHeight.",
+    section1Title: "1) Responsive Columns",
+    section1Description: "`columns` with breakpoints and per-item `span`.",
+    section2Title: "2) Auto-Fit + RowSpan",
+    section2Description: "Fluid grid with `minItemWidth`, `dense`, and `rowHeight`.",
+    section3Title: "3) Playground (SgPlayground)",
+    section3Description: "Try the main SgGrid props.",
+    playgroundTitle: "SgGrid Playground"
+  },
+  es: {
+    subtitle: "Grid con columnas responsivas, auto-fit, span, rowSpan, dense y rowHeight.",
+    section1Title: "1) Columnas Responsivas",
+    section1Description: "`columns` con breakpoints y `span` por item.",
+    section2Title: "2) Auto-Fit + RowSpan",
+    section2Description: "Grid fluido con `minItemWidth`, `dense` y `rowHeight`.",
+    section3Title: "3) Playground (SgPlayground)",
+    section3Description: "Prueba las props principales de SgGrid.",
+    playgroundTitle: "SgGrid Playground"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof GRID_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgGridPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof GRID_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = GRID_TEXTS[locale];
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
 
   return (
     <I18NReady>
@@ -83,71 +147,71 @@ export default function SgGridPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgGrid"
-          subtitle="Grid com colunas responsivas, auto-fit, span, rowSpan, dense e rowHeight."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-      <Section title="1) Columns Responsivo" description="`columns` com breakpoints e `span` por item.">
-        <SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
-          <Card title="Card 1" />
-          <Card title="Card 2" />
-          <SgPanel span={2} padding={12} className="rounded-lg">
-            <SgStack gap={8}>
-              <p className="font-medium">Card 3 (span 2)</p>
-              <p className="text-xs text-muted-foreground">Ocupa 2 colunas.</p>
-            </SgStack>
-          </SgPanel>
-          <Card title="Card 4" />
-          <Card title="Card 5" />
-          <Card title="Card 6" />
-        </SgGrid>
+        <Section title={texts.section1Title} description={texts.section1Description}>
+          <SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
+            <Card title="Card 1" />
+            <Card title="Card 2" />
+            <SgPanel span={2} padding={12} className="rounded-lg">
+              <SgStack gap={8}>
+                <p className="font-medium">Card 3 (span 2)</p>
+                <p className="text-xs text-muted-foreground">Ocupa 2 colunas.</p>
+              </SgStack>
+            </SgPanel>
+            <Card title="Card 4" />
+            <Card title="Card 5" />
+            <Card title="Card 6" />
+          </SgGrid>
 
-        <SgStack className="mt-6">
-          <CodeBlockBase
-            code={`<SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
+          <SgStack className="mt-6">
+            <CodeBlockBase
+              code={`<SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
   <SgPanel>Card 1</SgPanel>
   <SgPanel>Card 2</SgPanel>
   <SgPanel span={2}>Card 3 (span 2)</SgPanel>
 </SgGrid>`}
-          />
-        </SgStack>
-      </Section>
+            />
+          </SgStack>
+        </Section>
 
-      <Section title="2) Auto-Fit + RowSpan" description="Grid fluido com `minItemWidth`, `dense` e `rowHeight`.">
-        <SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
-          <Card title="Card A" />
-          <SgPanel rowSpan={2} padding={12} className="rounded-lg">
-            <SgStack gap={8}>
-              <p className="font-medium">Card B (rowSpan 2)</p>
-              <p className="text-xs text-muted-foreground">Ocupa 2 linhas do grid.</p>
-            </SgStack>
-          </SgPanel>
-          <Card title="Card C" />
-          <SgPanel span={2} padding={12} className="rounded-lg">
-            <SgStack gap={8}>
-              <p className="font-medium">Card D (span 2)</p>
-              <p className="text-xs text-muted-foreground">Ocupa 2 colunas.</p>
-            </SgStack>
-          </SgPanel>
-          <Card title="Card E" />
-          <Card title="Card F" />
-        </SgGrid>
+        <Section title={texts.section2Title} description={texts.section2Description}>
+          <SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
+            <Card title="Card A" />
+            <SgPanel rowSpan={2} padding={12} className="rounded-lg">
+              <SgStack gap={8}>
+                <p className="font-medium">Card B (rowSpan 2)</p>
+                <p className="text-xs text-muted-foreground">Ocupa 2 linhas do grid.</p>
+              </SgStack>
+            </SgPanel>
+            <Card title="Card C" />
+            <SgPanel span={2} padding={12} className="rounded-lg">
+              <SgStack gap={8}>
+                <p className="font-medium">Card D (span 2)</p>
+                <p className="text-xs text-muted-foreground">Ocupa 2 colunas.</p>
+              </SgStack>
+            </SgPanel>
+            <Card title="Card E" />
+            <Card title="Card F" />
+          </SgGrid>
 
-        <SgStack className="mt-6">
-          <CodeBlockBase
-            code={`<SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
+          <SgStack className="mt-6">
+            <CodeBlockBase
+              code={`<SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
   <SgPanel>Card A</SgPanel>
   <SgPanel rowSpan={2}>Card B</SgPanel>
   <SgPanel span={2}>Card C</SgPanel>
 </SgGrid>`}
-          />
-        </SgStack>
-      </Section>
+            />
+          </SgStack>
+        </Section>
 
-        <Section title="3) Playground (SgPlayground)" description="Teste das props principais do SgGrid.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <SgPlayground
-            title="SgGrid Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={GRID_PLAYGROUND_CODE}

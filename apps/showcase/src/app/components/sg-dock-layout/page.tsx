@@ -90,8 +90,58 @@ const DOCK_ZONE_PROPS: ShowcasePropRow[] = [
   { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteudo renderizado dentro da zona." }
 ];
 
+type DockLayoutPageTexts = {
+  sectionBasicDescription: string;
+  sectionPlaygroundTitle: string;
+  sectionPlaygroundDescription: string;
+  playgroundTitle: string;
+  propsTitleLayout: string;
+  propsTitleZone: string;
+};
+
+const DOCK_LAYOUT_PAGE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockLayoutPageTexts> = {
+  "pt-BR": {
+    sectionBasicDescription: "Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis.",
+    sectionPlaygroundTitle: "2) Playground (SgPlayground)",
+    sectionPlaygroundDescription: "Exemplo interativo com zonas de dock e toolbars.",
+    playgroundTitle: "SgDockLayout Playground",
+    propsTitleLayout: "Referencia de Props - SgDockLayout",
+    propsTitleZone: "Referencia de Props - SgDockZone"
+  },
+  "pt-PT": {
+    sectionBasicDescription: "Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis.",
+    sectionPlaygroundTitle: "2) Playground (SgPlayground)",
+    sectionPlaygroundDescription: "Exemplo interativo com zonas de dock e toolbars.",
+    playgroundTitle: "SgDockLayout Playground",
+    propsTitleLayout: "Referencia de Props - SgDockLayout",
+    propsTitleZone: "Referencia de Props - SgDockZone"
+  },
+  "en-US": {
+    sectionBasicDescription: "Four zones (top/bottom/left/right) and six draggable toolbars.",
+    sectionPlaygroundTitle: "2) Playground (SgPlayground)",
+    sectionPlaygroundDescription: "Interactive example with dock zones and toolbars.",
+    playgroundTitle: "SgDockLayout Playground",
+    propsTitleLayout: "Props Reference - SgDockLayout",
+    propsTitleZone: "Props Reference - SgDockZone"
+  },
+  es: {
+    sectionBasicDescription: "Cuatro zonas (top/bottom/left/right) y seis toolbars arrastrables.",
+    sectionPlaygroundTitle: "2) Playground (SgPlayground)",
+    sectionPlaygroundDescription: "Ejemplo interactivo con zonas de dock y toolbars.",
+    playgroundTitle: "SgDockLayout Playground",
+    propsTitleLayout: "Referencia de Props - SgDockLayout",
+    propsTitleZone: "Referencia de Props - SgDockZone"
+  }
+};
+
+function isSupportedDockLayoutLocale(locale: string): locale is keyof typeof DOCK_LAYOUT_PAGE_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgDockLayoutPage() {
   const i18n = useShowcaseI18n();
+  const locale: keyof typeof DOCK_LAYOUT_PAGE_TEXTS = isSupportedDockLayoutLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = DOCK_LAYOUT_PAGE_TEXTS[locale];
   const topLabel = t(i18n, "showcase.component.dockLayout.labels.top");
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
@@ -114,7 +164,7 @@ export default function SgDockLayoutPage() {
 
       <Section
         title={`1) ${t(i18n, "showcase.component.dockLayout.sections.basic.title")}`}
-        description="Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis."
+        description={texts.sectionBasicDescription}
       >
         <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
           <SgDockLayout id="showcase-dock-basic-v9" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
@@ -206,9 +256,9 @@ export default function Example() {
         />
       </Section>
 
-        <Section title="2) Playground (SgPlayground)" description="Exemplo interativo com zonas de dock e toolbars.">
+        <Section title={texts.sectionPlaygroundTitle} description={texts.sectionPlaygroundDescription}>
           <SgPlayground
-            title="SgDockLayout Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={DOCK_LAYOUT_PLAYGROUND_CODE}
@@ -219,12 +269,12 @@ export default function Example() {
 
         <ShowcasePropsReference
           id="props-reference"
-          title="Referencia de Props - SgDockLayout"
+          title={texts.propsTitleLayout}
           rows={DOCK_LAYOUT_PROPS}
         />
         <ShowcasePropsReference
           id="props-reference-dock-zone"
-          title="Referencia de Props - SgDockZone"
+          title={texts.propsTitleZone}
           rows={DOCK_ZONE_PROPS}
         />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../i18n";
 
 export type ShowcaseExampleLink = {
   id: string;
@@ -13,7 +14,15 @@ type UseShowcaseAnchorsOptions = {
   extraTopGap?: number;
 };
 
+function getExampleLabel(locale: ShowcaseLocale): string {
+  if (locale === "en-US") return "Example";
+  if (locale === "es") return "Ejemplo";
+  return "Exemplo";
+}
+
 export function useShowcaseAnchors(options?: UseShowcaseAnchorsOptions) {
+  const i18n = useShowcaseI18n();
+  const exampleLabel = getExampleLabel(i18n.locale);
   const deps = options?.deps ?? [];
   const minOffset = options?.minOffset ?? 240;
   const extraTopGap = options?.extraTopGap ?? 12;
@@ -51,11 +60,11 @@ export function useShowcaseAnchors(options?: UseShowcaseAnchorsOptions) {
       const titleEl =
         (section.querySelector("[data-anchor-title='true']") as HTMLElement | null) ??
         section.querySelector("h2, h3");
-      const rawTitle = titleEl?.textContent?.trim() ?? `Exemplo ${index + 1}`;
+      const rawTitle = titleEl?.textContent?.trim() ?? `${exampleLabel} ${index + 1}`;
       const normalized = rawTitle.replace(/^\d+\)\s*/, "").trim();
       return {
         id,
-        label: `${index + 1}) ${normalized || `Exemplo ${index + 1}`}`
+        label: `${index + 1}) ${normalized || `${exampleLabel} ${index + 1}`}`
       };
     });
     setExampleLinks((prev) => {
@@ -65,7 +74,7 @@ export function useShowcaseAnchors(options?: UseShowcaseAnchorsOptions) {
       return links;
     });
     return links.length;
-  }, []);
+  }, [exampleLabel]);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -92,7 +101,7 @@ export function useShowcaseAnchors(options?: UseShowcaseAnchorsOptions) {
       cancelled = true;
       if (retryTimer) window.clearTimeout(retryTimer);
     };
-  }, [syncExampleLinks, ...deps]);
+  }, [syncExampleLinks, ...deps, exampleLabel]);
 
   const findScrollContainer = React.useCallback((element: HTMLElement | null): HTMLElement | Window => {
     let current = element?.parentElement ?? null;

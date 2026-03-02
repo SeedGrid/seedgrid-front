@@ -7,6 +7,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -68,8 +69,101 @@ const PANEL_PROPS: ShowcasePropRow[] = [
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customização visual." }
 ];
 
+type PanelTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  playgroundTitle: string;
+};
+
+const PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PanelTexts> = {
+  "pt-BR": {
+    subtitle: "Showcase com exemplos de todas as props do SgPanel.",
+    section1Title: "1) align + width + height",
+    section1Description: "`align` so faz sentido dentro do `SgMainPanel`. `width`/`height` em numero sao tratados como porcentagem.",
+    section2Title: "2) span + rowSpan",
+    section2Description: "`span` e `rowSpan` fazem sentido dentro do `SgGrid`.",
+    section3Title: "3) borderStyle + padding + children",
+    section3Description: "Estilizacao basica do panel.",
+    section4Title: "4) scrollable + scrollbarGutter",
+    section4Description: "Cobertura de scrollable boolean | auto | y | x e uso de scrollbarGutter.",
+    section5Title: "5) Exemplo combinado",
+    section5Description: "Exemplo unico com props de dock/layout e de grid, com codigo 1:1.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Teste rapido das principais props do SgPanel.",
+    playgroundTitle: "SgPanel Playground"
+  },
+  "pt-PT": {
+    subtitle: "Showcase com exemplos de todas as props do SgPanel.",
+    section1Title: "1) align + width + height",
+    section1Description: "`align` so faz sentido dentro do `SgMainPanel`. `width`/`height` em numero sao tratados como percentagem.",
+    section2Title: "2) span + rowSpan",
+    section2Description: "`span` e `rowSpan` fazem sentido dentro do `SgGrid`.",
+    section3Title: "3) borderStyle + padding + children",
+    section3Description: "Estilizacao basica do panel.",
+    section4Title: "4) scrollable + scrollbarGutter",
+    section4Description: "Cobertura de scrollable boolean | auto | y | x e uso de scrollbarGutter.",
+    section5Title: "5) Exemplo combinado",
+    section5Description: "Exemplo unico com props de dock/layout e de grid, com codigo 1:1.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Teste rapido das principais props do SgPanel.",
+    playgroundTitle: "SgPanel Playground"
+  },
+  "en-US": {
+    subtitle: "Showcase with examples covering all SgPanel props.",
+    section1Title: "1) align + width + height",
+    section1Description: "`align` only makes sense inside `SgMainPanel`. Numeric `width`/`height` values are treated as percentages.",
+    section2Title: "2) span + rowSpan",
+    section2Description: "`span` and `rowSpan` are used inside `SgGrid`.",
+    section3Title: "3) borderStyle + padding + children",
+    section3Description: "Basic panel styling.",
+    section4Title: "4) scrollable + scrollbarGutter",
+    section4Description: "Coverage for scrollable boolean | auto | y | x and scrollbarGutter usage.",
+    section5Title: "5) Combined example",
+    section5Description: "Single example mixing dock/layout and grid props with 1:1 code.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Quick test for the main SgPanel props.",
+    playgroundTitle: "SgPanel Playground"
+  },
+  es: {
+    subtitle: "Showcase con ejemplos de todas las props de SgPanel.",
+    section1Title: "1) align + width + height",
+    section1Description: "`align` solo tiene sentido dentro de `SgMainPanel`. `width`/`height` numericos se tratan como porcentaje.",
+    section2Title: "2) span + rowSpan",
+    section2Description: "`span` y `rowSpan` se usan dentro de `SgGrid`.",
+    section3Title: "3) borderStyle + padding + children",
+    section3Description: "Estilizacion basica del panel.",
+    section4Title: "4) scrollable + scrollbarGutter",
+    section4Description: "Cobertura de scrollable boolean | auto | y | x y uso de scrollbarGutter.",
+    section5Title: "5) Ejemplo combinado",
+    section5Description: "Ejemplo unico con props de dock/layout y de grid, con codigo 1:1.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Prueba rapida de las props principales de SgPanel.",
+    playgroundTitle: "SgPanel Playground"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof PANEL_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgPanelPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof PANEL_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = PANEL_TEXTS[locale];
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
 
   return (
     <I18NReady>
@@ -81,14 +175,14 @@ export default function SgPanelPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgPanel"
-          subtitle="Showcase com exemplos de todas as props do SgPanel."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) align + width + height"
-        description="`align` so faz sentido dentro do `SgMainPanel`. `width`/`height` em numero sao tratados como porcentagem."
+        title={texts.section1Title}
+        description={texts.section1Description}
       >
         <SgPanel className="h-[430px] rounded-xl bg-muted/30" padding={12}>
           <SgMainPanel gap={8} className="h-full w-full rounded-lg bg-background p-3">
@@ -186,8 +280,8 @@ export default function SgPanelPage() {
       </Section>
 
       <Section
-        title="2) span + rowSpan"
-        description="`span` e `rowSpan` fazem sentido dentro do `SgGrid`."
+        title={texts.section2Title}
+        description={texts.section2Description}
       >
         <SgGrid columns={{ base: 1, md: 4 }} gap={8} rowHeight={90} dense>
           <SgPanel padding={10} className="rounded-md">Item 1</SgPanel>
@@ -218,7 +312,7 @@ export default function SgPanelPage() {
         </SgStack>
       </Section>
 
-      <Section title="3) borderStyle + padding + children" description="Estilizacao basica do panel.">
+      <Section title={texts.section3Title} description={texts.section3Description}>
         <SgGrid columns={{ base: 1, md: 3 }} gap={4}>
           <SgPanel borderStyle="none" padding={12} className="rounded-lg bg-muted/50">
             children + borderStyle="none"
@@ -249,8 +343,8 @@ export default function SgPanelPage() {
       </Section>
 
       <Section
-        title="4) scrollable + scrollbarGutter"
-        description="Cobertura de scrollable boolean | auto | y | x e uso de scrollbarGutter."
+        title={texts.section4Title}
+        description={texts.section4Description}
       >
         <SgGrid columns={{ base: 1, md: 2 }} gap={4}>
           <SgPanel scrollable padding={10} className="h-48 rounded-lg">
@@ -345,7 +439,7 @@ export default function SgPanelPage() {
         </SgStack>
       </Section>
 
-      <Section title="5) Exemplo combinado" description="Exemplo unico com props de dock/layout e de grid, com codigo 1:1.">
+      <Section title={texts.section5Title} description={texts.section5Description}>
         <SgStack gap={10}>
           <SgPanel className="h-[260px] rounded-xl bg-muted/30" padding={10}>
             <SgMainPanel gap={8} className="h-full rounded-lg bg-background p-3">
@@ -393,9 +487,9 @@ export default function SgPanelPage() {
         </SgStack>
       </Section>
 
-        <Section title="6) Playground (SgPlayground)" description="Teste rápido das principais props do SgPanel.">
+        <Section title={texts.section6Title} description={texts.section6Description}>
           <SgPlayground
-            title="SgPanel Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PANEL_PLAYGROUND_CODE}

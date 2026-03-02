@@ -7,6 +7,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -236,14 +237,107 @@ const SLIDER_PROPS: ShowcasePropRow[] = [
   }
 ];
 
+type SliderTexts = {
+  subtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  playgroundTitle: string;
+};
+
+const SLIDER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SliderTexts> = {
+  "pt-BR": {
+    subtitle: "Slider com min/max, controle externo, step, width, inputProps e estado disabled.",
+    section1Title: "1) Basico",
+    section1Description: "Define minValue e maxValue com valor inicial usando defaultValue.",
+    section2Title: "2) Controle Externo",
+    section2Description: "O valor pode ser setado externamente pela prop value.",
+    section3Title: "3) Step e Width",
+    section3Description: "Demonstra step com width numerico e width em string CSS.",
+    section4Title: "4) className, ariaLabel e disabled",
+    section4Description: "Exibe personalizacao visual, acessibilidade e estado desabilitado.",
+    section5Title: "5) inputProps",
+    section5Description: "Passa atributos nativos do input e eventos adicionais via inputProps.",
+    section6Title: "6) Playground",
+    section6Description: "Teste min/max, step, width, disabled e inputProps em tempo real.",
+    playgroundTitle: "SgSlider Playground"
+  },
+  "pt-PT": {
+    subtitle: "Slider com min/max, controlo externo, step, width, inputProps e estado disabled.",
+    section1Title: "1) Basico",
+    section1Description: "Define minValue e maxValue com valor inicial usando defaultValue.",
+    section2Title: "2) Controlo Externo",
+    section2Description: "O valor pode ser definido externamente pela prop value.",
+    section3Title: "3) Step e Width",
+    section3Description: "Demonstra step com width numerico e width em string CSS.",
+    section4Title: "4) className, ariaLabel e disabled",
+    section4Description: "Exibe personalizacao visual, acessibilidade e estado desabilitado.",
+    section5Title: "5) inputProps",
+    section5Description: "Passa atributos nativos do input e eventos adicionais via inputProps.",
+    section6Title: "6) Playground",
+    section6Description: "Teste min/max, step, width, disabled e inputProps em tempo real.",
+    playgroundTitle: "SgSlider Playground"
+  },
+  "en-US": {
+    subtitle: "Slider with min/max, external control, step, width, inputProps and disabled state.",
+    section1Title: "1) Basic",
+    section1Description: "Defines minValue and maxValue with an initial value via defaultValue.",
+    section2Title: "2) External Control",
+    section2Description: "The value can be set externally through the value prop.",
+    section3Title: "3) Step and Width",
+    section3Description: "Shows step with numeric width and CSS-string width.",
+    section4Title: "4) className, ariaLabel and disabled",
+    section4Description: "Shows visual customization, accessibility and disabled state.",
+    section5Title: "5) inputProps",
+    section5Description: "Passes native input attributes and extra events through inputProps.",
+    section6Title: "6) Playground",
+    section6Description: "Test min/max, step, width, disabled and inputProps in real time.",
+    playgroundTitle: "SgSlider Playground"
+  },
+  es: {
+    subtitle: "Slider con min/max, control externo, step, width, inputProps y estado disabled.",
+    section1Title: "1) Basico",
+    section1Description: "Define minValue y maxValue con valor inicial usando defaultValue.",
+    section2Title: "2) Control Externo",
+    section2Description: "El valor se puede definir externamente por la prop value.",
+    section3Title: "3) Step y Width",
+    section3Description: "Demuestra step con width numerico y width en string CSS.",
+    section4Title: "4) className, ariaLabel y disabled",
+    section4Description: "Muestra personalizacion visual, accesibilidad y estado deshabilitado.",
+    section5Title: "5) inputProps",
+    section5Description: "Pasa atributos nativos del input y eventos adicionales via inputProps.",
+    section6Title: "6) Playground",
+    section6Description: "Prueba min/max, step, width, disabled e inputProps en tiempo real.",
+    playgroundTitle: "SgSlider Playground"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof SLIDER_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgSliderPage() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof SLIDER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = SLIDER_TEXTS[locale];
   const [basicValue, setBasicValue] = React.useState(50);
   const [controlledValue, setControlledValue] = React.useState(35);
   const [stepWidthValue, setStepWidthValue] = React.useState(25);
   const [accessibilityValue, setAccessibilityValue] = React.useState(40);
   const [inputPropsValue, setInputPropsValue] = React.useState(70);
   const [inputFocusCount, setInputFocusCount] = React.useState(0);
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
 
   return (
     <I18NReady>
@@ -255,12 +349,12 @@ export default function SgSliderPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgSlider"
-          subtitle="Exemplos completos cobrindo todas as props publicas do SgSlider."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Basico" description="Define minValue e maxValue com valor inicial usando defaultValue.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <div className="max-w-sm space-y-2">
             <SgSlider
               id="slider-basic"
@@ -276,7 +370,7 @@ export default function SgSliderPage() {
           <CodeBlock code={EXAMPLE_BASIC_CODE} />
         </Section>
 
-        <Section title="2) Controle Externo" description="O valor pode ser setado externamente pela prop value.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="max-w-sm space-y-3">
             <SgSlider
               id="slider-controlled"
@@ -297,7 +391,7 @@ export default function SgSliderPage() {
           <CodeBlock code={EXAMPLE_CONTROLLED_CODE} />
         </Section>
 
-        <Section title="3) Step e Width" description="Demonstra step com width numerico e width em string CSS.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <div className="space-y-3">
             <SgSlider
               id="slider-step-width-number"
@@ -323,7 +417,7 @@ export default function SgSliderPage() {
           <CodeBlock code={EXAMPLE_STEP_WIDTH_CODE} />
         </Section>
 
-        <Section title="4) className, ariaLabel e disabled" description="Exibe personalizacao visual, acessibilidade e estado desabilitado.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <div className="space-y-3">
             <SgSlider
               id="slider-aria-class"
@@ -351,7 +445,7 @@ export default function SgSliderPage() {
           <CodeBlock code={EXAMPLE_ACCESSIBILITY_CODE} />
         </Section>
 
-        <Section title="5) inputProps" description="Passa atributos nativos do input e eventos adicionais via inputProps.">
+        <Section title={texts.section5Title} description={texts.section5Description}>
           <div className="space-y-2">
             <p id="slider-input-props-help" className="text-sm text-muted-foreground">
               Use Tab para focar o slider.
@@ -378,9 +472,9 @@ export default function SgSliderPage() {
           <CodeBlock code={EXAMPLE_INPUT_PROPS_CODE} />
         </Section>
 
-        <Section title="6) Playground" description="Teste min/max, step, width, disabled e inputProps em tempo real.">
+        <Section title={texts.section6Title} description={texts.section6Description}>
           <SgPlayground
-            title="SgSlider Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}

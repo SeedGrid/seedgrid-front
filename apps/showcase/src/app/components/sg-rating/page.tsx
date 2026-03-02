@@ -12,6 +12,7 @@ import {
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: {
   id?: string;
@@ -41,44 +42,185 @@ type PropRow = {
 };
 
 const RATING_PROPS: PropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador único do componente." },
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador unico do componente." },
   { prop: "label", type: "string", defaultValue: "-", description: "Texto do label exibido acima do rating." },
-  { prop: "value", type: "number", defaultValue: "0", description: "Valor atual da avaliação." },
+  { prop: "value", type: "number", defaultValue: "0", description: "Valor atual da avaliacao." },
   { prop: "stars", type: "number", defaultValue: "5", description: "Quantidade total de estrelas." },
-  { prop: "allowHalf", type: "boolean", defaultValue: "false", description: "Permite seleção de meia estrela." },
-  { prop: "cancel", type: "boolean", defaultValue: "true", description: "Exibe botão para limpar a avaliação." },
-  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita a interação com o componente." },
-  { prop: "readOnly", type: "boolean", defaultValue: "false", description: "Mantém visualização sem permitir alteração." },
+  { prop: "allowHalf", type: "boolean", defaultValue: "false", description: "Permite selecao de meia estrela." },
+  { prop: "cancel", type: "boolean", defaultValue: "true", description: "Exibe botao para limpar a avaliacao." },
+  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita a interacao com o componente." },
+  { prop: "readOnly", type: "boolean", defaultValue: "false", description: "Mantem visualizacao sem permitir alteracao." },
   { prop: "size", type: "\"sm\" | \"md\" | \"lg\" | \"xl\"", defaultValue: "\"md\"", description: "Define o tamanho das estrelas." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classe CSS customizada para o container." },
-  { prop: "onIcon", type: "ReactNode", defaultValue: "-", description: "Ícone customizado para estado preenchido." },
-  { prop: "offIcon", type: "ReactNode", defaultValue: "-", description: "Ícone customizado para estado vazio." },
-  { prop: "cancelIcon", type: "ReactNode", defaultValue: "-", description: "Ícone customizado do botão de limpar." },
-  { prop: "color", type: "string", defaultValue: "\"hsl(var(--primary))\"", description: "Cor do ícone preenchido." },
-  { prop: "emptyColor", type: "string", defaultValue: "\"hsl(var(--muted-foreground))\"", description: "Cor do ícone vazio." },
+  { prop: "onIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado para estado preenchido." },
+  { prop: "offIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado para estado vazio." },
+  { prop: "cancelIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado do botao de limpar." },
+  { prop: "color", type: "string", defaultValue: "\"hsl(var(--primary))\"", description: "Cor do icone preenchido." },
+  { prop: "emptyColor", type: "string", defaultValue: "\"hsl(var(--muted-foreground))\"", description: "Cor do icone vazio." },
   { prop: "showTooltip", type: "boolean", defaultValue: "false", description: "Exibe tooltip com valor ao passar o mouse." },
   { prop: "onChange", type: "(value: number) => void", defaultValue: "-", description: "Callback disparado quando o valor muda." },
   { prop: "onHover", type: "(value: number | null) => void", defaultValue: "-", description: "Callback disparado no hover das estrelas." },
-  { prop: "register", type: "UseFormRegister<FieldValues>", defaultValue: "-", description: "Integração React Hook Form via register." },
-  { prop: "name", type: "string", defaultValue: "-", description: "Nome do campo para integração com formulário." },
+  { prop: "register", type: "UseFormRegister<FieldValues>", defaultValue: "-", description: "Integracao React Hook Form via register." },
+  { prop: "name", type: "string", defaultValue: "-", description: "Nome do campo para integracao com formulario." },
   { prop: "control", type: "any", defaultValue: "-", description: "Control do React Hook Form." },
   { prop: "error", type: "string", defaultValue: "-", description: "Mensagem de erro externa." },
-  { prop: "required", type: "boolean", defaultValue: "false", description: "Define o campo como obrigatório." },
-  { prop: "requiredMessage", type: "string", defaultValue: "-", description: "Mensagem de validação para required." }
+  { prop: "required", type: "boolean", defaultValue: "false", description: "Define o campo como obrigatorio." },
+  { prop: "requiredMessage", type: "string", defaultValue: "-", description: "Mensagem de validacao para required." }
 ];
 
-const EXAMPLE_LINKS = [
-  { id: "exemplo-1", label: "1) Basico" },
-  { id: "exemplo-2", label: "2) Meia estrela + tooltip" },
-  { id: "exemplo-3", label: "3) Somente leitura e desabilitado" },
-  { id: "exemplo-4", label: "4) Tamanhos e quantidade de estrelas" },
-  { id: "exemplo-5", label: "5) Cores e ícones customizados" },
-  { id: "exemplo-6", label: "6) Callbacks" },
-  { id: "exemplo-7", label: "7) React Hook Form" },
-  { id: "exemplo-8", label: "8) Campo obrigatório" },
-  { id: "exemplo-9", label: "9) Playground" }
-];
 
+type RatingTexts = {
+  subtitle: string;
+  examplesLabel: string;
+  propsLinkLabel: string;
+  propsTitle: string;
+  propsColProp: string;
+  propsColType: string;
+  propsColDefault: string;
+  propsColDescription: string;
+  sectionTitles: string[];
+  sectionDescriptions: string[];
+  playgroundTitle: string;
+};
+
+const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
+  "pt-BR": {
+    subtitle: "Componente de avaliacao com suporte a meia estrela, estados visuais, customizacao de icones e integracao com React Hook Form.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+    sectionTitles: [
+      "1) Basico",
+      "2) Meia estrela + tooltip",
+      "3) Somente leitura e desabilitado",
+      "4) Tamanhos e quantidade de estrelas",
+      "5) Cores e icones customizados",
+      "6) Callbacks",
+      "7) React Hook Form",
+      "8) Campo obrigatorio",
+      "9) Playground (SgPlayground)"
+    ],
+    sectionDescriptions: [
+      "Exemplo controlado com estado React.",
+      "Permite clicar nas metades e exibir valor no hover.",
+      "Visualizacao sem interacao e estado disabled.",
+      "Controle de size e stars.",
+      "Troca de cores e icones de preenchido/vazio.",
+      "Exemplo com onChange e onHover + log de eventos.",
+      "Uso com control/name e submit.",
+      "Exemplo com required e requiredMessage.",
+      "Simule as props principais em tempo real."
+    ],
+    playgroundTitle: "SgRating Playground"
+  },
+  "pt-PT": {
+    subtitle: "Componente de avaliacao com suporte a meia estrela, estados visuais, customizacao de icones e integracao com React Hook Form.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+    sectionTitles: [
+      "1) Basico",
+      "2) Meia estrela + tooltip",
+      "3) Somente leitura e desabilitado",
+      "4) Tamanhos e quantidade de estrelas",
+      "5) Cores e icones customizados",
+      "6) Callbacks",
+      "7) React Hook Form",
+      "8) Campo obrigatorio",
+      "9) Playground (SgPlayground)"
+    ],
+    sectionDescriptions: [
+      "Exemplo controlado com estado React.",
+      "Permite clicar nas metades e exibir valor no hover.",
+      "Visualizacao sem interacao e estado disabled.",
+      "Controle de size e stars.",
+      "Troca de cores e icones de preenchido/vazio.",
+      "Exemplo com onChange e onHover + log de eventos.",
+      "Uso com control/name e submit.",
+      "Exemplo com required e requiredMessage.",
+      "Simule as props principais em tempo real."
+    ],
+    playgroundTitle: "SgRating Playground"
+  },
+  "en-US": {
+    subtitle: "Rating component with half-star support, visual states, icon customization and React Hook Form integration.",
+    examplesLabel: "Examples",
+    propsLinkLabel: "Props Reference",
+    propsTitle: "Props Reference",
+    propsColProp: "Prop",
+    propsColType: "Type",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
+    sectionTitles: [
+      "1) Basic",
+      "2) Half star + tooltip",
+      "3) Read-only and disabled",
+      "4) Sizes and number of stars",
+      "5) Colors and custom icons",
+      "6) Callbacks",
+      "7) React Hook Form",
+      "8) Required field",
+      "9) Playground (SgPlayground)"
+    ],
+    sectionDescriptions: [
+      "Controlled example with React state.",
+      "Allows half-click selection and hover value tooltip.",
+      "View-only and disabled state.",
+      "Control of size and stars.",
+      "Switch filled/empty colors and icons.",
+      "Example with onChange and onHover + event log.",
+      "Usage with control/name and submit.",
+      "Example using required and requiredMessage.",
+      "Simulate main props in real time."
+    ],
+    playgroundTitle: "SgRating Playground"
+  },
+  es: {
+    subtitle: "Componente de valoracion con soporte de media estrella, estados visuales, personalizacion de iconos e integracion con React Hook Form.",
+    examplesLabel: "Ejemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Predeterminado",
+    propsColDescription: "Descripcion",
+    sectionTitles: [
+      "1) Basico",
+      "2) Media estrella + tooltip",
+      "3) Solo lectura y deshabilitado",
+      "4) Tamanhos y cantidad de estrellas",
+      "5) Colores e iconos personalizados",
+      "6) Callbacks",
+      "7) React Hook Form",
+      "8) Campo obligatorio",
+      "9) Playground (SgPlayground)"
+    ],
+    sectionDescriptions: [
+      "Ejemplo controlado con estado React.",
+      "Permite clicar mitades y mostrar valor en hover.",
+      "Visualizacion sin interaccion y estado disabled.",
+      "Control de size y stars.",
+      "Cambio de colores e iconos llenos/vacios.",
+      "Ejemplo con onChange y onHover + log de eventos.",
+      "Uso con control/name y submit.",
+      "Ejemplo con required y requiredMessage.",
+      "Simula las props principales en tiempo real."
+    ],
+    playgroundTitle: "SgRating Playground"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof RATING_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
 const BASIC_CODE = `import * as React from "react";
 import { SgRating } from "@seedgrid/fe-components";
 
@@ -685,6 +827,10 @@ function RequiredExample() {
 }
 
 export default function SgRatingPage() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof RATING_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = RATING_TEXTS[locale];
+  const exampleLinks = React.useMemo(() => texts.sectionTitles.map((label, index) => ({ id: `exemplo-${index + 1}`, label })), [texts]);
   const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
   const [anchorOffset, setAnchorOffset] = React.useState(320);
 
@@ -806,14 +952,10 @@ export default function SgRatingPage() {
         <div ref={stickyHeaderRef} className="sticky top-0 z-50 isolate max-h-[52vh] overflow-y-auto bg-background pb-2 pt-2 md:-top-8 md:max-h-none md:overflow-visible md:pb-2 md:pt-8">
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">SgRating</h1>
-            <p className="mt-2 text-muted-foreground">
-              Componente de avaliação com suporte a meia estrela, estados visuais, customização de ícones e integração com React Hook Form.
-            </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Exemplos
-            </p>
+            <p className="mt-2 text-muted-foreground">{texts.subtitle}</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{texts.examplesLabel}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
-              {EXAMPLE_LINKS.map((example) => (
+              {exampleLinks.map((example) => (
                 <Link
                   key={example.id}
                   href={`#${example.id}`}
@@ -827,56 +969,54 @@ export default function SgRatingPage() {
                 href="#props-reference"
                 onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
-              >
-                Props Reference
-              </Link>
+              >{texts.propsLinkLabel}</Link>
             </SgGrid>
           </div>
         </div>
 
-        <Section id="exemplo-1" title="1) Basico" description="Exemplo controlado com estado React.">
+        <Section id="exemplo-1" title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
           <BasicExample />
           <CodeBlockBase code={BASIC_CODE} />
         </Section>
 
-        <Section id="exemplo-2" title="2) Meia estrela + tooltip" description="Permite clicar nas metades e exibir valor no hover.">
+        <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <HalfTooltipExample />
           <CodeBlockBase code={HALF_TOOLTIP_CODE} />
         </Section>
 
-        <Section id="exemplo-3" title="3) Somente leitura e desabilitado" description="Visualização sem interação e estado disabled.">
+        <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
           <ReadonlyDisabledExample />
           <CodeBlockBase code={READONLY_DISABLED_CODE} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Tamanhos e quantidade de estrelas" description="Controle de size e stars.">
+        <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
           <SizeStarsExample />
           <CodeBlockBase code={SIZE_STARS_CODE} />
         </Section>
 
-        <Section id="exemplo-5" title="5) Cores e ícones customizados" description="Troca de cores e ícones de preenchido/vazio.">
+        <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
           <ColorsIconsExample />
           <CodeBlockBase code={COLORS_ICONS_CODE} />
         </Section>
 
-        <Section id="exemplo-6" title="6) Callbacks" description="Exemplo com onChange e onHover + log de eventos.">
+        <Section id="exemplo-6" title={texts.sectionTitles[5] ?? ""} description={texts.sectionDescriptions[5] ?? ""}>
           <CallbackExample />
           <CodeBlockBase code={CALLBACK_CODE} />
         </Section>
 
-        <Section id="exemplo-7" title="7) React Hook Form" description="Uso com control/name e submit.">
+        <Section id="exemplo-7" title={texts.sectionTitles[6] ?? ""} description={texts.sectionDescriptions[6] ?? ""}>
           <RhfExample />
           <CodeBlockBase code={RHF_CODE} />
         </Section>
 
-        <Section id="exemplo-8" title="8) Campo obrigatório" description="Exemplo com required e requiredMessage.">
+        <Section id="exemplo-8" title={texts.sectionTitles[7] ?? ""} description={texts.sectionDescriptions[7] ?? ""}>
           <RequiredExample />
           <CodeBlockBase code={REQUIRED_CODE} />
         </Section>
 
-        <Section id="exemplo-9" title="9) Playground (SgPlayground)" description="Simule as props principais em tempo real.">
+        <Section id="exemplo-9" title={texts.sectionTitles[8] ?? ""} description={texts.sectionDescriptions[8] ?? ""}>
           <SgPlayground
-            title="SgRating Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
@@ -889,15 +1029,15 @@ export default function SgRatingPage() {
           id="props-reference"
           className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
         >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+          <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">Prop</th>
-                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                  <th className="pb-2 font-semibold">Descrição</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
+                  <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -918,3 +1058,8 @@ export default function SgRatingPage() {
     </I18NReady>
   );
 }
+
+
+
+
+

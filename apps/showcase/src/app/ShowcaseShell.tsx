@@ -93,7 +93,7 @@ const COMPONENTS = [
   { group: "Gadgets", slug: "gadgets/sg-radial-gauge", label: "SgRadialGauge" },
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard" },
   { group: "Utils", slug: "sg-toaster", label: "SgToaster" },
-  { group: "Utils", slug: "sg-playground", label: "SgPlayground" },
+  // { group: "Utils", slug: "sg-playground", label: "SgPlayground" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark" }
 ];
 

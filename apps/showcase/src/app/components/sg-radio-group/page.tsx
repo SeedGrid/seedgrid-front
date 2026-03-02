@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 type PropDef = {
   name: string;
@@ -54,21 +55,21 @@ function CodeBlock(props: { children: string }) {
   return <CodeBlockBase code={props.children} />;
 }
 
-function PropsTable(props: { id: string; props: PropDef[] }) {
+function PropsTable(props: { id: string; props: PropDef[]; title: string; colProp: string; colType: string; colDefault: string; colDescription: string }) {
   return (
     <section
       id={props.id}
       className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
     >
-      <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+      <h2 data-anchor-title="true" className="text-lg font-semibold">{props.title}</h2>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left">
-              <th className="pb-2 pr-4 font-semibold">Prop</th>
-              <th className="pb-2 pr-4 font-semibold">Tipo</th>
-              <th className="pb-2 pr-4 font-semibold">Padrão</th>
-              <th className="pb-2 font-semibold">Descrição</th>
+              <th className="pb-2 pr-4 font-semibold">{props.colProp}</th>
+              <th className="pb-2 pr-4 font-semibold">{props.colType}</th>
+              <th className="pb-2 pr-4 font-semibold">{props.colDefault}</th>
+              <th className="pb-2 font-semibold">{props.colDescription}</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -87,6 +88,138 @@ function PropsTable(props: { id: string; props: PropDef[] }) {
   );
 }
 
+
+type RadioGroupTexts = {
+  subtitle: string;
+  examplesLabel: string;
+  propsLinkLabel: string;
+  propsTitle: string;
+  propsColProp: string;
+  propsColType: string;
+  propsColDefault: string;
+  propsColDescription: string;
+  sectionTitles: string[];
+  playgroundTitle: string;
+};
+
+const RADIO_GROUP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RadioGroupTexts> = {
+  "pt-BR": {
+    subtitle: "Grupo de radio buttons com orientacao horizontal/vertical, icones, opcao de limpar e integracao com React Hook Form.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+    playgroundTitle: "SgRadioGroup Playground",
+    sectionTitles: [
+      "1) Basico",
+      "2) Orientacao Horizontal",
+      "3) Com Icones",
+      "4) Apenas Icones (Icon Only)",
+      "5) Com Opcao de Cancelar",
+      "6) Controle Externo (setValue/getValue)",
+      "7) Com Opcao Desabilitada",
+      "8) Grupo Desabilitado",
+      "9) Somente Leitura",
+      "10) Obrigatorio com Validacao",
+      "11) Horizontal com Icones Coloridos",
+      "12) Selection Style Highlight (Lista)",
+      "13) Com GroupBox Customizado",
+      "14) React Hook Form - Register",
+      "15) Playground Interativo"
+    ]
+  },
+  "pt-PT": {
+    subtitle: "Grupo de radio buttons com orientacao horizontal/vertical, icones, opcao de limpar e integracao com React Hook Form.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+    playgroundTitle: "SgRadioGroup Playground",
+    sectionTitles: [
+      "1) Basico",
+      "2) Orientacao Horizontal",
+      "3) Com Icones",
+      "4) Apenas Icones (Icon Only)",
+      "5) Com Opcao de Cancelar",
+      "6) Controlo Externo (setValue/getValue)",
+      "7) Com Opcao Desabilitada",
+      "8) Grupo Desabilitado",
+      "9) Somente Leitura",
+      "10) Obrigatorio com Validacao",
+      "11) Horizontal com Icones Coloridos",
+      "12) Selection Style Highlight (Lista)",
+      "13) Com GroupBox Customizado",
+      "14) React Hook Form - Register",
+      "15) Playground Interativo"
+    ]
+  },
+  "en-US": {
+    subtitle: "Radio button group with horizontal/vertical orientation, icons, clear option, and React Hook Form integration.",
+    examplesLabel: "Examples",
+    propsLinkLabel: "Props Reference",
+    propsTitle: "Props Reference",
+    propsColProp: "Prop",
+    propsColType: "Type",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
+    playgroundTitle: "SgRadioGroup Playground",
+    sectionTitles: [
+      "1) Basic",
+      "2) Horizontal Orientation",
+      "3) With Icons",
+      "4) Icon Only",
+      "5) With Cancel Option",
+      "6) External Control (setValue/getValue)",
+      "7) With Disabled Option",
+      "8) Disabled Group",
+      "9) Read-Only",
+      "10) Required with Validation",
+      "11) Horizontal with Colored Icons",
+      "12) Selection Style Highlight (List)",
+      "13) With Custom GroupBox",
+      "14) React Hook Form - Register",
+      "15) Interactive Playground"
+    ]
+  },
+  es: {
+    subtitle: "Grupo de radio buttons con orientacion horizontal/vertical, iconos, opcion de limpiar e integracion con React Hook Form.",
+    examplesLabel: "Ejemplos",
+    propsLinkLabel: "Referencia de Props",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Predeterminado",
+    propsColDescription: "Descripcion",
+    playgroundTitle: "SgRadioGroup Playground",
+    sectionTitles: [
+      "1) Basico",
+      "2) Orientacion Horizontal",
+      "3) Con Iconos",
+      "4) Solo Iconos (Icon Only)",
+      "5) Con Opcion de Cancelar",
+      "6) Control Externo (setValue/getValue)",
+      "7) Con Opcion Deshabilitada",
+      "8) Grupo Deshabilitado",
+      "9) Solo Lectura",
+      "10) Obligatorio con Validacion",
+      "11) Horizontal con Iconos Coloreados",
+      "12) Selection Style Highlight (Lista)",
+      "13) Con GroupBox Personalizado",
+      "14) React Hook Form - Register",
+      "15) Playground Interactivo"
+    ]
+  }
+};
+
+function isSupportedRadioLocale(locale: ShowcaseLocale): locale is keyof typeof RADIO_GROUP_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
 const RADIO_GROUP_PLAYGROUND_APP_FILE = `import * as React from "react";
 import * as SeedGrid from "@seedgrid/fe-components";
 import { Heart, Star, ThumbsUp } from "lucide-react";
@@ -236,13 +369,13 @@ export default function App() {
 `;
 
 const BASIC_OPTIONS: SgRadioGroupOption[] = [
-  { label: "Opção 1", value: "option1" },
-  { label: "Opção 2", value: "option2" },
-  { label: "Opção 3", value: "option3" }
+  { label: "Opcao 1", value: "option1" },
+  { label: "Opcao 2", value: "option2" },
+  { label: "Opcao 3", value: "option3" }
 ];
 
 const FRUIT_OPTIONS: SgRadioGroupOption[] = [
-  { label: "Maçã", value: "apple" },
+  { label: "Maca", value: "apple" },
   { label: "Banana", value: "banana" },
   { label: "Laranja", value: "orange" },
   { label: "Uva", value: "grape" }
@@ -255,9 +388,9 @@ const OPTIONS_WITH_ICONS: SgRadioGroupOption[] = [
 ];
 
 const SHAPE_OPTIONS: SgRadioGroupOption[] = [
-  { label: "Círculo", value: "circle", icon: <Circle className="w-5 h-5" /> },
+  { label: "Circulo", value: "circle", icon: <Circle className="w-5 h-5" /> },
   { label: "Quadrado", value: "square", icon: <Square className="w-5 h-5" /> },
-  { label: "Triângulo", value: "triangle", icon: <Triangle className="w-5 h-5" /> }
+  { label: "Triangulo", value: "triangle", icon: <Triangle className="w-5 h-5" /> }
 ];
 
 const WEATHER_OPTIONS: SgRadioGroupOption[] = [
@@ -280,30 +413,15 @@ const CONTACT_OPTIONS: SgRadioGroupOption[] = [
 
 const PRIORITY_OPTIONS: SgRadioGroupOption[] = [
   { label: "Baixa", value: "low" },
-  { label: "Média", value: "medium" },
+  { label: "Media", value: "medium" },
   { label: "Alta", value: "high" },
   { label: "Urgente", value: "urgent", disabled: true }
 ];
 
-const EXAMPLE_LINKS = [
-  { id: "exemplo-1", label: "1) Básico" },
-  { id: "exemplo-2", label: "2) Orientação Horizontal" },
-  { id: "exemplo-3", label: "3) Com Ícones" },
-  { id: "exemplo-4", label: "4) Apenas Ícones (Icon Only)" },
-  { id: "exemplo-5", label: "5) Com Opção de Cancelar" },
-  { id: "exemplo-6", label: "6) Controle Externo (setValue/getValue)" },
-  { id: "exemplo-7", label: "7) Com Opção Desabilitada" },
-  { id: "exemplo-8", label: "8) Grupo Desabilitado" },
-  { id: "exemplo-9", label: "9) Somente Leitura" },
-  { id: "exemplo-10", label: "10) Obrigatório com Validação" },
-  { id: "exemplo-11", label: "11) Horizontal com Ícones Coloridos" },
-  { id: "exemplo-12", label: "12) Selection Style Highlight (Lista)" },
-  { id: "exemplo-13", label: "13) Com GroupBox Customizado" },
-  { id: "exemplo-14", label: "14) React Hook Form - Register" },
-  { id: "exemplo-15", label: "15) Playground Interativo" }
-];
-
 export default function SgRadioGroupShowcase() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof RADIO_GROUP_TEXTS = isSupportedRadioLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = RADIO_GROUP_TEXTS[locale];
   const [selectedBasic, setSelectedBasic] = React.useState<string | number | null>("option1");
   const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>(null);
   const [selectedWithCancel, setSelectedWithCancel] = React.useState<string | number | null>("option2");
@@ -314,24 +432,24 @@ export default function SgRadioGroupShowcase() {
 
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
-    alert(`Dados do formulário: ${JSON.stringify(data, null, 2)}`);
+    alert(`Dados do formulario: ${JSON.stringify(data, null, 2)}`);
   };
 
   const propDefs: PropDef[] = [
     {
       name: "id",
       type: "string",
-      description: "ID único para o grupo de radio buttons"
+      description: "ID unico para o grupo de radio buttons"
     },
     {
       name: "title",
       type: "string",
-      description: "Título exibido acima do grupo"
+      description: "Titulo exibido acima do grupo"
     },
     {
       name: "source",
       type: "SgRadioGroupOption[]",
-      description: "Array de opções. Cada opção deve ter label, value, e opcionalmente icon e disabled"
+      description: "Array de opcoes. Cada opcao deve ter label, value, e opcionalmente icon e disabled"
     },
     {
       name: "value",
@@ -342,30 +460,30 @@ export default function SgRadioGroupShowcase() {
       name: "orientation",
       type: '"horizontal" | "vertical"',
       defaultValue: '"vertical"',
-      description: "Orientação do layout das opções"
+      description: "Orientacao do layout das opcoes"
     },
     {
       name: "selectionStyle",
       type: '"radio" | "highlight"',
       defaultValue: '"radio"',
-      description: "Define o estilo visual da seleção (radio padrão ou destaque em linha)"
+      description: "Define o estilo visual da selecao (radio padrao ou destaque em linha)"
     },
     {
       name: "iconOnly",
       type: "boolean",
       defaultValue: "false",
-      description: "Exibe apenas os ícones, sem os labels"
+      description: "Exibe apenas os icones, sem os labels"
     },
     {
       name: "showCancel",
       type: "boolean",
       defaultValue: "false",
-      description: "Mostra opção para cancelar/limpar seleção"
+      description: "Mostra opcao para cancelar/limpar selecao"
     },
     {
       name: "cancelLabel",
       type: "string",
-      description: "Label customizado para a opção de cancelar"
+      description: "Label customizado para a opcao de cancelar"
     },
     {
       name: "disabled",
@@ -383,7 +501,7 @@ export default function SgRadioGroupShowcase() {
       name: "required",
       type: "boolean",
       defaultValue: "false",
-      description: "Marca o campo como obrigatório (com validação)"
+      description: "Marca o campo como obrigatorio (com validacao)"
     },
     {
       name: "onChange",
@@ -403,7 +521,7 @@ export default function SgRadioGroupShowcase() {
     {
       name: "register",
       type: "UseFormRegister",
-      description: "Função register do React Hook Form"
+      description: "Funcao register do React Hook Form"
     },
     {
       name: "error",
@@ -418,7 +536,7 @@ export default function SgRadioGroupShowcase() {
     {
       name: "optionClassName",
       type: "string",
-      description: "Classes CSS adicionais para cada opção"
+      description: "Classes CSS adicionais para cada opcao"
     },
     {
       name: "groupBoxProps",
@@ -548,13 +666,10 @@ export default function SgRadioGroupShowcase() {
         <div ref={stickyHeaderRef} className="sticky top-0 z-50 isolate max-h-[52vh] overflow-y-auto bg-background pb-2 pt-2 md:-top-8 md:max-h-none md:overflow-visible md:pb-2 md:pt-8">
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">SgRadioGroup</h1>
-            <p className="mt-2 text-muted-foreground">
-              Grupo de radio buttons com orientação horizontal/vertical, ícones, opção de limpar e integração com
-              React Hook Form.
-            </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-2 text-muted-foreground">{texts.subtitle}</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{texts.examplesLabel}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
-              {EXAMPLE_LINKS.map((example) => (
+              {texts.sectionTitles.map((label, index) => ({ id: `exemplo-${index + 1}`, label })).map((example) => (
                 <Link
                   key={example.id}
                   href={`#${example.id}`}
@@ -568,17 +683,15 @@ export default function SgRadioGroupShowcase() {
                 href="#props-reference"
                 onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
-              >
-                Props Reference
-              </Link>
+              >{texts.propsLinkLabel}</Link>
             </SgGrid>
           </div>
         </div>
 
-      <Section id="exemplo-1" title="1) Básico">
+      <Section id="exemplo-1" title={texts.sectionTitles[0] ?? ""}>
         <SgRadioGroup
           id="basic"
-          title="Escolha uma opção"
+          title="Escolha uma opcao"
           source={BASIC_OPTIONS}
           value={selectedBasic ?? undefined}
           onChange={setSelectedBasic}
@@ -591,7 +704,7 @@ export default function SgRadioGroupShowcase() {
 
 <SgRadioGroup
   id="basic"
-  title="Escolha uma opção"
+  title="Escolha uma opcao"
   source={BASIC_OPTIONS}
   value={selectedBasic ?? undefined}
   onChange={setSelectedBasic}
@@ -599,7 +712,7 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-2" title="2) Orientação Horizontal">
+      <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""}>
         <SgRadioGroup
           id="horizontal"
           title="Selecione uma fruta"
@@ -620,22 +733,22 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-3" title="3) Com Ícones">
+      <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""}>
         <SgRadioGroup
           id="with-icons"
-          title="Escolha uma ação"
+          title="Escolha uma acao"
           source={OPTIONS_WITH_ICONS}
         />
         <CodeBlock>
           {`<SgRadioGroup
   id="with-icons"
-  title="Escolha uma ação"
+  title="Escolha uma acao"
   source={OPTIONS_WITH_ICONS}
 />`}
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-4" title="4) Apenas Ícones (Icon Only)">
+      <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""}>
         <SgRadioGroup
           id="icon-only"
           title="Escolha uma forma"
@@ -652,10 +765,10 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-5" title="5) Com Opção de Cancelar">
+      <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""}>
         <SgRadioGroup
           id="with-cancel"
-          title="Selecione (com opção de cancelar)"
+          title="Selecione (com opcao de cancelar)"
           source={BASIC_OPTIONS}
           value={selectedWithCancel ?? undefined}
           onChange={setSelectedWithCancel}
@@ -667,7 +780,7 @@ export default function SgRadioGroupShowcase() {
         <CodeBlock>
           {`<SgRadioGroup
   id="with-cancel"
-  title="Selecione (com opção de cancelar)"
+  title="Selecione (com opcao de cancelar)"
   source={BASIC_OPTIONS}
   value={selectedWithCancel ?? undefined}
   onChange={setSelectedWithCancel}
@@ -676,7 +789,7 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-6" title="6) Controle Externo (setValue/getValue)">
+      <Section id="exemplo-6" title={texts.sectionTitles[5] ?? ""}>
         <div className="space-y-4">
           <SgRadioGroup
             id="external-control"
@@ -687,7 +800,7 @@ export default function SgRadioGroupShowcase() {
           />
           <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
             <SgButton onClick={() => setExternalValue("apple")}>
-              Definir Maçã
+              Definir Maca
             </SgButton>
             <SgButton onClick={() => setExternalValue("banana")}>
               Definir Banana
@@ -715,30 +828,30 @@ export default function SgRadioGroupShowcase() {
 />
 
 <SgButton onClick={() => setExternalValue("apple")}>
-  Definir Maçã
+  Definir Maca
 </SgButton>`}
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-7" title="7) Com Opção Desabilitada">
+      <Section id="exemplo-7" title={texts.sectionTitles[6] ?? ""}>
         <SgRadioGroup
           id="with-disabled-option"
-          title="Nível de prioridade"
+          title="Nivel de prioridade"
           source={PRIORITY_OPTIONS}
         />
         <CodeBlock>
           {`<SgRadioGroup
   id="with-disabled-option"
-  title="Nível de prioridade"
+  title="Nivel de prioridade"
   source={PRIORITY_OPTIONS}
 />`}
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-8" title="8) Grupo Desabilitado">
+      <Section id="exemplo-8" title={texts.sectionTitles[7] ?? ""}>
         <SgRadioGroup
           id="disabled-group"
-          title="Opções desabilitadas"
+          title="Opcoes desabilitadas"
           source={BASIC_OPTIONS}
           value="option2"
           disabled
@@ -746,7 +859,7 @@ export default function SgRadioGroupShowcase() {
         <CodeBlock>
           {`<SgRadioGroup
   id="disabled-group"
-  title="Opções desabilitadas"
+  title="Opcoes desabilitadas"
   source={BASIC_OPTIONS}
   value="option2"
   disabled
@@ -754,10 +867,10 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-9" title="9) Somente Leitura">
+      <Section id="exemplo-9" title={texts.sectionTitles[8] ?? ""}>
         <SgRadioGroup
           id="readonly"
-          title="Configuração atual (somente leitura)"
+          title="Configuracao atual (somente leitura)"
           source={FRUIT_OPTIONS}
           value="banana"
           readOnly
@@ -765,7 +878,7 @@ export default function SgRadioGroupShowcase() {
         <CodeBlock>
           {`<SgRadioGroup
   id="readonly"
-  title="Configuração atual (somente leitura)"
+  title="Configuracao atual (somente leitura)"
   source={FRUIT_OPTIONS}
   value="banana"
   readOnly
@@ -773,11 +886,11 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-10" title="10) Obrigatório com Validação">
+      <Section id="exemplo-10" title={texts.sectionTitles[9] ?? ""}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <SgRadioGroup
             name="preference"
-            title="Preferência de contato *"
+            title="Preferencia de contato *"
             source={CONTACT_OPTIONS}
             control={control}
             required
@@ -790,7 +903,7 @@ export default function SgRadioGroupShowcase() {
 <form onSubmit={handleSubmit(onSubmit)}>
   <SgRadioGroup
     name="preference"
-    title="Preferência de contato *"
+    title="Preferencia de contato *"
     source={CONTACT_OPTIONS}
     control={control}
     required
@@ -800,27 +913,27 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-11" title="11) Horizontal com Ícones Coloridos">
+      <Section id="exemplo-11" title={texts.sectionTitles[10] ?? ""}>
         <SgRadioGroup
           id="horizontal-colored"
-          title="Condição do tempo"
+          title="Condicao do tempo"
           source={WEATHER_OPTIONS}
           orientation="horizontal"
         />
         <CodeBlock>
           {`<SgRadioGroup
   id="horizontal-colored"
-  title="Condição do tempo"
+  title="Condicao do tempo"
   source={WEATHER_OPTIONS}
   orientation="horizontal"
 />`}
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-12" title="12) Selection Style Highlight (Lista)">
+      <Section id="exemplo-12" title={texts.sectionTitles[11] ?? ""}>
         <SgRadioGroup
           id="highlight-list"
-          title="Opções"
+          title="Opcoes"
           source={LIST_HIGHLIGHT_OPTIONS}
           value={selectedHighlightStyle ?? undefined}
           onChange={setSelectedHighlightStyle}
@@ -835,7 +948,7 @@ export default function SgRadioGroupShowcase() {
 
 <SgRadioGroup
   id="highlight-list"
-  title="Opções"
+  title="Opcoes"
   source={LIST_HIGHLIGHT_OPTIONS}
   value={selectedHighlightStyle ?? undefined}
   onChange={setSelectedHighlightStyle}
@@ -845,13 +958,13 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-13" title="13) Com GroupBox Customizado">
+      <Section id="exemplo-13" title={texts.sectionTitles[12] ?? ""}>
         <SgRadioGroup
           id="custom-groupbox"
           title="Escolha com estilo customizado"
           source={OPTIONS_WITH_ICONS}
           groupBoxProps={{
-            title: "Preferências",
+            title: "Preferencias",
             className: "border-2 border-[rgb(var(--sg-primary-500))]"
           }}
         />
@@ -861,14 +974,14 @@ export default function SgRadioGroupShowcase() {
   title="Escolha com estilo customizado"
   source={OPTIONS_WITH_ICONS}
   groupBoxProps={{
-    title: "Preferências",
+    title: "Preferencias",
     className: "border-2 border-[rgb(var(--sg-primary-500))]"
   }}
 />`}
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-14" title="14) React Hook Form - Register">
+      <Section id="exemplo-14" title={texts.sectionTitles[13] ?? ""}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <SgRadioGroup
             name="fruit"
@@ -893,9 +1006,9 @@ export default function SgRadioGroupShowcase() {
         </CodeBlock>
       </Section>
 
-      <Section id="exemplo-15" title="15) Playground Interativo">
+      <Section id="exemplo-15" title={texts.sectionTitles[14] ?? ""}>
         <SgPlayground
-          title="SgRadioGroup Playground"
+          title={texts.playgroundTitle}
           interactive
           codeContract="appFile"
           code={RADIO_GROUP_PLAYGROUND_APP_FILE}
@@ -903,10 +1016,12 @@ export default function SgRadioGroupShowcase() {
           defaultOpen
         />
       </Section>
-      <PropsTable id="props-reference" props={propDefs} />
+      <PropsTable id="props-reference" props={propDefs} title={texts.propsTitle} colProp={texts.propsColProp} colType={texts.propsColType} colDefault={texts.propsColDefault} colDescription={texts.propsColDescription} />
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
+
 

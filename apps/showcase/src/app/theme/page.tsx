@@ -3,13 +3,217 @@
 import React from "react";
 import { useSgTheme } from "@seedgrid/fe-theme";
 import CodeBlockBase from "../components/CodeBlockBase";
+import I18NReady from "../components/I18NReady";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../i18n";
+
+type ThemeTexts = {
+  title: string;
+  subtitle: string;
+  installTitle: string;
+  installDescription: string;
+  setupTitle: string;
+  setupDescription: string;
+  hookTitle: string;
+  hookDescription: string;
+  cssVarsTitle: string;
+  cssVarsDescription: string;
+  paletteTitle: string;
+  paletteDescription: string;
+  semanticTitle: string;
+  semanticDescription: string;
+  neutralTitle: string;
+  neutralDescription: string;
+  tokensTitle: string;
+  tokensDescription: string;
+  tailwindTitle: string;
+  tailwindDescription: string;
+  statusTitle: string;
+  currentModeLabel: string;
+  seedLabel: string;
+  persistenceTitle: string;
+  persistenceDescription: string;
+  persistenceSavedTitle: string;
+  persistenceSavedDescription: string;
+  persistenceConfigKeyDescription: string;
+  persistenceModeKeyDescription: string;
+  palettePrimary: string;
+  paletteSecondary: string;
+  paletteTertiary: string;
+  semanticSuccess: string;
+  semanticInfo: string;
+  semanticWarning: string;
+  semanticError: string;
+};
+
+const THEME_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ThemeTexts> = {
+  "pt-BR": {
+    title: "SeedThemeProvider",
+    subtitle: "Sistema de temas baseado em uma cor seed que gera paletas harmoniosas automaticamente.",
+    installTitle: "Instalacao",
+    installDescription: "Adicione o pacote ao projeto.",
+    setupTitle: "Setup Basico",
+    setupDescription: "Configure o provider no layout raiz da aplicacao.",
+    hookTitle: "Hook useSgTheme",
+    hookDescription: "Acesse e altere o tema em qualquer componente.",
+    cssVarsTitle: "Usando CSS Variables",
+    cssVarsDescription: "Todas as cores ficam disponiveis como CSS variables.",
+    paletteTitle: "Paletas de Cores",
+    paletteDescription: "Cada cor possui escala de 50 a 900.",
+    semanticTitle: "Cores Semanticas",
+    semanticDescription: "Cores fixas para convencoes universais de UI/UX.",
+    neutralTitle: "Cores Neutras",
+    neutralDescription: "Cores harmonizadas com a seed.",
+    tokensTitle: "Tokens de Componentes",
+    tokensDescription: "Variaveis semanticas para componentes especificos.",
+    tailwindTitle: "Configuracao do Tailwind",
+    tailwindDescription: "Configure o Tailwind para usar as CSS variables.",
+    statusTitle: "Estado Atual do Tema",
+    currentModeLabel: "Modo Atual",
+    seedLabel: "Cor Seed",
+    persistenceTitle: "Persistencia no localStorage",
+    persistenceDescription: "O tema e salvo automaticamente.",
+    persistenceSavedTitle: "Tema salvo automaticamente",
+    persistenceSavedDescription:
+      "Quando voce altera seed ou modo (light/dark), as preferencias sao salvas no localStorage e restauradas ao recarregar a pagina.",
+    persistenceConfigKeyDescription: "Chave do localStorage para configuracao do tema",
+    persistenceModeKeyDescription: "Chave do localStorage para modo light/dark",
+    palettePrimary: "Primary (muda com seed)",
+    paletteSecondary: "Secondary (muda com seed)",
+    paletteTertiary: "Tertiary (muda com seed)",
+    semanticSuccess: "Success (verde fixo)",
+    semanticInfo: "Info (azul fixo)",
+    semanticWarning: "Warning (amarelo fixo)",
+    semanticError: "Error (vermelho fixo)"
+  },
+  "pt-PT": {
+    title: "SeedThemeProvider",
+    subtitle: "Sistema de temas baseado numa cor seed que gera paletas harmoniosas automaticamente.",
+    installTitle: "Instalacao",
+    installDescription: "Adicione o pacote ao projeto.",
+    setupTitle: "Setup Basico",
+    setupDescription: "Configure o provider no layout raiz da aplicacao.",
+    hookTitle: "Hook useSgTheme",
+    hookDescription: "Aceda e altere o tema em qualquer componente.",
+    cssVarsTitle: "Usando CSS Variables",
+    cssVarsDescription: "Todas as cores ficam disponiveis como CSS variables.",
+    paletteTitle: "Paletas de Cores",
+    paletteDescription: "Cada cor possui escala de 50 a 900.",
+    semanticTitle: "Cores Semanticas",
+    semanticDescription: "Cores fixas para convencoes universais de UI/UX.",
+    neutralTitle: "Cores Neutras",
+    neutralDescription: "Cores harmonizadas com a seed.",
+    tokensTitle: "Tokens de Componentes",
+    tokensDescription: "Variaveis semanticas para componentes especificos.",
+    tailwindTitle: "Configuracao do Tailwind",
+    tailwindDescription: "Configure o Tailwind para usar as CSS variables.",
+    statusTitle: "Estado Atual do Tema",
+    currentModeLabel: "Modo Atual",
+    seedLabel: "Cor Seed",
+    persistenceTitle: "Persistencia no localStorage",
+    persistenceDescription: "O tema e guardado automaticamente.",
+    persistenceSavedTitle: "Tema guardado automaticamente",
+    persistenceSavedDescription:
+      "Quando altera seed ou modo (light/dark), as preferencias sao guardadas no localStorage e restauradas ao recarregar a pagina.",
+    persistenceConfigKeyDescription: "Chave do localStorage para configuracao do tema",
+    persistenceModeKeyDescription: "Chave do localStorage para modo light/dark",
+    palettePrimary: "Primary (muda com seed)",
+    paletteSecondary: "Secondary (muda com seed)",
+    paletteTertiary: "Tertiary (muda com seed)",
+    semanticSuccess: "Success (verde fixo)",
+    semanticInfo: "Info (azul fixo)",
+    semanticWarning: "Warning (amarelo fixo)",
+    semanticError: "Error (vermelho fixo)"
+  },
+  "en-US": {
+    title: "SeedThemeProvider",
+    subtitle: "Theme system based on a single seed color that automatically generates harmonic palettes.",
+    installTitle: "Installation",
+    installDescription: "Add the package to your project.",
+    setupTitle: "Basic Setup",
+    setupDescription: "Configure the provider in your app root layout.",
+    hookTitle: "useSgTheme Hook",
+    hookDescription: "Access and update theme settings from any component.",
+    cssVarsTitle: "Using CSS Variables",
+    cssVarsDescription: "All colors are available as CSS variables.",
+    paletteTitle: "Color Palettes",
+    paletteDescription: "Each color has a scale from 50 to 900.",
+    semanticTitle: "Semantic Colors",
+    semanticDescription: "Fixed colors for common UI/UX semantics.",
+    neutralTitle: "Neutral Colors",
+    neutralDescription: "Neutral colors harmonized with the seed.",
+    tokensTitle: "Component Tokens",
+    tokensDescription: "Semantic variables for specific components.",
+    tailwindTitle: "Tailwind Setup",
+    tailwindDescription: "Configure Tailwind to consume CSS variables.",
+    statusTitle: "Current Theme State",
+    currentModeLabel: "Current Mode",
+    seedLabel: "Seed Color",
+    persistenceTitle: "localStorage Persistence",
+    persistenceDescription: "Theme data is saved automatically.",
+    persistenceSavedTitle: "Theme saved automatically",
+    persistenceSavedDescription:
+      "When you change the seed or mode (light/dark), preferences are stored in localStorage and restored on page reload.",
+    persistenceConfigKeyDescription: "localStorage key for theme configuration",
+    persistenceModeKeyDescription: "localStorage key for light/dark mode",
+    palettePrimary: "Primary (changes with seed)",
+    paletteSecondary: "Secondary (changes with seed)",
+    paletteTertiary: "Tertiary (changes with seed)",
+    semanticSuccess: "Success (fixed green)",
+    semanticInfo: "Info (fixed blue)",
+    semanticWarning: "Warning (fixed yellow)",
+    semanticError: "Error (fixed red)"
+  },
+  es: {
+    title: "SeedThemeProvider",
+    subtitle: "Sistema de temas basado en un color seed que genera paletas armoniosas automaticamente.",
+    installTitle: "Instalacion",
+    installDescription: "Agrega el paquete a tu proyecto.",
+    setupTitle: "Setup Basico",
+    setupDescription: "Configura el provider en el layout raiz de la aplicacion.",
+    hookTitle: "Hook useSgTheme",
+    hookDescription: "Accede y modifica el tema desde cualquier componente.",
+    cssVarsTitle: "Uso de CSS Variables",
+    cssVarsDescription: "Todos los colores estan disponibles como CSS variables.",
+    paletteTitle: "Paletas de Colores",
+    paletteDescription: "Cada color tiene una escala de 50 a 900.",
+    semanticTitle: "Colores Semanticos",
+    semanticDescription: "Colores fijos para convenciones universales de UI/UX.",
+    neutralTitle: "Colores Neutros",
+    neutralDescription: "Colores neutros armonizados con la seed.",
+    tokensTitle: "Tokens de Componentes",
+    tokensDescription: "Variables semanticas para componentes especificos.",
+    tailwindTitle: "Configuracion de Tailwind",
+    tailwindDescription: "Configura Tailwind para usar CSS variables.",
+    statusTitle: "Estado Actual del Tema",
+    currentModeLabel: "Modo Actual",
+    seedLabel: "Color Seed",
+    persistenceTitle: "Persistencia en localStorage",
+    persistenceDescription: "El tema se guarda automaticamente.",
+    persistenceSavedTitle: "Tema guardado automaticamente",
+    persistenceSavedDescription:
+      "Cuando cambias la seed o el modo (light/dark), las preferencias se guardan en localStorage y se restauran al recargar la pagina.",
+    persistenceConfigKeyDescription: "Clave de localStorage para configuracion del tema",
+    persistenceModeKeyDescription: "Clave de localStorage para modo light/dark",
+    palettePrimary: "Primary (cambia con la seed)",
+    paletteSecondary: "Secondary (cambia con la seed)",
+    paletteTertiary: "Tertiary (cambia con la seed)",
+    semanticSuccess: "Success (verde fijo)",
+    semanticInfo: "Info (azul fijo)",
+    semanticWarning: "Warning (amarillo fijo)",
+    semanticError: "Error (rojo fijo)"
+  }
+};
+
+function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof THEME_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
 
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
       <div>
         <h2 className="text-2xl font-semibold">{title}</h2>
-        {description && <p className="mt-1 text-sm text-[rgb(var(--sg-muted))]">{description}</p>}
+        {description ? <p className="mt-1 text-sm text-[rgb(var(--sg-muted))]">{description}</p> : null}
       </div>
       {children}
     </section>
@@ -24,7 +228,7 @@ function ColorSwatch({ varName, label }: { varName: string; label: string }) {
   return (
     <div className="flex items-center gap-3">
       <div
-        className="w-12 h-12 rounded-lg border-2 border-[rgb(var(--sg-border))]"
+        className="h-12 w-12 rounded-lg border-2 border-[rgb(var(--sg-border))]"
         style={{ backgroundColor: `rgb(var(${varName}))` }}
       />
       <div className="flex-1">
@@ -47,7 +251,7 @@ function PaletteScale({ name, label }: { name: string; label: string }) {
               className="h-16 rounded border border-[rgb(var(--sg-border))]"
               style={{ backgroundColor: `rgb(var(--sg-${name}-${stop}))` }}
             />
-            <div className="text-xs text-center text-[rgb(var(--sg-muted))]">{stop}</div>
+            <div className="text-center text-xs text-[rgb(var(--sg-muted))]">{stop}</div>
           </div>
         ))}
       </div>
@@ -57,24 +261,25 @@ function PaletteScale({ name, label }: { name: string; label: string }) {
 
 export default function ThemeShowcase() {
   const { currentMode } = useSgTheme();
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof THEME_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = THEME_TEXTS[locale];
 
   return (
-    <div className="max-w-6xl space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold">SeedThemeProvider</h1>
-        <p className="mt-2 text-[rgb(var(--sg-muted))]">
-          Sistema de temas baseado em uma única cor seed que gera automaticamente paletas harmoniosas.
-        </p>
-      </div>
+    <I18NReady>
+      <div className="max-w-6xl space-y-10">
+        <div>
+          <h1 className="text-3xl font-bold">{texts.title}</h1>
+          <p className="mt-2 text-[rgb(var(--sg-muted))]">{texts.subtitle}</p>
+        </div>
 
-      {/* ── Instalação ── */}
-      <Section title="Instalação" description="Adicione o pacote ao seu projeto">
-        <CodeBlock code={`pnpm add @seedgrid/fe-theme`} />
-      </Section>
+        <Section title={texts.installTitle} description={texts.installDescription}>
+          <CodeBlock code={`pnpm add @seedgrid/fe-theme`} />
+        </Section>
 
-      {/* ── Setup Básico ── */}
-      <Section title="Setup Básico" description="Configure o provider no layout raiz da sua aplicação">
-        <CodeBlock code={`import { SeedThemeProvider } from "@seedgrid/fe-theme";
+        <Section title={texts.setupTitle} description={texts.setupDescription}>
+          <CodeBlock
+            code={`import { SeedThemeProvider } from "@seedgrid/fe-theme";
 
 export default function RootLayout({ children }) {
   return (
@@ -82,95 +287,95 @@ export default function RootLayout({ children }) {
       <body>
         <SeedThemeProvider
           initialTheme={{
-            seed: "#16803D",      // Cor principal do tema
-            mode: "auto",         // "light" | "dark" | "auto"
-            radius: 8,            // Border radius padrão
-            persistMode: true,    // Salvar preferências no localStorage
+            seed: "#16803D",
+            mode: "auto",
+            radius: 8,
+            persistMode: true,
           }}
-          applyTo="html"          // Aplicar CSS vars no <html>
+          applyTo="html"
         >
           {children}
         </SeedThemeProvider>
       </body>
     </html>
   );
-}`} />
-      </Section>
+}`}
+          />
+        </Section>
 
-      {/* ── Hook useSgTheme ── */}
-      <Section title="Hook useSgTheme" description="Acesse e modifique o tema em qualquer componente">
-        <CodeBlock code={`import { useSgTheme } from "@seedgrid/fe-theme";
+        <Section title={texts.hookTitle} description={texts.hookDescription}>
+          <CodeBlock
+            code={`import { useSgTheme } from "@seedgrid/fe-theme";
 
 function MyComponent() {
-  const { setTheme, setMode, currentMode, vars } = useSgTheme();
+  const { setTheme, setMode, currentMode } = useSgTheme();
 
   return (
     <div>
       <button onClick={() => setTheme({ seed: "#7C3AED" })}>
-        Mudar para Roxo
+        Set Purple Seed
       </button>
-      
+
       <button onClick={() => setMode(currentMode === "light" ? "dark" : "light")}>
         Toggle Dark Mode
       </button>
     </div>
   );
-}`} />
-      </Section>
+}`}
+          />
+        </Section>
 
-      {/* ── Usando CSS Variables ── */}
-      <Section title="Usando CSS Variables" description="Todas as cores estão disponíveis como CSS variables">
-        <CodeBlock code={`// Em componentes React
+        <Section title={texts.cssVarsTitle} description={texts.cssVarsDescription}>
+          <CodeBlock
+            code={`// React component
 <div className="bg-[rgb(var(--sg-primary-600))] text-[rgb(var(--sg-on-primary))]">
-  Botão Primary
+  Primary Button
 </div>
 
-// Em Tailwind (configurado)
+// Tailwind classes
 <div className="bg-sg-primary-600 text-sg-on-primary">
-  Botão Primary
+  Primary Button
 </div>
 
-// Em CSS puro
+// Plain CSS
 .my-button {
   background-color: rgb(var(--sg-primary-600));
   color: rgb(var(--sg-on-primary));
-}`} />
-      </Section>
+}`}
+          />
+        </Section>
 
-      {/* ── Paletas de Cores ── */}
-      <Section title="Paletas de Cores" description="Cada cor possui uma escala de 50 a 900">
-        <div className="space-y-6">
-          <PaletteScale name="primary" label="Primary (muda com seed)" />
-          <PaletteScale name="secondary" label="Secondary (muda com seed)" />
-          <PaletteScale name="tertiary" label="Tertiary (muda com seed)" />
-        </div>
-      </Section>
+        <Section title={texts.paletteTitle} description={texts.paletteDescription}>
+          <div className="space-y-6">
+            <PaletteScale name="primary" label={texts.palettePrimary} />
+            <PaletteScale name="secondary" label={texts.paletteSecondary} />
+            <PaletteScale name="tertiary" label={texts.paletteTertiary} />
+          </div>
+        </Section>
 
-      {/* ── Cores Semânticas ── */}
-      <Section title="Cores Semânticas" description="Cores fixas para convenções universais de UI/UX">
-        <div className="space-y-6">
-          <PaletteScale name="success" label="Success (verde fixo)" />
-          <PaletteScale name="info" label="Info (azul fixo)" />
-          <PaletteScale name="warning" label="Warning (amarelo fixo)" />
-          <PaletteScale name="error" label="Error (vermelho fixo)" />
-        </div>
-      </Section>
+        <Section title={texts.semanticTitle} description={texts.semanticDescription}>
+          <div className="space-y-6">
+            <PaletteScale name="success" label={texts.semanticSuccess} />
+            <PaletteScale name="info" label={texts.semanticInfo} />
+            <PaletteScale name="warning" label={texts.semanticWarning} />
+            <PaletteScale name="error" label={texts.semanticError} />
+          </div>
+        </Section>
 
-      {/* ── Cores Neutras ── */}
-      <Section title="Cores Neutras" description="Cores harmonizadas sutilmente com a seed">
-        <div className="grid grid-cols-2 gap-4">
-          <ColorSwatch varName="--sg-bg" label="Background" />
-          <ColorSwatch varName="--sg-surface" label="Surface (cards, modals)" />
-          <ColorSwatch varName="--sg-muted-surface" label="Muted Surface" />
-          <ColorSwatch varName="--sg-border" label="Border" />
-          <ColorSwatch varName="--sg-text" label="Text" />
-          <ColorSwatch varName="--sg-muted" label="Muted Text" />
-        </div>
-      </Section>
+        <Section title={texts.neutralTitle} description={texts.neutralDescription}>
+          <div className="grid grid-cols-2 gap-4">
+            <ColorSwatch varName="--sg-bg" label="Background" />
+            <ColorSwatch varName="--sg-surface" label="Surface (cards, modals)" />
+            <ColorSwatch varName="--sg-muted-surface" label="Muted Surface" />
+            <ColorSwatch varName="--sg-border" label="Border" />
+            <ColorSwatch varName="--sg-text" label="Text" />
+            <ColorSwatch varName="--sg-muted" label="Muted Text" />
+          </div>
+        </Section>
 
-      {/* ── Tokens de Componentes ── */}
-      <Section title="Tokens de Componentes" description="Variáveis semânticas para componentes específicos">
-        <CodeBlock code={`// Botões
+        <Section title={texts.tokensTitle} description={texts.tokensDescription}>
+          <CodeBlock
+            code={`// Buttons
 --sg-btn-primary-bg
 --sg-btn-primary-fg
 --sg-btn-primary-border
@@ -194,15 +399,13 @@ function MyComponent() {
 // Alerts
 --sg-alert-success-bg
 --sg-alert-success-fg
---sg-alert-success-border
-// ... (info, warning, error)`} />
-      </Section>
+--sg-alert-success-border`}
+          />
+        </Section>
 
-      {/* ── Configuração do Tailwind ── */}
-      <Section title="Configuração do Tailwind" description="Configure o Tailwind para usar as CSS variables">
-        <CodeBlock code={`// tailwind.config.ts
-import type { Config } from "tailwindcss";
-
+        <Section title={texts.tailwindTitle} description={texts.tailwindDescription}>
+          <CodeBlock
+            code={`// tailwind.config.ts
 const sgPalette = (name: string) => ({
   50: \`rgb(var(--sg-\${name}-50) / <alpha-value>)\`,
   100: \`rgb(var(--sg-\${name}-100) / <alpha-value>)\`,
@@ -214,81 +417,60 @@ const sgPalette = (name: string) => ({
   700: \`rgb(var(--sg-\${name}-700) / <alpha-value>)\`,
   800: \`rgb(var(--sg-\${name}-800) / <alpha-value>)\`,
   900: \`rgb(var(--sg-\${name}-900) / <alpha-value>)\`,
-});
+});`}
+          />
+        </Section>
 
-export default {
-  theme: {
-    extend: {
-      colors: {
-        sg: {
-          primary: sgPalette("primary"),
-          secondary: sgPalette("secondary"),
-          tertiary: sgPalette("tertiary"),
-          success: sgPalette("success"),
-          info: sgPalette("info"),
-          warning: sgPalette("warning"),
-          error: sgPalette("error"),
-        }
-      }
-    }
-  }
-} satisfies Config;`} />
-      </Section>
-
-      {/* ── Modo Atual ── */}
-      <Section title="Estado Atual do Tema">
-        <div className="p-6 rounded-lg bg-[rgb(var(--sg-surface))] border border-[rgb(var(--sg-border))]">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="text-sm text-[rgb(var(--sg-muted))]">Modo Atual</div>
-              <div className="text-lg font-semibold">{currentMode}</div>
-            </div>
-            <div>
-              <div className="text-sm text-[rgb(var(--sg-muted))]">Cor Seed</div>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-6 h-6 rounded border border-[rgb(var(--sg-border))]"
-                  style={{ backgroundColor: `rgb(var(--sg-primary-600))` }}
-                />
-                <div className="font-mono text-sm">rgb(var(--sg-primary-600))</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* ── Persistência ── */}
-      <Section title="Persistência no localStorage" description="O tema é salvo automaticamente">
-        <div className="p-6 rounded-lg bg-[rgb(var(--sg-surface))] border border-[rgb(var(--sg-border))]">
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">💾</div>
+        <Section title={texts.statusTitle}>
+          <div className="rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] p-6">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="font-semibold">Tema salvo automaticamente</div>
-                <div className="text-sm text-[rgb(var(--sg-muted))]">
-                  Quando você muda a cor seed ou o modo (light/dark), as preferências são salvas no localStorage
-                  e restauradas automaticamente quando você recarrega a página.
+                <div className="text-sm text-[rgb(var(--sg-muted))]">{texts.currentModeLabel}</div>
+                <div className="text-lg font-semibold">{currentMode}</div>
+              </div>
+              <div>
+                <div className="text-sm text-[rgb(var(--sg-muted))]">{texts.seedLabel}</div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="h-6 w-6 rounded border border-[rgb(var(--sg-border))]"
+                    style={{ backgroundColor: "rgb(var(--sg-primary-600))" }}
+                  />
+                  <div className="font-mono text-sm">rgb(var(--sg-primary-600))</div>
                 </div>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">🔑</div>
-              <div>
-                <div className="font-mono text-sm">sg:theme:config</div>
-                <div className="text-xs text-[rgb(var(--sg-muted))]">Chave do localStorage para configuração do tema</div>
+          </div>
+        </Section>
+
+        <Section title={texts.persistenceTitle} description={texts.persistenceDescription}>
+          <div className="rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] p-6">
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">LS</div>
+                <div>
+                  <div className="font-semibold">{texts.persistenceSavedTitle}</div>
+                  <div className="text-sm text-[rgb(var(--sg-muted))]">{texts.persistenceSavedDescription}</div>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">🔑</div>
-              <div>
-                <div className="font-mono text-sm">sg:theme:mode</div>
-                <div className="text-xs text-[rgb(var(--sg-muted))]">Chave do localStorage para modo light/dark</div>
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">Key</div>
+                <div>
+                  <div className="font-mono text-sm">sg:theme:config</div>
+                  <div className="text-xs text-[rgb(var(--sg-muted))]">{texts.persistenceConfigKeyDescription}</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">Key</div>
+                <div>
+                  <div className="font-mono text-sm">sg:theme:mode</div>
+                  <div className="text-xs text-[rgb(var(--sg-muted))]">{texts.persistenceModeKeyDescription}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </Section>
-    </div>
+        </Section>
+      </div>
+    </I18NReady>
   );
 }
 

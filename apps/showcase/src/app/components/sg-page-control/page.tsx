@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { FolderKanban, Receipt, ShieldCheck, UserRound, Wrench } from "lucide-react";
@@ -8,6 +8,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const PAGE_IDS = ["cadastro", "fiscal", "acesso", "integracoes"] as const;
 
@@ -36,13 +37,13 @@ export default function Example() {
   return (
     <SgPageControl defaultActivePageId="cadastro">
       <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-        Conteúdo cadastro
+        ConteÃºdo cadastro
       </SgPageControlPage>
       <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-        Conteúdo fiscal
+        ConteÃºdo fiscal
       </SgPageControlPage>
       <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-        Conteúdo acesso
+        ConteÃºdo acesso
       </SgPageControlPage>
     </SgPageControl>
   );
@@ -61,14 +62,14 @@ export default function Example() {
         <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("cadastro")}>Cadastro</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Fiscal</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("acesso")}>Acesso</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>Integrações</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>IntegraÃ§Ãµes</SgButton>
       </div>
 
       <SgPageControl activePageId={activePageId} onActivePageIdChange={(pageId) => setActivePageId(pageId)} variant="pills">
-        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>Conteúdo cadastro</SgPageControlPage>
-        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Conteúdo fiscal</SgPageControlPage>
-        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>Conteúdo acesso</SgPageControlPage>
-        <SgPageControlPage id="integracoes" title="Integrações" icon={<FolderKanban className="size-4" />}>Conteúdo integrações</SgPageControlPage>
+        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
+        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
+        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
+        <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<FolderKanban className="size-4" />}>ConteÃºdo integraÃ§Ãµes</SgPageControlPage>
       </SgPageControl>
     </div>
   );
@@ -89,10 +90,10 @@ export default function Example() {
       hiddenPageIds={hiddenPageIds}
       keepMounted
     >
-      <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>Conteúdo cadastro</SgPageControlPage>
-      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Conteúdo fiscal</SgPageControlPage>
-      <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>Conteúdo acesso</SgPageControlPage>
-      <SgPageControlPage id="integracoes" title="Integrações" icon={<Wrench className="size-4" />}>Conteúdo integrações</SgPageControlPage>
+      <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
+      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
+      <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
+      <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<Wrench className="size-4" />}>ConteÃºdo integraÃ§Ãµes</SgPageControlPage>
     </SgPageControl>
   );
 }`;
@@ -120,33 +121,114 @@ export default function App() {
       </div>
 
       <SgPageControl variant={variant} size={size} fullWidthTabs={fullWidthTabs}>
-        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>Conteúdo cadastro</SgPageControlPage>
-        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Conteúdo fiscal</SgPageControlPage>
-        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>Conteúdo acesso</SgPageControlPage>
+        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
+        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
+        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
       </SgPageControl>
     </div>
   );
 }`;
 
 const PAGE_CONTROL_PROPS: ShowcasePropRow[] = [
-  { prop: "children", type: "SgPageControlPage", defaultValue: "-", description: "Páginas declaradas como filhos." },
-  { prop: "activePageId / activeIndex", type: "string / number", defaultValue: "-", description: "Controle externo da página ativa." },
-  { prop: "defaultActivePageId / defaultActiveIndex", type: "string / number", defaultValue: "primeira página visível", description: "Estado inicial quando não controlado." },
-  { prop: "onActivePageIdChange / onActiveIndexChange", type: "callbacks", defaultValue: "-", description: "Eventos de mudança de página." },
-  { prop: "hiddenPageIds", type: "string[]", defaultValue: "[]", description: "Oculta páginas sem removê-las da declaração." },
-  { prop: "keepMounted", type: "boolean", defaultValue: "false", description: "Mantém todos os painéis montados." },
+  { prop: "children", type: "SgPageControlPage", defaultValue: "-", description: "PÃ¡ginas declaradas como filhos." },
+  { prop: "activePageId / activeIndex", type: "string / number", defaultValue: "-", description: "Controle externo da pÃ¡gina ativa." },
+  { prop: "defaultActivePageId / defaultActiveIndex", type: "string / number", defaultValue: "primeira pÃ¡gina visÃ­vel", description: "Estado inicial quando nÃ£o controlado." },
+  { prop: "onActivePageIdChange / onActiveIndexChange", type: "callbacks", defaultValue: "-", description: "Eventos de mudanÃ§a de pÃ¡gina." },
+  { prop: "hiddenPageIds", type: "string[]", defaultValue: "[]", description: "Oculta pÃ¡ginas sem removÃª-las da declaraÃ§Ã£o." },
+  { prop: "keepMounted", type: "boolean", defaultValue: "false", description: "MantÃ©m todos os painÃ©is montados." },
   { prop: "variant", type: "\"underline\" | \"pills\"", defaultValue: "underline", description: "Estilo visual das abas." },
   { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Tamanho das abas e painel." },
-  { prop: "fullWidthTabs / keyboardNavigation", type: "boolean", defaultValue: "false / true", description: "Abas em largura total e navegação por teclado." },
+  { prop: "fullWidthTabs / keyboardNavigation", type: "boolean", defaultValue: "false / true", description: "Abas em largura total e navegaÃ§Ã£o por teclado." },
   { prop: "ariaLabel / emptyMessage", type: "string / ReactNode", defaultValue: "Page control / No visible pages.", description: "Acessibilidade e estado vazio." },
-  { prop: "className / tabListClassName / tabClassName / panelClassName / style", type: "customização visual", defaultValue: "-", description: "Classes e estilo do container." },
-  { prop: "SgPageControlPage.id / title / icon / hidden / disabled / keepMounted / className / tabClassName / children", type: "page props", defaultValue: "-", description: "Propriedades de cada aba/página." }
+  { prop: "className / tabListClassName / tabClassName / panelClassName / style", type: "customizaÃ§Ã£o visual", defaultValue: "-", description: "Classes e estilo do container." },
+  { prop: "SgPageControlPage.id / title / icon / hidden / disabled / keepMounted / className / tabClassName / children", type: "page props", defaultValue: "-", description: "Propriedades de cada aba/pÃ¡gina." }
 ];
 
+
+type PageControlTexts = {
+  subtitle: string;
+  sectionTitles: string[];
+  sectionDescriptions: string[];
+  playgroundTitle: string;
+};
+
+const PAGE_CONTROL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PageControlTexts> = {
+  "pt-BR": {
+    subtitle: "TabView com controle externo de pagina ativa e ocultacao dinamica de tabs.",
+    sectionTitles: [
+      "1) Basico",
+      "2) Controle Externo",
+      "3) Ocultar Pagina Externamente",
+      "4) Playground"
+    ],
+    sectionDescriptions: [
+      "Cada pagina define icon e title no SgPageControlPage.",
+      "Use activePageId + onActivePageIdChange para setar a aba ativa.",
+      "hiddenPageIds permite esconder tabs sem apagar a declaracao.",
+      "Teste variant, size e fullWidthTabs."
+    ],
+    playgroundTitle: "SgPageControl Playground"
+  },
+  "pt-PT": {
+    subtitle: "TabView com controlo externo da pagina ativa e ocultacao dinamica de tabs.",
+    sectionTitles: [
+      "1) Basico",
+      "2) Controlo Externo",
+      "3) Ocultar Pagina Externamente",
+      "4) Playground"
+    ],
+    sectionDescriptions: [
+      "Cada pagina define icon e title no SgPageControlPage.",
+      "Use activePageId + onActivePageIdChange para definir o tab ativo.",
+      "hiddenPageIds permite esconder tabs sem remover a declaracao.",
+      "Teste variant, size e fullWidthTabs."
+    ],
+    playgroundTitle: "SgPageControl Playground"
+  },
+  "en-US": {
+    subtitle: "TabView with external active-page control and dynamic tab hiding.",
+    sectionTitles: [
+      "1) Basic",
+      "2) External Control",
+      "3) Hide Page Externally",
+      "4) Playground"
+    ],
+    sectionDescriptions: [
+      "Each page defines icon and title in SgPageControlPage.",
+      "Use activePageId + onActivePageIdChange to set the active tab.",
+      "hiddenPageIds hides tabs without removing declarations.",
+      "Try variant, size and fullWidthTabs."
+    ],
+    playgroundTitle: "SgPageControl Playground"
+  },
+  es: {
+    subtitle: "TabView con control externo de pagina activa y ocultacion dinamica de tabs.",
+    sectionTitles: [
+      "1) Basico",
+      "2) Control Externo",
+      "3) Ocultar Pagina Externamente",
+      "4) Playground"
+    ],
+    sectionDescriptions: [
+      "Cada pagina define icon y title en SgPageControlPage.",
+      "Usa activePageId + onActivePageIdChange para definir la tab activa.",
+      "hiddenPageIds oculta tabs sin remover declaraciones.",
+      "Prueba variant, size y fullWidthTabs."
+    ],
+    playgroundTitle: "SgPageControl Playground"
+  }
+};
+
+function isSupportedPageControlLocale(locale: ShowcaseLocale): locale is keyof typeof PAGE_CONTROL_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
 export default function SgPageControlShowcasePage() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof PAGE_CONTROL_TEXTS = isSupportedPageControlLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = PAGE_CONTROL_TEXTS[locale];
   const [activePageId, setActivePageId] = React.useState<string>("cadastro");
   const [hiddenPageIds, setHiddenPageIds] = React.useState<string[]>([]);
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({ deps: [i18n.locale] });
 
   const toggleHidden = (id: string) => {
     setHiddenPageIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
@@ -162,56 +244,56 @@ export default function SgPageControlShowcasePage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgPageControl"
-          subtitle="TabView com controle externo de página ativa e ocultação dinâmica de tabs."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Básico" description="Cada página define icon e title no SgPageControlPage.">
+        <Section title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
           <SgPageControl defaultActivePageId="cadastro">
             <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              Conteúdo cadastro
+              ConteÃºdo cadastro
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              Conteúdo fiscal
+              ConteÃºdo fiscal
             </SgPageControlPage>
             <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              Conteúdo acesso
+              ConteÃºdo acesso
             </SgPageControlPage>
           </SgPageControl>
           <CodeBlock code={EXAMPLE_BASIC_CODE} />
         </Section>
 
-        <Section title="2) Controle Externo" description="Use activePageId + onActivePageIdChange para setar a aba ativa.">
+        <Section title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <div className="flex flex-wrap gap-2">
             <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("cadastro")}>Ir para Cadastro</SgButton>
             <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Ir para Fiscal</SgButton>
             <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("acesso")}>Ir para Acesso</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>Ir para Integrações</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>Ir para IntegraÃ§Ãµes</SgButton>
           </div>
 
           <SgPageControl activePageId={activePageId} onActivePageIdChange={(pageId) => setActivePageId(pageId)} variant="pills">
             <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              Conteúdo cadastro
+              ConteÃºdo cadastro
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              Conteúdo fiscal
+              ConteÃºdo fiscal
             </SgPageControlPage>
             <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              Conteúdo acesso
+              ConteÃºdo acesso
             </SgPageControlPage>
-            <SgPageControlPage id="integracoes" title="Integrações" icon={<FolderKanban className="size-4" />}>
-              Conteúdo integrações
+            <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<FolderKanban className="size-4" />}>
+              ConteÃºdo integraÃ§Ãµes
             </SgPageControlPage>
           </SgPageControl>
 
           <p className="text-sm text-muted-foreground">
-            Página ativa atual: <span className="font-semibold text-foreground">{activePageId}</span>
+            PÃ¡gina ativa atual: <span className="font-semibold text-foreground">{activePageId}</span>
           </p>
           <CodeBlock code={EXAMPLE_CONTROLLED_CODE} />
         </Section>
 
-        <Section title="3) Ocultar Página Externamente" description="hiddenPageIds permite esconder tabs sem apagar a declaração.">
+        <Section title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
           <div className="flex flex-wrap gap-3">
             {PAGE_IDS.map((id) => (
               <label key={id} className="inline-flex items-center gap-2 text-sm">
@@ -228,24 +310,24 @@ export default function SgPageControlShowcasePage() {
             keepMounted
           >
             <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              Conteúdo cadastro
+              ConteÃºdo cadastro
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              Conteúdo fiscal
+              ConteÃºdo fiscal
             </SgPageControlPage>
             <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              Conteúdo acesso
+              ConteÃºdo acesso
             </SgPageControlPage>
-            <SgPageControlPage id="integracoes" title="Integrações" icon={<Wrench className="size-4" />}>
-              Conteúdo integrações
+            <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<Wrench className="size-4" />}>
+              ConteÃºdo integraÃ§Ãµes
             </SgPageControlPage>
           </SgPageControl>
           <CodeBlock code={EXAMPLE_HIDDEN_CODE} />
         </Section>
 
-        <Section title="4) Playground" description="Teste variant, size e fullWidthTabs.">
+        <Section title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
           <SgPlayground
-            title="SgPageControl Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
@@ -260,3 +342,4 @@ export default function SgPageControlShowcasePage() {
     </I18NReady>
   );
 }
+

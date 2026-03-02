@@ -7,6 +7,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -354,7 +355,109 @@ const EXPANDABLE_PANEL_PROPS: ShowcasePropRow[] = [
   { prop: "style", type: "React.CSSProperties", defaultValue: "-", description: "Estilo inline do container do painel." }
 ];
 
+type ExpandablePanelTexts = {
+  subtitle: string;
+  sectionTitles: string[];
+  sectionDescriptions: string[];
+  playgroundTitle: string;
+  propsTitle: string;
+};
+
+const EXPANDABLE_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ExpandablePanelTexts> = {
+  "pt-BR": {
+    subtitle: "Mais exemplos cobrindo as principais propriedades de modo inline e overlay.",
+    sectionTitles: [
+      "1) Inline Controlado + Resize",
+      "2) Overlay + Comportamento",
+      "3) defaultOpen + Estilizacao",
+      "4) Acessibilidade + Fade",
+      "5) Sem Backdrop + Animation none",
+      "6) Playground"
+    ],
+    sectionDescriptions: [
+      "Demonstra open/onOpenChange, size, resizable e onSizeChange.",
+      "Demonstra placement, closeOnEsc, closeOnOutsideClick, trapFocus, showBackdrop e handle.",
+      "Demonstra defaultOpen, elevation, border, rounded, classes por area e style.",
+      "Demonstra role, ariaLabel, overlayClassName, animation fade e closeOnOutsideClick=false.",
+      "Demonstra showBackdrop=false, closeOnOutsideClick=false, closeOnEsc e animation none.",
+      "Teste modo, direcao, placement, animacao e controles de interacao."
+    ],
+    playgroundTitle: "SgExpandablePanel Playground",
+    propsTitle: "Referencia de Props"
+  },
+  "pt-PT": {
+    subtitle: "Mais exemplos cobrindo as principais propriedades de modo inline e overlay.",
+    sectionTitles: [
+      "1) Inline Controlado + Resize",
+      "2) Overlay + Comportamento",
+      "3) defaultOpen + Estilizacao",
+      "4) Acessibilidade + Fade",
+      "5) Sem Backdrop + Animation none",
+      "6) Playground"
+    ],
+    sectionDescriptions: [
+      "Demonstra open/onOpenChange, size, resizable e onSizeChange.",
+      "Demonstra placement, closeOnEsc, closeOnOutsideClick, trapFocus, showBackdrop e handle.",
+      "Demonstra defaultOpen, elevation, border, rounded, classes por area e style.",
+      "Demonstra role, ariaLabel, overlayClassName, animation fade e closeOnOutsideClick=false.",
+      "Demonstra showBackdrop=false, closeOnOutsideClick=false, closeOnEsc e animation none.",
+      "Teste modo, direcao, placement, animacao e controles de interacao."
+    ],
+    playgroundTitle: "SgExpandablePanel Playground",
+    propsTitle: "Referencia de Props"
+  },
+  "en-US": {
+    subtitle: "More examples covering the main props in inline and overlay modes.",
+    sectionTitles: [
+      "1) Controlled Inline + Resize",
+      "2) Overlay + Behavior",
+      "3) defaultOpen + Styling",
+      "4) Accessibility + Fade",
+      "5) No Backdrop + Animation none",
+      "6) Playground"
+    ],
+    sectionDescriptions: [
+      "Demonstrates open/onOpenChange, size, resizable and onSizeChange.",
+      "Demonstrates placement, closeOnEsc, closeOnOutsideClick, trapFocus, showBackdrop and handle.",
+      "Demonstrates defaultOpen, elevation, border, rounded, per-area classes and style.",
+      "Demonstrates role, ariaLabel, overlayClassName, fade animation and closeOnOutsideClick=false.",
+      "Demonstrates showBackdrop=false, closeOnOutsideClick=false, closeOnEsc and animation none.",
+      "Test mode, direction, placement, animation and interaction controls."
+    ],
+    playgroundTitle: "SgExpandablePanel Playground",
+    propsTitle: "Props Reference"
+  },
+  es: {
+    subtitle: "Mas ejemplos cubriendo las principales props en modo inline y overlay.",
+    sectionTitles: [
+      "1) Inline Controlado + Resize",
+      "2) Overlay + Comportamiento",
+      "3) defaultOpen + Estilos",
+      "4) Accesibilidad + Fade",
+      "5) Sin Backdrop + Animation none",
+      "6) Playground"
+    ],
+    sectionDescriptions: [
+      "Demuestra open/onOpenChange, size, resizable y onSizeChange.",
+      "Demuestra placement, closeOnEsc, closeOnOutsideClick, trapFocus, showBackdrop y handle.",
+      "Demuestra defaultOpen, elevation, border, rounded, clases por area y style.",
+      "Demuestra role, ariaLabel, overlayClassName, animacion fade y closeOnOutsideClick=false.",
+      "Demuestra showBackdrop=false, closeOnOutsideClick=false, closeOnEsc y animation none.",
+      "Prueba modo, direccion, placement, animacion y controles de interaccion."
+    ],
+    playgroundTitle: "SgExpandablePanel Playground",
+    propsTitle: "Referencia de Props"
+  }
+};
+
+function isSupportedExpandableLocale(locale: ShowcaseLocale): locale is keyof typeof EXPANDABLE_PANEL_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
 export default function SgExpandablePanelPage() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof EXPANDABLE_PANEL_TEXTS = isSupportedExpandableLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = EXPANDABLE_PANEL_TEXTS[locale];
   const [inlineOpen, setInlineOpen] = React.useState(true);
   const [inlineSize, setInlineSize] = React.useState<number | string>(320);
 
@@ -366,7 +469,9 @@ export default function SgExpandablePanelPage() {
   const [a11yOpen, setA11yOpen] = React.useState(false);
   const [noBackdropOpen, setNoBackdropOpen] = React.useState(false);
 
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
+    deps: [i18n.locale]
+  });
 
   return (
     <I18NReady>
@@ -378,12 +483,12 @@ export default function SgExpandablePanelPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgExpandablePanel"
-          subtitle="Mais exemplos cobrindo as principais propriedades de modo inline e overlay."
+          subtitle={texts.subtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Inline Controlado + Resize" description="Demonstra open/onOpenChange, size, resizable e onSizeChange.">
+        <Section title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
           <div className="h-[360px] overflow-hidden rounded-lg border border-border">
             <div className="flex h-full">
               <div className="flex-1 space-y-3 p-4">
@@ -418,7 +523,7 @@ export default function SgExpandablePanelPage() {
           <CodeBlock code={EXAMPLE_INLINE_CONTROLLED_CODE} />
         </Section>
 
-        <Section title="2) Overlay + Comportamento" description="Demonstra placement, closeOnEsc, closeOnOutsideClick, trapFocus, showBackdrop e handle.">
+        <Section title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <div className="flex flex-wrap gap-2">
             <SgButton onClick={() => setDrawerOpen(true)}>Abrir drawer</SgButton>
           </div>
@@ -454,7 +559,7 @@ export default function SgExpandablePanelPage() {
           <CodeBlock code={EXAMPLE_OVERLAY_BEHAVIOR_CODE} />
         </Section>
 
-        <Section title="3) defaultOpen + Estilizacao" description="Demonstra defaultOpen, elevation, border, rounded, classes por area e style.">
+        <Section title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
           <div className="flex flex-wrap items-center gap-2">
             <SgButton
               size="sm"
@@ -498,7 +603,7 @@ export default function SgExpandablePanelPage() {
           <CodeBlock code={EXAMPLE_DEFAULT_OPEN_STYLES_CODE} />
         </Section>
 
-        <Section title="4) Acessibilidade + Fade" description="Demonstra role, ariaLabel, overlayClassName, animation fade e closeOnOutsideClick=false.">
+        <Section title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
           <div className="flex flex-wrap gap-2">
             <SgButton onClick={() => setA11yOpen(true)}>Abrir painel com fade</SgButton>
           </div>
@@ -528,7 +633,7 @@ export default function SgExpandablePanelPage() {
           <CodeBlock code={EXAMPLE_ACCESSIBILITY_FADE_CODE} />
         </Section>
 
-        <Section title="5) Sem Backdrop + Animation none" description="Demonstra showBackdrop=false, closeOnOutsideClick=false, closeOnEsc e animation none.">
+        <Section title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
           <div className="flex flex-wrap gap-2">
             <SgButton appearance="outline" onClick={() => setNoBackdropOpen(true)}>Abrir sem backdrop</SgButton>
           </div>
@@ -555,9 +660,9 @@ export default function SgExpandablePanelPage() {
           <CodeBlock code={EXAMPLE_NO_BACKDROP_CODE} />
         </Section>
 
-        <Section title="6) Playground" description="Teste modo, direcao, placement, animacao e controles de interacao.">
+        <Section title={texts.sectionTitles[5] ?? ""} description={texts.sectionDescriptions[5] ?? ""}>
           <SgPlayground
-            title="SgExpandablePanel Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
@@ -566,7 +671,7 @@ export default function SgExpandablePanelPage() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={EXPANDABLE_PANEL_PROPS} />
+        <ShowcasePropsReference rows={EXPANDABLE_PANEL_PROPS} title={texts.propsTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SgButton, SgGrid, SgInputOTP, SgPlayground, type SgInputOTPRef } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -37,6 +38,127 @@ function ValuePanel(props: { masked: string; raw: string; expectedLength: number
   );
 }
 
+
+type OtpTexts = {
+  subtitle: string;
+  examplesLabel: string;
+  propsLinkLabel: string;
+  sectionTitles: string[];
+  sectionDescriptions: string[];
+  playgroundTitle: string;
+  propsTitle: string;
+  propsColProp: string;
+  propsColType: string;
+  propsColDefault: string;
+  propsColDescription: string;
+};
+
+const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
+  "pt-BR": {
+    subtitle: "Input OTP com digitos separados, suporte a colagem e mascara configuravel.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    sectionTitles: [
+      "1) Basico",
+      "2) Mascara customizada",
+      "3) Colagem + onComplete",
+      "4) Acesso por ref",
+      "5) Playground"
+    ],
+    sectionDescriptions: [
+      "Mascara padrao: 999999.",
+      "Exemplo: \"###-###-99\".",
+      "Cole um OTP e receba callback ao completar.",
+      "Focar, limpar e ler valores via API do ref.",
+      "Simule as principais props em tempo real."
+    ],
+    playgroundTitle: "SgInputOTP Playground",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao"
+  },
+  "pt-PT": {
+    subtitle: "Input OTP com digitos separados, suporte a colagem e mascara configuravel.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Referencia de Props",
+    sectionTitles: [
+      "1) Basico",
+      "2) Mascara customizada",
+      "3) Colagem + onComplete",
+      "4) Acesso por ref",
+      "5) Playground"
+    ],
+    sectionDescriptions: [
+      "Mascara padrao: 999999.",
+      "Exemplo: \"###-###-99\".",
+      "Cole um OTP e receba callback ao completar.",
+      "Focar, limpar e ler valores via API do ref.",
+      "Simule as principais props em tempo real."
+    ],
+    playgroundTitle: "SgInputOTP Playground",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao"
+  },
+  "en-US": {
+    subtitle: "OTP input with separated digits, paste support, and configurable mask.",
+    examplesLabel: "Examples",
+    propsLinkLabel: "Props Reference",
+    sectionTitles: [
+      "1) Basic",
+      "2) Custom mask",
+      "3) Paste + onComplete",
+      "4) Ref access",
+      "5) Playground"
+    ],
+    sectionDescriptions: [
+      "Default mask: 999999.",
+      "Example: \"###-###-99\".",
+      "Paste an OTP and receive callback on completion.",
+      "Focus, clear, and read values using ref API.",
+      "Simulate main props in real time."
+    ],
+    playgroundTitle: "SgInputOTP Playground",
+    propsTitle: "Props Reference",
+    propsColProp: "Prop",
+    propsColType: "Type",
+    propsColDefault: "Default",
+    propsColDescription: "Description"
+  },
+  es: {
+    subtitle: "Input OTP con digitos separados, soporte de pegado y mascara configurable.",
+    examplesLabel: "Ejemplos",
+    propsLinkLabel: "Referencia de Props",
+    sectionTitles: [
+      "1) Basico",
+      "2) Mascara personalizada",
+      "3) Pegado + onComplete",
+      "4) Acceso por ref",
+      "5) Playground"
+    ],
+    sectionDescriptions: [
+      "Mascara por defecto: 999999.",
+      "Ejemplo: \"###-###-99\".",
+      "Pega un OTP y recibe callback al completar.",
+      "Enfocar, limpiar y leer valores via API del ref.",
+      "Simula las props principales en tiempo real."
+    ],
+    playgroundTitle: "SgInputOTP Playground",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Predeterminado",
+    propsColDescription: "Descripcion"
+  }
+};
+
+function isSupportedOtpLocale(locale: ShowcaseLocale): locale is keyof typeof OTP_TEXTS {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
 const OTP_PLAYGROUND_CODE = `import * as React from "react";
 import { SgButton, SgGrid, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";
 
@@ -67,7 +189,7 @@ export default function App() {
         id="playground-otp"
         ref={otpRef}
         label="SgInputOTP Playground"
-        hintText="Digite ou cole o código"
+        hintText="Digite ou cole o codigo"
         mask={mask}
         onChange={setMasked}
         onRawChange={setRaw}
@@ -82,6 +204,9 @@ export default function App() {
 }`;
 
 export default function SgInputOTPPage() {
+  const i18n = useShowcaseI18n();
+  const locale: keyof typeof OTP_TEXTS = isSupportedOtpLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const texts = OTP_TEXTS[locale];
   const otpRef = React.useRef<SgInputOTPRef | null>(null);
   const [basicMasked, setBasicMasked] = React.useState("");
   const [basicRaw, setBasicRaw] = React.useState("");
@@ -90,7 +215,7 @@ export default function SgInputOTPPage() {
   const [pasteMasked, setPasteMasked] = React.useState("");
   const [pasteRaw, setPasteRaw] = React.useState("");
   const [completeValue, setCompleteValue] = React.useState("");
-  const [refReadout, setRefReadout] = React.useState('Clique em "Ler conteúdo".');
+  const [refReadout, setRefReadout] = React.useState('Clique em "Ler conteudo".');
   const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
   const [anchorOffset, setAnchorOffset] = React.useState(320);
 
@@ -198,16 +323,7 @@ export default function SgInputOTPPage() {
     };
   }, []);
 
-  const exampleLinks = React.useMemo(
-    () => [
-      { id: "exemplo-1", label: "1) Básico" },
-      { id: "exemplo-2", label: "2) Máscara customizada" },
-      { id: "exemplo-3", label: "3) Colagem + onComplete" },
-      { id: "exemplo-4", label: "4) Acesso por ref" },
-      { id: "exemplo-5", label: "5) Playground" }
-    ],
-    []
-  );
+  const exampleLinks = React.useMemo(() => texts.sectionTitles.map((label, index) => ({ id: `exemplo-${index + 1}`, label })), [texts]);
 
   return (
     <I18NReady>
@@ -218,10 +334,8 @@ export default function SgInputOTPPage() {
         <div ref={stickyHeaderRef} className="sticky top-0 z-50 isolate max-h-[52vh] overflow-y-auto bg-background pb-2 pt-2 md:-top-8 md:max-h-none md:overflow-visible md:pb-2 md:pt-8">
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">SgInputOTP</h1>
-            <p className="mt-2 text-muted-foreground">
-              Input OTP com dígitos separados, suporte a colagem e máscara configurável.
-            </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-2 text-muted-foreground">{texts.subtitle}</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{texts.examplesLabel}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (
                 <Link
@@ -237,28 +351,26 @@ export default function SgInputOTPPage() {
                 href="#props-reference"
                 onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
-              >
-                Props Reference
-              </Link>
+              >{texts.propsLinkLabel}</Link>
             </SgGrid>
           </div>
         </div>
 
-        <Section id="exemplo-1" title="1) Básico" description="Máscara padrão: 999999.">
+        <Section id="exemplo-1" title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
           <div className="w-full max-w-md space-y-3">
             <SgInputOTP
               id="otp-basic"
-              label="Código OTP"
-              hintText="Digite os 6 dígitos"
+              label="Codigo OTP"
+              hintText="Digite os 6 digitos"
               onChange={setBasicMasked}
               onRawChange={setBasicRaw}
             />
             <ValuePanel masked={basicMasked} raw={basicRaw} expectedLength={6} />
           </div>
-          <CodeBlock code={`const [masked, setMasked] = React.useState("");\nconst [raw, setRaw] = React.useState("");\n\nreturn (\n  <SgInputOTP\n    id="otp-basic"\n    label="Código OTP"\n    hintText="Digite os 6 dígitos"\n    onChange={setMasked}\n    onRawChange={setRaw}\n  />\n);`} />
+          <CodeBlock code={`const [masked, setMasked] = React.useState("");\nconst [raw, setRaw] = React.useState("");\n\nreturn (\n  <SgInputOTP\n    id="otp-basic"\n    label="Codigo OTP"\n    hintText="Digite os 6 digitos"\n    onChange={setMasked}\n    onRawChange={setRaw}\n  />\n);`} />
         </Section>
 
-        <Section id="exemplo-2" title="2) Máscara customizada" description='Exemplo: "###-###-99".'>
+        <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <div className="w-full max-w-md space-y-3">
             <SgInputOTP
               id="otp-mask"
@@ -273,11 +385,11 @@ export default function SgInputOTPPage() {
           <CodeBlock code={`<SgInputOTP\n  id="otp-mask"\n  label="Token de acesso"\n  hintText="Formato: ###-###-99"\n  mask="###-###-99"\n  onChange={setMaskMasked}\n  onRawChange={setMaskRaw}\n/>`} />
         </Section>
 
-        <Section id="exemplo-3" title="3) Colagem + onComplete" description="Cole um OTP e receba callback ao completar.">
+        <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
           <div className="w-full max-w-md space-y-3">
             <SgInputOTP
               id="otp-paste"
-              label="Cole o código"
+              label="Cole o codigo"
               hintText='Teste colando: "AB1-CD2-34"'
               mask="###-###-99"
               onChange={setPasteMasked}
@@ -286,12 +398,12 @@ export default function SgInputOTPPage() {
             />
             <ValuePanel masked={pasteMasked} raw={pasteRaw} expectedLength={8} completeValue={completeValue} />
           </div>
-          <CodeBlock code={`<SgInputOTP\n  id="otp-paste"\n  label="Cole o código"\n  hintText='Teste colando: "AB1-CD2-34"'\n  mask="###-###-99"\n  onChange={setPasteMasked}\n  onRawChange={setPasteRaw}\n  onComplete={(value) => setCompleteValue(value)}\n/>`} />
+          <CodeBlock code={`<SgInputOTP\n  id="otp-paste"\n  label="Cole o codigo"\n  hintText='Teste colando: "AB1-CD2-34"'\n  mask="###-###-99"\n  onChange={setPasteMasked}\n  onRawChange={setPasteRaw}\n  onComplete={(value) => setCompleteValue(value)}\n/>`} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Acesso por ref" description="Focar, limpar e ler valores via API do ref.">
+        <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
           <div className="w-full max-w-md space-y-3">
-            <SgInputOTP id="otp-ref" ref={otpRef} label="OTP por ref" hintText="Use os botões abaixo" mask="###-###-99" />
+            <SgInputOTP id="otp-ref" ref={otpRef} label="OTP por ref" hintText="Use os botoes abaixo" mask="###-###-99" />
             <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
               <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>Focar</SgButton>
               <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>Limpar</SgButton>
@@ -304,19 +416,19 @@ export default function SgInputOTPPage() {
                   setRefReadout(`masked="${masked || "(vazio)"}" | raw="${raw || "(vazio)"}"`);
                 }}
               >
-                Ler conteúdo
+                Ler conteudo
               </SgButton>
             </SgGrid>
             <div className="rounded-md border border-border bg-foreground/5 p-3 text-xs">
               <strong>saida:</strong> {refReadout}
             </div>
           </div>
-          <CodeBlock code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);\n\nreturn (\n  <>\n    <SgInputOTP id="otp-ref" ref={otpRef} mask="###-###-99" />\n    <SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>\n    <SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>\n    <SgButton onClick={() => console.log(otpRef.current?.getMaskedValue())}>Ler conteúdo</SgButton>\n  </>\n);`} />
+          <CodeBlock code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);\n\nreturn (\n  <>\n    <SgInputOTP id="otp-ref" ref={otpRef} mask="###-###-99" />\n    <SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>\n    <SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>\n    <SgButton onClick={() => console.log(otpRef.current?.getMaskedValue())}>Ler conteudo</SgButton>\n  </>\n);`} />
         </Section>
 
-        <Section id="exemplo-5" title="5) Playground" description="Simule as principais props em tempo real.">
+        <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
           <SgPlayground
-            title="SgInputOTP Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={OTP_PLAYGROUND_CODE}
@@ -329,28 +441,28 @@ export default function SgInputOTPPage() {
           id="props-reference"
           className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
         >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+          <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">Prop</th>
-                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                  <th className="pb-2 font-semibold">Descrição</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
+                  <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Máscara (`#` alfanumérico e `9` numérico).</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Mascara (`#` alfanumerico e `9` numerico).</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">value / defaultValue</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Modo controlado e valor inicial.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validacao obrigatoria.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onRawChange / onComplete</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Retorno de valor formatado, bruto e completo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de edição.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customização visual.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com RHF.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Métodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de edicao.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customizacao visual.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com RHF.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Metodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
               </tbody>
             </table>
           </div>
@@ -360,3 +472,4 @@ export default function SgInputOTPPage() {
     </I18NReady>
   );
 }
+
