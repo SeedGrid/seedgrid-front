@@ -1032,6 +1032,8 @@
   "showcase.nav.layout": "Layout",
   "showcase.nav.search.label": "Search",
   "showcase.nav.search.placeholder": "Search component...",
+  "showcase.nav.themeSystem": "Theme System",
+  "showcase.nav.creditsLicenses": "Credits / Licenses",
   "showcase.toolbar.language": "Language",
   "showcase.nav.wizard": "Wizard",
   "showcase.themeEditor.apply": "Apply",

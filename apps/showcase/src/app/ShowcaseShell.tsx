@@ -98,31 +98,11 @@ const COMPONENTS = [
 ];
 
 const THEME_ITEMS = [
-  { slug: "theme", label: "Theme System", isTheme: true },
-  { slug: "credits", label: "Creditos / Licencas", isTheme: true }
+  { slug: "theme", labelKey: "showcase.nav.themeSystem" },
+  { slug: "credits", labelKey: "showcase.nav.creditsLicenses" }
 ];
 
 const MENU_GROUP_ORDER = ["Inputs", "Buttons", "Menus", "Layout", "Digits", "Gadgets", "Wizard", "Utils"] as const;
-
-const SHELL_MENU: SgMenuNode[] = [
-  ...THEME_ITEMS.map((item) => ({
-    id: `theme-${item.slug}`,
-    label: item.label,
-    url: `/${item.slug}`
-  })),
-  ...MENU_GROUP_ORDER.map((group) => {
-    const children = COMPONENTS.filter((item) => item.group === group).map((item) => ({
-      id: `component-${item.slug}`,
-      label: item.label,
-      url: `/components/${item.slug}`
-    }));
-    return {
-      id: `group-${group.toLowerCase()}`,
-      label: group,
-      children
-    };
-  }).filter((node) => node.children.length > 0)
-];
 
 const SIDEBAR_THEME_VARS = {
   "--primary": "27 62% 47%",
@@ -282,6 +262,26 @@ export default function ShowcaseShell(props: {
     return () => media.removeEventListener("change", syncViewport);
   }, []);
 
+  const shellMenu = React.useMemo<SgMenuNode[]>(() => ([
+    ...THEME_ITEMS.map((item) => ({
+      id: `theme-${item.slug}`,
+      label: t({ locale, messages }, item.labelKey),
+      url: `/${item.slug}`
+    })),
+    ...MENU_GROUP_ORDER.map((group) => {
+      const children = COMPONENTS.filter((item) => item.group === group).map((item) => ({
+        id: `component-${item.slug}`,
+        label: item.label,
+        url: `/components/${item.slug}`
+      }));
+      return {
+        id: `group-${group.toLowerCase()}`,
+        label: group,
+        children
+      };
+    }).filter((node) => node.children.length > 0)
+  ]), [locale, messages]);
+
   return (
     <ShowcaseI18nProvider locale={locale} messages={messages}>
       <SgComponentsI18nProvider
@@ -321,7 +321,7 @@ export default function ShowcaseShell(props: {
           <SgDockZone zone="left" className="col-start-1 row-start-2 !p-0 border-r border-[#e2cebc] bg-[#f7f3ee]">
             <SgMenu
               id="showcase-shell-menu-dockable"
-              menu={SHELL_MENU}
+              menu={shellMenu}
               selection={{ activeUrl: pathname ?? undefined }}
               brand={{
                 imageSrc: "/logo-seedgrid.svg",
