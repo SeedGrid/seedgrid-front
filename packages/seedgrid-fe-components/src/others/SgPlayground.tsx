@@ -594,17 +594,53 @@ function CopyButton() {
 
 function RunButton({ onRun }: { onRun?: () => void }) {
   const { sandpack } = useSandpack();
+  const [running, setRunning] = React.useState(false);
+
+  const handleRun = React.useCallback(async () => {
+    if (running) return;
+    setRunning(true);
+    onRun?.();
+
+    try {
+      if (typeof window !== "undefined") {
+        await new Promise<void>((resolve) => {
+          window.requestAnimationFrame(() => window.requestAnimationFrame(() => resolve()));
+        });
+      }
+
+      // On lazy init + hidden preview scenarios, iframe/client registration can lag by a tick.
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        await sandpack.runSandpack();
+
+        if (
+          sandpack.status === "running" ||
+          sandpack.status === "done" ||
+          Object.keys(sandpack.clients ?? {}).length > 0
+        ) {
+          break;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 120));
+      }
+    } catch (error) {
+      console.error("[SgPlayground] Failed to run Sandpack", error);
+    } finally {
+      if (typeof window !== "undefined") {
+        window.setTimeout(() => setRunning(false), 150);
+      } else {
+        setRunning(false);
+      }
+    }
+  }, [onRun, running, sandpack]);
 
   return (
     <SgButton
       severity="primary"
       size="sm"
-      onClick={() => {
-        sandpack.runSandpack();
-        onRun?.();
-      }}
+      loading={running}
+      onClick={handleRun}
     >
-      Run
+      {running ? "Running" : "Run"}
     </SgButton>
   );
 }
