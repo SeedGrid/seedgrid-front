@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Box, Building2, FilePenLine, Layers3, Receipt, Settings } from "lucide-react";
@@ -8,9 +8,10 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const BASIC_ITEMS: SgBreadcrumbItem[] = [
-  { id: "modulos", label: "Módulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
+  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
   { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
   { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
   { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
@@ -29,8 +30,8 @@ const ROUTES = {
   ],
   configuracao: [
     { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
-    { id: "config", label: "Configuração", href: "/erp/configuracao", icon: <Settings className="size-4" /> },
-    { id: "usuarios", label: "Usuários", icon: <Building2 className="size-4" /> }
+    { id: "config", label: "ConfiguraÃ§Ã£o", href: "/erp/configuracao", icon: <Settings className="size-4" /> },
+    { id: "usuarios", label: "UsuÃ¡rios", icon: <Building2 className="size-4" /> }
   ]
 } satisfies Record<"cadastro" | "financeiro" | "configuracao", SgBreadcrumbItem[]>;
 
@@ -60,12 +61,107 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
+type BreadcrumbTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section2ActiveRouteLabel: string;
+  section2LastClickLabel: string;
+  section3Title: string;
+  section3Description: string;
+  section3CollapseLabel: string;
+  section3ScrollLabel: string;
+  section4Title: string;
+  section4Description: string;
+  propsReferenceTitle: string;
+};
+
+const BREADCRUMB_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", BreadcrumbTexts> = {
+  "pt-BR": {
+    headerSubtitle: "Breadcrumb hierarquico com suporte a icones, navegacao e overflow.",
+    section1Title: "1) Basico",
+    section1Description: "Com icones e item atual nao clicavel no final.",
+    section2Title: "2) Caminho Externo",
+    section2Description: "Troca do caminho renderizado por estado externo.",
+    section2ActiveRouteLabel: "rota ativa",
+    section2LastClickLabel: "ultimo clique",
+    section3Title: "3) Overflow",
+    section3Description: "Colapso com dropdown ou scroll horizontal em telas pequenas.",
+    section3CollapseLabel: "Collapse com dropdown",
+    section3ScrollLabel: "Scroll horizontal",
+    section4Title: "4) Playground",
+    section4Description: "Troque separador, variant e item Home.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "pt-PT": {
+    headerSubtitle: "Breadcrumb hierarquico com suporte a icones, navegacao e overflow.",
+    section1Title: "1) Basico",
+    section1Description: "Com icones e item atual nao clicavel no final.",
+    section2Title: "2) Caminho Externo",
+    section2Description: "Troca do caminho renderizado por estado externo.",
+    section2ActiveRouteLabel: "rota ativa",
+    section2LastClickLabel: "ultimo clique",
+    section3Title: "3) Overflow",
+    section3Description: "Colapso com dropdown ou scroll horizontal em telas pequenas.",
+    section3CollapseLabel: "Collapse com dropdown",
+    section3ScrollLabel: "Scroll horizontal",
+    section4Title: "4) Playground",
+    section4Description: "Troque separador, variant e item Home.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "en-US": {
+    headerSubtitle: "Hierarchical breadcrumb with support for icons, navigation, and overflow.",
+    section1Title: "1) Basic",
+    section1Description: "With icons and a non-clickable current item at the end.",
+    section2Title: "2) External Path",
+    section2Description: "Switch rendered route using external state.",
+    section2ActiveRouteLabel: "active route",
+    section2LastClickLabel: "last click",
+    section3Title: "3) Overflow",
+    section3Description: "Collapse with dropdown or horizontal scroll on small screens.",
+    section3CollapseLabel: "Collapse with dropdown",
+    section3ScrollLabel: "Horizontal scroll",
+    section4Title: "4) Playground",
+    section4Description: "Switch separator, variant, and Home item.",
+    propsReferenceTitle: "Props Reference",
+  },
+  es: {
+    headerSubtitle: "Breadcrumb jerarquico con soporte para iconos, navegacion y overflow.",
+    section1Title: "1) Basico",
+    section1Description: "Con iconos y elemento actual no clickeable al final.",
+    section2Title: "2) Ruta Externa",
+    section2Description: "Cambia la ruta renderizada por estado externo.",
+    section2ActiveRouteLabel: "ruta activa",
+    section2LastClickLabel: "ultimo clic",
+    section3Title: "3) Overflow",
+    section3Description: "Colapso con dropdown o scroll horizontal en pantallas pequenas.",
+    section3CollapseLabel: "Collapse con dropdown",
+    section3ScrollLabel: "Scroll horizontal",
+    section4Title: "4) Playground",
+    section4Description: "Cambia separador, variant y item Home.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+};
+
+type SupportedBreadcrumbLocale = keyof typeof BREADCRUMB_TEXTS;
+
+function isSupportedBreadcrumbLocale(locale: ShowcaseLocale): locale is SupportedBreadcrumbLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getBreadcrumbTexts(locale: ShowcaseLocale): BreadcrumbTexts {
+  const normalized: SupportedBreadcrumbLocale = isSupportedBreadcrumbLocale(locale) ? locale : "pt-BR";
+  return BREADCRUMB_TEXTS[normalized];
+}
+
 const EXAMPLE_BASIC_CODE = `import React from "react";
 import { Box, Building2, FilePenLine, Layers3 } from "lucide-react";
 import { SgBreadcrumb, type SgBreadcrumbItem } from "@seedgrid/fe-components";
 
 const items: SgBreadcrumbItem[] = [
-  { id: "modulos", label: "Módulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
+  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
   { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
   { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
   { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
@@ -88,10 +184,10 @@ export default function Example() {
       <div className="flex flex-wrap gap-2">
         <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("cadastro")}>Rota cadastro</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("financeiro")}>Rota financeiro</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuração</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuraÃ§Ã£o</SgButton>
       </div>
       <SgBreadcrumb items={routeItems} separator="arrow" variant="subtle" onNavigate={(item) => setLastNavigate(item.id)} />
-      <p>rota ativa: {routeKey} | último clique: {lastNavigate}</p>
+      <p>rota ativa: {routeKey} | Ãºltimo clique: {lastNavigate}</p>
     </div>
   );
 }`;
@@ -115,7 +211,7 @@ import { Layers3, Building2, Box, FilePenLine } from "lucide-react";
 import { SgBreadcrumb, SgButton, type SgBreadcrumbSeparator } from "@seedgrid/fe-components";
 
 const items = [
-  { id: "modulos", label: "Módulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
+  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
   { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
   { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
   { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
@@ -148,15 +244,15 @@ export default function App() {
 const BREADCRUMB_PROPS: ShowcasePropRow[] = [
   { prop: "items", type: "SgBreadcrumbItem[]", defaultValue: "-", description: "Lista de itens renderizados no breadcrumb." },
   { prop: "separator", type: "\"slash\" | \"chevron\" | \"dot\" | \"arrow\" | ReactNode", defaultValue: "chevron", description: "Separador visual entre itens." },
-  { prop: "maxItems", type: "number", defaultValue: "-", description: "Quantidade máxima de itens antes do overflow." },
+  { prop: "maxItems", type: "number", defaultValue: "-", description: "Quantidade mÃ¡xima de itens antes do overflow." },
   { prop: "overflowBehavior", type: "\"collapse\" | \"scroll\"", defaultValue: "collapse", description: "Comportamento em trilhas longas." },
-  { prop: "showHomeIcon / homeHref / homeLabel", type: "boolean / string / ReactNode", defaultValue: "false / / / Home", description: "Configuração do item Home automático." },
+  { prop: "showHomeIcon / homeHref / homeLabel", type: "boolean / string / ReactNode", defaultValue: "false / / / Home", description: "ConfiguraÃ§Ã£o do item Home automÃ¡tico." },
   { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Tamanho visual dos itens." },
   { prop: "variant", type: "\"default\" | \"subtle\" | \"primary\"", defaultValue: "default", description: "Estilo visual do breadcrumb." },
-  { prop: "ariaLabel", type: "string", defaultValue: "Breadcrumb", description: "Rótulo de acessibilidade da navegação." },
-  { prop: "overflowLabel", type: "string", defaultValue: "Mais caminhos", description: "Rótulo do botão de overflow." },
+  { prop: "ariaLabel", type: "string", defaultValue: "Breadcrumb", description: "RÃ³tulo de acessibilidade da navegaÃ§Ã£o." },
+  { prop: "overflowLabel", type: "string", defaultValue: "Mais caminhos", description: "RÃ³tulo do botÃ£o de overflow." },
   { prop: "onNavigate", type: "(item, index) => void", defaultValue: "-", description: "Callback ao navegar em um item." },
-  { prop: "className / itemClassName / style", type: "string / string / CSSProperties", defaultValue: "-", description: "Customização de layout e estilo." },
+  { prop: "className / itemClassName / style", type: "string / string / CSSProperties", defaultValue: "-", description: "CustomizaÃ§Ã£o de layout e estilo." },
   { prop: "SgBreadcrumbItem.id / label / href / icon / disabled / hidden / onClick", type: "item props", defaultValue: "-", description: "Estrutura de cada item do breadcrumb." }
 ];
 
@@ -164,7 +260,10 @@ export default function SgBreadcrumbPage() {
   const [routeKey, setRouteKey] = React.useState<keyof typeof ROUTES>("cadastro");
   const [lastNavigate, setLastNavigate] = React.useState("-");
   const routeItems = ROUTES[routeKey];
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getBreadcrumbTexts(i18n.locale), [i18n.locale]);
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   return (
     <I18NReady>
@@ -176,21 +275,21 @@ export default function SgBreadcrumbPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgBreadcrumb"
-          subtitle="Breadcrumb hierárquico com suporte a ícones, navegação e overflow."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Básico" description="Com ícones e item atual não clicável no final.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <SgBreadcrumb items={BASIC_ITEMS} separator="chevron" showHomeIcon />
           <CodeBlock code={EXAMPLE_BASIC_CODE} />
         </Section>
 
-        <Section title="2) Caminho Externo" description="Troca do caminho renderizado por estado externo.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="flex flex-wrap gap-2">
             <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("cadastro")}>Rota cadastro</SgButton>
             <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("financeiro")}>Rota financeiro</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuração</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuraÃ§Ã£o</SgButton>
           </div>
 
           <SgBreadcrumb
@@ -201,20 +300,20 @@ export default function SgBreadcrumbPage() {
           />
 
           <p className="text-sm text-muted-foreground">
-            rota ativa: <span className="font-semibold text-foreground">{routeKey}</span> | último clique:{" "}
+            {texts.section2ActiveRouteLabel}: <span className="font-semibold text-foreground">{routeKey}</span> | {texts.section2LastClickLabel}:{" "}
             <span className="font-semibold text-foreground">{lastNavigate}</span>
           </p>
           <CodeBlock code={EXAMPLE_EXTERNAL_CODE} />
         </Section>
 
-        <Section title="3) Overflow" description="Colapso com dropdown ou scroll horizontal em telas pequenas.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <div className="space-y-4">
             <div>
-              <p className="mb-2 text-sm font-medium">Collapse com dropdown</p>
+              <p className="mb-2 text-sm font-medium">{texts.section3CollapseLabel}</p>
               <SgBreadcrumb items={LONG_ITEMS} maxItems={4} overflowBehavior="collapse" separator="slash" />
             </div>
             <div>
-              <p className="mb-2 text-sm font-medium">Scroll horizontal</p>
+              <p className="mb-2 text-sm font-medium">{texts.section3ScrollLabel}</p>
               <div className="max-w-[360px] rounded-lg border border-border p-2">
                 <SgBreadcrumb items={LONG_ITEMS} overflowBehavior="scroll" separator="dot" />
               </div>
@@ -223,7 +322,7 @@ export default function SgBreadcrumbPage() {
           <CodeBlock code={EXAMPLE_OVERFLOW_CODE} />
         </Section>
 
-        <Section title="4) Playground" description="Troque separador, variant e item Home.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <SgPlayground
             title="SgBreadcrumb Playground"
             interactive
@@ -234,7 +333,7 @@ export default function SgBreadcrumbPage() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={BREADCRUMB_PROPS} />
+        <ShowcasePropsReference rows={BREADCRUMB_PROPS} title={texts.propsReferenceTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

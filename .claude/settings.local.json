@@ -47,7 +47,18 @@
       "Bash(pnpm add @pqina/flip --filter @seedgrid/fe-components)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\(''main'',''''\\), d.get\\(''types'',''''\\), d.get\\(''typings'',''''\\)\\)\")",
       "Bash(pnpm run typecheck)",
-      "Bash(xargs grep -l \"credits\\\\|license\\\\|terceiro\\\\|third\" -i)"
+      "Bash(xargs grep -l \"credits\\\\|license\\\\|terceiro\\\\|third\" -i)",
+      "Bash(grep -l \"PLAYGROUND_CODE\\\\|codeContract.*appFile\" c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/digits/*/page.tsx c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/gadgets/*/page.tsx)",
+      "Bash(npm view @seedgrid/fe-components versions --json)",
+      "Bash(npm view @seedgrid/fe-components@0.2.9 exports)",
+      "Bash(npm pack @seedgrid/fe-components@0.2.9 --dry-run)",
+      "Bash(npm pack @seedgrid/fe-components@2026.3.1)",
+      "Bash(tar -tzf seedgrid-fe-components-2026.3.1.tgz)",
+      "Bash(tar -xzf seedgrid-fe-components-2026.3.1.tgz package/dist/index.js)",
+      "Bash(tar -tzf seedgrid-fe-components-0.2.9.tgz)",
+      "Bash(grep -h \"^import {\" c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/sg-*/page.tsx c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/digits/*/page.tsx c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/gadgets/*/page.tsx)",
+      "Bash(tar -xzf seedgrid-fe-components-0.2.9.tgz package/dist/index.js)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

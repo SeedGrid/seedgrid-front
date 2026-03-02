@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgButton, SgCombobox, SgPlayground } from "@seedgrid/fe-components";
@@ -6,6 +6,7 @@ import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode; example?: boolean }) {
   return (
@@ -228,8 +229,129 @@ export default function App() {
   );
 }`;
 
+type ComboboxTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  propsTitle: string;
+  propsDescription: string;
+  propsColProp: string;
+  propsColType: string;
+  propsColDefault: string;
+  propsColDescription: string;
+};
+
+const COMBOBOX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ComboboxTexts> = {
+  "pt-BR": {
+    headerSubtitle:
+      "Combobox no estilo select, sem digitacao livre. O item selecionado vem de source e o evento onSelect devolve o objeto selecionado.",
+    section1Title: "1) Basico com lista de objetos",
+    section1Description:
+      'Sem input livre: com foco no campo, digite letras e ele "pula" para o item correspondente.',
+    section2Title: "2) Controlado por value",
+    section2Description: "Use value/onValueChange para setar um valor valido programaticamente.",
+    section3Title: "3) Source async + custom render",
+    section3Description: "Suporte a loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip.",
+    section4Title: "4) Border radius",
+    section4Description: "Aplica o raio no input e no dropdown.",
+    section5Title: "5) Playground (SgPlayground)",
+    section5Description: "Simule cenarios com source local/async, grouped, openOnFocus e eventos.",
+    propsTitle: "Referencia de Props",
+    propsDescription: "Propriedades publicas do SgCombobox.",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+  },
+  "pt-PT": {
+    headerSubtitle:
+      "Combobox no estilo select, sem digitacao livre. O item selecionado vem de source e o evento onSelect devolve o objeto selecionado.",
+    section1Title: "1) Basico com lista de objetos",
+    section1Description:
+      'Sem input livre: com foco no campo, digite letras e ele "pula" para o item correspondente.',
+    section2Title: "2) Controlado por value",
+    section2Description: "Use value/onValueChange para setar um valor valido programaticamente.",
+    section3Title: "3) Source async + custom render",
+    section3Description: "Suporte a loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip.",
+    section4Title: "4) Border radius",
+    section4Description: "Aplica o raio no input e no dropdown.",
+    section5Title: "5) Playground (SgPlayground)",
+    section5Description: "Simule cenarios com source local/async, grouped, openOnFocus e eventos.",
+    propsTitle: "Referencia de Props",
+    propsDescription: "Propriedades publicas do SgCombobox.",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+  },
+  "en-US": {
+    headerSubtitle:
+      "Select-style combobox, no free typing. The selected item comes from source and onSelect returns the selected object.",
+    section1Title: "1) Basic with object list",
+    section1Description:
+      'No free input: focus the field, type letters, and it "jumps" to the matching item.',
+    section2Title: "2) Controlled by value",
+    section2Description: "Use value/onValueChange to set a valid value programmatically.",
+    section3Title: "3) Async source + custom render",
+    section3Description: "Supports loadingText, renderItem, renderGroupHeader, renderFooter, and itemTooltip.",
+    section4Title: "4) Border radius",
+    section4Description: "Applies border radius to input and dropdown.",
+    section5Title: "5) Playground (SgPlayground)",
+    section5Description: "Simulate scenarios with local/async source, grouped, openOnFocus, and events.",
+    propsTitle: "Props Reference",
+    propsDescription: "Public properties of SgCombobox.",
+    propsColProp: "Prop",
+    propsColType: "Type",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
+  },
+  es: {
+    headerSubtitle:
+      "Combobox estilo select, sin escritura libre. El item seleccionado viene de source y onSelect devuelve el objeto seleccionado.",
+    section1Title: "1) Basico con lista de objetos",
+    section1Description:
+      'Sin input libre: con foco en el campo, escribe letras y "salta" al item correspondiente.',
+    section2Title: "2) Controlado por value",
+    section2Description: "Usa value/onValueChange para setear un valor valido programaticamente.",
+    section3Title: "3) Source async + custom render",
+    section3Description: "Soporta loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip.",
+    section4Title: "4) Border radius",
+    section4Description: "Aplica el radio en el input y en el dropdown.",
+    section5Title: "5) Playground (SgPlayground)",
+    section5Description: "Simula escenarios con source local/async, grouped, openOnFocus y eventos.",
+    propsTitle: "Referencia de Props",
+    propsDescription: "Propiedades publicas de SgCombobox.",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Por defecto",
+    propsColDescription: "Descripcion",
+  },
+};
+
+type SupportedComboboxLocale = keyof typeof COMBOBOX_TEXTS;
+
+function isSupportedComboboxLocale(locale: ShowcaseLocale): locale is SupportedComboboxLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getComboboxTexts(locale: ShowcaseLocale): ComboboxTexts {
+  const normalized: SupportedComboboxLocale = isSupportedComboboxLocale(locale) ? locale : "pt-BR";
+  return COMBOBOX_TEXTS[normalized];
+}
+
 export default function SgComboboxPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getComboboxTexts(i18n.locale), [i18n.locale]);
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
   const [selectedCountry, setSelectedCountry] = React.useState<Country | null>(null);
   const [selectedId, setSelectedId] = React.useState<string | number | null>(null);
   const [selectedControlled, setSelectedControlled] = React.useState<Country | null>(null);
@@ -254,19 +376,14 @@ export default function SgComboboxPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgCombobox"
-          subtitle={
-            <>
-              Combobox no estilo <code>select</code>, sem digitação livre. O item selecionado vem de
-              <code> source</code> e o evento <code>onSelect</code> devolve o objeto selecionado.
-            </>
-          }
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
         <Section
-          title="1) Basico com lista de objetos"
-          description='Sem input livre: com foco no campo, digite letras e ele "pula" para o item correspondente.'
+          title={texts.section1Title}
+          description={texts.section1Description}
         >
           <div className="w-96">
             <SgCombobox<Country>
@@ -312,8 +429,8 @@ export default function SgComboboxPage() {
         </Section>
 
         <Section
-          title="2) Controlado por value"
-          description="Use value/onValueChange para setar um valor valido programaticamente."
+          title={texts.section2Title}
+          description={texts.section2Description}
         >
           <div className="w-96">
             <SgCombobox<Country>
@@ -392,8 +509,8 @@ const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(sele
         </Section>
 
         <Section
-          title="3) Source async + custom render"
-          description="Suporte a loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip."
+          title={texts.section3Title}
+          description={texts.section3Description}
         >
           <div className="w-96">
             <SgCombobox<Country>
@@ -471,8 +588,8 @@ const [selectedAsync, setSelectedAsync] = React.useState<Country | null>(null);
         </Section>
 
         <Section
-          title="4) Border radius"
-          description="Aplica o raio no input e no dropdown."
+          title={texts.section4Title}
+          description={texts.section4Description}
         >
           <div className="w-96">
             <SgCombobox<Country>
@@ -538,8 +655,8 @@ export default function Example() {
         </Section>
 
         <Section
-          title="5) Playground (SgPlayground)"
-          description="Simule cenarios com source local/async, grouped, openOnFocus e eventos."
+          title={texts.section5Title}
+          description={texts.section5Description}
         >
           <SgPlayground
             title="SgCombobox Playground"
@@ -555,16 +672,16 @@ export default function Example() {
           id="props-reference"
           className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
         >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Propriedades públicas do SgCombobox.</p>
+          <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{texts.propsDescription}</p>
           <div className="mt-4 w-full overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">Prop</th>
-                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                  <th className="pb-2 font-semibold">Descrição</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
+                  <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
+                  <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -577,10 +694,10 @@ export default function Example() {
                 <tr><td className="py-2 pr-4 font-mono text-xs">openOnFocus</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Abre a lista ao focar.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Define o raio de borda do campo e do dropdown.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">loadingText / emptyText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">i18n</td><td className="py-2">Textos para carregamento e lista vazia.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderItem</td><td className="py-2 pr-4">(item, isActive) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Renderização customizada do item.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderGroupHeader</td><td className="py-2 pr-4">(group) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Renderização customizada do cabeçalho de grupo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderFooter</td><td className="py-2 pr-4">(query, hasResults) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Renderização customizada do rodapé da lista.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">itemTooltip</td><td className="py-2 pr-4">(item) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Conteúdo de tooltip para item.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderItem</td><td className="py-2 pr-4">(item, isActive) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do item.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderGroupHeader</td><td className="py-2 pr-4">(group) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do cabeÃ§alho de grupo.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderFooter</td><td className="py-2 pr-4">(query, hasResults) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do rodapÃ© da lista.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">itemTooltip</td><td className="py-2 pr-4">(item) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">ConteÃºdo de tooltip para item.</td></tr>
               </tbody>
             </table>
           </div>
@@ -590,3 +707,4 @@ export default function Example() {
     </I18NReady>
   );
 }
+

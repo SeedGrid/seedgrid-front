@@ -15,6 +15,7 @@ import I18NReady from "../../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -27,6 +28,119 @@ function Section(props: { title: string; description?: string; children: React.R
       <div className="mt-4 space-y-4">{props.children}</div>
     </section>
   );
+}
+
+type DiscardDigitTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  section7Title: string;
+  section7Description: string;
+  propsReferenceTitle: string;
+};
+
+const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitTexts> = {
+  "pt-BR": {
+    headerSubtitle:
+      "Bloco de folhas com animacao 3D de descarte: a folha do topo sai e revela a proxima.",
+    section1Title: "1) Basico",
+    section1Description: "Troca de valor com efeito de descarte da folha superior.",
+    section2Title: "2) Folhas sequenciais",
+    section2Description: "Cada clique descarta uma folha e revela a seguinte.",
+    section3Title: "3) Variacoes de papel",
+    section3Description: "Exemplos com color + backgroundColor diferentes.",
+    section4Title: "4) Fontes",
+    section4Description: "Comparacao de fontes no mesmo efeito de pilha.",
+    section5Title: "5) Auto descarte",
+    section5Description: "Atualizacao continua para observar a direcao aleatoria da folha descartada.",
+    section6Title: "6) Paginacao imperativa (ref)",
+    section6Description:
+      "totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().",
+    section7Title: "7) Playground (SgPlayground)",
+    section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
+    propsReferenceTitle: "Referencia de Props"
+  },
+  "pt-PT": {
+    headerSubtitle:
+      "Bloco de folhas com animacao 3D de descarte: a folha no topo sai e revela a seguinte.",
+    section1Title: "1) Basico",
+    section1Description: "Troca de valor com efeito de descarte da folha superior.",
+    section2Title: "2) Folhas sequenciais",
+    section2Description: "Cada clique descarta uma folha e revela a seguinte.",
+    section3Title: "3) Variacoes de papel",
+    section3Description: "Exemplos com color + backgroundColor diferentes.",
+    section4Title: "4) Fontes",
+    section4Description: "Comparacao de fontes no mesmo efeito de pilha.",
+    section5Title: "5) Auto descarte",
+    section5Description: "Atualizacao continua para observar a direcao aleatoria da folha descartada.",
+    section6Title: "6) Paginacao imperativa (ref)",
+    section6Description:
+      "totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().",
+    section7Title: "7) Playground (SgPlayground)",
+    section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
+    propsReferenceTitle: "Referencia de Props"
+  },
+  "en-US": {
+    headerSubtitle:
+      "Stacked paper-style digit with a 3D discard animation: the top sheet leaves and reveals the next one.",
+    section1Title: "1) Basic",
+    section1Description: "Value changes with a top-sheet discard animation.",
+    section2Title: "2) Sequential sheets",
+    section2Description: "Each click discards one sheet and reveals the next.",
+    section3Title: "3) Paper variants",
+    section3Description: "Examples with different color + backgroundColor combinations.",
+    section4Title: "4) Fonts",
+    section4Description: "Font comparison using the same stack effect.",
+    section5Title: "5) Auto discard",
+    section5Description: "Continuous updates to observe random discard direction.",
+    section6Title: "6) Imperative pagination (ref)",
+    section6Description:
+      "totalNumberPages defines the sheet count. The ref exposes increasePage(), decreasePage(), and page().",
+    section7Title: "7) Playground (SgPlayground)",
+    section7Description: "Real-time tuning of color, font, backgroundColor, and animation.",
+    propsReferenceTitle: "Props Reference"
+  },
+  es: {
+    headerSubtitle:
+      "Bloque de hojas con animacion 3D de descarte: la hoja superior sale y revela la siguiente.",
+    section1Title: "1) Basico",
+    section1Description: "Cambio de valor con efecto de descarte de la hoja superior.",
+    section2Title: "2) Hojas secuenciales",
+    section2Description: "Cada clic descarta una hoja y revela la siguiente.",
+    section3Title: "3) Variaciones de papel",
+    section3Description: "Ejemplos con distintas combinaciones de color + backgroundColor.",
+    section4Title: "4) Fuentes",
+    section4Description: "Comparacion de fuentes con el mismo efecto de pila.",
+    section5Title: "5) Auto descarte",
+    section5Description: "Actualizacion continua para observar la direccion aleatoria del descarte.",
+    section6Title: "6) Paginacion imperativa (ref)",
+    section6Description:
+      "totalNumberPages define el total de hojas. El ref expone increasePage(), decreasePage() y page().",
+    section7Title: "7) Playground (SgPlayground)",
+    section7Description: "Ajuste en tiempo real de color, font, backgroundColor y animacion.",
+    propsReferenceTitle: "Referencia de Props"
+  }
+};
+
+type SupportedDiscardLocale = keyof typeof DISCARD_TEXTS;
+
+function isSupportedDiscardLocale(locale: ShowcaseLocale): locale is SupportedDiscardLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getDiscardTexts(locale: ShowcaseLocale): DiscardDigitTexts {
+  const normalized: SupportedDiscardLocale = isSupportedDiscardLocale(locale) ? locale : "pt-BR";
+  return DISCARD_TEXTS[normalized];
 }
 
 const PAGE_VALUES = ["001", "002", "003", "004", "005"] as const;
@@ -277,7 +391,10 @@ const PROPS: ShowcasePropRow[] = [
 ];
 
 export default function SgDiscardDigitShowcase() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getDiscardTexts(i18n.locale), [i18n.locale]);
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   const [digit, setDigit] = React.useState("0");
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -323,12 +440,12 @@ export default function SgDiscardDigitShowcase() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgDiscardDigit"
-          subtitle="Bloco de folhas com animacao 3D de descarte: folha do topo sai para baixo e revela a proxima."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Basico" description="Troca de valor com efeito de descarte da folha superior.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <div className="flex items-center gap-4">
             <SgDiscardDigit
               value={digit}
@@ -345,7 +462,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={BASIC_CODE} />
         </Section>
 
-        <Section title="2) Folhas sequenciais" description="Cada clique descarta uma folha e revela a seguinte.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="space-y-3">
             <SgDiscardDigit
               value={currentPage}
@@ -359,7 +476,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={PAGES_CODE} />
         </Section>
 
-        <Section title="3) Variacoes de papel" description="Exemplos com color + backgroundColor diferentes.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Papel branco</p>
@@ -392,7 +509,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={THEMES_CODE} />
         </Section>
 
-        <Section title="4) Fontes" description="Comparacao de fontes no mesmo efeito de pilha.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Sans</p>
@@ -418,7 +535,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={FONT_CODE} />
         </Section>
 
-        <Section title="5) Auto descarte" description="Atualizacao continua para observar direcao aleatoria da folha descartada.">
+        <Section title={texts.section5Title} description={texts.section5Description}>
           <div className="space-y-3">
             <SgDiscardDigit
               value={counter}
@@ -436,7 +553,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={AUTO_CODE} />
         </Section>
 
-        <Section title="6) Paginacao imperativa (ref)" description="totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().">
+        <Section title={texts.section6Title} description={texts.section6Description}>
           <div className="flex flex-wrap items-end gap-8">
             <SgDiscardDigit
               ref={discardRef}
@@ -457,7 +574,7 @@ export default function SgDiscardDigitShowcase() {
           <CodeBlockBase code={PAGINATION_CODE} />
         </Section>
 
-        <Section title="7) Playground (SgPlayground)" description="Ajuste em tempo real de color, font, backgroundColor e animacao.">
+        <Section title={texts.section7Title} description={texts.section7Description}>
           <SgPlayground
             title="SgDiscardDigit Playground"
             interactive
@@ -468,7 +585,7 @@ export default function SgDiscardDigitShowcase() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={PROPS} />
+        <ShowcasePropsReference rows={PROPS} title={texts.propsReferenceTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

@@ -14,6 +14,7 @@ import I18NReady from "../../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -26,6 +27,101 @@ function Section(props: { title: string; description?: string; children: React.R
       <div className="mt-4 space-y-4">{props.children}</div>
     </section>
   );
+}
+
+type NeonDigitTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  propsReferenceTitle: string;
+};
+
+const NEON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", NeonDigitTexts> = {
+  "pt-BR": {
+    headerSubtitle: "Caracteres em neon com animacao de troca, color, font, backgroundColor e shadowColor.",
+    section1Title: "1) Basico",
+    section1Description: "Controle simples de digito em estilo neon.",
+    section2Title: "2) Texto em neon",
+    section2Description: "Troca de palavras com o mesmo componente.",
+    section3Title: "3) Neon script (referencia visual)",
+    section3Description: "Visual inspirado nas imagens azul e laranja.",
+    section4Title: "4) Variacoes de color/background/shadow",
+    section4Description: "Themes neon para contextos diferentes.",
+    section5Title: "5) Escala e leitura",
+    section5Description: "Variacao de tamanho para diferentes cenarios.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Teste as props principais em tempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "pt-PT": {
+    headerSubtitle: "Caracteres em neon com animacao de troca, color, font, backgroundColor e shadowColor.",
+    section1Title: "1) Basico",
+    section1Description: "Controlo simples de digito em estilo neon.",
+    section2Title: "2) Texto em neon",
+    section2Description: "Troca de palavras com o mesmo componente.",
+    section3Title: "3) Neon script (referencia visual)",
+    section3Description: "Visual inspirado nas imagens azul e laranja.",
+    section4Title: "4) Variacoes de color/background/shadow",
+    section4Description: "Themes neon para contextos diferentes.",
+    section5Title: "5) Escala e leitura",
+    section5Description: "Variacao de tamanho para diferentes cenarios.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Teste as props principais em tempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "en-US": {
+    headerSubtitle: "Neon character component with swap animation, color, font, backgroundColor, and shadowColor.",
+    section1Title: "1) Basic",
+    section1Description: "Simple neon-style digit control.",
+    section2Title: "2) Neon text",
+    section2Description: "Word switching with the same component.",
+    section3Title: "3) Neon script (visual reference)",
+    section3Description: "Look inspired by blue and orange reference images.",
+    section4Title: "4) color/background/shadow variants",
+    section4Description: "Neon themes for different contexts.",
+    section5Title: "5) Scale and readability",
+    section5Description: "Size variation for different scenarios.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Test the main props in real time.",
+    propsReferenceTitle: "Props Reference",
+  },
+  es: {
+    headerSubtitle: "Caracteres neon con animacion de cambio, color, font, backgroundColor y shadowColor.",
+    section1Title: "1) Basico",
+    section1Description: "Control simple de digito en estilo neon.",
+    section2Title: "2) Texto neon",
+    section2Description: "Cambio de palabras con el mismo componente.",
+    section3Title: "3) Neon script (referencia visual)",
+    section3Description: "Visual inspirado en las imagenes azul y naranja.",
+    section4Title: "4) Variaciones de color/background/shadow",
+    section4Description: "Temas neon para distintos contextos.",
+    section5Title: "5) Escala y lectura",
+    section5Description: "Variacion de tamano para diferentes escenarios.",
+    section6Title: "6) Playground (SgPlayground)",
+    section6Description: "Prueba las props principales en tiempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+};
+
+type SupportedNeonLocale = keyof typeof NEON_TEXTS;
+
+function isSupportedNeonLocale(locale: ShowcaseLocale): locale is SupportedNeonLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getNeonTexts(locale: ShowcaseLocale): NeonDigitTexts {
+  const normalized: SupportedNeonLocale = isSupportedNeonLocale(locale) ? locale : "pt-BR";
+  return NEON_TEXTS[normalized];
 }
 
 const WORDS = ["teste", "seedgrid", "your text"] as const;
@@ -218,7 +314,10 @@ const PROPS: ShowcasePropRow[] = [
 ];
 
 export default function SgNeonDigitShowcase() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getNeonTexts(i18n.locale), [i18n.locale]);
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   const [digit, setDigit] = React.useState("0");
   const [wordIndex, setWordIndex] = React.useState(0);
@@ -238,12 +337,12 @@ export default function SgNeonDigitShowcase() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgNeonDigit"
-          subtitle="Caracteres em neon com animacao de troca, color, font, backgroundColor e shadowColor."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Basico" description="Controle simples de digito em estilo neon.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <div className="flex items-center gap-4">
             <SgNeonDigit value={digit} color="#f8fafc" backgroundColor="#120f2b" shadowColor="#8b5cf6" />
             <div className="flex flex-col gap-2">
@@ -254,7 +353,7 @@ export default function SgNeonDigitShowcase() {
           <CodeBlockBase code={BASIC_CODE} />
         </Section>
 
-        <Section title="2) Texto em neon" description="Troca de palavras com o mesmo componente.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="space-y-3">
             <SgNeonDigit value={word} color="#e2f6ff" backgroundColor="#101934" shadowColor="#47d1ff" />
             <SgButton size="sm" onClick={nextWord}>Trocar texto</SgButton>
@@ -262,7 +361,7 @@ export default function SgNeonDigitShowcase() {
           <CodeBlockBase code={WORDS_CODE} />
         </Section>
 
-        <Section title="3) Neon script (referencia visual)" description="Visual inspirado nas imagens azul e laranja.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Blue neon script</p>
@@ -296,7 +395,7 @@ export default function SgNeonDigitShowcase() {
           <CodeBlockBase code={SCRIPT_CODE} />
         </Section>
 
-        <Section title="4) Variacoes de color/background/shadow" description="Themes neon para contextos diferentes.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Blue glow</p>
@@ -314,7 +413,7 @@ export default function SgNeonDigitShowcase() {
           <CodeBlockBase code={THEMES_CODE} />
         </Section>
 
-        <Section title="5) Escala e leitura" description="Variacao de tamanho para diferentes cenarios.">
+        <Section title={texts.section5Title} description={texts.section5Description}>
           <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">Pequeno</p>
@@ -332,7 +431,7 @@ export default function SgNeonDigitShowcase() {
           <CodeBlockBase code={SIZE_CODE} />
         </Section>
 
-        <Section title="6) Playground (SgPlayground)" description="Teste as props principais em tempo real.">
+        <Section title={texts.section6Title} description={texts.section6Description}>
           <SgPlayground
             title="SgNeonDigit Playground"
             interactive
@@ -343,7 +442,7 @@ export default function SgNeonDigitShowcase() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={PROPS} />
+        <ShowcasePropsReference rows={PROPS} title={texts.propsReferenceTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

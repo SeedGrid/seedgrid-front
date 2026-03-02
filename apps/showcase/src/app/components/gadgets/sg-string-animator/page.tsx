@@ -13,6 +13,7 @@ import I18NReady from "../../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../../i18n";
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -430,6 +431,178 @@ function Ex9() {
   );
 }
 
+type StringAnimatorTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  section7Title: string;
+  section7Description: string;
+  section8Title: string;
+  section8Description: string;
+  section9Title: string;
+  section9Description: string;
+  playgroundTitle: string;
+  playgroundDescription: string;
+  playgroundCardTitle: string;
+  propsReferenceTitle: string;
+};
+
+const STRING_ANIMATOR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StringAnimatorTexts> = {
+  "pt-BR": {
+    headerSubtitle:
+      "Anima caractere por caractere de uma string para outra. Suporta seis estilos: roller3d, flip, neon, fade, discard e matrix. Configuravel em velocidade, alinhamento e cores.",
+    section1Title: "Roller 3D - nomes (left-aligned)",
+    section1Description:
+      'Anima "LUCIANO" ate "MARTA". Posicoes extras preenchidas com espaco a direita (alignTo="left").',
+    section2Title: "Roller 3D - numeros (right-aligned)",
+    section2Description:
+      'Anima "42" ate "1337". Espacos sao inseridos a esquerda (alignTo="right") e os digitos animam da direita para a esquerda.',
+    section3Title: "Estilo Flip",
+    section3Description: "Animacao de nomes usando SgFlipDigit (flip card).",
+    section4Title: "Estilo Neon",
+    section4Description:
+      "Cada caractere usa SgNeonDigit com efeito de brilho neon. Use color e backgroundColor para personalizar.",
+    section5Title: "Estilo Fade",
+    section5Description:
+      "Cada caractere usa SgFadeDigit: apaga o digito atual e acende o novo (efeito bulbo/display).",
+    section6Title: "Estilo Discard",
+    section6Description:
+      "Cada caractere usa SgDiscardDigit: a folha com o valor antigo e descartada voando para fora.",
+    section7Title: "Estilo Matrix",
+    section7Description:
+      "Cada caractere usa SgMatrixDigit: renderizado em pontos de LED 5x7. Ideal para placares e paineis digitais.",
+    section8Title: "autoStart - animacao automatica",
+    section8Description:
+      "Com autoStart=true, a animacao e iniciada automaticamente sempre que targetString mudar. Funciona com todos os estilos.",
+    section9Title: "Velocidades",
+    section9Description: "Comparacao de velocity=10, 50 e 90 na mesma animacao.",
+    playgroundTitle: "Playground",
+    playgroundDescription: "Configure todas as props em tempo real, incluindo os novos estilos e cores.",
+    playgroundCardTitle: "SgStringAnimator Playground",
+    propsReferenceTitle: "Referencia de Props"
+  },
+  "pt-PT": {
+    headerSubtitle:
+      "Anima caractere a caractere de uma string para outra. Suporta seis estilos: roller3d, flip, neon, fade, discard e matrix. Configuravel em velocidade, alinhamento e cores.",
+    section1Title: "Roller 3D - nomes (left-aligned)",
+    section1Description:
+      'Anima "LUCIANO" para "MARTA". Posicoes extra preenchidas com espaco a direita (alignTo="left").',
+    section2Title: "Roller 3D - numeros (right-aligned)",
+    section2Description:
+      'Anima "42" para "1337". Espacos sao inseridos a esquerda (alignTo="right") e os digitos animam da direita para a esquerda.',
+    section3Title: "Estilo Flip",
+    section3Description: "Animacao de nomes usando SgFlipDigit (flip card).",
+    section4Title: "Estilo Neon",
+    section4Description:
+      "Cada caractere usa SgNeonDigit com efeito de brilho neon. Use color e backgroundColor para personalizar.",
+    section5Title: "Estilo Fade",
+    section5Description:
+      "Cada caractere usa SgFadeDigit: apaga o digito atual e acende o novo (efeito de display).",
+    section6Title: "Estilo Discard",
+    section6Description:
+      "Cada caractere usa SgDiscardDigit: a folha com o valor antigo e descartada para fora.",
+    section7Title: "Estilo Matrix",
+    section7Description:
+      "Cada caractere usa SgMatrixDigit: renderizado em pontos de LED 5x7. Ideal para placares e paineis digitais.",
+    section8Title: "autoStart - animacao automatica",
+    section8Description:
+      "Com autoStart=true, a animacao inicia automaticamente sempre que targetString muda. Funciona com todos os estilos.",
+    section9Title: "Velocidades",
+    section9Description: "Comparacao de velocity=10, 50 e 90 na mesma animacao.",
+    playgroundTitle: "Playground",
+    playgroundDescription: "Configure as props em tempo real, incluindo os estilos e cores.",
+    playgroundCardTitle: "SgStringAnimator Playground",
+    propsReferenceTitle: "Referencia de Props"
+  },
+  "en-US": {
+    headerSubtitle:
+      "Animates one string into another, character by character. Supports six styles: roller3d, flip, neon, fade, discard, and matrix. Fully configurable for speed, alignment, and colors.",
+    section1Title: "Roller 3D - names (left-aligned)",
+    section1Description:
+      'Animates "LUCIANO" into "MARTA". Extra positions are padded on the right (alignTo="left").',
+    section2Title: "Roller 3D - numbers (right-aligned)",
+    section2Description:
+      'Animates "42" into "1337". Padding is applied on the left (alignTo="right") and digits animate from right to left.',
+    section3Title: "Flip style",
+    section3Description: "Name animation using SgFlipDigit (flip card).",
+    section4Title: "Neon style",
+    section4Description:
+      "Each character uses SgNeonDigit with a neon glow effect. Use color and backgroundColor for customization.",
+    section5Title: "Fade style",
+    section5Description:
+      "Each character uses SgFadeDigit: the current value fades out and the next one fades in.",
+    section6Title: "Discard style",
+    section6Description:
+      "Each character uses SgDiscardDigit: the previous value is discarded with an outgoing motion.",
+    section7Title: "Matrix style",
+    section7Description:
+      "Each character uses SgMatrixDigit with a 5x7 LED matrix rendering. Great for dashboards and digital panels.",
+    section8Title: "autoStart - automatic animation",
+    section8Description:
+      "With autoStart=true, animation starts automatically whenever targetString changes. Works with all styles.",
+    section9Title: "Speed presets",
+    section9Description: "Comparison of velocity=10, 50, and 90 using the same animation.",
+    playgroundTitle: "Playground",
+    playgroundDescription: "Configure all props in real time, including the new styles and colors.",
+    playgroundCardTitle: "SgStringAnimator Playground",
+    propsReferenceTitle: "Props Reference"
+  },
+  es: {
+    headerSubtitle:
+      "Anima una cadena a otra caracter por caracter. Soporta seis estilos: roller3d, flip, neon, fade, discard y matrix. Configurable en velocidad, alineacion y colores.",
+    section1Title: "Roller 3D - nombres (left-aligned)",
+    section1Description:
+      'Anima "LUCIANO" hasta "MARTA". Las posiciones extra se completan a la derecha (alignTo="left").',
+    section2Title: "Roller 3D - numeros (right-aligned)",
+    section2Description:
+      'Anima "42" hasta "1337". Los espacios se insertan a la izquierda (alignTo="right") y los digitos animan de derecha a izquierda.',
+    section3Title: "Estilo Flip",
+    section3Description: "Animacion de nombres usando SgFlipDigit (flip card).",
+    section4Title: "Estilo Neon",
+    section4Description:
+      "Cada caracter usa SgNeonDigit con efecto de brillo neon. Usa color y backgroundColor para personalizar.",
+    section5Title: "Estilo Fade",
+    section5Description:
+      "Cada caracter usa SgFadeDigit: apaga el valor actual y enciende el siguiente.",
+    section6Title: "Estilo Discard",
+    section6Description:
+      "Cada caracter usa SgDiscardDigit: la hoja con el valor anterior se descarta hacia fuera.",
+    section7Title: "Estilo Matrix",
+    section7Description:
+      "Cada caracter usa SgMatrixDigit: renderizado en puntos LED 5x7. Ideal para paneles digitales.",
+    section8Title: "autoStart - animacion automatica",
+    section8Description:
+      "Con autoStart=true, la animacion se inicia automaticamente cuando cambia targetString. Funciona con todos los estilos.",
+    section9Title: "Velocidades",
+    section9Description: "Comparacion de velocity=10, 50 y 90 en la misma animacion.",
+    playgroundTitle: "Playground",
+    playgroundDescription: "Configura todas las props en tiempo real, incluyendo estilos y colores.",
+    playgroundCardTitle: "SgStringAnimator Playground",
+    propsReferenceTitle: "Referencia de Props"
+  }
+};
+
+type SupportedStringAnimatorLocale = keyof typeof STRING_ANIMATOR_TEXTS;
+
+function isSupportedStringAnimatorLocale(locale: ShowcaseLocale): locale is SupportedStringAnimatorLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getStringAnimatorTexts(locale: ShowcaseLocale): StringAnimatorTexts {
+  const normalized: SupportedStringAnimatorLocale = isSupportedStringAnimatorLocale(locale) ? locale : "pt-BR";
+  return STRING_ANIMATOR_TEXTS[normalized];
+}
+
 // ---------------------------------------------------------------------------
 // Playground
 // ---------------------------------------------------------------------------
@@ -679,8 +852,10 @@ const PROPS: ShowcasePropRow[] = [
 // Page
 // ---------------------------------------------------------------------------
 export default function SgStringAnimatorShowcase() {
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getStringAnimatorTexts(i18n.locale), [i18n.locale]);
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
-    useShowcaseAnchors();
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   return (
     <I18NReady>
@@ -694,15 +869,15 @@ export default function SgStringAnimatorShowcase() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgStringAnimator"
-          subtitle="Anima caracter a caracter de uma string para outra. Suporta seis estilos: roller3d, flip, neon, fade, discard e matrix. Configuravel em velocidade, alinhamento e cores."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
         {/* 1 */}
         <Section
-          title="Roller 3D — nomes (left-aligned)"
-          description='Anima "LUCIANO" ate "MARTA". Posicoes extras preenchidas com espaco a direita (alignTo="left").'
+          title={texts.section1Title}
+          description={texts.section1Description}
         >
           <Ex1 />
           <CodeBlockBase code={EX1_CODE} />
@@ -710,8 +885,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 2 */}
         <Section
-          title="Roller 3D — numeros (right-aligned)"
-          description='Anima "42" ate "1337". Espacos sao inseridos a esquerda (alignTo="right") e os digitos animam da direita para a esquerda.'
+          title={texts.section2Title}
+          description={texts.section2Description}
         >
           <Ex2 />
           <CodeBlockBase code={EX2_CODE} />
@@ -719,8 +894,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 3 */}
         <Section
-          title="Estilo Flip"
-          description="Animacao de nomes usando SgFlipDigit (flip card)."
+          title={texts.section3Title}
+          description={texts.section3Description}
         >
           <Ex3 />
           <CodeBlockBase code={EX3_CODE} />
@@ -728,8 +903,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 4 */}
         <Section
-          title="Estilo Neon"
-          description="Cada caractere usa SgNeonDigit com efeito de brilho neon. Use color e backgroundColor para personalizar."
+          title={texts.section4Title}
+          description={texts.section4Description}
         >
           <Ex4 />
           <CodeBlockBase code={EX4_CODE} />
@@ -737,8 +912,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 5 */}
         <Section
-          title="Estilo Fade"
-          description="Cada caractere usa SgFadeDigit: apaga o digito atual e acende o novo (efeito bulbo/display)."
+          title={texts.section5Title}
+          description={texts.section5Description}
         >
           <Ex5 />
           <CodeBlockBase code={EX5_CODE} />
@@ -746,8 +921,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 6 */}
         <Section
-          title="Estilo Discard"
-          description="Cada caractere usa SgDiscardDigit: a folha com o valor antigo e descartada voando para fora."
+          title={texts.section6Title}
+          description={texts.section6Description}
         >
           <Ex6 />
           <CodeBlockBase code={EX6_CODE} />
@@ -755,8 +930,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 7 */}
         <Section
-          title="Estilo Matrix"
-          description="Cada caractere usa SgMatrixDigit: renderizado em pontos de LED 5x7. Ideal para placares e paineis digitais."
+          title={texts.section7Title}
+          description={texts.section7Description}
         >
           <Ex7 />
           <CodeBlockBase code={EX7_CODE} />
@@ -764,8 +939,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 8 */}
         <Section
-          title="autoStart — animacao automatica"
-          description="Com autoStart=true, a animacao e iniciada automaticamente sempre que targetString mudar. Funciona com todos os estilos."
+          title={texts.section8Title}
+          description={texts.section8Description}
         >
           <Ex8 />
           <CodeBlockBase code={EX8_CODE} />
@@ -773,8 +948,8 @@ export default function SgStringAnimatorShowcase() {
 
         {/* 9 */}
         <Section
-          title="Velocidades"
-          description="Comparacao de velocity=10, 50 e 90 na mesma animacao."
+          title={texts.section9Title}
+          description={texts.section9Description}
         >
           <Ex9 />
           <CodeBlockBase code={EX9_CODE} />
@@ -782,11 +957,11 @@ export default function SgStringAnimatorShowcase() {
 
         {/* Playground */}
         <Section
-          title="Playground"
-          description="Configure todas as props em tempo real, incluindo os novos estilos e cores."
+          title={texts.playgroundTitle}
+          description={texts.playgroundDescription}
         >
           <SgPlayground
-            title="SgStringAnimator Playground"
+            title={texts.playgroundCardTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
@@ -795,7 +970,7 @@ export default function SgStringAnimatorShowcase() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={PROPS} />
+        <ShowcasePropsReference rows={PROPS} title={texts.propsReferenceTitle} />
         <div
           aria-hidden="true"
           className="pointer-events-none"

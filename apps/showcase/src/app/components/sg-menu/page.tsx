@@ -19,6 +19,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const MENU: SgMenuNode[] = [
   { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
@@ -796,14 +797,251 @@ const MENU_USER_PROPS: ShowcasePropRow[] = [
   { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao ao clicar no bloco do usuario." }
 ];
 
+type MenuShowcaseTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  section6Title: string;
+  section6Description: string;
+  section7Title: string;
+  section7Description: string;
+  section8Title: string;
+  section8Description: string;
+  sidebarSearchPlaceholder: string;
+  sidebarUserSubtitle: string;
+  mainContentTitle: string;
+  activeItemLabel: string;
+  drawerOpenButton: string;
+  drawerPinButton: string;
+  drawerUnpinButton: string;
+  drawerSearchPlaceholder: string;
+  dockMenuStyleTitle: string;
+  dockFreeAreaLabel: string;
+  dockSearchPlaceholder: string;
+  dockUserSubtitle: string;
+  toolbarTitle: string;
+  toolbarHintNew: string;
+  toolbarHintSave: string;
+  toolbarHintPrint: string;
+  toolbarHintExport: string;
+  toolbarHintDelete: string;
+  playgroundTitle: string;
+  propsMenuTitle: string;
+  propsNodeTitle: string;
+  propsSelectionTitle: string;
+  propsBrandTitle: string;
+  propsUserTitle: string;
+};
+
+const MENU_SHOWCASE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MenuShowcaseTexts> = {
+  "pt-BR": {
+    headerSubtitle: "Menu hierarquico para sidebar, drawer, inline e hibrido, com busca e multiplos estilos.",
+    section1Title: "1) Sidebar Fixa",
+    section1Description: "Menu lateral com grupos colapsaveis e botao de colapso.",
+    section2Title: "2) Drawer Mobile",
+    section2Description: "Abre em overlay e pode ser fixado por pin.",
+    section3Title: "3) PanelMenu",
+    section3Description: "Exemplo isolado para visualizar apenas o estilo panel.",
+    section4Title: "4) Tiered",
+    section4Description: "Exemplo isolado para visualizar apenas o estilo tiered.",
+    section5Title: "5) MegaMenu Horizontal",
+    section5Description: "Exemplo isolado para visualizar apenas o mega menu horizontal.",
+    section6Title: "6) MegaMenu Vertical",
+    section6Description: "Exemplo isolado para visualizar apenas o mega menu vertical.",
+    section7Title: "7) Sidebar Dockable",
+    section7Description:
+      "SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.",
+    section8Title: "8) Playground",
+    section8Description: "Teste variant, style, collapsed e open.",
+    sidebarSearchPlaceholder: "Buscar modulo...",
+    sidebarUserSubtitle: "Financeiro",
+    mainContentTitle: "Conteudo principal",
+    activeItemLabel: "Item ativo",
+    drawerOpenButton: "Abrir menu mobile",
+    drawerPinButton: "Fixar drawer",
+    drawerUnpinButton: "Desafixar drawer",
+    drawerSearchPlaceholder: "Buscar...",
+    dockMenuStyleTitle: "Menu Style",
+    dockFreeAreaLabel: "Area central livre",
+    dockSearchPlaceholder: "Buscar modulo...",
+    dockUserSubtitle: "Financeiro",
+    toolbarTitle: "Ferramentas",
+    toolbarHintNew: "Novo registro",
+    toolbarHintSave: "Salvar",
+    toolbarHintPrint: "Imprimir",
+    toolbarHintExport: "Exportar",
+    toolbarHintDelete: "Excluir",
+    playgroundTitle: "SgMenu Playground",
+    propsMenuTitle: "Referencia de Props - SgMenu",
+    propsNodeTitle: "Referencia de Props - SgMenuNode",
+    propsSelectionTitle: "Referencia de Props - SgMenuSelection",
+    propsBrandTitle: "Referencia de Props - SgMenuBrand",
+    propsUserTitle: "Referencia de Props - SgMenuUser"
+  },
+  "pt-PT": {
+    headerSubtitle: "Menu hierarquico para sidebar, drawer, inline e hibrido, com busca e multiplos estilos.",
+    section1Title: "1) Sidebar Fixa",
+    section1Description: "Menu lateral com grupos colapsaveis e botao de colapso.",
+    section2Title: "2) Drawer Mobile",
+    section2Description: "Abre em overlay e pode ser fixado por pin.",
+    section3Title: "3) PanelMenu",
+    section3Description: "Exemplo isolado para visualizar apenas o estilo panel.",
+    section4Title: "4) Tiered",
+    section4Description: "Exemplo isolado para visualizar apenas o estilo tiered.",
+    section5Title: "5) MegaMenu Horizontal",
+    section5Description: "Exemplo isolado para visualizar apenas o mega menu horizontal.",
+    section6Title: "6) MegaMenu Vertical",
+    section6Description: "Exemplo isolado para visualizar apenas o mega menu vertical.",
+    section7Title: "7) Sidebar Dockable",
+    section7Description:
+      "SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.",
+    section8Title: "8) Playground",
+    section8Description: "Teste variant, style, collapsed e open.",
+    sidebarSearchPlaceholder: "Buscar modulo...",
+    sidebarUserSubtitle: "Financeiro",
+    mainContentTitle: "Conteudo principal",
+    activeItemLabel: "Item ativo",
+    drawerOpenButton: "Abrir menu mobile",
+    drawerPinButton: "Fixar drawer",
+    drawerUnpinButton: "Desafixar drawer",
+    drawerSearchPlaceholder: "Buscar...",
+    dockMenuStyleTitle: "Menu Style",
+    dockFreeAreaLabel: "Area central livre",
+    dockSearchPlaceholder: "Buscar modulo...",
+    dockUserSubtitle: "Financeiro",
+    toolbarTitle: "Ferramentas",
+    toolbarHintNew: "Novo registro",
+    toolbarHintSave: "Salvar",
+    toolbarHintPrint: "Imprimir",
+    toolbarHintExport: "Exportar",
+    toolbarHintDelete: "Excluir",
+    playgroundTitle: "SgMenu Playground",
+    propsMenuTitle: "Referencia de Props - SgMenu",
+    propsNodeTitle: "Referencia de Props - SgMenuNode",
+    propsSelectionTitle: "Referencia de Props - SgMenuSelection",
+    propsBrandTitle: "Referencia de Props - SgMenuBrand",
+    propsUserTitle: "Referencia de Props - SgMenuUser"
+  },
+  "en-US": {
+    headerSubtitle: "Hierarchical menu for sidebar, drawer, inline, and hybrid layouts, with search and multiple styles.",
+    section1Title: "1) Fixed Sidebar",
+    section1Description: "Side menu with collapsible groups and collapse button.",
+    section2Title: "2) Mobile Drawer",
+    section2Description: "Opens as overlay and can be pinned.",
+    section3Title: "3) PanelMenu",
+    section3Description: "Isolated example to preview only panel style.",
+    section4Title: "4) Tiered",
+    section4Description: "Isolated example to preview only tiered style.",
+    section5Title: "5) MegaMenu Horizontal",
+    section5Description: "Isolated example to preview only horizontal mega menu.",
+    section6Title: "6) MegaMenu Vertical",
+    section6Description: "Isolated example to preview only vertical mega menu.",
+    section7Title: "7) Dockable Sidebar",
+    section7Description:
+      "Dockable SgMenu with full menu, brand, userMenu, integrated SgToolBar, and showcase visual identity.",
+    section8Title: "8) Playground",
+    section8Description: "Test variant, style, collapsed, and open.",
+    sidebarSearchPlaceholder: "Search module...",
+    sidebarUserSubtitle: "Finance",
+    mainContentTitle: "Main content",
+    activeItemLabel: "Active item",
+    drawerOpenButton: "Open mobile menu",
+    drawerPinButton: "Pin drawer",
+    drawerUnpinButton: "Unpin drawer",
+    drawerSearchPlaceholder: "Search...",
+    dockMenuStyleTitle: "Menu Style",
+    dockFreeAreaLabel: "Free center area",
+    dockSearchPlaceholder: "Search module...",
+    dockUserSubtitle: "Finance",
+    toolbarTitle: "Tools",
+    toolbarHintNew: "New record",
+    toolbarHintSave: "Save",
+    toolbarHintPrint: "Print",
+    toolbarHintExport: "Export",
+    toolbarHintDelete: "Delete",
+    playgroundTitle: "SgMenu Playground",
+    propsMenuTitle: "Props Reference - SgMenu",
+    propsNodeTitle: "Props Reference - SgMenuNode",
+    propsSelectionTitle: "Props Reference - SgMenuSelection",
+    propsBrandTitle: "Props Reference - SgMenuBrand",
+    propsUserTitle: "Props Reference - SgMenuUser"
+  },
+  es: {
+    headerSubtitle: "Menu jerarquico para sidebar, drawer, inline e hibrido, con busqueda y multiples estilos.",
+    section1Title: "1) Sidebar Fija",
+    section1Description: "Menu lateral con grupos colapsables y boton de colapso.",
+    section2Title: "2) Drawer Mobile",
+    section2Description: "Se abre en overlay y puede fijarse con pin.",
+    section3Title: "3) PanelMenu",
+    section3Description: "Ejemplo aislado para ver solo el estilo panel.",
+    section4Title: "4) Tiered",
+    section4Description: "Ejemplo aislado para ver solo el estilo tiered.",
+    section5Title: "5) MegaMenu Horizontal",
+    section5Description: "Ejemplo aislado para ver solo el mega menu horizontal.",
+    section6Title: "6) MegaMenu Vertical",
+    section6Description: "Ejemplo aislado para ver solo el mega menu vertical.",
+    section7Title: "7) Sidebar Dockable",
+    section7Description:
+      "SgMenu dockable con menu completo, brand, userMenu, SgToolBar integrada e identidad visual del showcase.",
+    section8Title: "8) Playground",
+    section8Description: "Prueba variant, style, collapsed y open.",
+    sidebarSearchPlaceholder: "Buscar modulo...",
+    sidebarUserSubtitle: "Finanzas",
+    mainContentTitle: "Contenido principal",
+    activeItemLabel: "Item activo",
+    drawerOpenButton: "Abrir menu mobile",
+    drawerPinButton: "Fijar drawer",
+    drawerUnpinButton: "Desfijar drawer",
+    drawerSearchPlaceholder: "Buscar...",
+    dockMenuStyleTitle: "Estilo del Menu",
+    dockFreeAreaLabel: "Area central libre",
+    dockSearchPlaceholder: "Buscar modulo...",
+    dockUserSubtitle: "Finanzas",
+    toolbarTitle: "Herramientas",
+    toolbarHintNew: "Nuevo registro",
+    toolbarHintSave: "Guardar",
+    toolbarHintPrint: "Imprimir",
+    toolbarHintExport: "Exportar",
+    toolbarHintDelete: "Eliminar",
+    playgroundTitle: "SgMenu Playground",
+    propsMenuTitle: "Referencia de Props - SgMenu",
+    propsNodeTitle: "Referencia de Props - SgMenuNode",
+    propsSelectionTitle: "Referencia de Props - SgMenuSelection",
+    propsBrandTitle: "Referencia de Props - SgMenuBrand",
+    propsUserTitle: "Referencia de Props - SgMenuUser"
+  }
+};
+
+type SupportedMenuShowcaseLocale = keyof typeof MENU_SHOWCASE_TEXTS;
+
+function isSupportedMenuShowcaseLocale(locale: ShowcaseLocale): locale is SupportedMenuShowcaseLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getMenuShowcaseTexts(locale: ShowcaseLocale): MenuShowcaseTexts {
+  const normalized: SupportedMenuShowcaseLocale = isSupportedMenuShowcaseLocale(locale) ? locale : "pt-BR";
+  return MENU_SHOWCASE_TEXTS[normalized];
+}
+
 export default function SgMenuPage() {
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getMenuShowcaseTexts(i18n.locale), [i18n.locale]);
   const [activeId, setActiveId] = React.useState("dashboard");
   const [dockActiveId, setDockActiveId] = React.useState("dashboard");
   const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
   const [collapsed, setCollapsed] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [drawerPinned, setDrawerPinned] = React.useState(false);
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   return (
     <I18NReady>
@@ -815,12 +1053,12 @@ export default function SgMenuPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgMenu"
-          subtitle="Menu hierarquico para sidebar, drawer, inline e hibrido, com busca e multiplos estilos."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Sidebar Fixa" description="Menu lateral com grupos colapsaveis e botao de colapso.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <div className="h-[460px] overflow-hidden rounded-lg border border-border">
             <div className="flex h-full">
               <SgMenu
@@ -831,16 +1069,16 @@ export default function SgMenuPage() {
                 collapsed={collapsed}
                 onCollapsedChange={setCollapsed}
                 showCollapseButton
-                search={{ enabled: true, placeholder: "Buscar modulo..." }}
+                search={{ enabled: true, placeholder: texts.sidebarSearchPlaceholder }}
                 brand={{ title: "SeedGrid ERP" }}
-                user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+                user={{ name: "Lucia Souza", subtitle: texts.sidebarUserSubtitle }}
                 userMenu={USER_MENU}
                 onNavigate={(node) => setActiveId(node.id)}
               />
               <div className="flex-1 space-y-3 p-4">
-                <h3 className="text-base font-semibold">Conteudo principal</h3>
+                <h3 className="text-base font-semibold">{texts.mainContentTitle}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Item ativo: <span className="font-medium text-foreground">{activeId}</span>
+                  {texts.activeItemLabel}: <span className="font-medium text-foreground">{activeId}</span>
                 </p>
               </div>
             </div>
@@ -848,11 +1086,11 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_SIDEBAR_CODE} />
         </Section>
 
-        <Section title="2) Drawer Mobile" description="Abre em overlay e pode ser fixado por pin.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="flex flex-wrap gap-2">
-            <SgButton onClick={() => setDrawerOpen(true)}>Abrir menu mobile</SgButton>
+            <SgButton onClick={() => setDrawerOpen(true)}>{texts.drawerOpenButton}</SgButton>
             <SgButton appearance="outline" onClick={() => setDrawerPinned((v) => !v)}>
-              {drawerPinned ? "Desafixar drawer" : "Fixar drawer"}
+              {drawerPinned ? texts.drawerUnpinButton : texts.drawerPinButton}
             </SgButton>
           </div>
 
@@ -866,14 +1104,14 @@ export default function SgMenuPage() {
             onPinnedChange={setDrawerPinned}
             showPinButton
             closeOnNavigate
-            search={{ enabled: true, placeholder: "Buscar..." }}
+            search={{ enabled: true, placeholder: texts.drawerSearchPlaceholder }}
             brand={{ title: "SeedGrid ERP" }}
             onNavigate={(node) => setActiveId(node.id)}
           />
           <CodeBlock code={EXAMPLE_DRAWER_CODE} />
         </Section>
 
-        <Section title="3) PanelMenu" description="Exemplo isolado para visualizar apenas o estilo panel.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <div className="rounded-lg border border-border p-3">
             <div className="h-[320px] overflow-auto rounded-md border border-border">
               <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
@@ -882,7 +1120,7 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_PANEL_MENU_CODE} />
         </Section>
 
-        <Section title="4) Tiered" description="Exemplo isolado para visualizar apenas o estilo tiered.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <div className="rounded-lg border border-border p-3">
             <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
               <SgMenu menu={MENU} selection={{ activeId }} variant="inline" menuStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
@@ -891,7 +1129,7 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_TIERED_CODE} />
         </Section>
 
-        <Section title="5) MegaMenu Horizontal" description="Exemplo isolado para visualizar apenas o mega menu horizontal.">
+        <Section title={texts.section5Title} description={texts.section5Description}>
           <div className="rounded-lg border border-border p-3">
             <SgMenu
               menu={MEGA_MENU}
@@ -903,7 +1141,7 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_MEGA_HORIZONTAL_CODE} />
         </Section>
 
-        <Section title="6) MegaMenu Vertical" description="Exemplo isolado para visualizar apenas o mega menu vertical.">
+        <Section title={texts.section6Title} description={texts.section6Description}>
           <div className="rounded-lg border border-border p-3">
             <SgMenu
               menu={MEGA_MENU}
@@ -915,10 +1153,10 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />
         </Section>
 
-        <Section title="7) Sidebar Dockable" description="SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.">
+        <Section title={texts.section7Title} description={texts.section7Description}>
           <div className="space-y-3">
             <SgRadioGroup
-              title="Menu Style"
+              title={texts.dockMenuStyleTitle}
               source={DOCKABLE_MENU_STYLE_OPTIONS}
               value={dockMenuStyle}
               orientation="horizontal"
@@ -940,7 +1178,7 @@ export default function SgMenuPage() {
                 <SgDockZone zone="right" />
                 <SgDockZone zone="bottom" />
                 <SgDockZone zone="free">
-                  <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
+                  <div className="pointer-events-none text-sm text-[#7e5f46]">{texts.dockFreeAreaLabel}</div>
                 </SgDockZone>
 
                 <SgMenu
@@ -954,9 +1192,9 @@ export default function SgMenuPage() {
                   dockZone="left"
                   draggable
                   showCollapseButton
-                  search={{ enabled: true, placeholder: "Buscar módulo..." }}
+                  search={{ enabled: true, placeholder: texts.dockSearchPlaceholder }}
                   brand={{ title: "SeedGrid ERP", imageSrc: "/logo-seedgrid.svg" }}
-                  user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+                  user={{ name: "Lucia Souza", subtitle: texts.dockUserSubtitle }}
                   userMenu={DOCKABLE_USER_MENU}
                   userSectionStyle={{ backgroundColor: "#ebe0d4" }}
                   onNavigate={(node) => setDockActiveId(node.id)}
@@ -966,15 +1204,15 @@ export default function SgMenuPage() {
                   id="toolbar-dock-v1"
                   dockZone="top"
                   orientationDirection="horizontal-left"
-                  title="Ferramentas"
+                  title={texts.toolbarTitle}
                   draggable
                   collapsible={false}
                 >
-                  <SgToolbarIconButton icon={<Plus className="size-4" />} hint="Novo registro" severity="primary" />
-                  <SgToolbarIconButton icon={<Save className="size-4" />} hint="Salvar" />
-                  <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Imprimir" />
-                  <SgToolbarIconButton icon={<Download className="size-4" />} hint="Exportar" />
-                  <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="Excluir" severity="danger" />
+                  <SgToolbarIconButton icon={<Plus className="size-4" />} hint={texts.toolbarHintNew} severity="primary" />
+                  <SgToolbarIconButton icon={<Save className="size-4" />} hint={texts.toolbarHintSave} />
+                  <SgToolbarIconButton icon={<Printer className="size-4" />} hint={texts.toolbarHintPrint} />
+                  <SgToolbarIconButton icon={<Download className="size-4" />} hint={texts.toolbarHintExport} />
+                  <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint={texts.toolbarHintDelete} severity="danger" />
                 </SgToolBar>
               </SgDockLayout>
             </div>
@@ -982,9 +1220,9 @@ export default function SgMenuPage() {
           <CodeBlock code={EXAMPLE_DOCKABLE_CODE} />
         </Section>
 
-        <Section title="8) Playground" description="Teste variant, style, collapsed e open.">
+        <Section title={texts.section8Title} description={texts.section8Description}>
           <SgPlayground
-            title="SgMenu Playground"
+            title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
             code={PLAYGROUND_CODE}
@@ -993,14 +1231,15 @@ export default function SgMenuPage() {
           />
         </Section>
 
-        <ShowcasePropsReference id="props-reference" title="Referencia de Props - SgMenu" rows={MENU_PROPS} />
-        <ShowcasePropsReference id="props-reference-menu-node" title="Referencia de Props - SgMenuNode" rows={MENU_NODE_PROPS} />
-        <ShowcasePropsReference id="props-reference-menu-selection" title="Referencia de Props - SgMenuSelection" rows={MENU_SELECTION_PROPS} />
-        <ShowcasePropsReference id="props-reference-menu-brand" title="Referencia de Props - SgMenuBrand" rows={MENU_BRAND_PROPS} />
-        <ShowcasePropsReference id="props-reference-menu-user" title="Referencia de Props - SgMenuUser" rows={MENU_USER_PROPS} />
+        <ShowcasePropsReference id="props-reference" title={texts.propsMenuTitle} rows={MENU_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-node" title={texts.propsNodeTitle} rows={MENU_NODE_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-selection" title={texts.propsSelectionTitle} rows={MENU_SELECTION_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-brand" title={texts.propsBrandTitle} rows={MENU_BRAND_PROPS} />
+        <ShowcasePropsReference id="props-reference-menu-user" title={texts.propsUserTitle} rows={MENU_USER_PROPS} />
 
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+

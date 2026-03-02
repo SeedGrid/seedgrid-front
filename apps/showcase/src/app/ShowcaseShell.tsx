@@ -148,7 +148,54 @@ const SIDEBAR_THEME_VARS = {
   "--sg-link-hover": "168 87 38"
 } as React.CSSProperties;
 
-const LOCALES: Array<{ value: ShowcaseLocale; label: string }> = [
+function LocaleFlag(props: Readonly<{ locale: ShowcaseLocale }>) {
+  if (props.locale === "pt-BR") {
+    return (
+      <svg viewBox="0 0 24 16" width="16" height="12" aria-hidden="true">
+        <rect width="24" height="16" fill="#1f8f3a" />
+        <polygon points="12,2 22,8 12,14 2,8" fill="#f6c431" />
+        <circle cx="12" cy="8" r="3.2" fill="#1b4d9a" />
+      </svg>
+    );
+  }
+
+  if (props.locale === "pt-PT") {
+    return (
+      <svg viewBox="0 0 24 16" width="16" height="12" aria-hidden="true">
+        <rect width="10" height="16" fill="#1f8f3a" />
+        <rect x="10" width="14" height="16" fill="#c2332b" />
+        <circle cx="10" cy="8" r="2.2" fill="#f6c431" />
+      </svg>
+    );
+  }
+
+  if (props.locale === "en-US") {
+    return (
+      <svg viewBox="0 0 24 16" width="16" height="12" aria-hidden="true">
+        <rect width="24" height="16" fill="#ffffff" />
+        <rect y="0" width="24" height="2" fill="#c2332b" />
+        <rect y="4" width="24" height="2" fill="#c2332b" />
+        <rect y="8" width="24" height="2" fill="#c2332b" />
+        <rect y="12" width="24" height="2" fill="#c2332b" />
+        <rect width="10" height="8" fill="#1b4d9a" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 16" width="16" height="12" aria-hidden="true">
+      <rect width="24" height="16" fill="#c2332b" />
+      <rect width="8" height="16" fill="#f6c431" />
+    </svg>
+  );
+}
+
+type LocaleOption = {
+  value: ShowcaseLocale;
+  label: string;
+};
+
+const LOCALES: LocaleOption[] = [
   { value: "pt-BR", label: "pt-BR (Portugues do Brasil)" },
   { value: "pt-PT", label: "pt-PT (Portugues de Portugal)" },
   { value: "en-US", label: "en-US (Ingles dos Estados Unidos)" },
@@ -181,6 +228,7 @@ export default function ShowcaseShell(props: {
     props.initialMessages ?? showcaseMessagesPtBr
   );
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(true);
+  const [isMobileViewport, setIsMobileViewport] = React.useState(false);
 
   const applyLocale = React.useCallback((next: ShowcaseLocale) => {
     const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
@@ -225,6 +273,15 @@ export default function ShowcaseShell(props: {
     }
   }, [locale, messages]);
 
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(max-width: 767px)");
+    const syncViewport = () => setIsMobileViewport(media.matches);
+    syncViewport();
+    media.addEventListener("change", syncViewport);
+    return () => media.removeEventListener("change", syncViewport);
+  }, []);
+
   return (
     <ShowcaseI18nProvider locale={locale} messages={messages}>
       <SgComponentsI18nProvider
@@ -236,13 +293,13 @@ export default function ShowcaseShell(props: {
           screenId="showcase-shell-screen"
           fullscreen={false}
           className="h-screen w-full"
-          layoutClassName="!grid-cols-[auto_minmax(0,1fr)_auto] !grid-rows-[auto_minmax(0,1fr)]"
+          layoutClassName="!grid-cols-[auto_minmax(0,1fr)] lg:!grid-cols-[auto_minmax(0,1fr)_auto] !grid-rows-[auto_minmax(0,1fr)]"
         >
-          <SgDockZone zone="top" className="col-span-3 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee]">
+          <SgDockZone zone="top" className="col-span-2 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee] lg:col-span-3">
             <div className="px-2 py-1">
               <SgToolBar
                 id="showcase-locale-toolbar"
-                title="Idioma"
+                title={t({ locale, messages }, "showcase.toolbar.language")}
                 orientationDirection="horizontal-left"
                 collapsible={false}
                 dockZone="top"
@@ -250,7 +307,7 @@ export default function ShowcaseShell(props: {
                 {LOCALES.map((item) => (
                   <SgToolbarIconButton
                     key={item.value}
-                    icon={item.value.split("-")[0]?.toUpperCase()}
+                    icon={<LocaleFlag locale={item.value} />}
                     label={item.value}
                     hint={item.label}
                     severity={locale === item.value ? "primary" : "plain"}
@@ -282,8 +339,8 @@ export default function ShowcaseShell(props: {
               dockable
               dockZone="left"
               draggable
-              expandedWidth={288}
-              collapsedWidth={76}
+              expandedWidth={isMobileViewport ? 260 : 288}
+              collapsedWidth={isMobileViewport ? 56 : 76}
               border
               className="h-full bg-[#f7f3ee] text-[#2b1f14]"
               style={SIDEBAR_THEME_VARS}
@@ -294,7 +351,7 @@ export default function ShowcaseShell(props: {
             />
           </SgDockZone>
 
-          <SgDockZone zone="right" className="col-start-3 row-start-2 !p-0 border-l border-[#e2cebc] bg-[#f7f3ee]">
+          <SgDockZone zone="right" className="col-start-3 row-start-2 hidden !p-0 border-l border-[#e2cebc] bg-[#f7f3ee] lg:flex">
             <div className="h-full w-14" />
           </SgDockZone>
 

@@ -38,7 +38,7 @@ export type SgPlaygroundProps = {
   cardId?: string;
 };
 
-const DEFAULT_SEEDGRID_DEPENDENCY = "0.2.9";
+const DEFAULT_SEEDGRID_DEPENDENCY = "2026.3.1";
 const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
   "@codesandbox/sandpack-react": "^2.20.0",
   "react-hook-form": "^7.0.0",
@@ -367,11 +367,18 @@ function CopyButton() {
   );
 }
 
-function RunButton() {
+function RunButton({ onRun }: { onRun?: () => void }) {
   const { sandpack } = useSandpack();
 
   return (
-    <SgButton severity="primary" size="sm" onClick={() => sandpack.runSandpack()}>
+    <SgButton
+      severity="primary"
+      size="sm"
+      onClick={() => {
+        sandpack.runSandpack();
+        onRun?.();
+      }}
+    >
       Run
     </SgButton>
   );
@@ -405,9 +412,10 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   );
 
   const [sandpackStylesCss, setSandpackStylesCss] = React.useState<string>(() =>
-    buildSandpackStylesCss(readThemeVarsFromHost(), effectivePreviewPadding)
+    buildSandpackStylesCss({}, effectivePreviewPadding)
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [activePanel, setActivePanel] = React.useState<"code" | "preview">("code");
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -492,6 +500,8 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
         customSetup={{ dependencies: deps }}
         options={{
           autorun: false,
+          initMode: "lazy",
+          bundlerTimeOut: 60000,
           activeFile: "/App.tsx",
           visibleFiles: ["/App.tsx"],
           externalResources: SANDPACK_EXTERNAL_RESOURCES
@@ -514,21 +524,46 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
                 {isExpanded ? "Reduzir" : "Expandir"}
               </SgButton>
             ) : null}
-            <RunButton />
+            <RunButton onRun={() => setActivePanel("preview")} />
           </div>
+        </div>
+
+        <div className="flex md:hidden border-b border-border">
+          <button
+            type="button"
+            className={cn(
+              "flex-1 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
+              activePanel === "code"
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+            onClick={() => setActivePanel("code")}
+          >
+            Código
+          </button>
+          <button
+            type="button"
+            className={cn(
+              "flex-1 py-2 text-sm font-medium border-b-2 -mb-px transition-colors",
+              activePanel === "preview"
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+            onClick={() => setActivePanel("preview")}
+          >
+            Preview
+          </button>
         </div>
 
         <div
           className={cn(
-            "grid overflow-auto min-h-[260px] min-w-[480px]",
+            "grid overflow-auto min-h-[260px]",
+            "grid-cols-1 md:grid-cols-2",
             resizeClass
           )}
-          style={{
-            gridTemplateColumns: "1fr 1fr",
-            height: currentHeight
-          }}
+          style={{ height: currentHeight }}
         >
-          <div className="min-w-0 border-r border-border">
+          <div className={cn("min-w-0 md:border-r border-border", activePanel !== "code" ? "hidden md:block" : "")}>
             <SandpackCodeEditor
               showLineNumbers
               wrapContent
@@ -540,7 +575,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
               <CopyButton />
             </div>
           </div>
-          <div className="min-w-0">
+          <div className={cn("min-w-0", activePanel !== "preview" ? "hidden md:block" : "")}>
             <SandpackPreview
               style={{ height: "100%" }}
               showOpenInCodeSandbox={false}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
 import { SgButton, SgGrid, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
 
@@ -69,23 +70,251 @@ function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-const BUTTON_EXAMPLE_LINKS = [
-  { id: "exemplo-1", label: "1) Basic" },
-  { id: "exemplo-2", label: "2) Icons" },
-  { id: "exemplo-3", label: "3) Severities" },
-  { id: "exemplo-4", label: "4) Elevated Buttons" },
-  { id: "exemplo-5", label: "5) Rounded Buttons" },
-  { id: "exemplo-6", label: "6) Ghost Buttons" },
-  { id: "exemplo-7", label: "7) Outlined + Elevation" },
-  { id: "exemplo-8", label: "8) Outlined Buttons" },
-  { id: "exemplo-9", label: "9) Rounded Icon Buttons" },
-  { id: "exemplo-10", label: "10) Rounded Text Icon Buttons" },
-  { id: "exemplo-11", label: "11) Rounded and Outlined Icon Buttons" },
-  { id: "exemplo-12", label: "12) Sizes" },
-  { id: "exemplo-13", label: "13) Loading" },
-  { id: "exemplo-14", label: "14) Custom Colors" },
-  { id: "exemplo-15", label: "15) Playground" }
-];
+const BUTTON_EXAMPLE_IDS = [
+  "exemplo-1",
+  "exemplo-2",
+  "exemplo-3",
+  "exemplo-4",
+  "exemplo-5",
+  "exemplo-6",
+  "exemplo-7",
+  "exemplo-8",
+  "exemplo-9",
+  "exemplo-10",
+  "exemplo-11",
+  "exemplo-12",
+  "exemplo-13",
+  "exemplo-14",
+  "exemplo-15",
+] as const;
+
+type ButtonTexts = {
+  headerSubtitle: string;
+  examplesLabel: string;
+  propsLinkLabel: string;
+  sectionTitles: string[];
+  sectionDescriptions: string[];
+  iconsGroupElevated: string;
+  iconsGroupRounded: string;
+  iconsGroupGhost: string;
+  iconsGroupOutlinedElevation: string;
+  iconsGroupOutlined: string;
+  propsTitle: string;
+  propsColProp: string;
+  propsColType: string;
+  propsColDefault: string;
+  propsColDescription: string;
+};
+
+const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
+  "pt-BR": {
+    headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Props Reference",
+    sectionTitles: [
+      "1) Basico",
+      "2) Icones",
+      "3) Severities",
+      "4) Elevated Buttons",
+      "5) Rounded Buttons",
+      "6) Ghost Buttons (Flat)",
+      "7) Outlined + Elevation",
+      "8) Outlined Buttons",
+      "9) Rounded Icon Buttons",
+      "10) Rounded Text Icon Buttons",
+      "11) Rounded and Outlined Icon Buttons",
+      "12) Sizes",
+      "13) Loading",
+      "14) Custom Colors",
+      "15) Playground",
+    ],
+    sectionDescriptions: [
+      "Botao padrao com onClick e estado disabled.",
+      "Exemplos completos com icones para validar appearance/shape/elevation.",
+      'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
+      'appearance="solid" + elevation="sm".',
+      'shape="rounded" para formato pill.',
+      'appearance="ghost" - sem fundo, apenas texto colorido.',
+      'appearance="outline" + elevation="sm".',
+      'appearance="outline" - apenas bordas coloridas.',
+      'shape="rounded" + icon only - botoes circulares.',
+      'shape="rounded" + icon only + appearance="ghost"',
+      'shape="rounded" + icon only + appearance="outline"',
+      'size="sm" | "md" | "lg"',
+      "loading=true exibe spinner e desabilita o botao.",
+      "customColors permite qualquer cor via CSS.",
+      "Teste as principais props do SgButton em tempo real.",
+    ],
+    iconsGroupElevated: "Elevated Buttons",
+    iconsGroupRounded: "Rounded Buttons",
+    iconsGroupGhost: "Ghost Buttons (Flat)",
+    iconsGroupOutlinedElevation: "Outlined + Elevation",
+    iconsGroupOutlined: "Outlined Buttons",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+  },
+  "pt-PT": {
+    headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
+    examplesLabel: "Exemplos",
+    propsLinkLabel: "Props Reference",
+    sectionTitles: [
+      "1) Basico",
+      "2) Icones",
+      "3) Severities",
+      "4) Elevated Buttons",
+      "5) Rounded Buttons",
+      "6) Ghost Buttons (Flat)",
+      "7) Outlined + Elevation",
+      "8) Outlined Buttons",
+      "9) Rounded Icon Buttons",
+      "10) Rounded Text Icon Buttons",
+      "11) Rounded and Outlined Icon Buttons",
+      "12) Sizes",
+      "13) Loading",
+      "14) Custom Colors",
+      "15) Playground",
+    ],
+    sectionDescriptions: [
+      "Botao padrao com onClick e estado disabled.",
+      "Exemplos completos com icones para validar appearance/shape/elevation.",
+      'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
+      'appearance="solid" + elevation="sm".',
+      'shape="rounded" para formato pill.',
+      'appearance="ghost" - sem fundo, apenas texto colorido.',
+      'appearance="outline" + elevation="sm".',
+      'appearance="outline" - apenas bordas coloridas.',
+      'shape="rounded" + icon only - botoes circulares.',
+      'shape="rounded" + icon only + appearance="ghost"',
+      'shape="rounded" + icon only + appearance="outline"',
+      'size="sm" | "md" | "lg"',
+      "loading=true exibe spinner e desabilita o botao.",
+      "customColors permite qualquer cor via CSS.",
+      "Teste as principais props do SgButton em tempo real.",
+    ],
+    iconsGroupElevated: "Elevated Buttons",
+    iconsGroupRounded: "Rounded Buttons",
+    iconsGroupGhost: "Ghost Buttons (Flat)",
+    iconsGroupOutlinedElevation: "Outlined + Elevation",
+    iconsGroupOutlined: "Outlined Buttons",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Padrao",
+    propsColDescription: "Descricao",
+  },
+  "en-US": {
+    headerSubtitle: "Button with support for severity, appearance, shape, elevation, icons, and loading.",
+    examplesLabel: "Examples",
+    propsLinkLabel: "Props Reference",
+    sectionTitles: [
+      "1) Basic",
+      "2) Icons",
+      "3) Severities",
+      "4) Elevated Buttons",
+      "5) Rounded Buttons",
+      "6) Ghost Buttons (Flat)",
+      "7) Outlined + Elevation",
+      "8) Outlined Buttons",
+      "9) Rounded Icon Buttons",
+      "10) Rounded Text Icon Buttons",
+      "11) Rounded and Outlined Icon Buttons",
+      "12) Sizes",
+      "13) Loading",
+      "14) Custom Colors",
+      "15) Playground",
+    ],
+    sectionDescriptions: [
+      "Default button with onClick and disabled state.",
+      "Full icon examples to validate appearance/shape/elevation.",
+      'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
+      'appearance="solid" + elevation="sm".',
+      'shape="rounded" for pill format.',
+      'appearance="ghost" - no background, text only.',
+      'appearance="outline" + elevation="sm".',
+      'appearance="outline" - outlined style only.',
+      'shape="rounded" + icon only - circular buttons.',
+      'shape="rounded" + icon only + appearance="ghost"',
+      'shape="rounded" + icon only + appearance="outline"',
+      'size="sm" | "md" | "lg"',
+      "loading=true shows spinner and disables the button.",
+      "customColors allows any CSS color.",
+      "Test the main SgButton props in real time.",
+    ],
+    iconsGroupElevated: "Elevated Buttons",
+    iconsGroupRounded: "Rounded Buttons",
+    iconsGroupGhost: "Ghost Buttons (Flat)",
+    iconsGroupOutlinedElevation: "Outlined + Elevation",
+    iconsGroupOutlined: "Outlined Buttons",
+    propsTitle: "Props Reference",
+    propsColProp: "Prop",
+    propsColType: "Type",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
+  },
+  es: {
+    headerSubtitle: "Boton con soporte para severity, appearance, shape, elevation, iconos y loading.",
+    examplesLabel: "Ejemplos",
+    propsLinkLabel: "Referencia de Props",
+    sectionTitles: [
+      "1) Basico",
+      "2) Iconos",
+      "3) Severities",
+      "4) Elevated Buttons",
+      "5) Rounded Buttons",
+      "6) Ghost Buttons (Flat)",
+      "7) Outlined + Elevation",
+      "8) Outlined Buttons",
+      "9) Rounded Icon Buttons",
+      "10) Rounded Text Icon Buttons",
+      "11) Rounded and Outlined Icon Buttons",
+      "12) Sizes",
+      "13) Loading",
+      "14) Custom Colors",
+      "15) Playground",
+    ],
+    sectionDescriptions: [
+      "Boton estandar con onClick y estado disabled.",
+      "Ejemplos completos con iconos para validar appearance/shape/elevation.",
+      'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
+      'appearance="solid" + elevation="sm".',
+      'shape="rounded" para formato pill.',
+      'appearance="ghost" - sin fondo, solo texto.',
+      'appearance="outline" + elevation="sm".',
+      'appearance="outline" - solo bordes.',
+      'shape="rounded" + icon only - botones circulares.',
+      'shape="rounded" + icon only + appearance="ghost"',
+      'shape="rounded" + icon only + appearance="outline"',
+      'size="sm" | "md" | "lg"',
+      "loading=true muestra spinner y deshabilita el boton.",
+      "customColors permite cualquier color CSS.",
+      "Prueba las principales props de SgButton en tiempo real.",
+    ],
+    iconsGroupElevated: "Elevated Buttons",
+    iconsGroupRounded: "Rounded Buttons",
+    iconsGroupGhost: "Ghost Buttons (Flat)",
+    iconsGroupOutlinedElevation: "Outlined + Elevation",
+    iconsGroupOutlined: "Outlined Buttons",
+    propsTitle: "Referencia de Props",
+    propsColProp: "Prop",
+    propsColType: "Tipo",
+    propsColDefault: "Por defecto",
+    propsColDescription: "Descripcion",
+  },
+};
+
+type SupportedButtonLocale = keyof typeof BUTTON_TEXTS;
+
+function isSupportedButtonLocale(locale: ShowcaseLocale): locale is SupportedButtonLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getButtonTexts(locale: ShowcaseLocale): ButtonTexts {
+  const normalized: SupportedButtonLocale = isSupportedButtonLocale(locale) ? locale : "pt-BR";
+  return BUTTON_TEXTS[normalized];
+}
 
 const BUTTON_PLAYGROUND_CODE = `import * as React from "react";
 import { SgButton, SgGrid } from "@seedgrid/fe-components";
@@ -134,8 +363,16 @@ export default function App() {
 
 export default function SgButtonShowcase() {
   const submit = useFakeProcess(2000);
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getButtonTexts(i18n.locale), [i18n.locale]);
   const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
   const [anchorOffset, setAnchorOffset] = React.useState(320);
+
+  const sectionTitle = React.useCallback((index: number) => texts.sectionTitles[index - 1] ?? "", [texts]);
+  const sectionDescription = React.useCallback(
+    (index: number) => texts.sectionDescriptions[index - 1] ?? "",
+    [texts]
+  );
 
   React.useEffect(() => {
     const updateAnchorOffset = () => {
@@ -250,22 +487,22 @@ export default function SgButtonShowcase() {
         className="max-w-4xl space-y-8"
         style={{ ["--showcase-anchor-offset" as string]: `${anchorOffset}px` } as React.CSSProperties}
       >
-        <div ref={stickyHeaderRef} className="sticky -top-8 z-50 isolate bg-background pb-2 pt-8">
+        <div ref={stickyHeaderRef} className="sticky top-0 z-50 isolate max-h-[52vh] overflow-y-auto bg-background pb-2 pt-2 md:-top-8 md:max-h-none md:overflow-visible md:pb-2 md:pt-8">
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">SgButton</h1>
             <p className="mt-2 text-muted-foreground">
-              Botao com suporte a severity, appearance, shape, elevation, icons e loading.
+              {texts.headerSubtitle}
             </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{texts.examplesLabel}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
-              {BUTTON_EXAMPLE_LINKS.map((example) => (
+              {BUTTON_EXAMPLE_IDS.map((exampleId, index) => (
                 <Link
-                  key={example.id}
-                  href={`#${example.id}`}
-                  onClick={(event) => handleAnchorClick(event, example.id)}
+                  key={exampleId}
+                  href={`#${exampleId}`}
+                  onClick={(event) => handleAnchorClick(event, exampleId)}
                   className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
                 >
-                  {example.label}
+                  {sectionTitle(index + 1)}
                 </Link>
               ))}
               <Link
@@ -273,14 +510,14 @@ export default function SgButtonShowcase() {
                 onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
               >
-                Props Reference
+                {texts.propsLinkLabel}
               </Link>
             </SgGrid>
           </div>
         </div>
 
-      {/* ── Basic ── */}
-      <Section id="exemplo-1" title="1) Basic" description="Botao padrao com onClick e estado disabled.">
+      {/* â”€â”€ Basic â”€â”€ */}
+      <Section id="exemplo-1" title={sectionTitle(1)} description={sectionDescription(1)}>
         <Row>
           <SgButton onClick={submit.run} loading={submit.loading}>
             Submit
@@ -296,11 +533,11 @@ export default function SgButtonShowcase() {
 <SgButton disabled>Disabled</SgButton>`} />
       </Section>
 
-      {/* ── Icons ── */}
-      <Section id="exemplo-2" title="2) Icons" description="Exemplos completos com icones para validar appearance/shape/elevation.">
+      {/* â”€â”€ Icons â”€â”€ */}
+      <Section id="exemplo-2" title={sectionTitle(2)} description={sectionDescription(2)}>
         <div className="space-y-4">
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Elevated Buttons</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">{texts.iconsGroupElevated}</div>
             <Row>
               {SEVERITIES.map((s) => (
                 <SgButton key={`raised-${s}`} severity={s} appearance="solid" elevation="sm" leftIcon={<Check className="size-4" />}>
@@ -311,7 +548,7 @@ export default function SgButtonShowcase() {
           </div>
 
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Rounded Buttons</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">{texts.iconsGroupRounded}</div>
             <Row>
               {SEVERITIES.map((s) => (
                 <SgButton key={`rounded-${s}`} severity={s} shape="rounded" leftIcon={<Check className="size-4" />}>
@@ -322,7 +559,7 @@ export default function SgButtonShowcase() {
           </div>
 
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Ghost Buttons (Flat)</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">{texts.iconsGroupGhost}</div>
             <Row>
               {SEVERITIES.map((s) => (
                 <SgButton key={`flat-${s}`} severity={s} appearance="ghost" leftIcon={<Check className="size-4" />}>
@@ -333,7 +570,7 @@ export default function SgButtonShowcase() {
           </div>
 
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Outlined + Elevation</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">{texts.iconsGroupOutlinedElevation}</div>
             <Row>
               {SEVERITIES.map((s) => (
                 <SgButton key={`raised-text-${s}`} severity={s} appearance="outline" elevation="sm" leftIcon={<Check className="size-4" />}>
@@ -344,7 +581,7 @@ export default function SgButtonShowcase() {
           </div>
 
           <div>
-            <div className="mb-2 text-sm font-medium text-muted-foreground">Outlined Buttons</div>
+            <div className="mb-2 text-sm font-medium text-muted-foreground">{texts.iconsGroupOutlined}</div>
             <Row>
               {SEVERITIES.map((s) => (
                 <SgButton key={`outline-${s}`} severity={s} appearance="outline" leftIcon={<Check className="size-4" />}>
@@ -379,7 +616,7 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="info" appearance="outline" leftIcon={<Check className="size-4" />}>Info</SgButton>
 <SgButton severity="danger" appearance="outline" leftIcon={<Check className="size-4" />}>Danger</SgButton>`} />
       </Section>
-      <Section id="exemplo-3" title='3) Severities' description='severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"'>
+      <Section id="exemplo-3" title={sectionTitle(3)} description={sectionDescription(3)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s}>{capitalize(s)}</SgButton>
@@ -396,8 +633,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Raised Buttons ── */}
-      <Section id="exemplo-4" title='4) Elevated Buttons' description='appearance="solid" + elevation="sm".'>
+      {/* â”€â”€ Raised Buttons â”€â”€ */}
+      <Section id="exemplo-4" title={sectionTitle(4)} description={sectionDescription(4)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="solid" elevation="sm">{capitalize(s)}</SgButton>
@@ -412,8 +649,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="solid" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Rounded Buttons ── */}
-      <Section id="exemplo-5" title='5) Rounded Buttons' description='shape="rounded" para formato pill.'>
+      {/* â”€â”€ Rounded Buttons â”€â”€ */}
+      <Section id="exemplo-5" title={sectionTitle(5)} description={sectionDescription(5)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} shape="rounded">{capitalize(s)}</SgButton>
@@ -428,8 +665,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Flat Buttons (ghost) ── */}
-      <Section id="exemplo-6" title='6) Ghost Buttons (Flat)' description='appearance="ghost" - sem fundo, apenas texto colorido.'>
+      {/* â”€â”€ Flat Buttons (ghost) â”€â”€ */}
+      <Section id="exemplo-6" title={sectionTitle(6)} description={sectionDescription(6)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="ghost">{capitalize(s)}</SgButton>
@@ -444,8 +681,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="ghost">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Raised Text Buttons ── */}
-      <Section id="exemplo-7" title='7) Outlined + Elevation' description='appearance="outline" + elevation="sm".'>
+      {/* â”€â”€ Raised Text Buttons â”€â”€ */}
+      <Section id="exemplo-7" title={sectionTitle(7)} description={sectionDescription(7)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline" elevation="sm">{capitalize(s)}</SgButton>
@@ -460,8 +697,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="outline" elevation="sm">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Outlined Buttons ── */}
-      <Section id="exemplo-8" title='8) Outlined Buttons' description='appearance="outline" - apenas bordas coloridas.'>
+      {/* â”€â”€ Outlined Buttons â”€â”€ */}
+      <Section id="exemplo-8" title={sectionTitle(8)} description={sectionDescription(8)}>
         <Row>
           {SEVERITIES.map((s) => (
             <SgButton key={s} severity={s} appearance="outline">{capitalize(s)}</SgButton>
@@ -476,8 +713,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" appearance="outline">Danger</SgButton>`} />
       </Section>
 
-      {/* ── Rounded Icon Buttons (solid) ── */}
-      <Section id="exemplo-9" title='9) Rounded Icon Buttons' description='shape="rounded" + icon only - botoes circulares.'>
+      {/* â”€â”€ Rounded Icon Buttons (solid) â”€â”€ */}
+      <Section id="exemplo-9" title={sectionTitle(9)} description={sectionDescription(9)}>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" leftIcon={icon} />
@@ -492,8 +729,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Rounded Text Icon Buttons (ghost) ── */}
-      <Section id="exemplo-10" title='10) Rounded Text Icon Buttons' description='shape="rounded" + icon only + appearance="ghost"'>
+      {/* â”€â”€ Rounded Text Icon Buttons (ghost) â”€â”€ */}
+      <Section id="exemplo-10" title={sectionTitle(10)} description={sectionDescription(10)}>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="ghost" leftIcon={icon} />
@@ -504,8 +741,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" appearance="ghost" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Rounded and Outlined Icon Buttons ── */}
-      <Section id="exemplo-11" title='11) Rounded and Outlined Icon Buttons' description='shape="rounded" + icon only + appearance="outline"'>
+      {/* â”€â”€ Rounded and Outlined Icon Buttons â”€â”€ */}
+      <Section id="exemplo-11" title={sectionTitle(11)} description={sectionDescription(11)}>
         <Row>
           {ICON_MAP.map(({ severity, icon }) => (
             <SgButton key={severity} severity={severity} shape="rounded" appearance="outline" leftIcon={icon} />
@@ -516,8 +753,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton severity="danger" shape="rounded" appearance="outline" leftIcon={<X className="size-4" />} />`} />
       </Section>
 
-      {/* ── Sizes ── */}
-      <Section id="exemplo-12" title='12) Sizes' description='size="sm" | "md" | "lg"'>
+      {/* â”€â”€ Sizes â”€â”€ */}
+      <Section id="exemplo-12" title={sectionTitle(12)} description={sectionDescription(12)}>
         <Row>
           <SgButton size="sm">Small</SgButton>
           <SgButton size="md">Medium</SgButton>
@@ -538,8 +775,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton size="lg" shape="rounded" leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* ── Loading ── */}
-      <Section id="exemplo-13" title="13) Loading" description="loading=true exibe spinner e desabilita o botao.">
+      {/* â”€â”€ Loading â”€â”€ */}
+      <Section id="exemplo-13" title={sectionTitle(13)} description={sectionDescription(13)}>
         <Row>
           <SgButton loading>Processing...</SgButton>
           <SgButton severity="success" loading>Saving...</SgButton>
@@ -552,8 +789,8 @@ import { SgButton } from "@seedgrid/fe-components";
 <SgButton shape="rounded" loading leftIcon={<Check className="size-4" />} />`} />
       </Section>
 
-      {/* ── Custom Colors ── */}
-      <Section id="exemplo-14" title="14) Custom Colors" description="customColors permite qualquer cor via CSS.">
+      {/* â”€â”€ Custom Colors â”€â”€ */}
+      <Section id="exemplo-14" title={sectionTitle(14)} description={sectionDescription(14)}>
         <Row>
           <SgButton
             customColors={{
@@ -624,7 +861,7 @@ import { SgButton } from "@seedgrid/fe-components";
 </SgButton>`} />
       </Section>
 
-      <Section id="exemplo-15" title="15) Playground" description="Teste as principais props do SgButton em tempo real.">
+      <Section id="exemplo-15" title={sectionTitle(15)} description={sectionDescription(15)}>
         <SgPlayground
           title="SgButton Playground"
           interactive
@@ -639,15 +876,15 @@ import { SgButton } from "@seedgrid/fe-components";
         id="props-reference"
         className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
       >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
+        <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
+                <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
+                <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
+                <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
+                <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -671,3 +908,4 @@ import { SgButton } from "@seedgrid/fe-components";
     </I18NReady>
   );
 }
+

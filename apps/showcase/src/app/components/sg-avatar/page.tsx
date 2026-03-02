@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Camera, User, Users } from "lucide-react";
@@ -8,6 +8,7 @@ import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
+import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const IMG_AMY = "https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png";
 const IMG_ASIYA = "https://primefaces.org/cdn/primereact/images/avatar/asiyajavayant.png";
@@ -25,6 +26,91 @@ function Section(props: { title: string; description?: string; children: React.R
       <div className="mt-4 space-y-4">{props.children}</div>
     </section>
   );
+}
+
+type AvatarTexts = {
+  headerSubtitle: string;
+  section1Title: string;
+  section1Description: string;
+  section2Title: string;
+  section2Description: string;
+  section3Title: string;
+  section3Description: string;
+  section4Title: string;
+  section4Description: string;
+  section5Title: string;
+  section5Description: string;
+  propsReferenceTitle: string;
+};
+
+const AVATAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", AvatarTexts> = {
+  "pt-BR": {
+    headerSubtitle: "Avatar com suporte a label, icone, imagem, severidade, tamanhos e agrupamento.",
+    section1Title: "1) Basico",
+    section1Description: "Uso basico com label, icone e imagem.",
+    section2Title: "2) Shape e Tamanho",
+    section2Description: "Combinacoes de shape e size.",
+    section3Title: "3) Severity e Cores Customizadas",
+    section3Description: "Preset por severity e override de cores.",
+    section4Title: "4) Avatar Group",
+    section4Description: "Agrupamento com sobreposicao e contador automatico.",
+    section5Title: "5) Playground",
+    section5Description: "Ajuste shape, size, severity e borda em tempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "pt-PT": {
+    headerSubtitle: "Avatar com suporte a label, icone, imagem, severidade, tamanhos e agrupamento.",
+    section1Title: "1) Basico",
+    section1Description: "Uso basico com label, icone e imagem.",
+    section2Title: "2) Shape e Tamanho",
+    section2Description: "Combinacoes de shape e size.",
+    section3Title: "3) Severity e Cores Customizadas",
+    section3Description: "Preset por severity e override de cores.",
+    section4Title: "4) Avatar Group",
+    section4Description: "Agrupamento com sobreposicao e contador automatico.",
+    section5Title: "5) Playground",
+    section5Description: "Ajuste shape, size, severity e borda em tempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+  "en-US": {
+    headerSubtitle: "Avatar with support for label, icon, image, severity, sizes, and grouping.",
+    section1Title: "1) Basic",
+    section1Description: "Basic usage with label, icon, and image.",
+    section2Title: "2) Shape and Size",
+    section2Description: "Shape and size combinations.",
+    section3Title: "3) Severity and Custom Colors",
+    section3Description: "Severity presets and color overrides.",
+    section4Title: "4) Avatar Group",
+    section4Description: "Grouping with overlap and automatic counter.",
+    section5Title: "5) Playground",
+    section5Description: "Adjust shape, size, severity, and border in real time.",
+    propsReferenceTitle: "Props Reference",
+  },
+  es: {
+    headerSubtitle: "Avatar con soporte para label, icono, imagen, severidad, tamanos y agrupacion.",
+    section1Title: "1) Basico",
+    section1Description: "Uso basico con label, icono e imagen.",
+    section2Title: "2) Shape y Tamano",
+    section2Description: "Combinaciones de shape y size.",
+    section3Title: "3) Severity y Colores Personalizados",
+    section3Description: "Preset por severity y override de colores.",
+    section4Title: "4) Avatar Group",
+    section4Description: "Agrupacion con superposicion y contador automatico.",
+    section5Title: "5) Playground",
+    section5Description: "Ajusta shape, size, severity y borde en tiempo real.",
+    propsReferenceTitle: "Referencia de Props",
+  },
+};
+
+type SupportedAvatarLocale = keyof typeof AVATAR_TEXTS;
+
+function isSupportedAvatarLocale(locale: ShowcaseLocale): locale is SupportedAvatarLocale {
+  return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
+}
+
+function getAvatarTexts(locale: ShowcaseLocale): AvatarTexts {
+  const normalized: SupportedAvatarLocale = isSupportedAvatarLocale(locale) ? locale : "pt-BR";
+  return AVATAR_TEXTS[normalized];
 }
 
 function Row(props: { children: React.ReactNode }) {
@@ -149,23 +235,26 @@ export default function App() {
 
 const AVATAR_PROPS: ShowcasePropRow[] = [
   { prop: "src / alt", type: "string", defaultValue: "- / Avatar", description: "Imagem do avatar e texto alternativo." },
-  { prop: "label / icon / fallback / children", type: "ReactNode", defaultValue: "-", description: "Conteúdo visual do avatar." },
+  { prop: "label / icon / fallback / children", type: "ReactNode", defaultValue: "-", description: "ConteÃºdo visual do avatar." },
   { prop: "size", type: "\"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\"", defaultValue: "md", description: "Tamanho do avatar." },
   { prop: "shape", type: "\"circle\" | \"square\"", defaultValue: "circle", description: "Formato do avatar." },
-  { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"info\" | \"neutral\" | \"custom\"", defaultValue: "primary", description: "Variação visual baseada no tema." },
+  { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"info\" | \"neutral\" | \"custom\"", defaultValue: "primary", description: "VariaÃ§Ã£o visual baseada no tema." },
   { prop: "bordered / disabled", type: "boolean", defaultValue: "true / false", description: "Borda e estado desabilitado." },
-  { prop: "customColors", type: "{ bg, fg, border, ring }", defaultValue: "-", description: "Override de cores quando necessário." },
+  { prop: "customColors", type: "{ bg, fg, border, ring }", defaultValue: "-", description: "Override de cores quando necessÃ¡rio." },
   { prop: "imageClassName / className", type: "string", defaultValue: "-", description: "Classes CSS para imagem e container." },
   { prop: "onImageError", type: "(event) => void", defaultValue: "-", description: "Callback para falha ao carregar imagem." },
   { prop: "SgAvatarGroup.children", type: "ReactNode", defaultValue: "-", description: "Lista de avatares no grupo." },
   { prop: "SgAvatarGroup.max / total", type: "number", defaultValue: "- / children.length", description: "Controle de quantos avatares exibir e total real." },
-  { prop: "SgAvatarGroup.overlap", type: "\"none\" | \"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Sobreposição entre itens." },
+  { prop: "SgAvatarGroup.overlap", type: "\"none\" | \"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "SobreposiÃ§Ã£o entre itens." },
   { prop: "SgAvatarGroup.moreSeverity / moreLabel", type: "severity / (remaining) => ReactNode", defaultValue: "neutral / +N", description: "Avatar de excesso de itens." },
   { prop: "SgAvatarGroup.size / shape / bordered", type: "avatar props", defaultValue: "md / circle / true", description: "Estilo aplicado ao avatar de excesso." }
 ];
 
 export default function SgAvatarPage() {
-  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors();
+  const i18n = useShowcaseI18n();
+  const texts = React.useMemo(() => getAvatarTexts(i18n.locale), [i18n.locale]);
+  const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } =
+    useShowcaseAnchors({ deps: [i18n.locale] });
 
   return (
     <I18NReady>
@@ -177,12 +266,12 @@ export default function SgAvatarPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgAvatar"
-          subtitle="Avatar com suporte a label, ícone, imagem, severidade, tamanhos e agrupamento."
+          subtitle={texts.headerSubtitle}
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Básico" description="Uso básico com label, ícone e imagem.">
+        <Section title={texts.section1Title} description={texts.section1Description}>
           <Row>
             <SgAvatar label="P" />
             <SgAvatar icon={<User />} severity="secondary" />
@@ -191,7 +280,7 @@ export default function SgAvatarPage() {
           <CodeBlock code={EXAMPLE_BASIC_CODE} />
         </Section>
 
-        <Section title="2) Shape e Tamanho" description="Combinações de shape e size.">
+        <Section title={texts.section2Title} description={texts.section2Description}>
           <Row>
             <SgAvatar label="C" shape="circle" />
             <SgAvatar label="S" shape="square" />
@@ -202,7 +291,7 @@ export default function SgAvatarPage() {
           <CodeBlock code={EXAMPLE_SHAPES_SIZES_CODE} />
         </Section>
 
-        <Section title="3) Severity e Cores Customizadas" description="Preset por severity e override de cores.">
+        <Section title={texts.section3Title} description={texts.section3Description}>
           <Row>
             <SgAvatar label="P" severity="primary" />
             <SgAvatar label="S" severity="success" />
@@ -221,7 +310,7 @@ export default function SgAvatarPage() {
           <CodeBlock code={EXAMPLE_SEVERITY_CODE} />
         </Section>
 
-        <Section title="4) Avatar Group" description="Agrupamento com sobreposição e contador automático.">
+        <Section title={texts.section4Title} description={texts.section4Description}>
           <div className="space-y-4">
             <Row>
               <SgAvatarGroup>
@@ -243,7 +332,7 @@ export default function SgAvatarPage() {
           <CodeBlock code={EXAMPLE_GROUP_CODE} />
         </Section>
 
-        <Section title="5) Playground" description="Ajuste shape, size, severity e borda em tempo real.">
+        <Section title={texts.section5Title} description={texts.section5Description}>
           <SgPlayground
             title="SgAvatar Playground"
             interactive
@@ -254,7 +343,7 @@ export default function SgAvatarPage() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={AVATAR_PROPS} />
+        <ShowcasePropsReference rows={AVATAR_PROPS} title={texts.propsReferenceTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
