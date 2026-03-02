@@ -13,6 +13,7 @@ import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/Sg
 export type SgMenuNode = {
   id: string;
   label: string;
+  hint?: string;
   url?: string;
   children?: SgMenuNode[];
   disabled?: boolean;
@@ -137,6 +138,21 @@ type MenuMaps = {
 type DockDragStart = {
   x: number;
   y: number;
+};
+
+type MenuHintPlacement = "top" | "right";
+
+type MenuHintAnchor = {
+  target: HTMLElement;
+  text: string;
+  placement: MenuHintPlacement;
+};
+
+type MenuHintState = {
+  text: string;
+  x: number;
+  y: number;
+  placement: MenuHintPlacement;
 };
 
 const ROOT_PARENT_ID = "__sg_menu_root__";
@@ -531,6 +547,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const [searchValue, setSearchValue] = React.useState("");
   const menuRootRef = React.useRef<HTMLDivElement | null>(null);
   const sidebarShellRef = React.useRef<HTMLElement | null>(null);
+  const menuHintAnchorRef = React.useRef<MenuHintAnchor | null>(null);
+  const [menuHint, setMenuHint] = React.useState<MenuHintState | null>(null);
   const [dockDragActive, setDockDragActive] = React.useState(false);
   const [horizontalDockAlign, setHorizontalDockAlign] = React.useState<"left" | "right" | null>(null);
   const dockDragStartRef = React.useRef<DockDragStart | null>(null);
@@ -578,6 +596,49 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const tieredOpenToLeft =
     resolvedPosition === "right" ||
     (isHorizontalDockZone && horizontalDockAlign === "right");
+
+  const hideMenuHint = React.useCallback(() => {
+    menuHintAnchorRef.current = null;
+    setMenuHint(null);
+  }, []);
+
+  const resolveMenuHintPosition = React.useCallback((anchor: MenuHintAnchor) => {
+    if (!anchor.target.isConnected) return null;
+
+    const rect = anchor.target.getBoundingClientRect();
+    if (anchor.placement === "right") {
+      return {
+        x: rect.right + 8,
+        y: rect.top + (rect.height / 2)
+      };
+    }
+
+    return {
+      x: rect.left + (rect.width / 2),
+      y: rect.top - 8
+    };
+  }, []);
+
+  const showMenuHint = React.useCallback(
+    (target: HTMLElement, text: string | undefined, placement: MenuHintPlacement = "top") => {
+      if (!text) return;
+
+      const anchor: MenuHintAnchor = { target, text, placement };
+      menuHintAnchorRef.current = anchor;
+      const nextPosition = resolveMenuHintPosition(anchor);
+      if (!nextPosition) {
+        hideMenuHint();
+        return;
+      }
+
+      setMenuHint({
+        text: anchor.text,
+        placement: anchor.placement,
+        ...nextPosition
+      });
+    },
+    [hideMenuHint, resolveMenuHintPosition]
+  );
 
   const [localActiveId, setLocalActiveId] = React.useState<string | undefined>(selection?.activeId);
   const [tieredPath, setTieredPath] = React.useState<string[]>([]);
@@ -691,6 +752,43 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [effectiveMenuStyle]);
 
+  const hasVisibleMenuHint = menuHint !== null;
+
+  React.useEffect(() => {
+    if (!hasVisibleMenuHint || !menuHintAnchorRef.current) return;
+
+    const reposition = () => {
+      const anchor = menuHintAnchorRef.current;
+      if (!anchor) return;
+
+      const nextPosition = resolveMenuHintPosition(anchor);
+      if (!nextPosition) {
+        hideMenuHint();
+        return;
+      }
+
+      setMenuHint({
+        text: anchor.text,
+        placement: anchor.placement,
+        ...nextPosition
+      });
+    };
+
+    reposition();
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    return () => {
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+    };
+  }, [hasVisibleMenuHint, hideMenuHint, resolveMenuHintPosition]);
+
+  React.useEffect(() => {
+    const anchor = menuHintAnchorRef.current;
+    if (!anchor) return;
+    if (!anchor.target.isConnected) hideMenuHint();
+  }, [filteredMenu, effectiveMenuStyle, isCollapsed, drawerOpen, pinnedState, hideMenuHint]);
+
   const toggleExpanded = React.useCallback(
     (nodeId: string) => {
       setExpandedIds((prev) => {
@@ -717,6 +815,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const activateNode = React.useCallback(
     (node: SgMenuNode) => {
       if (node.disabled) return;
+      hideMenuHint();
       onItemClick?.(node);
       setLocalActiveId(node.id);
 
@@ -742,7 +841,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       onNavigate,
       pinnedState,
       setDrawerOpen,
-      variant
+      variant,
+      hideMenuHint
     ]
   );
 
@@ -933,6 +1033,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       const disabled = !!node.disabled;
       const iconNode = resolveIcon(node);
       const hideChildren = isCollapsed;
+      const nodeHint = node.hint ?? (isCollapsed ? node.label : undefined);
+      const nodeHintPlacement: MenuHintPlacement = "right";
 
       return (
         <div key={node.id} className="min-w-0">
@@ -949,7 +1051,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               disabled ? "cursor-not-allowed opacity-55" : ""
             )}
             style={isCollapsed ? undefined : { paddingLeft: 8 + depth * indent }}
-            title={isCollapsed ? node.label : undefined}
+            onMouseEnter={
+              nodeHint
+                ? (event) => showMenuHint(event.currentTarget, nodeHint, nodeHintPlacement)
+                : undefined
+            }
+            onMouseLeave={nodeHint ? hideMenuHint : undefined}
           >
             <button
               ref={(el) => {
@@ -1032,6 +1139,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       hasSearch,
       indent,
       isCollapsed,
+      hideMenuHint,
+      showMenuHint,
       toggleExpanded
     ]
   );
@@ -1049,6 +1158,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           type="button"
           disabled={node.disabled}
           aria-current={isExactActive ? "page" : undefined}
+          onMouseEnter={node.hint ? (event) => showMenuHint(event.currentTarget, node.hint) : undefined}
+          onMouseLeave={node.hint ? hideMenuHint : undefined}
           onClick={() => {
             if (node.disabled) return;
             if (hasChildren && !node.url && !node.onClick) return;
@@ -1079,7 +1190,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </button>
       );
     },
-    [activateNode, activeSets.branch, activeSets.exact, densityCfg.icon]
+    [activateNode, activeSets.branch, activeSets.exact, densityCfg.icon, hideMenuHint, showMenuHint]
   );
 
   const renderTieredLevels = React.useCallback(
@@ -1112,7 +1223,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   type="button"
                   disabled={node.disabled}
                   aria-current={isExactActive ? "page" : undefined}
-                  onMouseEnter={() => {
+                  onMouseEnter={(event) => {
+                    if (node.hint) showMenuHint(event.currentTarget, node.hint);
                     if (!openSubmenuOnHover) return;
                     if (!hasChildren) {
                       setTieredPath((prev) => prev.slice(0, depth));
@@ -1120,6 +1232,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                     }
                     setTieredPath((prev) => [...prev.slice(0, depth), node.id]);
                   }}
+                  onMouseLeave={node.hint ? hideMenuHint : undefined}
                   onClick={() => {
                     if (node.disabled) return;
                     if (hasChildren) {
@@ -1167,7 +1280,16 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         </div>
       );
     },
-    [activateNode, activeSets.exact, densityCfg.icon, openSubmenuOnHover, tieredOpenToLeft, tieredPath]
+    [
+      activateNode,
+      activeSets.exact,
+      densityCfg.icon,
+      hideMenuHint,
+      openSubmenuOnHover,
+      showMenuHint,
+      tieredOpenToLeft,
+      tieredPath
+    ]
   );
 
   const renderMegaColumns = React.useCallback(
@@ -1239,7 +1361,11 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   key={node.id}
                   type="button"
                   disabled={node.disabled}
-                  onMouseEnter={() => hasChildren && setMegaActiveId(node.id)}
+                  onMouseEnter={(event) => {
+                    if (node.hint) showMenuHint(event.currentTarget, node.hint);
+                    if (hasChildren) setMegaActiveId(node.id);
+                  }}
+                  onMouseLeave={node.hint ? hideMenuHint : undefined}
                   onClick={() => {
                     if (node.disabled) return;
                     if (hasChildren) {
@@ -1282,7 +1408,11 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                 key={node.id}
                 type="button"
                 disabled={node.disabled}
-                onMouseEnter={() => hasChildren && setMegaActiveId(node.id)}
+                onMouseEnter={(event) => {
+                  if (node.hint) showMenuHint(event.currentTarget, node.hint);
+                  if (hasChildren) setMegaActiveId(node.id);
+                }}
+                onMouseLeave={node.hint ? hideMenuHint : undefined}
                 onClick={() => {
                   if (node.disabled) return;
                   if (hasChildren) {
@@ -1695,34 +1825,59 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       sidebarShell
     );
 
+  const menuHintNode =
+    menuHint && typeof document !== "undefined"
+      ? createPortal(
+          <span
+            className="pointer-events-none fixed z-[1200] max-w-[min(28rem,calc(100vw-24px))] rounded bg-foreground/90 px-2 py-1 text-[11px] text-background shadow-md whitespace-normal break-words"
+            style={{
+              left: menuHint.x,
+              top: menuHint.y,
+              transform: menuHint.placement === "right" ? "translateY(-50%)" : "translate(-50%, -100%)"
+            }}
+          >
+            {menuHint.text}
+          </span>,
+          document.body
+        )
+      : null;
+
   if (dockMode && portalTarget) {
-    return createPortal(shellForRender, portalTarget);
+    return (
+      <>
+        {createPortal(shellForRender, portalTarget)}
+        {menuHintNode}
+      </>
+    );
   }
 
   if (variant === "drawer") {
     return (
-      <SgExpandablePanel
-        mode="overlay"
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        expandTo={resolvedPosition === "left" ? "right" : "left"}
-        placement="start"
-        size={resolvedOverlaySize}
-        animation={{ type: "slide", durationMs: 180 }}
-        border={border}
-        elevation={elevation === "md" ? "lg" : elevation}
-        rounded="none"
-        closeOnOutsideClick={!pinnedState}
-        closeOnEsc={!pinnedState}
-        trapFocus
-        showBackdrop={overlayBackdropResolved}
-        ariaLabel={ariaLabel}
-        role="dialog"
-        className={className}
-        style={style}
-      >
-        {shellBody}
-      </SgExpandablePanel>
+      <>
+        <SgExpandablePanel
+          mode="overlay"
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          expandTo={resolvedPosition === "left" ? "right" : "left"}
+          placement="start"
+          size={resolvedOverlaySize}
+          animation={{ type: "slide", durationMs: 180 }}
+          border={border}
+          elevation={elevation === "md" ? "lg" : elevation}
+          rounded="none"
+          closeOnOutsideClick={!pinnedState}
+          closeOnEsc={!pinnedState}
+          trapFocus
+          showBackdrop={overlayBackdropResolved}
+          ariaLabel={ariaLabel}
+          role="dialog"
+          className={className}
+          style={style}
+        >
+          {shellBody}
+        </SgExpandablePanel>
+        {menuHintNode}
+      </>
     );
   }
 
@@ -1795,11 +1950,17 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             />
           </SgExpandablePanel>
         ) : null}
+        {menuHintNode}
       </>
     );
   }
 
-  return shellForRender;
+  return (
+    <>
+      {shellForRender}
+      {menuHintNode}
+    </>
+  );
 }
 
 SgMenu.displayName = "SgMenu";
