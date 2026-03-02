@@ -10,6 +10,11 @@ import {
 } from "@codesandbox/sandpack-react";
 import { SgButton } from "../buttons/SgButton";
 import { SgCard } from "../layout/SgCard";
+import blockedEmailDomainsConfig from "../blocked-email-domains.json";
+import componentsMessagesEnUsJson from "../i18n/en-US.json";
+import componentsMessagesEsJson from "../i18n/es.json";
+import componentsMessagesPtBrJson from "../i18n/pt-BR.json";
+import componentsMessagesPtPtJson from "../i18n/pt-PT.json";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -33,6 +38,9 @@ export type SgPlaygroundProps = {
   defaultImports?: string;
   previewWrapperClassName?: string;
   seedgridDependency?: string;
+  bundlerURL?: string;
+  bundlerTimeoutMs?: number;
+  npmRegistries?: SgPlaygroundNpmRegistry[];
   withCard?: boolean;
   collapsible?: boolean;
   defaultOpen?: boolean;
@@ -40,8 +48,17 @@ export type SgPlaygroundProps = {
 };
 
 export type SgPlaygroundPreset = "auto" | "basic" | "seedgrid" | "editor" | "full";
+export type SgPlaygroundNpmRegistry = {
+  enabledScopes: string[];
+  limitToScopes: boolean;
+  registryUrl: string;
+  proxyEnabled: boolean;
+  registryAuthToken?: string;
+};
 
 const DEFAULT_SEEDGRID_DEPENDENCY = "latest";
+const DEFAULT_SANDPACK_BUNDLER_URL = "https://sandpack.seedgrid.com.br";
+const DEFAULT_SANDPACK_BUNDLER_TIMEOUT_MS = 60000;
 const DEFAULT_SANDBOX_BASE_DEPENDENCIES: Record<string, string> = {
   react: "18.2.0",
   "react-dom": "18.2.0"
@@ -100,17 +117,6 @@ const SANDPACK_EXTERNAL_RESOURCES = [
   "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
 ];
 
-const SANDPACK_QRCODE_SHIM_PACKAGE_JSON = `{
-  "name": "qrcode",
-  "version": "0.0.0-sandpack-shim",
-  "type": "module",
-  "main": "./index.js",
-  "module": "./index.js",
-  "exports": {
-    ".": "./index.js"
-  }
-}`;
-
 const SANDPACK_QRCODE_SHIM_INDEX_JS = `const makeError = () =>
   new Error(
     "qrcode (node build) is not supported in Sandpack browser runtime. Update @seedgrid/fe-components to a browser-safe QR implementation."
@@ -133,19 +139,6 @@ const SANDPACK_MARKDOWN_IT_BIN_SHIM = `import markdownit from "../index.mjs";
 export default markdownit;
 export { markdownit };
 `;
-
-function createEsmShimPackageJson(name: string): string {
-  return `{
-  "name": "${name}",
-  "version": "0.0.0-sandpack-shim",
-  "type": "module",
-  "main": "./index.js",
-  "module": "./index.js",
-  "exports": {
-    ".": "./index.js"
-  }
-}`;
-}
 
 const SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS = `export const SandpackProvider = ({ children }) => children ?? null;
 export const SandpackCodeEditor = () => null;
@@ -181,12 +174,6 @@ const SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS = `const extension = {
 };
 export default extension;
 `;
-
-const SANDPACK_ASSERT_SHIM_PACKAGE_JSON = `{
-  "name": "assert",
-  "version": "0.0.0-sandpack-shim",
-  "main": "./index.js"
-}`;
 
 const SANDPACK_ASSERT_SHIM_INDEX_JS = `function fail(message) {
   throw new Error(message || "Assertion failed");
@@ -229,12 +216,6 @@ module.exports = assert;
 module.exports.default = assert;
 `;
 
-const SANDPACK_UTIL_SHIM_PACKAGE_JSON = `{
-  "name": "util",
-  "version": "0.0.0-sandpack-shim",
-  "main": "./index.js"
-}`;
-
 const SANDPACK_UTIL_SHIM_INDEX_JS = `const inspect = function inspect(value) {
   try {
     return JSON.stringify(value);
@@ -268,12 +249,6 @@ const utilShim = { inspect, deprecate, format };
 module.exports = utilShim;
 module.exports.default = utilShim;
 `;
-
-const SANDPACK_PATH_SHIM_PACKAGE_JSON = `{
-  "name": "path",
-  "version": "0.0.0-sandpack-shim",
-  "main": "./index.js"
-}`;
 
 const SANDPACK_PATH_SHIM_INDEX_JS = `function normalize(input) {
   return String(input || "").replace(/\\\\/g, "/");
@@ -318,12 +293,6 @@ module.exports = pathShim;
 module.exports.default = pathShim;
 `;
 
-const SANDPACK_FS_SHIM_PACKAGE_JSON = `{
-  "name": "fs",
-  "version": "0.0.0-sandpack-shim",
-  "main": "./index.js"
-}`;
-
 const SANDPACK_FS_SHIM_INDEX_JS = `function notSupported(name) {
   throw new Error("fs." + name + " is not supported in Sandpack browser runtime.");
 }
@@ -338,12 +307,6 @@ const fsShim = {
 module.exports = fsShim;
 module.exports.default = fsShim;
 `;
-
-const SANDPACK_PROCESS_SHIM_PACKAGE_JSON = `{
-  "name": "process",
-  "version": "0.0.0-sandpack-shim",
-  "main": "./index.js"
-}`;
 
 const SANDPACK_PROCESS_SHIM_INDEX_JS = `const processShim = {
   env: {},
@@ -450,6 +413,82 @@ const SANDPACK_HOST_STYLES_CSS = `
   left: auto !important;
 }
 `;
+
+function normalizeUrl(raw: string | undefined, fallback: string): string {
+  const value = raw?.trim();
+  if (!value) return fallback;
+
+  try {
+    const parsed = new URL(value);
+    return parsed.toString().replace(/\/+$/, "");
+  } catch {
+    return fallback;
+  }
+}
+
+function normalizeTimeoutMs(value: number | undefined, fallback: number): number {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    return fallback;
+  }
+  return Math.round(value);
+}
+
+function parseBooleanFlag(value: string | undefined, fallback: boolean): boolean {
+  const normalized = value?.trim().toLowerCase();
+  if (!normalized) return fallback;
+  if (normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on") {
+    return true;
+  }
+  if (normalized === "0" || normalized === "false" || normalized === "no" || normalized === "off") {
+    return false;
+  }
+  return fallback;
+}
+
+function resolveDefaultNpmRegistriesFromEnv(): SgPlaygroundNpmRegistry[] | undefined {
+  const registryUrlRaw = process.env.NEXT_PUBLIC_SANDPACK_NPM_REGISTRY_URL?.trim();
+  if (!registryUrlRaw) return undefined;
+
+  const scopesRaw = process.env.NEXT_PUBLIC_SANDPACK_NPM_REGISTRY_SCOPES;
+  const enabledScopes = (scopesRaw ?? "@seedgrid")
+    .split(",")
+    .map((scope) => scope.trim())
+    .filter(Boolean);
+
+  const limitToScopes = parseBooleanFlag(
+    process.env.NEXT_PUBLIC_SANDPACK_NPM_REGISTRY_LIMIT_TO_SCOPES,
+    true
+  );
+  const proxyEnabled = parseBooleanFlag(
+    process.env.NEXT_PUBLIC_SANDPACK_NPM_REGISTRY_PROXY_ENABLED,
+    false
+  );
+  const registryAuthToken = process.env.NEXT_PUBLIC_SANDPACK_NPM_REGISTRY_AUTH_TOKEN?.trim();
+
+  return [
+    {
+      enabledScopes,
+      limitToScopes,
+      registryUrl: registryUrlRaw.replace(/\/+$/, ""),
+      proxyEnabled,
+      ...(registryAuthToken ? { registryAuthToken } : {})
+    }
+  ];
+}
+
+function buildCjsJsonModule(value: unknown): string {
+  const serialized = JSON.stringify(value);
+  return `const data = ${serialized};
+module.exports = data;
+module.exports.default = data;
+`;
+}
+
+const SANDPACK_SEEDGRID_PT_BR_JSON_SHIM = buildCjsJsonModule(componentsMessagesPtBrJson);
+const SANDPACK_SEEDGRID_PT_PT_JSON_SHIM = buildCjsJsonModule(componentsMessagesPtPtJson);
+const SANDPACK_SEEDGRID_EN_US_JSON_SHIM = buildCjsJsonModule(componentsMessagesEnUsJson);
+const SANDPACK_SEEDGRID_ES_JSON_SHIM = buildCjsJsonModule(componentsMessagesEsJson);
+const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = buildCjsJsonModule(blockedEmailDomainsConfig);
 
 function parseRgbParts(raw: string): [number, number, number] | null {
   const value = raw.trim();
@@ -751,6 +790,9 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     defaultImports,
     previewWrapperClassName = "h-[420px] rounded-xl border border-border bg-muted/30 p-3",
     seedgridDependency,
+    bundlerURL,
+    bundlerTimeoutMs,
+    npmRegistries,
     withCard = true,
     collapsible = true,
     defaultOpen = true,
@@ -822,6 +864,35 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
 
   const requestedDeps = dependencies ?? {};
   const requestedDepKeys = Object.keys(requestedDeps);
+  const resolvedBundlerURL = normalizeUrl(
+    bundlerURL ?? process.env.NEXT_PUBLIC_SANDPACK_BUNDLER_URL,
+    DEFAULT_SANDPACK_BUNDLER_URL
+  );
+  const resolvedBundlerTimeoutMs = normalizeTimeoutMs(
+    bundlerTimeoutMs ??
+      Number(process.env.NEXT_PUBLIC_SANDPACK_BUNDLER_TIMEOUT_MS ?? Number.NaN),
+    DEFAULT_SANDPACK_BUNDLER_TIMEOUT_MS
+  );
+  const resolvedNpmRegistries = React.useMemo(
+    () => npmRegistries ?? resolveDefaultNpmRegistriesFromEnv(),
+    [npmRegistries]
+  );
+
+  React.useEffect(() => {
+    if (!interactive) return;
+    if (!parseBooleanFlag(process.env.NEXT_PUBLIC_SANDPACK_DEBUG, false)) return;
+
+    console.info("[SgPlayground] Sandpack runtime config", {
+      bundlerURL: resolvedBundlerURL,
+      bundlerTimeoutMs: resolvedBundlerTimeoutMs,
+      npmRegistries: (resolvedNpmRegistries ?? []).map((registry) => ({
+        enabledScopes: registry.enabledScopes,
+        limitToScopes: registry.limitToScopes,
+        registryUrl: registry.registryUrl,
+        proxyEnabled: registry.proxyEnabled
+      }))
+    });
+  }, [interactive, resolvedBundlerTimeoutMs, resolvedBundlerURL, resolvedNpmRegistries]);
 
   const codeUsesSeedgrid = /from\s+["']@seedgrid\/fe-components["']/.test(appTsx);
   const codeUsesTextEditor = /\bSgTextEditor\b/.test(appTsx);
@@ -864,8 +935,30 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
 
   if (includeSeedgridDependency) {
     // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
-    files["/node_modules/qrcode/package.json"] = { code: SANDPACK_QRCODE_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
+
+    // Sandpack runtime can evaluate JSON files as plain JS modules.
+    // Provide CJS-compatible shims to keep @seedgrid/fe-components i18n/validators working.
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.json"] = {
+      code: SANDPACK_SEEDGRID_PT_BR_JSON_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.json"] = {
+      code: SANDPACK_SEEDGRID_PT_PT_JSON_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.json"] = {
+      code: SANDPACK_SEEDGRID_EN_US_JSON_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/es.json"] = {
+      code: SANDPACK_SEEDGRID_ES_JSON_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.json"] = {
+      code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM,
+      hidden: true
+    };
   }
 
   if (shouldIncludeNodePolyfills) {
@@ -875,23 +968,14 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       hidden: true
     };
     // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
-    files["/node_modules/assert/package.json"] = { code: SANDPACK_ASSERT_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/assert/index.js"] = { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/util/package.json"] = { code: SANDPACK_UTIL_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/util/index.js"] = { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/path/package.json"] = { code: SANDPACK_PATH_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/path/index.js"] = { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/fs/package.json"] = { code: SANDPACK_FS_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/fs/index.js"] = { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/process/package.json"] = { code: SANDPACK_PROCESS_SHIM_PACKAGE_JSON, hidden: true };
     files["/node_modules/process/index.js"] = { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true };
   }
 
   if (shouldShimSandpackReact) {
-    files["/node_modules/@codesandbox/sandpack-react/package.json"] = {
-      code: createEsmShimPackageJson("@codesandbox/sandpack-react"),
-      hidden: true
-    };
     files["/node_modules/@codesandbox/sandpack-react/index.js"] = {
       code: SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS,
       hidden: true
@@ -899,20 +983,12 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   }
 
   if (shouldShimTiptap) {
-    files["/node_modules/@tiptap/react/package.json"] = {
-      code: createEsmShimPackageJson("@tiptap/react"),
-      hidden: true
-    };
     files["/node_modules/@tiptap/react/index.js"] = {
       code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
       hidden: true
     };
 
     for (const packageName of TIPTAP_SHIM_PACKAGES) {
-      files[`/node_modules/${packageName}/package.json`] = {
-        code: createEsmShimPackageJson(packageName),
-        hidden: true
-      };
       files[`/node_modules/${packageName}/index.js`] = {
         code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
         hidden: true
@@ -937,26 +1013,37 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       : resizeAxis === "horizontal"
         ? "resize-x"
         : "resize";
+  const sandpackCustomSetup = React.useMemo(
+    () => ({
+      dependencies: deps,
+      entry: "/index.tsx",
+      ...(resolvedNpmRegistries ? { npmRegistries: resolvedNpmRegistries } : {})
+    }),
+    [deps, resolvedNpmRegistries]
+  );
+  const sandpackOptions = React.useMemo(
+    () =>
+      ({
+        autorun: false,
+        initMode: "lazy",
+        bundlerURL: resolvedBundlerURL,
+        // Keep both keys while sandpack typings/runtime differ across versions.
+        bundlerTimeOut: resolvedBundlerTimeoutMs,
+        bundlerTimeout: resolvedBundlerTimeoutMs,
+        activeFile: "/App.tsx",
+        visibleFiles: ["/App.tsx"],
+        externalResources: SANDPACK_EXTERNAL_RESOURCES
+      }) as any,
+    [resolvedBundlerTimeoutMs, resolvedBundlerURL]
+  );
 
   const content = interactive ? (
     <div className={cn(withCard ? "" : "rounded-lg border border-border", withCard ? undefined : className)}>
       <SandpackProvider
         template="react-ts"
         files={files}
-        customSetup={{ dependencies: deps }}
-        options={
-          {
-            autorun: false,
-            initMode: "lazy",
-            bundlerURL: "https://sandpack.seedgrid.com.br",
-            // Keep both keys while sandpack typings/runtime differ across versions.
-            bundlerTimeOut: 60000,
-            bundlerTimeout: 60000,
-            activeFile: "/App.tsx",
-            visibleFiles: ["/App.tsx"],
-            externalResources: SANDPACK_EXTERNAL_RESOURCES
-          } as any
-        }
+        customSetup={sandpackCustomSetup}
+        options={sandpackOptions}
       >
         <style>{SANDPACK_HOST_STYLES_CSS}</style>
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
