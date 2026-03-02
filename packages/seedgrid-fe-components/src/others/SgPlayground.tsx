@@ -175,6 +175,28 @@ const SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS = `const extension = {
 export default extension;
 `;
 
+const SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS = `import * as React from "react";
+
+export function SgTextEditor() {
+  return React.createElement(
+    "div",
+    {
+      style: {
+        padding: "0.75rem",
+        border: "1px solid #e4e4e7",
+        borderRadius: "0.5rem",
+        fontSize: "0.875rem",
+        color: "#6b7280",
+        background: "#f9fafb"
+      }
+    },
+    "SgTextEditor is disabled in this sandbox preset."
+  );
+}
+
+export default SgTextEditor;
+`;
+
 const SANDPACK_ASSERT_SHIM_INDEX_JS = `function fail(message) {
   throw new Error(message || "Assertion failed");
 }
@@ -983,6 +1005,11 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   }
 
   if (shouldShimTiptap) {
+    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.js"] = {
+      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
+      hidden: true
+    };
+
     files["/node_modules/@tiptap/react/index.js"] = {
       code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
       hidden: true
