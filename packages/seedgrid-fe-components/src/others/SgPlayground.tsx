@@ -10,11 +10,6 @@ import {
 } from "@codesandbox/sandpack-react";
 import { SgButton } from "../buttons/SgButton";
 import { SgCard } from "../layout/SgCard";
-import blockedEmailDomainsConfig from "../blocked-email-domains.json";
-import componentsMessagesEnUsJson from "../i18n/en-US.json";
-import componentsMessagesEsJson from "../i18n/es.json";
-import componentsMessagesPtBrJson from "../i18n/pt-BR.json";
-import componentsMessagesPtPtJson from "../i18n/pt-PT.json";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -498,7 +493,7 @@ function resolveDefaultNpmRegistriesFromEnv(): SgPlaygroundNpmRegistry[] | undef
   ];
 }
 
-function buildCjsJsonModule(value: unknown): string {
+function buildCjsModule(value: unknown): string {
   const serialized = JSON.stringify(value);
   return `const data = ${serialized};
 module.exports = data;
@@ -506,11 +501,34 @@ module.exports.default = data;
 `;
 }
 
-const SANDPACK_SEEDGRID_PT_BR_JSON_SHIM = buildCjsJsonModule(componentsMessagesPtBrJson);
-const SANDPACK_SEEDGRID_PT_PT_JSON_SHIM = buildCjsJsonModule(componentsMessagesPtPtJson);
-const SANDPACK_SEEDGRID_EN_US_JSON_SHIM = buildCjsJsonModule(componentsMessagesEnUsJson);
-const SANDPACK_SEEDGRID_ES_JSON_SHIM = buildCjsJsonModule(componentsMessagesEsJson);
-const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = buildCjsJsonModule(blockedEmailDomainsConfig);
+const SANDPACK_MIN_COMPONENT_MESSAGES: Record<string, string> = {
+  "components.actions.clear": "Clear",
+  "components.actions.cancel": "Cancel",
+  "components.actions.confirm": "Confirm",
+  "components.inputs.required": "Required field.",
+  "components.inputs.maxLength": "Maximum {max} characters.",
+  "components.inputs.minLength": "Minimum {min} characters.",
+  "components.inputs.minWords": "Minimum {min} words.",
+  "components.inputs.email.invalid": "Invalid email.",
+  "components.inputs.phone.invalid": "Invalid phone.",
+  "components.inputs.date.invalid": "Invalid date.",
+  "components.inputs.number.min": "Value must be at least {min}.",
+  "components.inputs.number.max": "Value must be at most {max}.",
+  "components.password.show": "Show password",
+  "components.password.hide": "Hide password",
+  "components.autocomplete.empty": "No records found.",
+  "components.autocomplete.loading": "Loading...",
+  "components.rating.cancel": "Cancel rating",
+  "components.radiogroup.cancel": "No option"
+};
+
+const SANDPACK_SEEDGRID_PT_BR_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_PT_PT_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_EN_US_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_ES_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = buildCjsModule({
+  blockedEmailDomains: []
+});
 
 function parseRgbParts(raw: string): [number, number, number] | null {
   const value = raw.trim();
@@ -1009,14 +1027,30 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
       hidden: true
     };
+    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor"] = {
+      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.mjs"] = {
+      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
+      hidden: true
+    };
 
     files["/node_modules/@tiptap/react/index.js"] = {
+      code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
+      hidden: true
+    };
+    files["/node_modules/@tiptap/react/index.mjs"] = {
       code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
       hidden: true
     };
 
     for (const packageName of TIPTAP_SHIM_PACKAGES) {
       files[`/node_modules/${packageName}/index.js`] = {
+        code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+        hidden: true
+      };
+      files[`/node_modules/${packageName}/index.mjs`] = {
         code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
         hidden: true
       };
