@@ -19,6 +19,7 @@ export type SgPlaygroundProps = {
   code: string;
   interactive?: boolean;
   codeContract?: "renderBody" | "appFile";
+  preset?: SgPlaygroundPreset;
   title?: string;
   description?: string;
   height?: number | string;
@@ -38,11 +39,20 @@ export type SgPlaygroundProps = {
   cardId?: string;
 };
 
+export type SgPlaygroundPreset = "auto" | "basic" | "seedgrid" | "editor" | "full";
+
 const DEFAULT_SEEDGRID_DEPENDENCY = "latest";
-const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
-  "@codesandbox/sandpack-react": "^2.20.0",
+const DEFAULT_SANDBOX_BASE_DEPENDENCIES: Record<string, string> = {
+  react: "18.2.0",
+  "react-dom": "18.2.0"
+};
+
+const DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES: Record<string, string> = {
   "react-hook-form": "^7.0.0",
-  "lucide-react": "^0.468.0",
+  "lucide-react": "^0.468.0"
+};
+
+const DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES: Record<string, string> = {
   "@tiptap/core": "^2.9.1",
   "@tiptap/react": "^2.9.1",
   "@tiptap/pm": "^2.9.1",
@@ -59,11 +69,31 @@ const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
   "@tiptap/extension-font-family": "^2.9.1"
 };
 
+const DEFAULT_SANDBOX_HOST_DEPENDENCIES: Record<string, string> = {
+  "@codesandbox/sandpack-react": "^2.20.0"
+};
+
 const DEFAULT_SANDPACK_POLYFILLS: Record<string, string> = {
   assert: "^2.1.0",
   process: "^0.11.10",
   util: "^0.12.5"
 };
+
+const TIPTAP_SHIM_PACKAGES = [
+  "@tiptap/core",
+  "@tiptap/pm",
+  "@tiptap/starter-kit",
+  "@tiptap/extension-underline",
+  "@tiptap/extension-link",
+  "@tiptap/extension-image",
+  "@tiptap/extension-text-align",
+  "@tiptap/extension-text-style",
+  "@tiptap/extension-color",
+  "@tiptap/extension-highlight",
+  "@tiptap/extension-subscript",
+  "@tiptap/extension-superscript",
+  "@tiptap/extension-font-family"
+] as const;
 
 const SANDPACK_EXTERNAL_RESOURCES = [
   // Prebuilt utility CSS so classes from @seedgrid/fe-components can render inside Sandpack
@@ -102,6 +132,54 @@ const SANDPACK_MARKDOWN_IT_BIN_SHIM = `import markdownit from "../index.mjs";
 // Re-export parser factory so accidental imports of the bin path remain harmless.
 export default markdownit;
 export { markdownit };
+`;
+
+function createEsmShimPackageJson(name: string): string {
+  return `{
+  "name": "${name}",
+  "version": "0.0.0-sandpack-shim",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}`;
+}
+
+const SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS = `export const SandpackProvider = ({ children }) => children ?? null;
+export const SandpackCodeEditor = () => null;
+export const SandpackPreview = () => null;
+export const useSandpack = () => ({
+  sandpack: {
+    activeFile: "/App.tsx",
+    files: { "/App.tsx": { code: "" } },
+    runSandpack: async () => {},
+    clients: {},
+    status: "idle"
+  },
+  dispatch: () => {},
+  listen: () => () => {}
+});
+export default {};
+`;
+
+const SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS = `export const EditorContent = () => null;
+export const BubbleMenu = () => null;
+export const FloatingMenu = () => null;
+export const useEditor = () => null;
+export default {};
+`;
+
+const SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS = `const extension = {
+  configure() {
+    return extension;
+  },
+  extend() {
+    return extension;
+  }
+};
+export default extension;
 `;
 
 const SANDPACK_ASSERT_SHIM_PACKAGE_JSON = `{
@@ -362,6 +440,15 @@ body {
 .active\\:translate-y-\\[0\\.5px\\]:active { transform: translateY(0.5px); }
 .size-4 { width: 1rem; height: 1rem; }
 .size-5 { width: 1.25rem; height: 1.25rem; }
+`;
+
+const SANDPACK_HOST_STYLES_CSS = `
+.sg-playground-preview .sp-cube-wrapper {
+  top: 8px !important;
+  right: 8px !important;
+  bottom: auto !important;
+  left: auto !important;
+}
 `;
 
 function parseRgbParts(raw: string): [number, number, number] | null {
@@ -650,6 +737,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     code,
     interactive = false,
     codeContract = "renderBody",
+    preset = "auto",
     title,
     description,
     height = 360,
@@ -732,37 +820,114 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     process.env.NEXT_PUBLIC_SANDPACK_SEEDGRID_DEPENDENCY ??
     DEFAULT_SEEDGRID_DEPENDENCY;
 
+  const requestedDeps = dependencies ?? {};
+  const requestedDepKeys = Object.keys(requestedDeps);
+
+  const codeUsesSeedgrid = /from\s+["']@seedgrid\/fe-components["']/.test(appTsx);
+  const codeUsesTextEditor = /\bSgTextEditor\b/.test(appTsx);
+  const codeUsesPlaygroundComponent = /\bSgPlayground\b/.test(appTsx);
+
+  const resolvedPreset: Exclude<SgPlaygroundPreset, "auto"> =
+    preset === "auto"
+      ? codeUsesTextEditor
+        ? "editor"
+        : codeUsesSeedgrid
+          ? "seedgrid"
+          : "basic"
+      : preset;
+
+  const includeSeedgridDependency =
+    resolvedPreset === "seedgrid" ||
+    resolvedPreset === "editor" ||
+    resolvedPreset === "full" ||
+    requestedDepKeys.includes("@seedgrid/fe-components");
+
+  const includeEditorDependencies =
+    resolvedPreset === "editor" ||
+    resolvedPreset === "full" ||
+    codeUsesTextEditor ||
+    requestedDepKeys.some((dep) => dep.startsWith("@tiptap/"));
+
+  const includeSandpackReactDependency =
+    resolvedPreset === "full" ||
+    codeUsesPlaygroundComponent ||
+    requestedDepKeys.includes("@codesandbox/sandpack-react");
+
+  const shouldShimSandpackReact = includeSeedgridDependency && !includeSandpackReactDependency;
+  const shouldShimTiptap = includeSeedgridDependency && !includeEditorDependencies;
+  const shouldIncludeNodePolyfills = includeEditorDependencies;
+
   const files: SandpackFiles = {
     "/App.tsx": { code: appTsx, active: true },
-    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) },
-    // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
-    "/node_modules/qrcode/package.json": { code: SANDPACK_QRCODE_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/qrcode/index.js": { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true },
-    // markdown-it CLI entry uses node:fs and breaks in browser runtime.
-    "/node_modules/markdown-it/bin/markdown-it.mjs": {
-      code: SANDPACK_MARKDOWN_IT_BIN_SHIM,
-      hidden: true
-    },
-    // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
-    "/node_modules/assert/package.json": { code: SANDPACK_ASSERT_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/assert/index.js": { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true },
-    "/node_modules/util/package.json": { code: SANDPACK_UTIL_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/util/index.js": { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true },
-    "/node_modules/path/package.json": { code: SANDPACK_PATH_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/path/index.js": { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true },
-    "/node_modules/fs/package.json": { code: SANDPACK_FS_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/fs/index.js": { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true },
-    "/node_modules/process/package.json": { code: SANDPACK_PROCESS_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/process/index.js": { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true }
+    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) }
   };
 
+  if (includeSeedgridDependency) {
+    // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
+    files["/node_modules/qrcode/package.json"] = { code: SANDPACK_QRCODE_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
+  }
+
+  if (shouldIncludeNodePolyfills) {
+    // markdown-it CLI entry uses node:fs and breaks in browser runtime.
+    files["/node_modules/markdown-it/bin/markdown-it.mjs"] = {
+      code: SANDPACK_MARKDOWN_IT_BIN_SHIM,
+      hidden: true
+    };
+    // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
+    files["/node_modules/assert/package.json"] = { code: SANDPACK_ASSERT_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/assert/index.js"] = { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true };
+    files["/node_modules/util/package.json"] = { code: SANDPACK_UTIL_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/util/index.js"] = { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true };
+    files["/node_modules/path/package.json"] = { code: SANDPACK_PATH_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/path/index.js"] = { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true };
+    files["/node_modules/fs/package.json"] = { code: SANDPACK_FS_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/fs/index.js"] = { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true };
+    files["/node_modules/process/package.json"] = { code: SANDPACK_PROCESS_SHIM_PACKAGE_JSON, hidden: true };
+    files["/node_modules/process/index.js"] = { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true };
+  }
+
+  if (shouldShimSandpackReact) {
+    files["/node_modules/@codesandbox/sandpack-react/package.json"] = {
+      code: createEsmShimPackageJson("@codesandbox/sandpack-react"),
+      hidden: true
+    };
+    files["/node_modules/@codesandbox/sandpack-react/index.js"] = {
+      code: SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS,
+      hidden: true
+    };
+  }
+
+  if (shouldShimTiptap) {
+    files["/node_modules/@tiptap/react/package.json"] = {
+      code: createEsmShimPackageJson("@tiptap/react"),
+      hidden: true
+    };
+    files["/node_modules/@tiptap/react/index.js"] = {
+      code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
+      hidden: true
+    };
+
+    for (const packageName of TIPTAP_SHIM_PACKAGES) {
+      files[`/node_modules/${packageName}/package.json`] = {
+        code: createEsmShimPackageJson(packageName),
+        hidden: true
+      };
+      files[`/node_modules/${packageName}/index.js`] = {
+        code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+        hidden: true
+      };
+    }
+  }
+
   const deps: Record<string, string> = {
-    react: "^19.0.0",
-    "react-dom": "^19.0.0",
-    ...DEFAULT_SANDPACK_POLYFILLS,
-    ...DEFAULT_SEEDGRID_PEER_DEPENDENCIES,
-    "@seedgrid/fe-components": resolvedSeedgridDependency,
-    ...(dependencies ?? {})
+    ...DEFAULT_SANDBOX_BASE_DEPENDENCIES,
+    ...(includeSeedgridDependency ? DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES : {}),
+    ...(includeEditorDependencies ? DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES : {}),
+    ...(includeSandpackReactDependency ? DEFAULT_SANDBOX_HOST_DEPENDENCIES : {}),
+    ...(shouldIncludeNodePolyfills ? DEFAULT_SANDPACK_POLYFILLS : {}),
+    ...(includeSeedgridDependency ? { "@seedgrid/fe-components": resolvedSeedgridDependency } : {}),
+    ...requestedDeps
   };
   const currentHeight = isExpanded ? expandedHeight : height;
   const resizeClass = !resizable
@@ -793,6 +958,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
           } as any
         }
       >
+        <style>{SANDPACK_HOST_STYLES_CSS}</style>
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
           <div className="flex items-center gap-2">
             {withCard ? null : <span className="text-sm font-medium">{title ?? "Example"}</span>}
@@ -863,6 +1029,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
           </div>
           <div className={cn("min-w-0", activePanel !== "preview" ? "hidden md:block" : "")}>
             <SandpackPreview
+              className="sg-playground-preview"
               style={{ height: "100%" }}
               showOpenInCodeSandbox={false}
               showRefreshButton={false}
