@@ -59,6 +59,12 @@ const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
   "@tiptap/extension-font-family": "^2.9.1"
 };
 
+const DEFAULT_SANDPACK_POLYFILLS: Record<string, string> = {
+  assert: "^2.1.0",
+  process: "^0.11.10",
+  util: "^0.12.5"
+};
+
 const SANDPACK_EXTERNAL_RESOURCES = [
   // Prebuilt utility CSS so classes from @seedgrid/fe-components can render inside Sandpack
   "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -88,6 +94,197 @@ const qrcodeShim = {
 
 export const toDataURL = (...args) => qrcodeShim.toDataURL(...args);
 export default qrcodeShim;
+`;
+
+const SANDPACK_MARKDOWN_IT_BIN_SHIM = `import markdownit from "../index.mjs";
+
+// Browser-safe shim: Sandpack must not execute markdown-it CLI entrypoint.
+// Re-export parser factory so accidental imports of the bin path remain harmless.
+export default markdownit;
+export { markdownit };
+`;
+
+const SANDPACK_ASSERT_SHIM_PACKAGE_JSON = `{
+  "name": "assert",
+  "version": "0.0.0-sandpack-shim",
+  "main": "./index.js"
+}`;
+
+const SANDPACK_ASSERT_SHIM_INDEX_JS = `function fail(message) {
+  throw new Error(message || "Assertion failed");
+}
+
+function assert(value, message) {
+  if (!value) fail(message);
+}
+
+assert.ok = assert;
+assert.equal = function equal(actual, expected, message) {
+  if (actual != expected) fail(message || "Expected values to be loosely equal");
+};
+assert.strictEqual = function strictEqual(actual, expected, message) {
+  if (actual !== expected) fail(message || "Expected values to be strictly equal");
+};
+assert.notEqual = function notEqual(actual, expected, message) {
+  if (actual == expected) fail(message || "Expected values to be different");
+};
+assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
+  if (actual === expected) fail(message || "Expected values to be different");
+};
+assert.deepEqual = function deepEqual(actual, expected, message) {
+  try {
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      fail(message || "Expected values to be deeply equal");
+    }
+  } catch (_) {
+    if (actual !== expected) fail(message || "Expected values to be deeply equal");
+  }
+};
+assert.throws = function throwsAssertion(fn, message) {
+  var didThrow = false;
+  try { fn(); } catch (_) { didThrow = true; }
+  if (!didThrow) fail(message || "Expected function to throw");
+};
+assert.fail = fail;
+
+module.exports = assert;
+module.exports.default = assert;
+`;
+
+const SANDPACK_UTIL_SHIM_PACKAGE_JSON = `{
+  "name": "util",
+  "version": "0.0.0-sandpack-shim",
+  "main": "./index.js"
+}`;
+
+const SANDPACK_UTIL_SHIM_INDEX_JS = `const inspect = function inspect(value) {
+  try {
+    return JSON.stringify(value);
+  } catch (_) {
+    return String(value);
+  }
+};
+
+inspect.custom = typeof Symbol !== "undefined" && Symbol.for
+  ? Symbol.for("nodejs.util.inspect.custom")
+  : "@@nodejs.util.inspect.custom";
+
+function deprecate(fn, message) {
+  var warned = false;
+  return function deprecatedWrapper() {
+    if (!warned && typeof console !== "undefined" && typeof console.warn === "function") {
+      console.warn(message);
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  };
+}
+
+function format() {
+  return Array.prototype.map.call(arguments, function (item) {
+    return String(item);
+  }).join(" ");
+}
+
+const utilShim = { inspect, deprecate, format };
+module.exports = utilShim;
+module.exports.default = utilShim;
+`;
+
+const SANDPACK_PATH_SHIM_PACKAGE_JSON = `{
+  "name": "path",
+  "version": "0.0.0-sandpack-shim",
+  "main": "./index.js"
+}`;
+
+const SANDPACK_PATH_SHIM_INDEX_JS = `function normalize(input) {
+  return String(input || "").replace(/\\\\/g, "/");
+}
+
+function basename(input) {
+  var text = normalize(input);
+  var pieces = text.split("/").filter(Boolean);
+  return pieces.length ? pieces[pieces.length - 1] : "";
+}
+
+function dirname(input) {
+  var text = normalize(input);
+  var index = text.lastIndexOf("/");
+  if (index <= 0) return ".";
+  return text.slice(0, index);
+}
+
+function join() {
+  return Array.prototype
+    .map.call(arguments, normalize)
+    .filter(Boolean)
+    .join("/")
+    .replace(/\\/{2,}/g, "/");
+}
+
+function resolve() {
+  return join.apply(null, arguments);
+}
+
+const pathShim = {
+  sep: "/",
+  delimiter: ":",
+  basename,
+  dirname,
+  join,
+  resolve,
+  normalize
+};
+
+module.exports = pathShim;
+module.exports.default = pathShim;
+`;
+
+const SANDPACK_FS_SHIM_PACKAGE_JSON = `{
+  "name": "fs",
+  "version": "0.0.0-sandpack-shim",
+  "main": "./index.js"
+}`;
+
+const SANDPACK_FS_SHIM_INDEX_JS = `function notSupported(name) {
+  throw new Error("fs." + name + " is not supported in Sandpack browser runtime.");
+}
+
+const fsShim = {
+  openSync: function openSync() { return notSupported("openSync"); },
+  createReadStream: function createReadStream() { return notSupported("createReadStream"); },
+  createWriteStream: function createWriteStream() { return notSupported("createWriteStream"); },
+  readFileSync: function readFileSync() { return notSupported("readFileSync"); }
+};
+
+module.exports = fsShim;
+module.exports.default = fsShim;
+`;
+
+const SANDPACK_PROCESS_SHIM_PACKAGE_JSON = `{
+  "name": "process",
+  "version": "0.0.0-sandpack-shim",
+  "main": "./index.js"
+}`;
+
+const SANDPACK_PROCESS_SHIM_INDEX_JS = `const processShim = {
+  env: {},
+  argv: ["browser"],
+  stdout: { columns: 80 },
+  stderr: { columns: 80 },
+  cwd: function cwd() { return "/"; },
+  nextTick: function nextTick(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return Promise.resolve().then(function () { return fn.apply(null, args); });
+  }
+};
+
+if (typeof globalThis !== "undefined" && !globalThis.process) {
+  globalThis.process = processShim;
+}
+
+module.exports = processShim;
+module.exports.default = processShim;
 `;
 
 const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
@@ -504,12 +701,29 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) },
     // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
     "/node_modules/qrcode/package.json": { code: SANDPACK_QRCODE_SHIM_PACKAGE_JSON, hidden: true },
-    "/node_modules/qrcode/index.js": { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true }
+    "/node_modules/qrcode/index.js": { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true },
+    // markdown-it CLI entry uses node:fs and breaks in browser runtime.
+    "/node_modules/markdown-it/bin/markdown-it.mjs": {
+      code: SANDPACK_MARKDOWN_IT_BIN_SHIM,
+      hidden: true
+    },
+    // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
+    "/node_modules/assert/package.json": { code: SANDPACK_ASSERT_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/assert/index.js": { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true },
+    "/node_modules/util/package.json": { code: SANDPACK_UTIL_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/util/index.js": { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true },
+    "/node_modules/path/package.json": { code: SANDPACK_PATH_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/path/index.js": { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true },
+    "/node_modules/fs/package.json": { code: SANDPACK_FS_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/fs/index.js": { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true },
+    "/node_modules/process/package.json": { code: SANDPACK_PROCESS_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/process/index.js": { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true }
   };
 
   const deps: Record<string, string> = {
     react: "^19.0.0",
     "react-dom": "^19.0.0",
+    ...DEFAULT_SANDPACK_POLYFILLS,
     ...DEFAULT_SEEDGRID_PEER_DEPENDENCIES,
     "@seedgrid/fe-components": resolvedSeedgridDependency,
     ...(dependencies ?? {})
@@ -529,15 +743,19 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
         template="react-ts"
         files={files}
         customSetup={{ dependencies: deps }}
-        options={{
-          autorun: false,
-          initMode: "lazy",
-          bundlerURL: "https://sandpack.seedgrid.com.br",
-          bundlerTimeOut: 60000,
-          activeFile: "/App.tsx",
-          visibleFiles: ["/App.tsx"],
-          externalResources: SANDPACK_EXTERNAL_RESOURCES
-        }}
+        options={
+          {
+            autorun: false,
+            initMode: "lazy",
+            bundlerURL: "https://sandpack.seedgrid.com.br",
+            // Keep both keys while sandpack typings/runtime differ across versions.
+            bundlerTimeOut: 60000,
+            bundlerTimeout: 60000,
+            activeFile: "/App.tsx",
+            visibleFiles: ["/App.tsx"],
+            externalResources: SANDPACK_EXTERNAL_RESOURCES
+          } as any
+        }
       >
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
           <div className="flex items-center gap-2">
