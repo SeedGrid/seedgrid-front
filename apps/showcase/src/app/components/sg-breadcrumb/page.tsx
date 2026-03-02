@@ -11,29 +11,29 @@ import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const BASIC_ITEMS: SgBreadcrumbItem[] = [
-  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
-  { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
-  { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
-  { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
+  { id: "modules", label: "Modules", href: "/modules", icon: <Layers3 className="size-4" /> },
+  { id: "registrations", label: "Registrations", href: "/modules/registrations", icon: <Building2 className="size-4" /> },
+  { id: "products", label: "Products", href: "/modules/registrations/products", icon: <Box className="size-4" /> },
+  { id: "edit", label: "Edit", icon: <FilePenLine className="size-4" /> }
 ];
 
 const ROUTES = {
-  cadastro: [
+  registration: [
     { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
-    { id: "cadastros", label: "Cadastros", href: "/erp/cadastros", icon: <Building2 className="size-4" /> },
-    { id: "clientes", label: "Clientes", icon: <Receipt className="size-4" /> }
+    { id: "registrations", label: "Registrations", href: "/erp/registrations", icon: <Building2 className="size-4" /> },
+    { id: "customers", label: "Customers", icon: <Receipt className="size-4" /> }
   ],
-  financeiro: [
+  fiscal: [
     { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
-    { id: "financeiro", label: "Financeiro", href: "/erp/financeiro", icon: <Receipt className="size-4" /> },
-    { id: "contas", label: "Contas a pagar", icon: <FilePenLine className="size-4" /> }
+    { id: "fiscal", label: "Fiscal", href: "/erp/fiscal", icon: <Receipt className="size-4" /> },
+    { id: "access", label: "Access", icon: <FilePenLine className="size-4" /> }
   ],
-  configuracao: [
+  integration: [
     { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
-    { id: "config", label: "ConfiguraÃ§Ã£o", href: "/erp/configuracao", icon: <Settings className="size-4" /> },
-    { id: "usuarios", label: "UsuÃ¡rios", icon: <Building2 className="size-4" /> }
+    { id: "integration", label: "Integration", href: "/erp/integration", icon: <Settings className="size-4" /> },
+    { id: "connectors", label: "Connectors", icon: <Building2 className="size-4" /> }
   ]
-} satisfies Record<"cadastro" | "financeiro" | "configuracao", SgBreadcrumbItem[]>;
+} satisfies Record<"registration" | "fiscal" | "integration", SgBreadcrumbItem[]>;
 
 const LONG_ITEMS: SgBreadcrumbItem[] = [
   { id: "home", label: "Home", href: "/" },
@@ -161,10 +161,10 @@ import { Box, Building2, FilePenLine, Layers3 } from "lucide-react";
 import { SgBreadcrumb, type SgBreadcrumbItem } from "@seedgrid/fe-components";
 
 const items: SgBreadcrumbItem[] = [
-  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
-  { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
-  { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
-  { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
+  { id: "modules", label: "Modules", href: "/modules", icon: <Layers3 className="size-4" /> },
+  { id: "registrations", label: "Registrations", href: "/modules/registrations", icon: <Building2 className="size-4" /> },
+  { id: "products", label: "Products", href: "/modules/registrations/products", icon: <Box className="size-4" /> },
+  { id: "edit", label: "Edit", icon: <FilePenLine className="size-4" /> }
 ];
 
 export default function Example() {
@@ -175,19 +175,19 @@ const EXAMPLE_EXTERNAL_CODE = `import React from "react";
 import { SgBreadcrumb, SgButton } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [routeKey, setRouteKey] = React.useState<"cadastro" | "financeiro" | "configuracao">("cadastro");
+  const [routeKey, setRouteKey] = React.useState<"registration" | "fiscal" | "integration">("registration");
   const [lastNavigate, setLastNavigate] = React.useState("-");
   const routeItems = ROUTES[routeKey];
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("cadastro")}>Rota cadastro</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("financeiro")}>Rota financeiro</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuraÃ§Ã£o</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("registration")}>Go to Registration</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("fiscal")}>Go to Fiscal</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("integration")}>Go to Integration</SgButton>
       </div>
       <SgBreadcrumb items={routeItems} separator="arrow" variant="subtle" onNavigate={(item) => setLastNavigate(item.id)} />
-      <p>rota ativa: {routeKey} | Ãºltimo clique: {lastNavigate}</p>
+      <p>active route: {routeKey} | last click: {lastNavigate}</p>
     </div>
   );
 }`;
@@ -211,10 +211,10 @@ import { Layers3, Building2, Box, FilePenLine } from "lucide-react";
 import { SgBreadcrumb, SgButton, type SgBreadcrumbSeparator } from "@seedgrid/fe-components";
 
 const items = [
-  { id: "modulos", label: "MÃ³dulos", href: "/modulos", icon: <Layers3 className="size-4" /> },
-  { id: "cadastros", label: "Cadastros", href: "/modulos/cadastros", icon: <Building2 className="size-4" /> },
-  { id: "produtos", label: "Produtos", href: "/modulos/cadastros/produtos", icon: <Box className="size-4" /> },
-  { id: "editar", label: "Editar", icon: <FilePenLine className="size-4" /> }
+  { id: "modules", label: "Modules", href: "/modules", icon: <Layers3 className="size-4" /> },
+  { id: "registrations", label: "Registrations", href: "/modules/registrations", icon: <Building2 className="size-4" /> },
+  { id: "products", label: "Products", href: "/modules/registrations/products", icon: <Box className="size-4" /> },
+  { id: "edit", label: "Edit", icon: <FilePenLine className="size-4" /> }
 ];
 
 export default function App() {
@@ -242,22 +242,22 @@ export default function App() {
 }`;
 
 const BREADCRUMB_PROPS: ShowcasePropRow[] = [
-  { prop: "items", type: "SgBreadcrumbItem[]", defaultValue: "-", description: "Lista de itens renderizados no breadcrumb." },
-  { prop: "separator", type: "\"slash\" | \"chevron\" | \"dot\" | \"arrow\" | ReactNode", defaultValue: "chevron", description: "Separador visual entre itens." },
-  { prop: "maxItems", type: "number", defaultValue: "-", description: "Quantidade mÃ¡xima de itens antes do overflow." },
-  { prop: "overflowBehavior", type: "\"collapse\" | \"scroll\"", defaultValue: "collapse", description: "Comportamento em trilhas longas." },
-  { prop: "showHomeIcon / homeHref / homeLabel", type: "boolean / string / ReactNode", defaultValue: "false / / / Home", description: "ConfiguraÃ§Ã£o do item Home automÃ¡tico." },
-  { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Tamanho visual dos itens." },
-  { prop: "variant", type: "\"default\" | \"subtle\" | \"primary\"", defaultValue: "default", description: "Estilo visual do breadcrumb." },
-  { prop: "ariaLabel", type: "string", defaultValue: "Breadcrumb", description: "RÃ³tulo de acessibilidade da navegaÃ§Ã£o." },
-  { prop: "overflowLabel", type: "string", defaultValue: "Mais caminhos", description: "RÃ³tulo do botÃ£o de overflow." },
-  { prop: "onNavigate", type: "(item, index) => void", defaultValue: "-", description: "Callback ao navegar em um item." },
-  { prop: "className / itemClassName / style", type: "string / string / CSSProperties", defaultValue: "-", description: "CustomizaÃ§Ã£o de layout e estilo." },
-  { prop: "SgBreadcrumbItem.id / label / href / icon / disabled / hidden / onClick", type: "item props", defaultValue: "-", description: "Estrutura de cada item do breadcrumb." }
+  { prop: "items", type: "SgBreadcrumbItem[]", defaultValue: "-", description: "List of rendered breadcrumb items." },
+  { prop: "separator", type: "\"slash\" | \"chevron\" | \"dot\" | \"arrow\" | ReactNode", defaultValue: "chevron", description: "Visual separator between items." },
+  { prop: "maxItems", type: "number", defaultValue: "-", description: "Maximum item count before overflow." },
+  { prop: "overflowBehavior", type: "\"collapse\" | \"scroll\"", defaultValue: "collapse", description: "Overflow behavior for long trails." },
+  { prop: "showHomeIcon / homeHref / homeLabel", type: "boolean / string / ReactNode", defaultValue: "false / / / Home", description: "Automatic Home item configuration." },
+  { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Visual size of items." },
+  { prop: "variant", type: "\"default\" | \"subtle\" | \"primary\"", defaultValue: "default", description: "Visual style variant." },
+  { prop: "ariaLabel", type: "string", defaultValue: "Breadcrumb", description: "Accessible label for navigation." },
+  { prop: "overflowLabel", type: "string", defaultValue: "More paths", description: "Label for the overflow button." },
+  { prop: "onNavigate", type: "(item, index) => void", defaultValue: "-", description: "Callback fired when navigating to an item." },
+  { prop: "className / itemClassName / style", type: "string / string / CSSProperties", defaultValue: "-", description: "Layout and style customization." },
+  { prop: "SgBreadcrumbItem.id / label / href / icon / disabled / hidden / onClick", type: "item props", defaultValue: "-", description: "Structure of each breadcrumb item." }
 ];
 
 export default function SgBreadcrumbPage() {
-  const [routeKey, setRouteKey] = React.useState<keyof typeof ROUTES>("cadastro");
+  const [routeKey, setRouteKey] = React.useState<keyof typeof ROUTES>("registration");
   const [lastNavigate, setLastNavigate] = React.useState("-");
   const routeItems = ROUTES[routeKey];
   const i18n = useShowcaseI18n();
@@ -287,9 +287,9 @@ export default function SgBreadcrumbPage() {
 
         <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="flex flex-wrap gap-2">
-            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("cadastro")}>Rota cadastro</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("financeiro")}>Rota financeiro</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("configuracao")}>Rota configuraÃ§Ã£o</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("registration")}>Go to Registration</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("fiscal")}>Go to Fiscal</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("integration")}>Go to Integration</SgButton>
           </div>
 
           <SgBreadcrumb

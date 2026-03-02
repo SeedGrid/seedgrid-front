@@ -9,6 +9,7 @@ function cn(...parts: Array<string | false | null | undefined>) {
 export type SgPageControlPageProps = {
   id?: string;
   title: React.ReactNode;
+  hint?: string;
   icon?: React.ReactNode;
   hidden?: boolean;
   disabled?: boolean;
@@ -277,6 +278,7 @@ export function SgPageControl(props: Readonly<SgPageControlProps>) {
               aria-controls={panelId}
               aria-selected={isActive}
               tabIndex={isActive ? 0 : -1}
+              title={record.props.hint}
               disabled={record.props.disabled}
               onClick={() => selectPage(record.id)}
               className={cn(
@@ -348,4 +350,3 @@ export function SgPageControlPage(props: Readonly<SgPageControlPageProps>) {
 }
 
 SgPageControlPage.displayName = "SgPageControlPage";
-

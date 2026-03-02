@@ -88,11 +88,11 @@ export default function CreditsPage() {
       usedIn: "SgPlayground"
     },
     {
-      name: "qrcode",
-      version: "1.x",
-      license: "MIT",
-      url: "https://github.com/soldair/node-qrcode",
-      description: "QR code generator for Node.js and the browser.",
+      name: "qrcode.react",
+      version: "4.x",
+      license: "ISC",
+      url: "https://github.com/zpao/qrcode.react",
+      description: "Browser-safe React QR code renderer (SVG/Canvas).",
       usedIn: "SgQRCode"
     },
     {
@@ -173,4 +173,3 @@ export default function CreditsPage() {
     </I18NReady>
   );
 }
-

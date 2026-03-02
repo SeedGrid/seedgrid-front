@@ -38,7 +38,7 @@ export type SgPlaygroundProps = {
   cardId?: string;
 };
 
-const DEFAULT_SEEDGRID_DEPENDENCY = "2026.3.1";
+const DEFAULT_SEEDGRID_DEPENDENCY = "latest";
 const DEFAULT_SEEDGRID_PEER_DEPENDENCIES: Record<string, string> = {
   "@codesandbox/sandpack-react": "^2.20.0",
   "react-hook-form": "^7.0.0",
@@ -61,6 +61,32 @@ const SANDPACK_EXTERNAL_RESOURCES = [
   // Prebuilt utility CSS so classes from @seedgrid/fe-components can render inside Sandpack
   "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
 ];
+
+const SANDPACK_QRCODE_SHIM_PACKAGE_JSON = `{
+  "name": "qrcode",
+  "version": "0.0.0-sandpack-shim",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}`;
+
+const SANDPACK_QRCODE_SHIM_INDEX_JS = `const makeError = () =>
+  new Error(
+    "qrcode (node build) is not supported in Sandpack browser runtime. Update @seedgrid/fe-components to a browser-safe QR implementation."
+  );
+
+const qrcodeShim = {
+  toDataURL() {
+    return Promise.reject(makeError());
+  }
+};
+
+export const toDataURL = (...args) => qrcodeShim.toDataURL(...args);
+export default qrcodeShim;
+`;
 
 const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
   "--background": "0 0% 100%",
@@ -473,7 +499,10 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
 
   const files: SandpackFiles = {
     "/App.tsx": { code: appTsx, active: true },
-    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) }
+    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) },
+    // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
+    "/node_modules/qrcode/package.json": { code: SANDPACK_QRCODE_SHIM_PACKAGE_JSON, hidden: true },
+    "/node_modules/qrcode/index.js": { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true }
   };
 
   const deps: Record<string, string> = {
@@ -501,6 +530,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
         options={{
           autorun: false,
           initMode: "lazy",
+          bundlerURL: "https://sandpack.seedgrid.com.br",
           bundlerTimeOut: 60000,
           activeFile: "/App.tsx",
           visibleFiles: ["/App.tsx"],

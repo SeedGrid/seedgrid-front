@@ -1,10 +1,44 @@
 "use client";
 
 import * as React from "react";
-import QRCode from "qrcode";
+import { QRCodeSVG } from "qrcode.react";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
+}
+
+type QrErrorBoundaryProps = {
+  resetKey: string;
+  fallback: React.ReactNode;
+  onError?: (error: Error) => void;
+  children: React.ReactNode;
+};
+
+type QrErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class QrErrorBoundary extends React.Component<QrErrorBoundaryProps, QrErrorBoundaryState> {
+  state: QrErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): QrErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    this.props.onError?.(error);
+  }
+
+  componentDidUpdate(prevProps: QrErrorBoundaryProps) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
 }
 
 export type SgQRCodeErrorCorrectionLevel = "L" | "M" | "Q" | "H";
@@ -51,8 +85,6 @@ export function SgQRCode(props: Readonly<SgQRCodeProps>) {
     ...rest
   } = props;
 
-  const [qrDataUrl, setQrDataUrl] = React.useState<string>("");
-  const [hasError, setHasError] = React.useState(false);
   const normalizedValue = value?.trim() ?? "";
 
   const safeSize = Math.max(64, Math.round(size));
@@ -63,52 +95,7 @@ export function SgQRCode(props: Readonly<SgQRCodeProps>) {
     Math.min(safeSize, Math.round(logoSize ?? safeSize * 0.22))
   );
   const logoContainerSize = safeLogoSize + safeLogoPadding * 2;
-
-  React.useEffect(() => {
-    let active = true;
-
-    if (!normalizedValue) {
-      setQrDataUrl("");
-      setHasError(false);
-      return () => {
-        active = false;
-      };
-    }
-
-    QRCode.toDataURL(normalizedValue, {
-      width: safeSize,
-      margin: safeMargin,
-      color: {
-        dark: fgColor,
-        light: bgColor
-      },
-      errorCorrectionLevel
-    })
-      .then((dataUrl) => {
-        if (!active) return;
-        setQrDataUrl(dataUrl);
-        setHasError(false);
-      })
-      .catch((cause: unknown) => {
-        if (!active) return;
-        const error = cause instanceof Error ? cause : new Error("Failed to generate QR code");
-        setQrDataUrl("");
-        setHasError(true);
-        onGenerateError?.(error);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [
-    normalizedValue,
-    safeSize,
-    safeMargin,
-    fgColor,
-    bgColor,
-    errorCorrectionLevel,
-    onGenerateError
-  ]);
+  const qrResetKey = `${normalizedValue}|${safeSize}|${safeMargin}|${fgColor}|${bgColor}|${errorCorrectionLevel}`;
 
   if (!normalizedValue) {
     if (!emptyFallback) return null;
@@ -129,20 +116,24 @@ export function SgQRCode(props: Readonly<SgQRCodeProps>) {
       style={{ width: safeSize, height: safeSize, ...style }}
       {...rest}
     >
-      {qrDataUrl && !hasError ? (
-        <img
-          src={qrDataUrl}
-          alt="QR Code"
-          width={safeSize}
-          height={safeSize}
+      <QrErrorBoundary
+        resetKey={qrResetKey}
+        onError={onGenerateError}
+        fallback={<div className="h-full w-full animate-pulse rounded-md bg-muted/40" aria-hidden="true" />}
+      >
+        <QRCodeSVG
+          value={normalizedValue}
+          size={safeSize}
+          marginSize={safeMargin}
+          fgColor={fgColor}
+          bgColor={bgColor}
+          level={errorCorrectionLevel}
+          title="QR Code"
           className={cn("block h-full w-full", imageClassName)}
-          draggable={false}
         />
-      ) : (
-        <div className="h-full w-full animate-pulse rounded-md bg-muted/40" aria-hidden="true" />
-      )}
+      </QrErrorBoundary>
 
-      {logoSrc && qrDataUrl && !hasError ? (
+      {logoSrc ? (
         <span
           className={cn("absolute inline-flex items-center justify-center overflow-hidden", logoClassName)}
           style={{

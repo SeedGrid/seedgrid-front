@@ -10,7 +10,7 @@ import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
-const PAGE_IDS = ["cadastro", "fiscal", "acesso", "integracoes"] as const;
+const PAGE_IDS = ["registration", "fiscal", "access", "integrations"] as const;
 
 function Section(props: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -24,7 +24,6 @@ function Section(props: { title: string; description?: string; children: React.R
     </section>
   );
 }
-
 function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
@@ -35,15 +34,15 @@ import { SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
 
 export default function Example() {
   return (
-    <SgPageControl defaultActivePageId="cadastro">
-      <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-        ConteÃºdo cadastro
+    <SgPageControl defaultActivePageId="registration">
+      <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>
+        Registration content
       </SgPageControlPage>
       <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-        ConteÃºdo fiscal
+        Fiscal content
       </SgPageControlPage>
-      <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-        ConteÃºdo acesso
+      <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>
+        Access content
       </SgPageControlPage>
     </SgPageControl>
   );
@@ -54,22 +53,22 @@ import { FolderKanban, Receipt, ShieldCheck, UserRound } from "lucide-react";
 import { SgButton, SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [activePageId, setActivePageId] = React.useState("cadastro");
+  const [activePageId, setActivePageId] = React.useState("registration");
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("cadastro")}>Cadastro</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Fiscal</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("acesso")}>Acesso</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>IntegraÃ§Ãµes</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("registration")}>Go to Registration</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Go to Fiscal</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("access")}>Go to Access</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integrations")}>Go to Integrations</SgButton>
       </div>
 
       <SgPageControl activePageId={activePageId} onActivePageIdChange={(pageId) => setActivePageId(pageId)} variant="pills">
-        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
-        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
-        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
-        <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<FolderKanban className="size-4" />}>ConteÃºdo integraÃ§Ãµes</SgPageControlPage>
+        <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>Registration content</SgPageControlPage>
+        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Fiscal content</SgPageControlPage>
+        <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>Access content</SgPageControlPage>
+        <SgPageControlPage id="integrations" title="Integrations" icon={<FolderKanban className="size-4" />}>Integrations content</SgPageControlPage>
       </SgPageControl>
     </div>
   );
@@ -80,7 +79,7 @@ import { Receipt, ShieldCheck, UserRound, Wrench } from "lucide-react";
 import { SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [activePageId, setActivePageId] = React.useState("cadastro");
+  const [activePageId, setActivePageId] = React.useState("registration");
   const [hiddenPageIds, setHiddenPageIds] = React.useState<string[]>([]);
 
   return (
@@ -90,10 +89,45 @@ export default function Example() {
       hiddenPageIds={hiddenPageIds}
       keepMounted
     >
-      <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
-      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
-      <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
-      <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<Wrench className="size-4" />}>ConteÃºdo integraÃ§Ãµes</SgPageControlPage>
+      <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>Registration content</SgPageControlPage>
+      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Fiscal content</SgPageControlPage>
+      <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>Access content</SgPageControlPage>
+      <SgPageControlPage id="integrations" title="Integrations" icon={<Wrench className="size-4" />}>Integrations content</SgPageControlPage>
+    </SgPageControl>
+  );
+}`;
+
+const EXAMPLE_HINT_CODE = `import React from "react";
+import { Receipt, ShieldCheck, UserRound } from "lucide-react";
+import { SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgPageControl defaultActivePageId="registration">
+      <SgPageControlPage
+        id="registration"
+        title="Registration"
+        hint="Create and edit registration data."
+        icon={<UserRound className="size-4" />}
+      >
+        Registration content
+      </SgPageControlPage>
+      <SgPageControlPage
+        id="fiscal"
+        title="Fiscal"
+        hint="Review tax and fiscal settings."
+        icon={<Receipt className="size-4" />}
+      >
+        Fiscal content
+      </SgPageControlPage>
+      <SgPageControlPage
+        id="access"
+        title="Access"
+        hint="Manage users, roles and permissions."
+        icon={<ShieldCheck className="size-4" />}
+      >
+        Access content
+      </SgPageControlPage>
     </SgPageControl>
   );
 }`;
@@ -121,27 +155,27 @@ export default function App() {
       </div>
 
       <SgPageControl variant={variant} size={size} fullWidthTabs={fullWidthTabs}>
-        <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>ConteÃºdo cadastro</SgPageControlPage>
-        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>ConteÃºdo fiscal</SgPageControlPage>
-        <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>ConteÃºdo acesso</SgPageControlPage>
+        <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>Registration content</SgPageControlPage>
+        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Fiscal content</SgPageControlPage>
+        <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>Access content</SgPageControlPage>
       </SgPageControl>
     </div>
   );
 }`;
 
 const PAGE_CONTROL_PROPS: ShowcasePropRow[] = [
-  { prop: "children", type: "SgPageControlPage", defaultValue: "-", description: "PÃ¡ginas declaradas como filhos." },
-  { prop: "activePageId / activeIndex", type: "string / number", defaultValue: "-", description: "Controle externo da pÃ¡gina ativa." },
-  { prop: "defaultActivePageId / defaultActiveIndex", type: "string / number", defaultValue: "primeira pÃ¡gina visÃ­vel", description: "Estado inicial quando nÃ£o controlado." },
-  { prop: "onActivePageIdChange / onActiveIndexChange", type: "callbacks", defaultValue: "-", description: "Eventos de mudanÃ§a de pÃ¡gina." },
-  { prop: "hiddenPageIds", type: "string[]", defaultValue: "[]", description: "Oculta pÃ¡ginas sem removÃª-las da declaraÃ§Ã£o." },
-  { prop: "keepMounted", type: "boolean", defaultValue: "false", description: "MantÃ©m todos os painÃ©is montados." },
-  { prop: "variant", type: "\"underline\" | \"pills\"", defaultValue: "underline", description: "Estilo visual das abas." },
-  { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Tamanho das abas e painel." },
-  { prop: "fullWidthTabs / keyboardNavigation", type: "boolean", defaultValue: "false / true", description: "Abas em largura total e navegaÃ§Ã£o por teclado." },
-  { prop: "ariaLabel / emptyMessage", type: "string / ReactNode", defaultValue: "Page control / No visible pages.", description: "Acessibilidade e estado vazio." },
-  { prop: "className / tabListClassName / tabClassName / panelClassName / style", type: "customizaÃ§Ã£o visual", defaultValue: "-", description: "Classes e estilo do container." },
-  { prop: "SgPageControlPage.id / title / icon / hidden / disabled / keepMounted / className / tabClassName / children", type: "page props", defaultValue: "-", description: "Propriedades de cada aba/pÃ¡gina." }
+  { prop: "children", type: "SgPageControlPage", defaultValue: "-", description: "Pages declared as children." },
+  { prop: "activePageId / activeIndex", type: "string / number", defaultValue: "-", description: "External control of active page." },
+  { prop: "defaultActivePageId / defaultActiveIndex", type: "string / number", defaultValue: "first visible page", description: "Initial state when uncontrolled." },
+  { prop: "onActivePageIdChange / onActiveIndexChange", type: "callbacks", defaultValue: "-", description: "Events triggered on page change." },
+  { prop: "hiddenPageIds", type: "string[]", defaultValue: "[]", description: "Hide pages without removing declarations." },
+  { prop: "keepMounted", type: "boolean", defaultValue: "false", description: "Keep all panels mounted." },
+  { prop: "variant", type: "\"underline\" | \"pills\"", defaultValue: "underline", description: "Visual style of tabs." },
+  { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Tab and panel size." },
+  { prop: "fullWidthTabs / keyboardNavigation", type: "boolean", defaultValue: "false / true", description: "Full-width tabs and keyboard navigation." },
+  { prop: "ariaLabel / emptyMessage", type: "string / ReactNode", defaultValue: "Page control / No visible pages.", description: "Accessibility and empty state." },
+  { prop: "className / tabListClassName / tabClassName / panelClassName / style", type: "visual customization", defaultValue: "-", description: "Classes and styles for wrappers." },
+  { prop: "SgPageControlPage.id / title / hint / icon / hidden / disabled / keepMounted / className / tabClassName / children", type: "page props", defaultValue: "-", description: "Props available for each tab/page." }
 ];
 
 
@@ -159,12 +193,14 @@ const PAGE_CONTROL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PageControl
       "1) Basico",
       "2) Controle Externo",
       "3) Ocultar Pagina Externamente",
-      "4) Playground"
+      "4) Com Hint nas Abas",
+      "5) Playground"
     ],
     sectionDescriptions: [
       "Cada pagina define icon e title no SgPageControlPage.",
       "Use activePageId + onActivePageIdChange para setar a aba ativa.",
       "hiddenPageIds permite esconder tabs sem apagar a declaracao.",
+      "Passe o mouse sobre a aba para ver o hint.",
       "Teste variant, size e fullWidthTabs."
     ],
     playgroundTitle: "SgPageControl Playground"
@@ -175,12 +211,14 @@ const PAGE_CONTROL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PageControl
       "1) Basico",
       "2) Controlo Externo",
       "3) Ocultar Pagina Externamente",
-      "4) Playground"
+      "4) Com Hint nos Tabs",
+      "5) Playground"
     ],
     sectionDescriptions: [
       "Cada pagina define icon e title no SgPageControlPage.",
       "Use activePageId + onActivePageIdChange para definir o tab ativo.",
       "hiddenPageIds permite esconder tabs sem remover a declaracao.",
+      "Passe o rato no tab para ver o hint.",
       "Teste variant, size e fullWidthTabs."
     ],
     playgroundTitle: "SgPageControl Playground"
@@ -191,12 +229,14 @@ const PAGE_CONTROL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PageControl
       "1) Basic",
       "2) External Control",
       "3) Hide Page Externally",
-      "4) Playground"
+      "4) With Tab Hints",
+      "5) Playground"
     ],
     sectionDescriptions: [
       "Each page defines icon and title in SgPageControlPage.",
       "Use activePageId + onActivePageIdChange to set the active tab.",
       "hiddenPageIds hides tabs without removing declarations.",
+      "Hover each tab to display its hint.",
       "Try variant, size and fullWidthTabs."
     ],
     playgroundTitle: "SgPageControl Playground"
@@ -207,12 +247,14 @@ const PAGE_CONTROL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PageControl
       "1) Basico",
       "2) Control Externo",
       "3) Ocultar Pagina Externamente",
-      "4) Playground"
+      "4) Con Hint en Tabs",
+      "5) Playground"
     ],
     sectionDescriptions: [
       "Cada pagina define icon y title en SgPageControlPage.",
       "Usa activePageId + onActivePageIdChange para definir la tab activa.",
       "hiddenPageIds oculta tabs sin remover declaraciones.",
+      "Pasa el cursor por la tab para ver el hint.",
       "Prueba variant, size y fullWidthTabs."
     ],
     playgroundTitle: "SgPageControl Playground"
@@ -226,7 +268,7 @@ export default function SgPageControlShowcasePage() {
   const i18n = useShowcaseI18n();
   const locale: keyof typeof PAGE_CONTROL_TEXTS = isSupportedPageControlLocale(i18n.locale) ? i18n.locale : "pt-BR";
   const texts = PAGE_CONTROL_TEXTS[locale];
-  const [activePageId, setActivePageId] = React.useState<string>("cadastro");
+  const [activePageId, setActivePageId] = React.useState<string>("registration");
   const [hiddenPageIds, setHiddenPageIds] = React.useState<string[]>([]);
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({ deps: [i18n.locale] });
 
@@ -250,15 +292,15 @@ export default function SgPageControlShowcasePage() {
         />
 
         <Section title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
-          <SgPageControl defaultActivePageId="cadastro">
-            <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              ConteÃºdo cadastro
+          <SgPageControl defaultActivePageId="registration">
+            <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>
+              Registration content
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              ConteÃºdo fiscal
+              Fiscal content
             </SgPageControlPage>
-            <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              ConteÃºdo acesso
+            <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>
+              Access content
             </SgPageControlPage>
           </SgPageControl>
           <CodeBlock code={EXAMPLE_BASIC_CODE} />
@@ -266,29 +308,29 @@ export default function SgPageControlShowcasePage() {
 
         <Section title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <div className="flex flex-wrap gap-2">
-            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("cadastro")}>Ir para Cadastro</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Ir para Fiscal</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("acesso")}>Ir para Acesso</SgButton>
-            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integracoes")}>Ir para IntegraÃ§Ãµes</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("registration")}>Go to Registration</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("fiscal")}>Go to Fiscal</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("access")}>Go to Access</SgButton>
+            <SgButton size="sm" appearance="outline" onClick={() => setActivePageId("integrations")}>Go to Integrations</SgButton>
           </div>
 
           <SgPageControl activePageId={activePageId} onActivePageIdChange={(pageId) => setActivePageId(pageId)} variant="pills">
-            <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              ConteÃºdo cadastro
+            <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>
+              Registration content
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              ConteÃºdo fiscal
+              Fiscal content
             </SgPageControlPage>
-            <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              ConteÃºdo acesso
+            <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>
+              Access content
             </SgPageControlPage>
-            <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<FolderKanban className="size-4" />}>
-              ConteÃºdo integraÃ§Ãµes
+            <SgPageControlPage id="integrations" title="Integrations" icon={<FolderKanban className="size-4" />}>
+              Integrations content
             </SgPageControlPage>
           </SgPageControl>
 
           <p className="text-sm text-muted-foreground">
-            PÃ¡gina ativa atual: <span className="font-semibold text-foreground">{activePageId}</span>
+            Current active page: <span className="font-semibold text-foreground">{activePageId}</span>
           </p>
           <CodeBlock code={EXAMPLE_CONTROLLED_CODE} />
         </Section>
@@ -298,7 +340,7 @@ export default function SgPageControlShowcasePage() {
             {PAGE_IDS.map((id) => (
               <label key={id} className="inline-flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={hiddenPageIds.includes(id)} onChange={() => toggleHidden(id)} />
-                ocultar {id}
+                hide {id}
               </label>
             ))}
           </div>
@@ -309,23 +351,53 @@ export default function SgPageControlShowcasePage() {
             hiddenPageIds={hiddenPageIds}
             keepMounted
           >
-            <SgPageControlPage id="cadastro" title="Cadastro" icon={<UserRound className="size-4" />}>
-              ConteÃºdo cadastro
+            <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>
+              Registration content
             </SgPageControlPage>
             <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
-              ConteÃºdo fiscal
+              Fiscal content
             </SgPageControlPage>
-            <SgPageControlPage id="acesso" title="Acesso" icon={<ShieldCheck className="size-4" />}>
-              ConteÃºdo acesso
+            <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>
+              Access content
             </SgPageControlPage>
-            <SgPageControlPage id="integracoes" title="IntegraÃ§Ãµes" icon={<Wrench className="size-4" />}>
-              ConteÃºdo integraÃ§Ãµes
+            <SgPageControlPage id="integrations" title="Integrations" icon={<Wrench className="size-4" />}>
+              Integrations content
             </SgPageControlPage>
           </SgPageControl>
           <CodeBlock code={EXAMPLE_HIDDEN_CODE} />
         </Section>
 
         <Section title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
+          <SgPageControl defaultActivePageId="registration">
+            <SgPageControlPage
+              id="registration"
+              title="Registration"
+              hint="Create and edit registration data."
+              icon={<UserRound className="size-4" />}
+            >
+              Registration content
+            </SgPageControlPage>
+            <SgPageControlPage
+              id="fiscal"
+              title="Fiscal"
+              hint="Review tax and fiscal settings."
+              icon={<Receipt className="size-4" />}
+            >
+              Fiscal content
+            </SgPageControlPage>
+            <SgPageControlPage
+              id="access"
+              title="Access"
+              hint="Manage users, roles and permissions."
+              icon={<ShieldCheck className="size-4" />}
+            >
+              Access content
+            </SgPageControlPage>
+          </SgPageControl>
+          <CodeBlock code={EXAMPLE_HINT_CODE} />
+        </Section>
+
+        <Section title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
           <SgPlayground
             title={texts.playgroundTitle}
             interactive
@@ -342,4 +414,5 @@ export default function SgPageControlShowcasePage() {
     </I18NReady>
   );
 }
+
 
