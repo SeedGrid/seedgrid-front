@@ -3,6 +3,9 @@
     "allow": [
       "Bash(node -e \":*)",
       "Bash(pnpm -C packages/seedgrid-fe-components build)"
+    ],
+    "additionalDirectories": [
+      "c:\\empreendedorismo\\seedgrid\\front\\packages\\seedgrid-fe-components\\src\\i18n"
     ]
   }
 }
