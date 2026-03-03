@@ -130,10 +130,7 @@ const TIPTAP_SHIM_PACKAGES = [
   "@tiptap/extension-font-family"
 ] as const;
 
-const SANDPACK_EXTERNAL_RESOURCES = [
-  // Prebuilt utility CSS so classes from @seedgrid/fe-components can render inside Sandpack
-  "https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"
-];
+const SANDPACK_EXTERNAL_RESOURCES: string[] = [];
 
 const SANDPACK_QRCODE_SHIM_INDEX_JS = `const makeError = () =>
   new Error(
@@ -380,7 +377,15 @@ const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
   "--destructive": "0 84.2% 60.2%",
   "--destructive-foreground": "0 0% 100%",
   "--border": "214.3 31.8% 91.4%",
+  "--input": "214.3 31.8% 91.4%",
   "--ring": "var(--primary)",
+  "--muted": "210 40% 96.1%",
+  "--muted-foreground": "215.4 16.3% 46.9%",
+  "--card": "0 0% 100%",
+  "--card-foreground": "222.2 84% 4.9%",
+  "--popover": "0 0% 100%",
+  "--popover-foreground": "222.2 84% 4.9%",
+  "--radius": "0.5rem",
   "--sg-primary-600": "22 163 74",
   "--sg-secondary-600": "82 82 91",
   "--sg-tertiary-600": "20 184 166",
@@ -452,6 +457,49 @@ const SANDPACK_HOST_STYLES_CSS = `
   bottom: auto !important;
   left: auto !important;
 }
+`;
+
+// Virtual index.html that loads Tailwind v3 play CDN with SeedGrid's design token config.
+// The config script must come BEFORE the CDN script so Tailwind picks it up at init time.
+const SANDPACK_TAILWIND_INDEX_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    tailwind = {
+      config: {
+        theme: {
+          extend: {
+            colors: {
+              border: "hsl(var(--border))",
+              input: "hsl(var(--input))",
+              ring: "hsl(var(--ring))",
+              background: "hsl(var(--background))",
+              foreground: "hsl(var(--foreground))",
+              primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+              secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
+              destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+              muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
+              accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" }
+            },
+            borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)"
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
 `;
 
 function normalizeUrl(raw: string | undefined, fallback: string): string {
@@ -546,6 +594,10 @@ const SANDPACK_SEEDGRID_ES_JSON_SHIM = JSON.stringify(SANDPACK_MIN_COMPONENT_MES
 const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = JSON.stringify({
   blockedEmailDomains: []
 });
+
+// CJS shims for .js locale files (new npm versions after the JSON→TypeScript conversion).
+const SANDPACK_SEEDGRID_LOCALE_JS_SHIM = `module.exports = ${JSON.stringify(SANDPACK_MIN_COMPONENT_MESSAGES)};`;
+const SANDPACK_SEEDGRID_BLOCKED_EMAIL_JS_SHIM = `module.exports = ${JSON.stringify({ blockedEmailDomains: [] })};`;
 
 function parseRgbParts(raw: string): [number, number, number] | null {
   const value = raw.trim();
@@ -1007,8 +1059,13 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
     files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
 
+    // Virtual index.html: loads Tailwind v3 play CDN with SeedGrid design-token config.
+    // This replaces the old Tailwind v2 CDN (which lacked JIT arbitrary values and CSS-var-based design tokens).
+    files["/public/index.html"] = { code: SANDPACK_TAILWIND_INDEX_HTML, hidden: true };
+
     // Sandpack runtime can evaluate JSON files as plain JS modules.
     // Provide CJS-compatible shims to keep @seedgrid/fe-components i18n/validators working.
+    // .json shims cover current npm versions; .js shims cover new versions after JSON→TypeScript conversion.
     files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.json"] = {
       code: SANDPACK_SEEDGRID_PT_BR_JSON_SHIM,
       hidden: true
@@ -1027,6 +1084,26 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     };
     files["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.json"] = {
       code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.js"] = {
+      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.js"] = {
+      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.js"] = {
+      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/i18n/es.js"] = {
+      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+      hidden: true
+    };
+    files["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.js"] = {
+      code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_JS_SHIM,
       hidden: true
     };
   }

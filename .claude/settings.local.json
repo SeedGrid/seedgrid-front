@@ -61,7 +61,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:sandpack.seedgrid.com.br)",
       "Bash(pnpm run build:sandbox)",
-      "Bash(pnpm -C packages/seedgrid-fe-components typecheck)"
+      "Bash(pnpm -C packages/seedgrid-fe-components typecheck)",
+      "Bash(node -e \"const buf = require\\(''fs''\\).readFileSync\\(''packages/seedgrid-fe-components/src/i18n/es.ts''\\); const hex = buf.slice\\(0, 6\\).toString\\(''hex''\\); console.log\\(''BOM/start bytes:'', hex\\); console.log\\(''Encoding check \\(first 100 chars\\):'', buf.slice\\(0, 100\\).toString\\(''utf8''\\)\\);\")"
     ]
   }
 }
