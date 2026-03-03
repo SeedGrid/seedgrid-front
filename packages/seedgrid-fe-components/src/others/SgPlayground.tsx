@@ -60,9 +60,32 @@ const DEFAULT_SANDBOX_BASE_DEPENDENCIES: Record<string, string> = {
 };
 
 const DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES: Record<string, string> = {
-  "react-hook-form": "^7.0.0",
-  "lucide-react": "^0.468.0"
+  "react-hook-form": "^7.0.0"
 };
+
+// lucide-react is a heavy peer dep (~1400 icons). For non-full presets we shim it with
+// a generic SVG placeholder to avoid OOM in the browser bundler.
+const SANDPACK_LUCIDE_REACT_SHIM_INDEX_JS = `const React = require("react");
+const Icon = function(props) {
+  return React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: props.size || props.width || 16,
+    height: props.size || props.height || 16,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: props.color || "currentColor",
+    strokeWidth: props.strokeWidth || 2,
+    className: props.className
+  });
+};
+const proxy = new Proxy({}, {
+  get: function(_, key) {
+    if (key === "__esModule") return true;
+    return Icon;
+  }
+});
+module.exports = proxy;
+`;
 
 const DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES: Record<string, string> = {
   "@tiptap/core": "^2.9.1",
@@ -967,6 +990,9 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   const shouldShimSandpackReact = includeSeedgridDependency && !includeSandpackReactDependency;
   const shouldShimTiptap = includeSeedgridDependency && !includeEditorDependencies;
   const shouldIncludeNodePolyfills = includeEditorDependencies;
+  // Shim lucide-react for all non-full presets to avoid OOM from bundling ~1400 icon components.
+  // Full preset gets the real package so icons render correctly.
+  const shouldShimLucide = includeSeedgridDependency && resolvedPreset !== "full" && !requestedDepKeys.includes("lucide-react");
 
   const files: SandpackFiles = {
     "/App.tsx": { code: appTsx, active: true },
@@ -974,6 +1000,21 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   };
 
   if (includeSeedgridDependency) {
+    // Override @seedgrid/fe-components package.json to point at the pre-compiled sandbox bundle
+    // (dist/sandbox.cjs) instead of the tsc barrel file (dist/index.js).
+    // This makes the Sandpack bundler fetch and process ONE file instead of 200+ individual files,
+    // which dramatically reduces memory usage and eliminates "loading everything" on every run.
+    // Requires @seedgrid/fe-components to be built with: pnpm run build:sandbox
+    files["/node_modules/@seedgrid/fe-components/package.json"] = {
+      code: JSON.stringify({
+        name: "@seedgrid/fe-components",
+        version: "0.0.0-sandbox",
+        main: "dist/sandbox.cjs",
+        exports: { ".": { require: "./dist/sandbox.cjs", default: "./dist/sandbox.cjs" } }
+      }),
+      hidden: true
+    };
+
     // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
     files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
 
@@ -1027,10 +1068,6 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
       hidden: true
     };
-    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor"] = {
-      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
-      hidden: true
-    };
     files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.mjs"] = {
       code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
       hidden: true
@@ -1065,9 +1102,21 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     }
   }
 
+  if (shouldShimLucide) {
+    files["/node_modules/lucide-react/package.json"] = {
+      code: JSON.stringify({ name: "lucide-react", version: "0.0.0-shim", main: "index.js" }),
+      hidden: true
+    };
+    files["/node_modules/lucide-react/index.js"] = {
+      code: SANDPACK_LUCIDE_REACT_SHIM_INDEX_JS,
+      hidden: true
+    };
+  }
+
   const deps: Record<string, string> = {
     ...DEFAULT_SANDBOX_BASE_DEPENDENCIES,
     ...(includeSeedgridDependency ? DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES : {}),
+    ...(includeSeedgridDependency && !shouldShimLucide ? { "lucide-react": "^0.468.0" } : {}),
     ...(includeEditorDependencies ? DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES : {}),
     ...(includeSandpackReactDependency ? DEFAULT_SANDBOX_HOST_DEPENDENCIES : {}),
     ...(shouldIncludeNodePolyfills ? DEFAULT_SANDPACK_POLYFILLS : {}),
@@ -1101,9 +1150,9 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
         bundlerTimeout: resolvedBundlerTimeoutMs,
         activeFile: "/App.tsx",
         visibleFiles: ["/App.tsx"],
-        externalResources: SANDPACK_EXTERNAL_RESOURCES
+        externalResources: includeSeedgridDependency ? SANDPACK_EXTERNAL_RESOURCES : []
       }) as any,
-    [resolvedBundlerTimeoutMs, resolvedBundlerURL]
+    [includeSeedgridDependency, resolvedBundlerTimeoutMs, resolvedBundlerURL]
   );
 
   const content = interactive ? (

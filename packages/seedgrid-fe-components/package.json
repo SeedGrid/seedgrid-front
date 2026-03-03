@@ -19,12 +19,14 @@
       "default": "./dist/index.js"
     }
   },
+  "sideEffects": false,
   "files": [
     "dist"
   ],
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "build": "pnpm run clean && tsc -p tsconfig.json && pnpm run build:sandbox",
+    "build:sandbox": "tsup --config tsup.sandbox.config.ts",
     "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
@@ -48,6 +50,7 @@
     "react-hook-form": "^7.0.0"
   },
   "devDependencies": {
+    "tsup": "^8.4.0",
     "@tiptap/core": "^2.9.1",
     "@tiptap/extension-color": "^2.9.1",
     "@tiptap/extension-font-family": "^2.9.1",
