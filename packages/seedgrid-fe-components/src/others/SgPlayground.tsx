@@ -130,7 +130,12 @@ const TIPTAP_SHIM_PACKAGES = [
   "@tiptap/extension-font-family"
 ] as const;
 
-const SANDPACK_EXTERNAL_RESOURCES: string[] = [];
+// Sandpack's CRA runtime does not execute script tags from template HTML reliably.
+// Load Tailwind as external resources so it is injected before module evaluation.
+const SANDPACK_EXTERNAL_RESOURCES: string[] = [
+  "/sandpack-tailwind-config.js",
+  "https://cdn.tailwindcss.com"
+];
 
 const SANDPACK_QRCODE_SHIM_INDEX_JS = `const makeError = () =>
   new Error(
@@ -647,93 +652,91 @@ const SANDPACK_HOST_STYLES_CSS = `
 }
 `;
 
-// Virtual index.html that loads Tailwind v3 play CDN with SeedGrid's design token config.
-// The config script must come BEFORE the CDN script so Tailwind picks it up at init time.
+const SANDPACK_TAILWIND_CONFIG_JS = `function sgPalette(name) {
+  return {
+    50: "rgb(var(--sg-" + name + "-50) / <alpha-value>)",
+    100: "rgb(var(--sg-" + name + "-100) / <alpha-value>)",
+    200: "rgb(var(--sg-" + name + "-200) / <alpha-value>)",
+    300: "rgb(var(--sg-" + name + "-300) / <alpha-value>)",
+    400: "rgb(var(--sg-" + name + "-400) / <alpha-value>)",
+    500: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
+    600: "rgb(var(--sg-" + name + "-600) / <alpha-value>)",
+    700: "rgb(var(--sg-" + name + "-700) / <alpha-value>)",
+    800: "rgb(var(--sg-" + name + "-800) / <alpha-value>)",
+    900: "rgb(var(--sg-" + name + "-900) / <alpha-value>)",
+    DEFAULT: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
+    hover: "rgb(var(--sg-" + name + "-hover) / <alpha-value>)",
+    active: "rgb(var(--sg-" + name + "-active) / <alpha-value>)"
+  };
+}
+
+window.tailwind = window.tailwind || {};
+window.tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+        secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
+        destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+        muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
+        accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
+        card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+        popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
+        sg: {
+          bg: "rgb(var(--sg-bg) / <alpha-value>)",
+          surface: "rgb(var(--sg-surface) / <alpha-value>)",
+          "muted-surface": "rgb(var(--sg-muted-surface) / <alpha-value>)",
+          border: "rgb(var(--sg-border) / <alpha-value>)",
+          ring: "rgb(var(--sg-ring) / <alpha-value>)",
+          focus: "rgb(var(--sg-ring) / <alpha-value>)",
+          text: "rgb(var(--sg-text) / <alpha-value>)",
+          muted: "rgb(var(--sg-muted) / <alpha-value>)",
+          disabled: "rgb(var(--sg-disabled) / <alpha-value>)",
+          "on-disabled": "rgb(var(--sg-on-disabled) / <alpha-value>)",
+          hover: "rgb(var(--sg-primary-50) / <alpha-value>)",
+          hover2: "rgb(var(--sg-primary-100) / <alpha-value>)",
+          surface2: "rgb(var(--sg-muted-surface) / <alpha-value>)",
+          link: "rgb(var(--sg-link) / <alpha-value>)",
+          "link-hover": "rgb(var(--sg-link-hover) / <alpha-value>)",
+          "on-primary": "rgb(var(--sg-on-primary) / <alpha-value>)",
+          "on-secondary": "rgb(var(--sg-on-secondary) / <alpha-value>)",
+          "on-tertiary": "rgb(var(--sg-on-tertiary) / <alpha-value>)",
+          "on-warning": "rgb(var(--sg-on-warning) / <alpha-value>)",
+          "on-error": "rgb(var(--sg-on-error) / <alpha-value>)",
+          "on-info": "rgb(var(--sg-on-info) / <alpha-value>)",
+          "on-success": "rgb(var(--sg-on-success) / <alpha-value>)",
+          primary: sgPalette("primary"),
+          secondary: sgPalette("secondary"),
+          tertiary: sgPalette("tertiary"),
+          warning: sgPalette("warning"),
+          error: sgPalette("error"),
+          info: sgPalette("info"),
+          success: sgPalette("success")
+        }
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+        sg: "var(--sg-radius)"
+      }
+    }
+  }
+};
+`;
+
+// Keep CRA's expected HTML entry file path for react/react-ts templates.
 const SANDPACK_TAILWIND_INDEX_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script>
-    function sgPalette(name) {
-      return {
-        50: "rgb(var(--sg-" + name + "-50) / <alpha-value>)",
-        100: "rgb(var(--sg-" + name + "-100) / <alpha-value>)",
-        200: "rgb(var(--sg-" + name + "-200) / <alpha-value>)",
-        300: "rgb(var(--sg-" + name + "-300) / <alpha-value>)",
-        400: "rgb(var(--sg-" + name + "-400) / <alpha-value>)",
-        500: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
-        600: "rgb(var(--sg-" + name + "-600) / <alpha-value>)",
-        700: "rgb(var(--sg-" + name + "-700) / <alpha-value>)",
-        800: "rgb(var(--sg-" + name + "-800) / <alpha-value>)",
-        900: "rgb(var(--sg-" + name + "-900) / <alpha-value>)",
-        DEFAULT: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
-        hover: "rgb(var(--sg-" + name + "-hover) / <alpha-value>)",
-        active: "rgb(var(--sg-" + name + "-active) / <alpha-value>)"
-      };
-    }
-    tailwind = {
-      config: {
-        theme: {
-          extend: {
-            colors: {
-              border: "hsl(var(--border))",
-              input: "hsl(var(--input))",
-              ring: "hsl(var(--ring))",
-              background: "hsl(var(--background))",
-              foreground: "hsl(var(--foreground))",
-              primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
-              secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
-              destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
-              muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
-              accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
-              card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
-              popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
-              sg: {
-                bg: "rgb(var(--sg-bg) / <alpha-value>)",
-                surface: "rgb(var(--sg-surface) / <alpha-value>)",
-                "muted-surface": "rgb(var(--sg-muted-surface) / <alpha-value>)",
-                border: "rgb(var(--sg-border) / <alpha-value>)",
-                ring: "rgb(var(--sg-ring) / <alpha-value>)",
-                focus: "rgb(var(--sg-ring) / <alpha-value>)",
-                text: "rgb(var(--sg-text) / <alpha-value>)",
-                muted: "rgb(var(--sg-muted) / <alpha-value>)",
-                disabled: "rgb(var(--sg-disabled) / <alpha-value>)",
-                "on-disabled": "rgb(var(--sg-on-disabled) / <alpha-value>)",
-                hover: "rgb(var(--sg-primary-50) / <alpha-value>)",
-                hover2: "rgb(var(--sg-primary-100) / <alpha-value>)",
-                surface2: "rgb(var(--sg-muted-surface) / <alpha-value>)",
-                link: "rgb(var(--sg-link) / <alpha-value>)",
-                "link-hover": "rgb(var(--sg-link-hover) / <alpha-value>)",
-                "on-primary": "rgb(var(--sg-on-primary) / <alpha-value>)",
-                "on-secondary": "rgb(var(--sg-on-secondary) / <alpha-value>)",
-                "on-tertiary": "rgb(var(--sg-on-tertiary) / <alpha-value>)",
-                "on-warning": "rgb(var(--sg-on-warning) / <alpha-value>)",
-                "on-error": "rgb(var(--sg-on-error) / <alpha-value>)",
-                "on-info": "rgb(var(--sg-on-info) / <alpha-value>)",
-                "on-success": "rgb(var(--sg-on-success) / <alpha-value>)",
-                primary: sgPalette("primary"),
-                secondary: sgPalette("secondary"),
-                tertiary: sgPalette("tertiary"),
-                warning: sgPalette("warning"),
-                error: sgPalette("error"),
-                info: sgPalette("info"),
-                success: sgPalette("success")
-              }
-            },
-            borderRadius: {
-              lg: "var(--radius)",
-              md: "calc(var(--radius) - 2px)",
-              sm: "calc(var(--radius) - 4px)",
-              sg: "var(--sg-radius)"
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   <div id="root"></div>
@@ -1299,8 +1302,11 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
 
     // Virtual index.html: loads Tailwind v3 play CDN with SeedGrid design-token config.
-    // This replaces the old Tailwind v2 CDN (which lacked JIT arbitrary values and CSS-var-based design tokens).
+    // This keeps CRA's public/index.html entry path expected by the react/react-ts templates.
     files["/public/index.html"] = { code: SANDPACK_TAILWIND_INDEX_HTML, hidden: true };
+    // Tailwind config is loaded via externalResources because Sandpack runtime
+    // does not execute scripts from template HTML head/body consistently.
+    files["/sandpack-tailwind-config.js"] = { code: SANDPACK_TAILWIND_CONFIG_JS, hidden: true };
 
     // Sandpack runtime can evaluate JSON files as plain JS modules.
     // Provide CJS-compatible shims to keep @seedgrid/fe-components i18n/validators working.
@@ -1572,4 +1578,3 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     </SgCard>
   );
 }
-
