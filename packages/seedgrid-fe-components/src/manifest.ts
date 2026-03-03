@@ -1,5 +1,5 @@
 import type { SeedGridModuleManifest, SeedGridRegistry } from "./integration/module";
-import ptBr from "./i18n/pt-BR.json";
+import ptBr from "./i18n/pt-BR.js";
 
 export const componentsManifest: SeedGridModuleManifest = {
   id: "seedgrid-fe-components",
@@ -11,7 +11,7 @@ export const componentsManifest: SeedGridModuleManifest = {
       {
         namespace: "components",
         resources: ptBr,
-        distPath: "dist/i18n/pt-BR.json"
+        distPath: "dist/i18n/pt-BR.js"
       }
     ]
   },
