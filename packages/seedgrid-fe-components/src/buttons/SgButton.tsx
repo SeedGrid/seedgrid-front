@@ -104,11 +104,11 @@ const PRESET: Record<
 
 const SIZE: Record<
   Size,
-  { h: string; px: string; text: string; gap: string; icon: string; radius: string }
+  { h: string; minH: string; py: string; px: string; text: string; gap: string; icon: string; radius: string }
 > = {
-  sm: { h: "h-8", px: "px-3", text: "text-sm", gap: "gap-2", icon: "size-4", radius: "rounded-md" },
-  md: { h: "h-10", px: "px-4", text: "text-sm", gap: "gap-2", icon: "size-4", radius: "rounded-lg" },
-  lg: { h: "h-12", px: "px-5", text: "text-base", gap: "gap-2.5", icon: "size-5", radius: "rounded-xl" }
+  sm: { h: "h-8", minH: "min-h-8", py: "py-1.5", px: "px-3", text: "text-sm", gap: "gap-2", icon: "size-4", radius: "rounded-md" },
+  md: { h: "h-10", minH: "min-h-10", py: "py-2", px: "px-4", text: "text-sm", gap: "gap-2", icon: "size-4", radius: "rounded-lg" },
+  lg: { h: "h-12", minH: "min-h-12", py: "py-2.5", px: "px-5", text: "text-base", gap: "gap-2.5", icon: "size-5", radius: "rounded-xl" }
 };
 
 export function resolveButtonColors(
@@ -206,6 +206,11 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
     const resolvedSize = size ?? (isIconOnly ? "sm" : "md");
     const resolvedShape = shape ?? (isIconOnly ? "circle" : "default");
     const s = SIZE[resolvedSize];
+    const contentClass = cn(
+      "inline-flex min-w-0 items-center justify-center",
+      !isIconOnly ? "w-full" : undefined,
+      s.gap
+    );
 
     return (
       <button
@@ -214,15 +219,13 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
         disabled={isDisabled}
         style={{ ...buildVars(severity, customColors), ...style }}
         className={cn(
-          "inline-flex items-center justify-center select-none whitespace-nowrap",
+          "inline-flex min-w-0 max-w-full items-center justify-center select-none whitespace-normal break-words text-center",
           "font-medium",
           "transition-[background-color,color,border-color,box-shadow,transform] duration-150",
           "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--sg-btn-ring)]",
           "disabled:opacity-60 disabled:cursor-not-allowed",
-          s.h,
-          isIconOnly ? "aspect-square" : s.px,
+          isIconOnly ? cn("aspect-square", s.h) : cn(s.minH, s.py, s.px),
           s.text,
-          s.gap,
           resolvedShape === "rounded" ? "rounded-full" : resolvedShape === "circle" ? "rounded-full" : resolvedShape === "square" ? "rounded-none" : s.radius,
           appearanceClass(appearance),
           elevationClass(elevation),
@@ -232,14 +235,14 @@ export const SgButton = React.forwardRef<HTMLButtonElement, SgButtonProps>(
         {...rest}
       >
         {loading ? (
-          <span className={cn("inline-flex items-center", s.gap)}>
+          <span className={contentClass}>
             <Spinner className={s.icon} />
-            {children ? <span>{children}</span> : null}
+            {children ? <span className="min-w-0 whitespace-normal break-words">{children}</span> : null}
           </span>
         ) : (
-          <span className={cn("inline-flex items-center", s.gap)}>
+          <span className={contentClass}>
             {leftIcon ? <span className={cn("shrink-0", s.icon)}>{leftIcon}</span> : null}
-            {children ? <span>{children}</span> : null}
+            {children ? <span className="min-w-0 whitespace-normal break-words">{children}</span> : null}
             {rightIcon ? <span className={cn("shrink-0", s.icon)}>{rightIcon}</span> : null}
           </span>
         )}
