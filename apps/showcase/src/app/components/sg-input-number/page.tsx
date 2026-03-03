@@ -92,6 +92,22 @@ export default function App() {
         />
       </div>
 
+      <div className="rounded-md border border-border p-4">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputNumber id="label-float" label="Float" hintText="0.00" labelPosition="float" />
+          <SgInputNumber id="label-top" label="Top" hintText="0.00" labelPosition="top" />
+          <SgInputNumber
+            id="label-left"
+            label="Left"
+            hintText="0.00"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
+
       <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
         Valor atual: <strong>{amount || "-"}</strong>
       </div>
@@ -289,7 +305,8 @@ export default function SgInputNumberPage() {
       { id: "exemplo-13", label: `13) ${t(i18n, "showcase.component.inputNumber.sections.standalone.title")}` },
       { id: "exemplo-14", label: `14) ${t(i18n, "showcase.component.inputNumber.sections.events.title")}` },
       { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputNumber.sections.sizeBorder.title")}` },
-      { id: "exemplo-16", label: "16) Playground" }
+      { id: "exemplo-16", label: `16) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-17", label: "17) Playground" }
     ],
     [i18n.locale]
   );
@@ -963,8 +980,53 @@ export default function Example() {
       </Section>
 
       <Section
-        id="exemplo-16"
-        title="16) Playground"
+  id="exemplo-16"
+  title={`16) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputNumber
+      id="sg-input-number-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputNumber
+      id="sg-input-number-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputNumber
+      id="sg-input-number-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputNumber
+  id="sg-input-number-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputNumber
+  id="sg-input-number-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputNumber
+  id="sg-input-number-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section
+        id="exemplo-17"
+        title="17) Playground"
         description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgInputNumber" })}
       >
         <SgPlayground
@@ -1009,6 +1071,10 @@ export default function Example() {
               <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao de limpar.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado habilitado e somente leitura.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Variacoes visuais do campo.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensao e borda.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com React Hook Form.</td></tr>
             </tbody>

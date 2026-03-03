@@ -58,6 +58,23 @@ export default function App() {
         onChange={setValue}
       />
 
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputCNPJ id="label-float" label="Float" hintText="00.000.000/0000-00" labelPosition="float" inputProps={{}} />
+          <SgInputCNPJ id="label-top" label="Top" hintText="00.000.000/0000-00" labelPosition="top" inputProps={{}} />
+          <SgInputCNPJ
+            id="label-left"
+            label="Left"
+            hintText="00.000.000/0000-00"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+            inputProps={{}}
+          />
+        </SgGrid>
+      </div>
+
       <div className="rounded border border-border bg-muted/40 p-3 text-xs">
         Valor atual: <strong>{value || "-"}</strong>
       </div>
@@ -200,7 +217,8 @@ export default function SgInputCNPJPage() {
       { id: "exemplo-11", label: `11) ${t(i18n, "showcase.common.sections.sizeBorder.title")}` },
       { id: "exemplo-12", label: `12) ${t(i18n, "showcase.common.sections.disabled.title")}` },
       { id: "exemplo-13", label: `13) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-14", label: "14) Playground" }
+      { id: "exemplo-14", label: `14) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-15", label: "15) Playground" }
     ],
     [i18n.locale]
   );
@@ -547,7 +565,58 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
         <CodeBlock code={`<SgInputCNPJ\n  id="eventos"\n  label="${t(i18n, "showcase.component.cnpj.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
 
-      <Section id="exemplo-14" title="14) Playground" description={t(i18n, "showcase.common.playground.description")}>
+      <Section
+  id="exemplo-14"
+  title={`14) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputCNPJ
+      id="sg-input-cnpj-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      inputProps={{}}
+      labelPosition="float"
+    />
+    <SgInputCNPJ
+      id="sg-input-cnpj-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      inputProps={{}}
+      labelPosition="top"
+    />
+    <SgInputCNPJ
+      id="sg-input-cnpj-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      inputProps={{}}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputCNPJ
+  id="sg-input-cnpj-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  inputProps={{}}
+  labelPosition="float"
+/>
+
+<SgInputCNPJ
+  id="sg-input-cnpj-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  inputProps={{}}
+  labelPosition="top"
+/>
+
+<SgInputCNPJ
+  id="sg-input-cnpj-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  inputProps={{}}
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-15" title="15) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputCNPJ Playground"
           interactive
@@ -583,6 +652,10 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
               <tr><td className="py-2 pr-4 font-mono text-xs">onPublicaCnpjResult / onPublicaCnpjError</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de retorno da consulta pública.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos do componente.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled / enabled / readOnly / clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
             </tbody>

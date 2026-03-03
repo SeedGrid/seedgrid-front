@@ -1502,7 +1502,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           type="button"
           onClick={brand.onClick}
           className={cn(
-            "min-w-0 flex-1 rounded-md",
+            "min-w-0 rounded-md",
+            isHorizontalDockZone ? "flex-none" : "flex-1",
             "flex items-center gap-2",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
           )}
@@ -1510,9 +1511,11 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           {brand.image ? (
             <span className="inline-flex shrink-0 items-center justify-center">{brand.image}</span>
           ) : brand.imageSrc ? (
-            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-12 w-auto max-w-[160px]" />
+            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className={cn("w-auto", isHorizontalDockZone ? "h-7 max-w-[120px]" : "h-12 max-w-[160px]")} />
           ) : null}
-          <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
+          {brand.title ? (
+            <span className="truncate text-sm font-semibold">{brand.title}</span>
+          ) : null}
         </button>
       ) : showBrandSpacer ? (
         <div className="flex-1" />
@@ -1789,7 +1792,6 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         }}
         className={cn(
           "relative flex flex-col bg-background text-foreground",
-          !dockDragActive && horizontalDockAlign === null ? "w-full" : "",
           !dockDragActive ? "self-stretch" : "",
           !dockDragActive && horizontalDockAlign === "right" ? "ml-auto" : "",
           border ? "border border-border" : "",
@@ -1797,9 +1799,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           className
         )}
         style={{
-          width: dockDragActive || horizontalDockAlign !== null
-            ? expandedWidthCss
-            : undefined,
+          width: !isHorizontalDockZone && isCollapsed ? collapsedWidthCss : expandedWidthCss,
           ...style
         }}
       >

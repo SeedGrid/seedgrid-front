@@ -70,6 +70,22 @@ export default function App() {
         showStrengthBar={showStrengthBar}
         inputProps={{ value, onChange: (event) => setValue(event.target.value) }}
       />
+
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputPassword id="label-float" label="Float" hintText="Type password" labelPosition="float" />
+          <SgInputPassword id="label-top" label="Top" hintText="Type password" labelPosition="top" />
+          <SgInputPassword
+            id="label-left"
+            label="Left"
+            hintText="Type password"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
     </div>
   );
 }`;
@@ -201,7 +217,8 @@ export default function SgInputPasswordPage() {
       { id: "exemplo-3", label: `3) ${t(i18n, "showcase.component.inputPassword.sections.validation.title")}` },
       { id: "exemplo-4", label: `4) ${t(i18n, "showcase.common.sections.visual.title")}` },
       { id: "exemplo-5", label: `5) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-6", label: "6) Playground" }
+      { id: "exemplo-6", label: `6) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-7", label: "7) Playground" }
     ],
     [i18n.locale]
   );
@@ -339,7 +356,52 @@ export default function SgInputPasswordPage() {
           <CodeBlock code={`<SgInputPassword\n  id="demo-events"\n  label="${t(i18n, "showcase.common.labels.typeAndLog")}"\n  required\n  onChange={(value) => log(\`onChange: "\${value}"\`)}\n  onEnter={() => log("${t(i18n, "showcase.component.inputPassword.logs.onEnter")}")}\n  onExit={() => log("${t(i18n, "showcase.component.inputPassword.logs.onExit")}")}\n  onClear={() => log("${t(i18n, "showcase.component.inputPassword.logs.onClear")}")}\n/>`} />
         </Section>
 
-        <Section id="exemplo-6" title="6) Playground" description={t(i18n, "showcase.common.playground.description")}>
+        <Section
+  id="exemplo-6"
+  title={`6) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputPassword
+      id="sg-input-password-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputPassword
+      id="sg-input-password-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputPassword
+      id="sg-input-password-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputPassword
+  id="sg-input-password-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputPassword
+  id="sg-input-password-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputPassword
+  id="sg-input-password-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-7" title="7) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputPassword Playground"
             interactive
@@ -374,6 +436,10 @@ export default function SgInputPasswordPage() {
                 <tr><td className="py-2 pr-4 font-mono text-xs">showStrengthBar</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe barra de força.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">commonPasswordCheck</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Bloqueia senhas comuns.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">clearButton / withBorder / filled / enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos do componente.</td></tr>
               </tbody>

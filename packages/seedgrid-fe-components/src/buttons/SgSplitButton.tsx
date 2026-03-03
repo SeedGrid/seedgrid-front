@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { SgButton, resolveButtonColors } from "./SgButton";
+import { SgButton } from "./SgButton";
 import type { SgButtonCustomColors } from "./SgButton";
 
 type Severity =
@@ -115,24 +115,10 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
       setOpen(false);
     };
 
-    const colors = resolveButtonColors(severity, customColors);
-    const toneKey =
-      severity === "danger"
-        ? "error"
-        : severity === "help"
-          ? "tertiary"
-          : severity;
-    const tone100 = `var(--sg-${toneKey}-100, var(--sg-primary-100))`;
-    const tone200 = `var(--sg-${toneKey}-200, ${tone100})`;
-    const tone300 = `var(--sg-${toneKey}-300, ${tone200})`;
-    const menuBg = `rgb(${tone100})`;
-    const menuFg = colors.bg;
-    const menuHoverBg = `rgb(${tone200})`;
-    const menuBorder = `rgb(${tone200})`;
 
     const dividerBorderClass =
       appearance === "solid"
-        ? "border-l border-[rgb(var(--sg-border))]"
+        ? "border-l border-white/40"
         : appearance === "outline"
           ? "border-l border-[var(--sg-btn-border,currentColor)]"
           : "border-l border-current/20";
@@ -181,37 +167,18 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
           <div
             ref={menuRef}
             role="menu"
-            className={`absolute right-0 top-full z-50 mt-1 ${s.menu} overflow-hidden rounded-lg shadow-lg`}
-            style={{
-              backgroundColor: menuBg,
-              color: menuFg,
-              border: `1px solid ${menuBorder}`
-            }}
+            className={`absolute left-0 top-full z-50 mt-1 ${s.menu} overflow-hidden rounded-lg shadow-lg bg-background text-foreground border border-border`}
           >
             {items.map((item, i) => (
               <React.Fragment key={i}>
                 {item.separator && i > 0 ? (
-                  <div
-                    className="my-0.5"
-                    style={{
-                      borderTop: `1px solid ${appearance === "solid" ? `rgb(${tone300})` : "rgb(var(--sg-text)/0.2)"}`
-                    }}
-                  />
+                  <div className="my-0.5 border-t border-border" />
                 ) : null}
                 <button
                   role="menuitem"
                   type="button"
                   disabled={item.disabled}
-                  className={`flex w-full items-center gap-2 ${s.item} ${s.text} transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
-                  style={{
-                    backgroundColor: "transparent"
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!item.disabled) (e.currentTarget.style.backgroundColor = menuHoverBg);
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
+                  className={`flex w-full items-center gap-2 ${s.item} ${s.text} transition-colors hover:bg-muted/60 disabled:opacity-50 disabled:cursor-not-allowed`}
                   onClick={() => handleItemClick(item)}
                 >
                   {item.icon ? <span className={`shrink-0 ${s.iconSize}`}>{item.icon}</span> : null}

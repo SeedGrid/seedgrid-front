@@ -58,6 +58,22 @@ export default function App() {
         onChange={setValue}
       />
 
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputDate id="label-float" label="Float" hintText="YYYY-MM-DD" labelPosition="float" />
+          <SgInputDate id="label-top" label="Top" hintText="YYYY-MM-DD" labelPosition="top" />
+          <SgInputDate
+            id="label-left"
+            label="Left"
+            hintText="YYYY-MM-DD"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
+
       <div className="rounded border border-border bg-muted/40 p-3 text-xs">
         Valor atual: <strong>{value || "-"}</strong>
       </div>
@@ -182,7 +198,8 @@ export default function SgInputDatePage() {
       { id: "exemplo-1", label: `1) ${t(i18n, "showcase.component.inputDate.sections.basic.title")}` },
       { id: "exemplo-2", label: `2) ${t(i18n, "showcase.component.inputDate.sections.range.title")}` },
       { id: "exemplo-3", label: `3) ${t(i18n, "showcase.component.inputDate.sections.fixed.title")}` },
-      { id: "exemplo-4", label: "4) Playground" }
+      { id: "exemplo-4", label: `4) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-5", label: "5) Playground" }
     ],
     [i18n.locale]
   );
@@ -269,7 +286,52 @@ export default function SgInputDatePage() {
           <CodeBlock code={`<SgInputDate\n  id="demo-float"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>`} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Playground" description={t(i18n, "showcase.common.playground.description")}>
+        <Section
+  id="exemplo-4"
+  title={`4) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputDate
+      id="sg-input-date-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputDate
+      id="sg-input-date-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputDate
+      id="sg-input-date-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputDate
+  id="sg-input-date-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputDate
+  id="sg-input-date-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputDate
+  id="sg-input-date-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-5" title="5) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputDate Playground"
             interactive
@@ -301,6 +363,10 @@ export default function SgInputDatePage() {
                 <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">minDate / maxDate</td><td className="py-2 pr-4">string (YYYY-MM-DD)</td><td className="py-2 pr-4">-</td><td className="py-2">Limites de data aceitos.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled / enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onValidation</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de valor e validação.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>

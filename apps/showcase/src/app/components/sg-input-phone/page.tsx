@@ -66,6 +66,22 @@ export default function App() {
         enabled={enabled}
         inputProps={{ value, onChange: (event) => setValue(event.target.value) }}
       />
+
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputPhone id="label-float" label="Float" hintText="(11) 99999-9999" labelPosition="float" />
+          <SgInputPhone id="label-top" label="Top" hintText="(11) 99999-9999" labelPosition="top" />
+          <SgInputPhone
+            id="label-left"
+            label="Left"
+            hintText="(11) 99999-9999"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
     </div>
   );
 }`;
@@ -202,7 +218,8 @@ export default function SgInputPhonePage() {
       { id: "exemplo-7", label: `7) ${t(i18n, "showcase.common.sections.sizeBorder.title")}` },
       { id: "exemplo-8", label: `8) ${t(i18n, "showcase.common.sections.disabled.title")}` },
       { id: "exemplo-9", label: `9) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-10", label: "10) Playground" }
+      { id: "exemplo-10", label: `10) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-11", label: "11) Playground" }
     ],
     [i18n.locale]
   );
@@ -433,8 +450,53 @@ export default function SgInputPhonePage() {
       </Section>
 
       <Section
-        id="exemplo-10"
-        title="10) Playground"
+  id="exemplo-10"
+  title={`10) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputPhone
+      id="sg-input-phone-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputPhone
+      id="sg-input-phone-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputPhone
+      id="sg-input-phone-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputPhone
+  id="sg-input-phone-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputPhone
+  id="sg-input-phone-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputPhone
+  id="sg-input-phone-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section
+        id="exemplo-11"
+        title="11) Playground"
         description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgInputPhone" })}
       >
         <SgPlayground
@@ -470,6 +532,10 @@ export default function SgInputPhonePage() {
               <tr><td className="py-2 pr-4 font-mono text-xs">invalidMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para telefone inválido.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback de resultado.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe borda do input.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Aplica estilo preenchido.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Mostra botão de limpar.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Controle de largura e arredondamento.</td></tr>

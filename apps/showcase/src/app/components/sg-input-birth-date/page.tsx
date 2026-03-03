@@ -61,6 +61,21 @@ export default function App() {
         onValidation={setValidation}
       />
 
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputBirthDate id="label-float" label="Float" hintText="DD/MM/YYYY" labelPosition="float" />
+          <SgInputBirthDate id="label-top" label="Top" hintText="DD/MM/YYYY" labelPosition="top" />
+          <SgInputBirthDate
+            id="label-left"
+            label="Left"
+            hintText="DD/MM/YYYY"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
       <div className="rounded border border-border bg-muted/40 p-3 text-xs">
         onValidation: <strong>{validation ?? "(válido)"}</strong>
       </div>
@@ -185,7 +200,8 @@ export default function SgInputBirthDatePage() {
       { id: "exemplo-1", label: `1) ${t(i18n, "showcase.component.inputBirthDate.sections.basic.title")}` },
       { id: "exemplo-2", label: `2) ${t(i18n, "showcase.component.inputBirthDate.sections.required.title")}` },
       { id: "exemplo-3", label: `3) ${t(i18n, "showcase.component.inputBirthDate.sections.range.title")}` },
-      { id: "exemplo-4", label: "4) Playground" }
+      { id: "exemplo-4", label: `4) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-5", label: "5) Playground" }
     ],
     [i18n.locale]
   );
@@ -275,7 +291,52 @@ export default function SgInputBirthDatePage() {
           <CodeBlock code={`<SgInputBirthDate\n  id="demo-range"\n  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"\n  minAge={12}\n  maxAge={80}\n/>`} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Playground" description={t(i18n, "showcase.common.playground.description")}>
+        <Section
+  id="exemplo-4"
+  title={`4) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputBirthDate
+      id="sg-input-birth-date-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputBirthDate
+      id="sg-input-birth-date-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputBirthDate
+      id="sg-input-birth-date-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputBirthDate
+  id="sg-input-birth-date-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputBirthDate
+  id="sg-input-birth-date-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputBirthDate
+  id="sg-input-birth-date-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-5" title="5) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputBirthDate Playground"
             interactive
@@ -307,6 +368,10 @@ export default function SgInputBirthDatePage() {
                 <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">minAge / maxAge</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">18 / -</td><td className="py-2">Faixa de idade permitida.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly / withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onValidation</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de valor e validação.</td></tr>
                 <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
@@ -319,3 +384,4 @@ export default function SgInputBirthDatePage() {
     </I18NReady>
   );
 }
+

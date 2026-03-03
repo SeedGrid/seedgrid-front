@@ -86,6 +86,23 @@ export default function App() {
         clearButton={clearButton}
         inputProps={{ value, onChange: (event) => setValue(event.target.value) }}
       />
+
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputPostalCode id="label-float" country={country} label="Float" hintText={hintByCountry[country]} labelPosition="float" />
+          <SgInputPostalCode id="label-top" country={country} label="Top" hintText={hintByCountry[country]} labelPosition="top" />
+          <SgInputPostalCode
+            id="label-left"
+            country={country}
+            label="Left"
+            hintText={hintByCountry[country]}
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
     </div>
   );
 }`;
@@ -266,7 +283,8 @@ export default function SgInputPostalCodePage() {
       { id: "exemplo-12", label: `12) ${t(i18n, "showcase.component.inputPostalCode.sections.disabledReadonly.title")}` },
       { id: "exemplo-13", label: `13) ${t(i18n, "showcase.component.inputPostalCode.sections.standalone.title")}` },
       { id: "exemplo-14", label: `14) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-15", label: "15) Playground" }
+      { id: "exemplo-15", label: `15) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-16", label: "16) Playground" }
     ],
     [i18n.locale]
   );
@@ -874,7 +892,52 @@ export default function Example() {
 />`} />
       </Section>
 
-      <Section id="exemplo-15" title="15) Playground" description={t(i18n, "showcase.common.playground.description")}>
+      <Section
+  id="exemplo-15"
+  title={`15) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputPostalCode
+      id="sg-input-postal-code-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputPostalCode
+      id="sg-input-postal-code-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputPostalCode
+      id="sg-input-postal-code-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputPostalCode
+  id="sg-input-postal-code-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputPostalCode
+  id="sg-input-postal-code-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputPostalCode
+  id="sg-input-postal-code-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-16" title="16) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputPostalCode Playground"
           interactive
@@ -909,6 +972,10 @@ export default function Example() {
               <tr><td className="py-2 pr-4 font-mono text-xs">validateWithViaCep / viaCepErrorMessage / onViaCepResult</td><td className="py-2 pr-4">boolean / string / function</td><td className="py-2 pr-4">false / auto / -</td><td className="py-2">Consulta ViaCEP para CEPs brasileiros.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon / prefixText / suffixText / iconButtons</td><td className="py-2 pr-4">ReactNode / string / string / ReactNode[]</td><td className="py-2 pr-4">-</td><td className="py-2">Customizações visuais do campo.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled / clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false / true</td><td className="py-2">Ajustes de aparência.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e raio da borda.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado do campo.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">name / register / control</td><td className="py-2 pr-4">string / function / object</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>

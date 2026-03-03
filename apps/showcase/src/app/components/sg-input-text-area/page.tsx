@@ -83,6 +83,22 @@ export default function App() {
         }}
       />
 
+      <div className="rounded-md border border-border p-4">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputTextArea id="label-float" label="Float" hintText="Type a note..." labelPosition="float" />
+          <SgInputTextArea id="label-top" label="Top" hintText="Type a note..." labelPosition="top" />
+          <SgInputTextArea
+            id="label-left"
+            label="Left"
+            hintText="Type a note..."
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
+
       <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
         Valor atual: <strong>{value || "-"}</strong>
       </div>
@@ -247,7 +263,8 @@ export default function SgInputTextAreaPage() {
       { id: "exemplo-14", label: `14) ${t(i18n, "showcase.component.inputTextArea.sections.disabledReadonly.title")}` },
       { id: "exemplo-15", label: `15) ${t(i18n, "showcase.component.inputTextArea.sections.externalError.title")}` },
       { id: "exemplo-16", label: `16) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-17", label: "17) Playground" }
+      { id: "exemplo-17", label: `17) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-18", label: "18) Playground" }
     ],
     [i18n.locale]
   );
@@ -675,8 +692,53 @@ export default function Example() {
       </Section>
 
       <Section
-        id="exemplo-17"
-        title="17) Playground"
+  id="exemplo-17"
+  title={`17) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputTextArea
+      id="sg-input-text-area-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputTextArea
+      id="sg-input-text-area-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputTextArea
+      id="sg-input-text-area-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputTextArea
+  id="sg-input-text-area-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputTextArea
+  id="sg-input-text-area-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputTextArea
+  id="sg-input-text-area-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section
+        id="exemplo-18"
+        title="18) Playground"
         description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgInputTextArea" })}
       >
         <SgPlayground
@@ -708,6 +770,9 @@ export default function Example() {
               <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.id")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.label")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">labelText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.labelText")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">&quot;float&quot; | &quot;top&quot; | &quot;left&quot;</td><td className="py-2 pr-4">&quot;float&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">&quot;11rem&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">&quot;start&quot; | &quot;center&quot; | &quot;end&quot;</td><td className="py-2 pr-4">&quot;start&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.labelAlign")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.hintText")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">error</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.error")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">textareaProps</td><td className="py-2 pr-4">TextareaHTMLAttributes</td><td className="py-2 pr-4">{`{}`}</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.textareaProps")}</td></tr>
@@ -724,6 +789,7 @@ export default function Example() {
               <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.borderRadius")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.filled")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.withBorder")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">&quot;none&quot; | &quot;sm&quot; | &quot;md&quot; | &quot;lg&quot;</td><td className="py-2 pr-4">&quot;sm&quot;</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.enabled")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.required")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">{t(i18n, "showcase.component.inputTextArea.props.rows.requiredMessage")}</td></tr>

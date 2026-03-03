@@ -125,12 +125,19 @@ export function SgInputDate(props: SgInputDateProps) {
   const inputClassName = (() => {
     if (mergedInputProps.className) return mergedInputProps.className;
     const hasError = Boolean(error ?? internalError);
+    const elevationClass = props.elevation === "none"
+      ? ""
+      : props.elevation === "md"
+        ? "shadow-md"
+        : props.elevation === "lg"
+          ? "shadow-lg"
+          : "shadow-sm";
     const baseClass =
-      "peer h-11 w-full rounded-md bg-white pl-3 pr-7 py-2.5 text-sm shadow-sm placeholder-transparent focus:outline-none";
+      "peer h-11 w-full rounded-md bg-white pl-3 pr-7 py-2.5 text-sm placeholder-transparent focus:outline-none";
     const borderClass = hasError
       ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
       : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
-    return [baseClass, borderClass].join(" ");
+    return [baseClass, borderClass, elevationClass].filter(Boolean).join(" ");
   })();
 
   return (

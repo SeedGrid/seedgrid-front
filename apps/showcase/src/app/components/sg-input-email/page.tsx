@@ -62,6 +62,22 @@ export default function App() {
         onChange={setValue}
       />
 
+      <div className="rounded border border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">labelPosition</p>
+        <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+          <SgInputEmail id="label-float" label="Float" hintText="name@domain.com" labelPosition="float" />
+          <SgInputEmail id="label-top" label="Top" hintText="name@domain.com" labelPosition="top" />
+          <SgInputEmail
+            id="label-left"
+            label="Left"
+            hintText="name@domain.com"
+            labelPosition="left"
+            labelWidth={120}
+            labelAlign="end"
+          />
+        </SgGrid>
+      </div>
+
       <div className="rounded border border-border bg-muted/40 p-3 text-xs">
         Valor atual: <strong>{value || "-"}</strong>
       </div>
@@ -202,7 +218,8 @@ export default function SgInputEmailPage() {
       { id: "exemplo-10", label: `10) ${t(i18n, "showcase.common.sections.sizeBorder.title")}` },
       { id: "exemplo-11", label: `11) ${t(i18n, "showcase.common.sections.disabled.title")}` },
       { id: "exemplo-12", label: `12) ${t(i18n, "showcase.common.sections.events.title")}` },
-      { id: "exemplo-13", label: "13) Playground" }
+      { id: "exemplo-13", label: `13) ${t(i18n, "showcase.common.sections.labelPosition.title")}` },
+      { id: "exemplo-14", label: "14) Playground" }
     ],
     [i18n.locale]
   );
@@ -528,7 +545,52 @@ fetch("/seedgrid-blocked-email-domains.json")
 />`} />
       </Section>
 
-      <Section id="exemplo-13" title="13) Playground" description={t(i18n, "showcase.common.playground.description")}>
+      <Section
+  id="exemplo-13"
+  title={`13) ${t(i18n, "showcase.common.sections.labelPosition.title")}`}
+  description={t(i18n, "showcase.common.sections.labelPosition.description")}
+>
+  <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+    <SgInputEmail
+      id="sg-input-email-label-float"
+      label={t(i18n, "showcase.common.labels.labelFloat")}
+      labelPosition="float"
+    />
+    <SgInputEmail
+      id="sg-input-email-label-top"
+      label={t(i18n, "showcase.common.labels.labelTop")}
+      labelPosition="top"
+    />
+    <SgInputEmail
+      id="sg-input-email-label-left"
+      label={t(i18n, "showcase.common.labels.labelLeft")}
+      labelPosition="left"
+      labelWidth={140}
+      labelAlign="end"
+    />
+  </SgGrid>
+  <CodeBlock code={`<SgInputEmail
+  id="sg-input-email-label-float"
+  label="${t(i18n, "showcase.common.labels.labelFloat")}"
+  labelPosition="float"
+/>
+
+<SgInputEmail
+  id="sg-input-email-label-top"
+  label="${t(i18n, "showcase.common.labels.labelTop")}"
+  labelPosition="top"
+/>
+
+<SgInputEmail
+  id="sg-input-email-label-left"
+  label="${t(i18n, "showcase.common.labels.labelLeft")}"
+  labelPosition="left"
+  labelWidth={140}
+  labelAlign="end"
+/>`} />
+</Section>
+
+<Section id="exemplo-14" title="14) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputEmail Playground"
           interactive
@@ -563,6 +625,10 @@ fetch("/seedgrid-blocked-email-domains.json")
               <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos do componente.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled / enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
               <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
             </tbody>

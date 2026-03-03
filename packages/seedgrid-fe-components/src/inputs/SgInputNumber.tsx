@@ -17,6 +17,10 @@ export type SgInputNumberProps = {
   id: string;
   label?: string;
   labelText?: string;
+  labelPosition?: "float" | "top" | "left";
+  labelWidth?: number | string;
+  labelAlign?: "start" | "center" | "end";
+  elevation?: "none" | "sm" | "md" | "lg";
   hintText?: string;
   prefixText?: string;
   suffixText?: string;
@@ -188,8 +192,14 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
     onChange: inputOnChange,
     ...restInputProps
   } = inputProps as React.InputHTMLAttributes<HTMLInputElement>;
+  const labelPosition = props.labelPosition ?? "float";
+  const isFloatLabel = labelPosition === "float";
+  const showExternalLabel = !isFloatLabel;
+  const labelAlign = props.labelAlign ?? "start";
   const labelText = props.labelText ?? props.label ?? "";
-  const placeholder = props.placeholder ?? props.hintText ?? labelText;
+  const placeholder = isFloatLabel
+    ? props.placeholder ?? props.hintText ?? labelText
+    : props.placeholder ?? props.hintText ?? "";
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const prefixRef = React.useRef<HTMLSpanElement | null>(null);
   const suffixRef = React.useRef<HTMLSpanElement | null>(null);
@@ -437,18 +447,27 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
   const hasSuffix = canShowClear || iconButtonsCount > 0;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
+  const placeholderClass = isFloatLabel ? "placeholder-transparent" : "placeholder:text-foreground/50";
   const baseClass =
-    "peer h-11 w-full rounded-md text-sm placeholder-transparent focus:outline-none text-right";
+    `peer h-11 w-full rounded-md text-sm focus:outline-none text-right ${placeholderClass}`;
   const hasError = Boolean(props.error ?? internalError);
+  const elevationClass = props.elevation === "none"
+    ? ""
+    : props.elevation === "md"
+      ? "shadow-md"
+      : props.elevation === "lg"
+        ? "shadow-lg"
+        : "shadow-sm";
   const borderClass = (props.withBorder ?? true) || hasError
     ? hasError
-      ? "border border-[hsl(var(--destructive))] shadow-sm focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
-      : "border border-border shadow-sm focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
+      ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
+      : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
     : "border border-transparent";
   const bgClass = props.filled ? "bg-muted/40" : "bg-white";
   const finalClass = [
     baseClass,
     borderClass,
+    elevationClass,
     bgClass,
     paddingLeft,
     paddingRight,
@@ -477,9 +496,27 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
   const clearRightStyle = props.suffixText && suffixWidth
     ? `${suffixWidth}px`
     : undefined;
-
-  return (
-    <div style={{ width: props.width ?? "100%" }}>
+  const resolvedLabelWidth = props.labelWidth !== undefined
+    ? typeof props.labelWidth === "number"
+      ? `${props.labelWidth}px`
+      : props.labelWidth
+    : "11rem";
+  const labelAlignClass = labelAlign === "center"
+    ? "text-center"
+    : labelAlign === "end"
+      ? "text-right"
+      : "text-left";
+  const externalLabelClass = [
+    "block text-sm font-medium",
+    hasError ? "text-[hsl(var(--destructive))]" : "text-foreground/70",
+    labelPosition === "left" ? `pt-2 ${labelAlignClass}` : "",
+    props.labelClassName ?? ""
+  ].join(" ");
+  const outerLayoutStyle = labelPosition === "left"
+    ? ({ ["--sg-input-label-width" as string]: resolvedLabelWidth } as React.CSSProperties)
+    : undefined;
+  const fieldNode = (
+    <>
       <div className="relative">
         {props.prefixText ? (
           <span
@@ -526,32 +563,34 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
             {props.suffixText}
           </span>
         ) : null}
-        <label
-          htmlFor={props.id}
-          className={[
-            "absolute bg-white px-1 transition-all",
-            isFilled
-              ? "-top-2 left-3 text-xs"
-              : `top-3 text-sm ${props.prefixIcon ? "left-10" : "left-3"}`,
-            hasError
-              ? "text-[hsl(var(--destructive))]"
-              : isFilled
-                ? "text-[hsl(var(--primary))]"
-                : "text-foreground/60",
-            hasError
-              ? "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
-              : "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]",
-            props.labelClassName ?? ""
-          ].join(" ")}
-          style={prefixPaddingStyle ? { left: prefixPaddingStyle } : undefined}
-        >
-          <span>{labelText}</span>
-          {props.required ? (
-            <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="true">
-              *
-            </span>
-          ) : null}
-        </label>
+        {isFloatLabel ? (
+          <label
+            htmlFor={props.id}
+            className={[
+              "absolute bg-white px-1 transition-all",
+              isFilled
+                ? "-top-2 left-3 text-xs"
+                : `top-3 text-sm ${props.prefixIcon ? "left-10" : "left-3"}`,
+              hasError
+                ? "text-[hsl(var(--destructive))]"
+                : isFilled
+                  ? "text-[hsl(var(--primary))]"
+                  : "text-foreground/60",
+              hasError
+                ? "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--destructive))]"
+                : "peer-focus:-top-2 peer-focus:left-3 peer-focus:text-xs peer-focus:text-[hsl(var(--primary))]",
+              props.labelClassName ?? ""
+            ].join(" ")}
+            style={prefixPaddingStyle ? { left: prefixPaddingStyle } : undefined}
+          >
+            <span>{labelText}</span>
+            {props.required ? (
+              <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="true">
+                *
+              </span>
+            ) : null}
+          </label>
+        ) : null}
         {hasSuffix ? (
           <span
             className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1"
@@ -575,6 +614,47 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
       </div>
       <div className="mt-1 flex items-center justify-between gap-2">
         <ErrorText message={props.error ?? internalError ?? undefined} />
+      </div>
+    </>
+  );
+
+  if (labelPosition === "left") {
+    return (
+      <div style={{ width: props.width ?? "100%" }}>
+        <div
+          className="grid grid-cols-1 gap-2 sm:grid-cols-[var(--sg-input-label-width)_minmax(0,1fr)] sm:items-start sm:gap-3"
+          style={outerLayoutStyle}
+        >
+          {showExternalLabel ? (
+            <label htmlFor={props.id} className={externalLabelClass}>
+              <span>{labelText}</span>
+              {props.required ? (
+                <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="true">
+                  *
+                </span>
+              ) : null}
+            </label>
+          ) : null}
+          <div>{fieldNode}</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ width: props.width ?? "100%" }}>
+      {showExternalLabel ? (
+        <label htmlFor={props.id} className={externalLabelClass}>
+          <span>{labelText}</span>
+          {props.required ? (
+            <span className="ml-1 text-[hsl(var(--destructive))]" aria-hidden="true">
+              *
+            </span>
+          ) : null}
+        </label>
+      ) : null}
+      <div className={showExternalLabel ? "mt-1" : undefined}>
+        {fieldNode}
       </div>
     </div>
   );
