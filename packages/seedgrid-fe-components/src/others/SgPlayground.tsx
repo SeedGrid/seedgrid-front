@@ -366,6 +366,7 @@ module.exports.default = processShim;
 `;
 
 const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
+  // shadcn/ui design tokens (HSL)
   "--background": "0 0% 100%",
   "--foreground": "222.2 84% 4.9%",
   "--primary": "142 76% 36%",
@@ -378,7 +379,7 @@ const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
   "--destructive-foreground": "0 0% 100%",
   "--border": "214.3 31.8% 91.4%",
   "--input": "214.3 31.8% 91.4%",
-  "--ring": "var(--primary)",
+  "--ring": "142 76% 36%",
   "--muted": "210 40% 96.1%",
   "--muted-foreground": "215.4 16.3% 46.9%",
   "--card": "0 0% 100%",
@@ -386,13 +387,143 @@ const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
   "--popover": "0 0% 100%",
   "--popover-foreground": "222.2 84% 4.9%",
   "--radius": "0.5rem",
+  // SeedGrid neutrals (RGB space-separated)
+  "--sg-bg": "255 255 255",
+  "--sg-surface": "248 250 252",
+  "--sg-muted-surface": "241 245 249",
+  "--sg-text": "15 23 42",
+  "--sg-muted": "100 116 139",
+  "--sg-border": "226 232 240",
+  "--sg-ring": "74 222 128",
+  "--sg-disabled": "203 213 225",
+  "--sg-on-disabled": "148 163 184",
+  "--sg-link": "22 163 74",
+  "--sg-link-hover": "21 128 61",
+  "--sg-radius": "0.5rem",
+  // On-color tokens
+  "--sg-on-primary": "255 255 255",
+  "--sg-on-secondary": "255 255 255",
+  "--sg-on-tertiary": "255 255 255",
+  "--sg-on-warning": "255 255 255",
+  "--sg-on-error": "255 255 255",
+  "--sg-on-info": "255 255 255",
+  "--sg-on-success": "255 255 255",
+  // Primary palette (green)
+  "--sg-primary-50": "240 253 244",
+  "--sg-primary-100": "220 252 231",
+  "--sg-primary-200": "187 247 208",
+  "--sg-primary-300": "134 239 172",
+  "--sg-primary-400": "74 222 128",
+  "--sg-primary-500": "34 197 94",
   "--sg-primary-600": "22 163 74",
+  "--sg-primary-700": "21 128 61",
+  "--sg-primary-800": "22 101 52",
+  "--sg-primary-900": "20 83 45",
+  "--sg-primary-hover": "21 128 61",
+  "--sg-primary-active": "22 101 52",
+  // Secondary palette (zinc)
+  "--sg-secondary-50": "250 250 250",
+  "--sg-secondary-100": "244 244 245",
+  "--sg-secondary-200": "228 228 231",
+  "--sg-secondary-300": "212 212 216",
+  "--sg-secondary-400": "161 161 170",
+  "--sg-secondary-500": "113 113 122",
   "--sg-secondary-600": "82 82 91",
-  "--sg-tertiary-600": "20 184 166",
-  "--sg-error-600": "220 38 38",
+  "--sg-secondary-700": "63 63 70",
+  "--sg-secondary-800": "39 39 42",
+  "--sg-secondary-900": "24 24 27",
+  "--sg-secondary-hover": "63 63 70",
+  "--sg-secondary-active": "39 39 42",
+  // Tertiary palette (teal)
+  "--sg-tertiary-50": "240 253 250",
+  "--sg-tertiary-100": "204 251 241",
+  "--sg-tertiary-200": "153 246 228",
+  "--sg-tertiary-300": "94 234 212",
+  "--sg-tertiary-400": "45 212 191",
+  "--sg-tertiary-500": "20 184 166",
+  "--sg-tertiary-600": "13 148 136",
+  "--sg-tertiary-700": "15 118 110",
+  "--sg-tertiary-800": "17 94 89",
+  "--sg-tertiary-900": "19 78 74",
+  "--sg-tertiary-hover": "15 118 110",
+  "--sg-tertiary-active": "17 94 89",
+  // Warning palette (amber)
+  "--sg-warning-50": "255 251 235",
+  "--sg-warning-100": "254 243 199",
+  "--sg-warning-200": "253 230 138",
+  "--sg-warning-300": "252 211 77",
+  "--sg-warning-400": "251 191 36",
+  "--sg-warning-500": "245 158 11",
   "--sg-warning-600": "217 119 6",
+  "--sg-warning-700": "180 83 9",
+  "--sg-warning-800": "146 64 14",
+  "--sg-warning-900": "120 53 15",
+  "--sg-warning-hover": "180 83 9",
+  "--sg-warning-active": "146 64 14",
+  // Error palette (red)
+  "--sg-error-50": "254 242 242",
+  "--sg-error-100": "254 226 226",
+  "--sg-error-200": "254 202 202",
+  "--sg-error-300": "252 165 165",
+  "--sg-error-400": "248 113 113",
+  "--sg-error-500": "239 68 68",
+  "--sg-error-600": "220 38 38",
+  "--sg-error-700": "185 28 28",
+  "--sg-error-800": "153 27 27",
+  "--sg-error-900": "127 29 29",
+  "--sg-error-hover": "185 28 28",
+  "--sg-error-active": "153 27 27",
+  // Info palette (sky)
+  "--sg-info-50": "240 249 255",
+  "--sg-info-100": "224 242 254",
+  "--sg-info-200": "186 230 253",
+  "--sg-info-300": "125 211 252",
+  "--sg-info-400": "56 189 248",
+  "--sg-info-500": "14 165 233",
   "--sg-info-600": "2 132 199",
-  "--sg-success-600": "22 163 74"
+  "--sg-info-700": "3 105 161",
+  "--sg-info-800": "7 89 133",
+  "--sg-info-900": "12 74 110",
+  "--sg-info-hover": "3 105 161",
+  "--sg-info-active": "7 89 133",
+  // Success palette (green, same as primary)
+  "--sg-success-50": "240 253 244",
+  "--sg-success-100": "220 252 231",
+  "--sg-success-200": "187 247 208",
+  "--sg-success-300": "134 239 172",
+  "--sg-success-400": "74 222 128",
+  "--sg-success-500": "34 197 94",
+  "--sg-success-600": "22 163 74",
+  "--sg-success-700": "21 128 61",
+  "--sg-success-800": "22 101 52",
+  "--sg-success-900": "20 83 45",
+  "--sg-success-hover": "21 128 61",
+  "--sg-success-active": "22 101 52",
+  // Button component vars (green primary default)
+  "--sg-btn-bg": "rgb(22 163 74)",
+  "--sg-btn-fg": "rgb(255 255 255)",
+  "--sg-btn-border": "rgb(22 163 74)",
+  "--sg-btn-hover-bg": "rgb(21 128 61)",
+  "--sg-btn-hover-fg": "rgb(255 255 255)",
+  "--sg-btn-hover-border": "rgb(21 128 61)",
+  "--sg-btn-active-bg": "rgb(22 101 52)",
+  "--sg-btn-ring": "rgb(74 222 128 / 0.4)",
+  "--sg-btn-tint": "22 163 74",
+  // Avatar component vars
+  "--sg-avatar-bg": "rgb(22 163 74)",
+  "--sg-avatar-fg": "rgb(255 255 255)",
+  "--sg-avatar-border": "transparent",
+  "--sg-avatar-ring": "rgb(74 222 128)",
+  // Badge component vars
+  "--sg-badge-bg": "rgb(240 253 244)",
+  "--sg-badge-fg": "rgb(22 163 74)",
+  "--sg-badge-border": "rgb(187 247 208)",
+  "--sg-badge-hover-bg": "rgb(220 252 231)",
+  "--sg-badge-hover-fg": "rgb(21 128 61)",
+  "--sg-badge-hover-border": "rgb(134 239 172)",
+  "--sg-badge-ring": "rgb(74 222 128)",
+  "--sg-badge-soft-bg": "rgb(240 253 244)",
+  "--sg-badge-soft-fg": "rgb(22 163 74)",
 };
 
 const SANDPACK_CORE_THEME_VARS = [
@@ -407,7 +538,64 @@ const SANDPACK_CORE_THEME_VARS = [
   "--destructive",
   "--destructive-foreground",
   "--border",
-  "--ring"
+  "--input",
+  "--ring",
+  "--muted",
+  "--muted-foreground",
+  "--radius"
+] as const;
+
+// Explicit list of --sg-* vars to read from host via getPropertyValue().
+// CSSStyleDeclaration.length/.item() does NOT enumerate CSS custom properties,
+// so we must call getPropertyValue() for each var by name.
+const SANDPACK_SG_VARS = [
+  // Neutrals
+  "--sg-bg", "--sg-surface", "--sg-muted-surface",
+  "--sg-text", "--sg-muted", "--sg-border", "--sg-ring",
+  "--sg-disabled", "--sg-on-disabled",
+  "--sg-link", "--sg-link-hover",
+  "--sg-radius",
+  // On-color tokens
+  "--sg-on-primary", "--sg-on-secondary", "--sg-on-tertiary",
+  "--sg-on-warning", "--sg-on-error", "--sg-on-info", "--sg-on-success",
+  // Primary palette
+  "--sg-primary-50", "--sg-primary-100", "--sg-primary-200", "--sg-primary-300",
+  "--sg-primary-400", "--sg-primary-500", "--sg-primary-600", "--sg-primary-700",
+  "--sg-primary-800", "--sg-primary-900", "--sg-primary-hover", "--sg-primary-active",
+  // Secondary palette
+  "--sg-secondary-50", "--sg-secondary-100", "--sg-secondary-200", "--sg-secondary-300",
+  "--sg-secondary-400", "--sg-secondary-500", "--sg-secondary-600", "--sg-secondary-700",
+  "--sg-secondary-800", "--sg-secondary-900", "--sg-secondary-hover", "--sg-secondary-active",
+  // Tertiary palette
+  "--sg-tertiary-50", "--sg-tertiary-100", "--sg-tertiary-200", "--sg-tertiary-300",
+  "--sg-tertiary-400", "--sg-tertiary-500", "--sg-tertiary-600", "--sg-tertiary-700",
+  "--sg-tertiary-800", "--sg-tertiary-900", "--sg-tertiary-hover", "--sg-tertiary-active",
+  // Warning palette
+  "--sg-warning-50", "--sg-warning-100", "--sg-warning-200", "--sg-warning-300",
+  "--sg-warning-400", "--sg-warning-500", "--sg-warning-600", "--sg-warning-700",
+  "--sg-warning-800", "--sg-warning-900", "--sg-warning-hover", "--sg-warning-active",
+  // Error palette
+  "--sg-error-50", "--sg-error-100", "--sg-error-200", "--sg-error-300",
+  "--sg-error-400", "--sg-error-500", "--sg-error-600", "--sg-error-700",
+  "--sg-error-800", "--sg-error-900", "--sg-error-hover", "--sg-error-active",
+  // Info palette
+  "--sg-info-50", "--sg-info-100", "--sg-info-200", "--sg-info-300",
+  "--sg-info-400", "--sg-info-500", "--sg-info-600", "--sg-info-700",
+  "--sg-info-800", "--sg-info-900", "--sg-info-hover", "--sg-info-active",
+  // Success palette
+  "--sg-success-50", "--sg-success-100", "--sg-success-200", "--sg-success-300",
+  "--sg-success-400", "--sg-success-500", "--sg-success-600", "--sg-success-700",
+  "--sg-success-800", "--sg-success-900", "--sg-success-hover", "--sg-success-active",
+  // Button component vars
+  "--sg-btn-bg", "--sg-btn-fg", "--sg-btn-border",
+  "--sg-btn-hover-bg", "--sg-btn-hover-fg", "--sg-btn-hover-border",
+  "--sg-btn-active-bg", "--sg-btn-ring", "--sg-btn-tint",
+  // Avatar component vars
+  "--sg-avatar-bg", "--sg-avatar-fg", "--sg-avatar-border", "--sg-avatar-ring",
+  // Badge component vars
+  "--sg-badge-bg", "--sg-badge-fg", "--sg-badge-border",
+  "--sg-badge-hover-bg", "--sg-badge-hover-fg", "--sg-badge-hover-border",
+  "--sg-badge-ring", "--sg-badge-soft-bg", "--sg-badge-soft-fg",
 ] as const;
 
 const SANDPACK_BASE_STYLES_CSS = `* {
@@ -468,6 +656,23 @@ const SANDPACK_TAILWIND_INDEX_HTML = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script>
+    function sgPalette(name) {
+      return {
+        50: "rgb(var(--sg-" + name + "-50) / <alpha-value>)",
+        100: "rgb(var(--sg-" + name + "-100) / <alpha-value>)",
+        200: "rgb(var(--sg-" + name + "-200) / <alpha-value>)",
+        300: "rgb(var(--sg-" + name + "-300) / <alpha-value>)",
+        400: "rgb(var(--sg-" + name + "-400) / <alpha-value>)",
+        500: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
+        600: "rgb(var(--sg-" + name + "-600) / <alpha-value>)",
+        700: "rgb(var(--sg-" + name + "-700) / <alpha-value>)",
+        800: "rgb(var(--sg-" + name + "-800) / <alpha-value>)",
+        900: "rgb(var(--sg-" + name + "-900) / <alpha-value>)",
+        DEFAULT: "rgb(var(--sg-" + name + "-500) / <alpha-value>)",
+        hover: "rgb(var(--sg-" + name + "-hover) / <alpha-value>)",
+        active: "rgb(var(--sg-" + name + "-active) / <alpha-value>)"
+      };
+    }
     tailwind = {
       config: {
         theme: {
@@ -482,12 +687,46 @@ const SANDPACK_TAILWIND_INDEX_HTML = `<!DOCTYPE html>
               secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
               destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
               muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
-              accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" }
+              accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
+              card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+              popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
+              sg: {
+                bg: "rgb(var(--sg-bg) / <alpha-value>)",
+                surface: "rgb(var(--sg-surface) / <alpha-value>)",
+                "muted-surface": "rgb(var(--sg-muted-surface) / <alpha-value>)",
+                border: "rgb(var(--sg-border) / <alpha-value>)",
+                ring: "rgb(var(--sg-ring) / <alpha-value>)",
+                focus: "rgb(var(--sg-ring) / <alpha-value>)",
+                text: "rgb(var(--sg-text) / <alpha-value>)",
+                muted: "rgb(var(--sg-muted) / <alpha-value>)",
+                disabled: "rgb(var(--sg-disabled) / <alpha-value>)",
+                "on-disabled": "rgb(var(--sg-on-disabled) / <alpha-value>)",
+                hover: "rgb(var(--sg-primary-50) / <alpha-value>)",
+                hover2: "rgb(var(--sg-primary-100) / <alpha-value>)",
+                surface2: "rgb(var(--sg-muted-surface) / <alpha-value>)",
+                link: "rgb(var(--sg-link) / <alpha-value>)",
+                "link-hover": "rgb(var(--sg-link-hover) / <alpha-value>)",
+                "on-primary": "rgb(var(--sg-on-primary) / <alpha-value>)",
+                "on-secondary": "rgb(var(--sg-on-secondary) / <alpha-value>)",
+                "on-tertiary": "rgb(var(--sg-on-tertiary) / <alpha-value>)",
+                "on-warning": "rgb(var(--sg-on-warning) / <alpha-value>)",
+                "on-error": "rgb(var(--sg-on-error) / <alpha-value>)",
+                "on-info": "rgb(var(--sg-on-info) / <alpha-value>)",
+                "on-success": "rgb(var(--sg-on-success) / <alpha-value>)",
+                primary: sgPalette("primary"),
+                secondary: sgPalette("secondary"),
+                tertiary: sgPalette("tertiary"),
+                warning: sgPalette("warning"),
+                error: sgPalette("error"),
+                info: sgPalette("info"),
+                success: sgPalette("success")
+              }
             },
             borderRadius: {
               lg: "var(--radius)",
               md: "calc(var(--radius) - 2px)",
-              sm: "calc(var(--radius) - 4px)"
+              sm: "calc(var(--radius) - 4px)",
+              sg: "var(--sg-radius)"
             }
           }
         }
@@ -698,9 +937,9 @@ function readThemeVarsFromHost(): Record<string, string> {
     if (value) themeVars[varName] = value;
   }
 
-  for (let index = 0; index < computed.length; index += 1) {
-    const varName = computed.item(index)?.trim();
-    if (!varName || !varName.startsWith("--sg-")) continue;
+  // CSSStyleDeclaration.length/.item() does NOT enumerate CSS custom properties,
+  // so we explicitly call getPropertyValue() for each known --sg-* var.
+  for (const varName of SANDPACK_SG_VARS) {
     const value = computed.getPropertyValue(varName).trim();
     if (value) themeVars[varName] = value;
   }
