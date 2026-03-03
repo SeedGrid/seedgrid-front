@@ -874,7 +874,7 @@ export default function Example() {
 />`} />
       </Section>
 
-      <Section id="exemplo-15" title="15) Playground" description="Simule as principais props em tempo real.">
+      <Section id="exemplo-15" title="15) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputPostalCode Playground"
           interactive

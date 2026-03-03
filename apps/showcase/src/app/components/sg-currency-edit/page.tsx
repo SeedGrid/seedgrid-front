@@ -991,7 +991,7 @@ export default function Example() {
       <Section
         id="exemplo-16"
         title="16) Playground"
-        description="Simule as principais props do SgCurrencyEdit em tempo real."
+        description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgCurrencyEdit" })}
       >
         <SgPlayground
           title="SgCurrencyEdit Playground"

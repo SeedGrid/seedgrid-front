@@ -275,7 +275,7 @@ export default function SgInputBirthDatePage() {
           <CodeBlock code={`<SgInputBirthDate\n  id="demo-range"\n  label="${t(i18n, "showcase.component.inputBirthDate.labels.birthDate")}"\n  minAge={12}\n  maxAge={80}\n/>`} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Playground" description="Simule as principais props em tempo real.">
+        <Section id="exemplo-4" title="4) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputBirthDate Playground"
             interactive

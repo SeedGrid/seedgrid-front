@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgAutocomplete, SgPlayground, type SgAutocompleteItem } from "@seedgrid/fe-components";
@@ -485,7 +485,7 @@ export default function Example() {
 
       <Section
         title="8) Playground"
-        description="Simule as principais props do SgAutocomplete em tempo real."
+        description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgAutocomplete" })}
       >
         <SgPlayground
           title="SgAutocomplete Playground"

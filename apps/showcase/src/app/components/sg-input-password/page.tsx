@@ -339,7 +339,7 @@ export default function SgInputPasswordPage() {
           <CodeBlock code={`<SgInputPassword\n  id="demo-events"\n  label="${t(i18n, "showcase.common.labels.typeAndLog")}"\n  required\n  onChange={(value) => log(\`onChange: "\${value}"\`)}\n  onEnter={() => log("${t(i18n, "showcase.component.inputPassword.logs.onEnter")}")}\n  onExit={() => log("${t(i18n, "showcase.component.inputPassword.logs.onExit")}")}\n  onClear={() => log("${t(i18n, "showcase.component.inputPassword.logs.onClear")}")}\n/>`} />
         </Section>
 
-        <Section id="exemplo-6" title="6) Playground" description="Simule as principais props em tempo real.">
+        <Section id="exemplo-6" title="6) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputPassword Playground"
             interactive

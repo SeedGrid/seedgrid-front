@@ -1051,5 +1051,7 @@
   "showcase.themeEditor.presets": "Colores Predefinidos",
   "showcase.themeEditor.semanticTokens": "Tokens Semanticos",
   "showcase.themeEditor.title": "Editor de Tema",
-  "showcase.themeEditor.tokenPreview": "Vista Previa de Tokens"
+  "showcase.themeEditor.tokenPreview": "Vista Previa de Tokens",
+  "showcase.common.playground.description": "Simula las props principales en tiempo real.",
+  "showcase.common.playground.description.withComponent": "Simula las props principales de {component} en tiempo real."
 }

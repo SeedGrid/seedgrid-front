@@ -547,7 +547,7 @@ OW.R9D.U0T/0002-96  (raw: OWR9DU0T000296)`}
         <CodeBlock code={`<SgInputCNPJ\n  id="eventos"\n  label="${t(i18n, "showcase.component.cnpj.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cnpj.labels.cnpj")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
 
-      <Section id="exemplo-14" title="14) Playground" description="Simule as principais props em tempo real.">
+      <Section id="exemplo-14" title="14) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputCNPJ Playground"
           interactive

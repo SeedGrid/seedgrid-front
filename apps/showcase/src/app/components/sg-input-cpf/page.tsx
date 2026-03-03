@@ -453,7 +453,7 @@ export default function SgInputCPFPage() {
         <CodeBlock code={`<SgInputCPF\n  id="eventos"\n  label="${t(i18n, "showcase.component.cpf.labels.withEvents")}"\n  hintText="${t(i18n, "showcase.component.cpf.labels.cpf")}"\n  required\n  inputProps={{}}\n  onChange={(v) => console.log("onChange:", v)}\n  onEnter={() => console.log("focus")}\n  onExit={() => console.log("blur")}\n  onClear={() => console.log("cleared")}\n  onValidation={(msg) => console.log("validation:", msg)}\n/>`} />
       </Section>
 
-      <Section id="exemplo-11" title="11) Playground" description="Simule as principais props em tempo real.">
+      <Section id="exemplo-11" title="11) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputCPF Playground"
           interactive

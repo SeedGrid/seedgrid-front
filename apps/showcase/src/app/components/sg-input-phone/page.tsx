@@ -435,7 +435,7 @@ export default function SgInputPhonePage() {
       <Section
         id="exemplo-10"
         title="10) Playground"
-        description="Simule as principais props do SgInputPhone em tempo real."
+        description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgInputPhone" })}
       >
         <SgPlayground
           title="SgInputPhone Playground"

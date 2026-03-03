@@ -269,7 +269,7 @@ export default function SgInputDatePage() {
           <CodeBlock code={`<SgInputDate\n  id="demo-float"\n  label="${t(i18n, "showcase.component.inputDate.labels.eventDate")}"\n/>`} />
         </Section>
 
-        <Section id="exemplo-4" title="4) Playground" description="Simule as principais props em tempo real.">
+        <Section id="exemplo-4" title="4) Playground" description={t(i18n, "showcase.common.playground.description")}>
           <SgPlayground
             title="SgInputDate Playground"
             interactive

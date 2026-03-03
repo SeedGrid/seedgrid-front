@@ -226,7 +226,7 @@ export default function Example() {
           />
         </Section>
 
-        <Section title="5) Playground" description="Simule as principais props do SgTextEditor em tempo real.">
+        <Section title="5) Playground" description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgTextEditor" })}>
           <SgPlayground
             title="SgTextEditor Playground"
             interactive

@@ -1053,7 +1053,7 @@ export default function Example() {
       <Section
         id="exemplo-18"
         title="18) Playground"
-        description="Simule as principais props do SgInputText em tempo real."
+        description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgInputText" })}
       >
         <SgPlayground
           title="SgInputText Playground"

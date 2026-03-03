@@ -528,7 +528,7 @@ fetch("/seedgrid-blocked-email-domains.json")
 />`} />
       </Section>
 
-      <Section id="exemplo-13" title="13) Playground" description="Simule as principais props em tempo real.">
+      <Section id="exemplo-13" title="13) Playground" description={t(i18n, "showcase.common.playground.description")}>
         <SgPlayground
           title="SgInputEmail Playground"
           interactive
