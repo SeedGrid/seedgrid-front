@@ -108,11 +108,11 @@ const DEFAULT_SANDBOX_HOST_DEPENDENCIES: Record<string, string> = {
   "@codesandbox/sandpack-react": "^2.20.0"
 };
 
-const DEFAULT_SANDPACK_POLYFILLS: Record<string, string> = {
-  assert: "^2.1.0",
-  process: "^0.11.10",
-  util: "^0.12.5"
-};
+// Keep this empty: editor runtime uses in-memory shims under /node_modules/*
+// for assert/path/process/util/fs and node:* aliases.
+// Installing npm polyfill packages here pulls deep transitive trees and may
+// explode resolution inside Sandpack (e.g. dunder-proto/get, get-proto, etc).
+const DEFAULT_SANDPACK_POLYFILLS: Record<string, string> = {};
 
 const TIPTAP_SHIM_PACKAGES = [
   "@tiptap/core",
@@ -154,6 +154,27 @@ const SANDPACK_MARKDOWN_IT_BIN_SHIM = `import markdownit from "../index.mjs";
 export default markdownit;
 export { markdownit };
 `;
+
+const SANDPACK_MARKDOWN_IT_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "markdown-it",
+  version: "14.1.1-shim",
+  main: "dist/index.cjs.js",
+  module: "index.mjs",
+  exports: {
+    ".": {
+      import: "./index.mjs",
+      require: "./dist/index.cjs.js"
+    },
+    "./*": {
+      import: "./*",
+      require: "./*"
+    }
+  },
+  // Sandpack can accidentally prioritize `bin`; force it to a browser-safe module.
+  bin: {
+    "markdown-it": "dist/index.cjs.js"
+  }
+});
 
 const SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS = `export const SandpackProvider = ({ children }) => children ?? null;
 export const SandpackCodeEditor = () => null;
@@ -364,6 +385,78 @@ if (typeof globalThis !== "undefined" && !globalThis.process) {
 module.exports = processShim;
 module.exports.default = processShim;
 `;
+
+const SANDPACK_NODE_ASSERT_ALIAS_SHIM_INDEX_JS = `const assertShim = require("assert");
+module.exports = assertShim;
+module.exports.default = assertShim;
+`;
+
+const SANDPACK_NODE_UTIL_ALIAS_SHIM_INDEX_JS = `const utilShim = require("util");
+module.exports = utilShim;
+module.exports.default = utilShim;
+`;
+
+const SANDPACK_NODE_PATH_ALIAS_SHIM_INDEX_JS = `const pathShim = require("path");
+module.exports = pathShim;
+module.exports.default = pathShim;
+`;
+
+const SANDPACK_NODE_FS_ALIAS_SHIM_INDEX_JS = `const fsShim = require("fs");
+module.exports = fsShim;
+module.exports.default = fsShim;
+`;
+
+const SANDPACK_NODE_PROCESS_ALIAS_SHIM_INDEX_JS = `const processShim = require("process");
+module.exports = processShim;
+module.exports.default = processShim;
+`;
+
+const SANDPACK_NODE_FS_PROMISES_ALIAS_SHIM_INDEX_JS = `const fsShim = require("fs");
+module.exports = fsShim.promises || {};
+module.exports.default = module.exports;
+`;
+
+const SANDPACK_NODE_ASSERT_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:assert",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
+
+const SANDPACK_NODE_UTIL_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:util",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
+
+const SANDPACK_NODE_PATH_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:path",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
+
+const SANDPACK_NODE_FS_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:fs",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
+
+const SANDPACK_NODE_PROCESS_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:process",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
+
+const SANDPACK_NODE_FS_PROMISES_PACKAGE_JSON_SHIM = JSON.stringify({
+  name: "node:fs/promises",
+  version: "0.0.0-shim",
+  main: "index.js",
+  module: "index.js"
+});
 
 const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
   // shadcn/ui design tokens (HSL)
@@ -1078,6 +1171,14 @@ function RunButton({ onRun }: { onRun?: () => void }) {
   );
 }
 
+const COREJS_PROVIDER_WARNING_PREFIX = "Internal error in the corejs3 provider: unknown polyfill";
+
+function shouldSuppressCoreJsProviderWarning(args: unknown[]) {
+  if (args.length === 0) return false;
+  const firstArg = args[0];
+  return typeof firstArg === "string" && firstArg.includes(COREJS_PROVIDER_WARNING_PREFIX);
+}
+
 export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   const {
     code,
@@ -1160,18 +1261,21 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   SgAutocomplete
 } from "@seedgrid/fe-components";`;
 
-  const appTsx =
-    codeContract === "appFile"
-      ? code
-      : buildAppTsxFromRenderBody(code, seedgridDefaultImports, previewWrapperClassName);
+  const appTsx = React.useMemo(
+    () =>
+      codeContract === "appFile"
+        ? code
+        : buildAppTsxFromRenderBody(code, seedgridDefaultImports, previewWrapperClassName),
+    [code, codeContract, previewWrapperClassName, seedgridDefaultImports]
+  );
 
   const resolvedSeedgridDependency =
     seedgridDependency ??
     process.env.NEXT_PUBLIC_SANDPACK_SEEDGRID_DEPENDENCY ??
     DEFAULT_SEEDGRID_DEPENDENCY;
 
-  const requestedDeps = dependencies ?? {};
-  const requestedDepKeys = Object.keys(requestedDeps);
+  const requestedDeps = React.useMemo(() => dependencies ?? {}, [dependencies]);
+  const requestedDepKeys = React.useMemo(() => Object.keys(requestedDeps), [requestedDeps]);
   const resolvedBundlerURL = normalizeUrl(
     bundlerURL ?? process.env.NEXT_PUBLIC_SANDPACK_BUNDLER_URL,
     DEFAULT_SANDPACK_BUNDLER_URL
@@ -1239,154 +1343,296 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   // Full preset gets the real package so icons render correctly.
   const shouldShimLucide = includeSeedgridDependency && resolvedPreset !== "full" && !requestedDepKeys.includes("lucide-react");
 
-  const files: SandpackFiles = {
-    "/App.tsx": { code: appTsx, active: true },
-    "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) }
-  };
+  React.useEffect(() => {
+    if (!shouldIncludeNodePolyfills) return;
+    if (typeof window === "undefined") return;
 
-  if (includeSeedgridDependency) {
-    // Intercept the package entry point and redirect to the pre-compiled sandbox bundle
-    // (dist/sandbox.cjs) instead of the tsc barrel file (dist/index.js).
-    // This makes the Sandpack bundler fetch and process ONE file instead of 200+ individual files.
-    // The real package.json from npm is left intact so version resolution works normally.
-    // Requires @seedgrid/fe-components to be built with: pnpm run build:sandbox
-    files["/node_modules/@seedgrid/fe-components/dist/index.js"] = {
-      code: `module.exports = require("./sandbox.cjs");`,
-      hidden: true
+    const originalError = console.error;
+    const originalWarn = console.warn;
+
+    console.error = (...args: unknown[]) => {
+      if (shouldSuppressCoreJsProviderWarning(args)) return;
+      originalError(...(args as Parameters<typeof console.error>));
     };
 
-    // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
-    files["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
-
-    // Keep CRA's public/index.html entry path expected by the react/react-ts templates.
-    files["/public/index.html"] = { code: SANDPACK_TAILWIND_INDEX_HTML, hidden: true };
-
-    // Sandpack runtime can evaluate JSON files as plain JS modules.
-    // Provide CJS-compatible shims to keep @seedgrid/fe-components i18n/validators working.
-    // .json shims cover current npm versions; .js shims cover new versions after JSON→TypeScript conversion.
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.json"] = {
-      code: SANDPACK_SEEDGRID_PT_BR_JSON_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.json"] = {
-      code: SANDPACK_SEEDGRID_PT_PT_JSON_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.json"] = {
-      code: SANDPACK_SEEDGRID_EN_US_JSON_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/es.json"] = {
-      code: SANDPACK_SEEDGRID_ES_JSON_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.json"] = {
-      code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.js"] = {
-      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.js"] = {
-      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.js"] = {
-      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/i18n/es.js"] = {
-      code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.js"] = {
-      code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_JS_SHIM,
-      hidden: true
-    };
-  }
-
-  if (shouldIncludeNodePolyfills) {
-    // markdown-it CLI entry uses node:fs and breaks in browser runtime.
-    files["/node_modules/markdown-it/bin/markdown-it.mjs"] = {
-      code: SANDPACK_MARKDOWN_IT_BIN_SHIM,
-      hidden: true
-    };
-    // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
-    files["/node_modules/assert/index.js"] = { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/util/index.js"] = { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/path/index.js"] = { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/fs/index.js"] = { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true };
-    files["/node_modules/process/index.js"] = { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true };
-  }
-
-  if (shouldShimSandpackReact) {
-    files["/node_modules/@codesandbox/sandpack-react/index.js"] = {
-      code: SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS,
-      hidden: true
-    };
-  }
-
-  if (shouldShimTiptap) {
-    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.js"] = {
-      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
-      hidden: true
-    };
-    files["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.mjs"] = {
-      code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
-      hidden: true
+    console.warn = (...args: unknown[]) => {
+      if (shouldSuppressCoreJsProviderWarning(args)) return;
+      originalWarn(...(args as Parameters<typeof console.warn>));
     };
 
-    files["/node_modules/@tiptap/react/package.json"] = {
-      code: JSON.stringify({ name: "@tiptap/react", version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
-      hidden: true
+    return () => {
+      console.error = originalError;
+      console.warn = originalWarn;
     };
-    files["/node_modules/@tiptap/react/index.js"] = {
-      code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
-      hidden: true
-    };
-    files["/node_modules/@tiptap/react/index.mjs"] = {
-      code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
-      hidden: true
+  }, [shouldIncludeNodePolyfills]);
+
+  const files = React.useMemo<SandpackFiles>(() => {
+    const nextFiles: SandpackFiles = {
+      "/App.tsx": { code: appTsx, active: true },
+      "/styles.css": { code: sandpackStylesCss || buildSandpackStylesCss({}, effectivePreviewPadding) }
     };
 
-    for (const packageName of TIPTAP_SHIM_PACKAGES) {
-      files[`/node_modules/${packageName}/package.json`] = {
-        code: JSON.stringify({ name: packageName, version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
+    if (includeSeedgridDependency) {
+      // Intercept the package entry point and redirect to the pre-compiled sandbox bundle
+      // (dist/sandbox.cjs) instead of the tsc barrel file (dist/index.js).
+      // This makes the Sandpack bundler fetch and process ONE file instead of 200+ individual files.
+      // The real package.json from npm is left intact so version resolution works normally.
+      // Requires @seedgrid/fe-components to be built with: pnpm run build:sandbox
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/index.js"] = {
+        code: `module.exports = require("./sandbox.cjs");`,
         hidden: true
       };
-      files[`/node_modules/${packageName}/index.js`] = {
-        code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+
+      // Compatibility shim for legacy @seedgrid/fe-components builds that still import "qrcode" (node-only path).
+      nextFiles["/node_modules/qrcode/index.js"] = { code: SANDPACK_QRCODE_SHIM_INDEX_JS, hidden: true };
+
+      // Keep CRA's public/index.html entry path expected by the react/react-ts templates.
+      nextFiles["/public/index.html"] = { code: SANDPACK_TAILWIND_INDEX_HTML, hidden: true };
+
+      // Sandpack runtime can evaluate JSON files as plain JS modules.
+      // Provide CJS-compatible shims to keep @seedgrid/fe-components i18n/validators working.
+      // .json shims cover current npm versions; .js shims cover new versions after JSON→TypeScript conversion.
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.json"] = {
+        code: SANDPACK_SEEDGRID_PT_BR_JSON_SHIM,
         hidden: true
       };
-      files[`/node_modules/${packageName}/index.mjs`] = {
-        code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.json"] = {
+        code: SANDPACK_SEEDGRID_PT_PT_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.json"] = {
+        code: SANDPACK_SEEDGRID_EN_US_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/es.json"] = {
+        code: SANDPACK_SEEDGRID_ES_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.json"] = {
+        code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/pt-BR.js"] = {
+        code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/pt-PT.js"] = {
+        code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/en-US.js"] = {
+        code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/i18n/es.js"] = {
+        code: SANDPACK_SEEDGRID_LOCALE_JS_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/blocked-email-domains.js"] = {
+        code: SANDPACK_SEEDGRID_BLOCKED_EMAIL_JS_SHIM,
         hidden: true
       };
     }
-  }
 
-  if (shouldShimLucide) {
-    files["/node_modules/lucide-react/package.json"] = {
-      code: JSON.stringify({ name: "lucide-react", version: "0.0.0-shim", main: "index.js" }),
-      hidden: true
-    };
-    files["/node_modules/lucide-react/index.js"] = {
-      code: SANDPACK_LUCIDE_REACT_SHIM_INDEX_JS,
-      hidden: true
-    };
-  }
+    if (shouldIncludeNodePolyfills) {
+      const markdownItPackageShimPaths = [
+        "/node_modules/markdown-it/package.json",
+        "/node_modules/prosemirror-markdown/node_modules/markdown-it/package.json",
+        "/node_modules/@tiptap/pm/node_modules/markdown-it/package.json",
+        "/node_modules/@tiptap/pm/node_modules/prosemirror-markdown/node_modules/markdown-it/package.json"
+      ] as const;
 
-  const deps: Record<string, string> = {
-    ...DEFAULT_SANDBOX_BASE_DEPENDENCIES,
-    ...(includeSeedgridDependency ? DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES : {}),
-    ...(includeSeedgridDependency && !shouldShimLucide ? { "lucide-react": "^0.468.0" } : {}),
-    ...(includeEditorDependencies ? DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES : {}),
-    ...(includeSandpackReactDependency ? DEFAULT_SANDBOX_HOST_DEPENDENCIES : {}),
-    ...(shouldIncludeNodePolyfills ? DEFAULT_SANDPACK_POLYFILLS : {}),
-    ...(includeSeedgridDependency ? { "@seedgrid/fe-components": resolvedSeedgridDependency } : {}),
-    ...requestedDeps
-  };
+      const markdownItBinShimPaths = [
+        "/node_modules/markdown-it/bin/markdown-it.mjs",
+        "/node_modules/prosemirror-markdown/node_modules/markdown-it/bin/markdown-it.mjs",
+        "/node_modules/@tiptap/pm/node_modules/markdown-it/bin/markdown-it.mjs",
+        "/node_modules/@tiptap/pm/node_modules/prosemirror-markdown/node_modules/markdown-it/bin/markdown-it.mjs"
+      ] as const;
+
+      // Keep markdown-it package metadata browser-safe. In some Sandpack resolver paths,
+      // `bin` can be chosen as entrypoint; forcing it to dist avoids node-only imports.
+      for (const shimPath of markdownItPackageShimPaths) {
+        nextFiles[shimPath] = {
+          code: SANDPACK_MARKDOWN_IT_PACKAGE_JSON_SHIM,
+          hidden: true
+        };
+      }
+      // markdown-it CLI entry uses node:fs and breaks in browser runtime.
+      for (const shimPath of markdownItBinShimPaths) {
+        nextFiles[shimPath] = {
+          code: SANDPACK_MARKDOWN_IT_BIN_SHIM,
+          hidden: true
+        };
+      }
+      // Node builtin compatibility shims used by transitive dependencies (e.g. argparse from markdown-it/tiptap).
+      nextFiles["/node_modules/assert/package.json"] = {
+        code: JSON.stringify({ name: "assert", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/util/package.json"] = {
+        code: JSON.stringify({ name: "util", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/path/package.json"] = {
+        code: JSON.stringify({ name: "path", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/fs/package.json"] = {
+        code: JSON.stringify({ name: "fs", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/process/package.json"] = {
+        code: JSON.stringify({ name: "process", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/assert/index.js"] = { code: SANDPACK_ASSERT_SHIM_INDEX_JS, hidden: true };
+      nextFiles["/node_modules/util/index.js"] = { code: SANDPACK_UTIL_SHIM_INDEX_JS, hidden: true };
+      nextFiles["/node_modules/path/index.js"] = { code: SANDPACK_PATH_SHIM_INDEX_JS, hidden: true };
+      nextFiles["/node_modules/fs/index.js"] = { code: SANDPACK_FS_SHIM_INDEX_JS, hidden: true };
+      nextFiles["/node_modules/process/index.js"] = { code: SANDPACK_PROCESS_SHIM_INDEX_JS, hidden: true };
+
+      // node:* specifiers are increasingly used by ESM packages.
+      // Mirror aliases to the shims above so both `fs` and `node:fs` resolve.
+      nextFiles["/node_modules/node:assert/package.json"] = {
+        code: SANDPACK_NODE_ASSERT_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:assert/index.js"] = {
+        code: SANDPACK_NODE_ASSERT_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:util/package.json"] = {
+        code: SANDPACK_NODE_UTIL_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:util/index.js"] = {
+        code: SANDPACK_NODE_UTIL_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:path/package.json"] = {
+        code: SANDPACK_NODE_PATH_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:path/index.js"] = {
+        code: SANDPACK_NODE_PATH_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:fs/package.json"] = {
+        code: SANDPACK_NODE_FS_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:fs/index.js"] = {
+        code: SANDPACK_NODE_FS_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:process/package.json"] = {
+        code: SANDPACK_NODE_PROCESS_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:process/index.js"] = {
+        code: SANDPACK_NODE_PROCESS_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:fs/promises/package.json"] = {
+        code: SANDPACK_NODE_FS_PROMISES_PACKAGE_JSON_SHIM,
+        hidden: true
+      };
+      nextFiles["/node_modules/node:fs/promises/index.js"] = {
+        code: SANDPACK_NODE_FS_PROMISES_ALIAS_SHIM_INDEX_JS,
+        hidden: true
+      };
+    }
+
+    if (shouldShimSandpackReact) {
+      nextFiles["/node_modules/@codesandbox/sandpack-react/index.js"] = {
+        code: SANDPACK_SANDBOX_SANDPACK_REACT_SHIM_INDEX_JS,
+        hidden: true
+      };
+    }
+
+    if (shouldShimTiptap) {
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.js"] = {
+        code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/@seedgrid/fe-components/dist/inputs/SgTextEditor.mjs"] = {
+        code: SANDPACK_SEEDGRID_TEXT_EDITOR_SHIM_INDEX_JS,
+        hidden: true
+      };
+
+      nextFiles["/node_modules/@tiptap/react/package.json"] = {
+        code: JSON.stringify({ name: "@tiptap/react", version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/@tiptap/react/index.js"] = {
+        code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
+        hidden: true
+      };
+      nextFiles["/node_modules/@tiptap/react/index.mjs"] = {
+        code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
+        hidden: true
+      };
+
+      for (const packageName of TIPTAP_SHIM_PACKAGES) {
+        nextFiles[`/node_modules/${packageName}/package.json`] = {
+          code: JSON.stringify({ name: packageName, version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
+          hidden: true
+        };
+        nextFiles[`/node_modules/${packageName}/index.js`] = {
+          code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+          hidden: true
+        };
+        nextFiles[`/node_modules/${packageName}/index.mjs`] = {
+          code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
+          hidden: true
+        };
+      }
+    }
+
+    if (shouldShimLucide) {
+      nextFiles["/node_modules/lucide-react/package.json"] = {
+        code: JSON.stringify({ name: "lucide-react", version: "0.0.0-shim", main: "index.js" }),
+        hidden: true
+      };
+      nextFiles["/node_modules/lucide-react/index.js"] = {
+        code: SANDPACK_LUCIDE_REACT_SHIM_INDEX_JS,
+        hidden: true
+      };
+    }
+
+    return nextFiles;
+  }, [
+    appTsx,
+    effectivePreviewPadding,
+    includeSeedgridDependency,
+    sandpackStylesCss,
+    shouldIncludeNodePolyfills,
+    shouldShimLucide,
+    shouldShimSandpackReact,
+    shouldShimTiptap
+  ]);
+
+  const deps = React.useMemo<Record<string, string>>(
+    () => ({
+      ...DEFAULT_SANDBOX_BASE_DEPENDENCIES,
+      ...(includeSeedgridDependency ? DEFAULT_SEEDGRID_RUNTIME_DEPENDENCIES : {}),
+      ...(includeSeedgridDependency && !shouldShimLucide ? { "lucide-react": "^0.468.0" } : {}),
+      ...(includeEditorDependencies ? DEFAULT_SEEDGRID_EDITOR_DEPENDENCIES : {}),
+      ...(includeSandpackReactDependency ? DEFAULT_SANDBOX_HOST_DEPENDENCIES : {}),
+      ...(shouldIncludeNodePolyfills ? DEFAULT_SANDPACK_POLYFILLS : {}),
+      ...(includeSeedgridDependency ? { "@seedgrid/fe-components": resolvedSeedgridDependency } : {}),
+      ...requestedDeps
+    }),
+    [
+      includeEditorDependencies,
+      includeSandpackReactDependency,
+      includeSeedgridDependency,
+      requestedDeps,
+      resolvedSeedgridDependency,
+      shouldIncludeNodePolyfills,
+      shouldShimLucide
+    ]
+  );
   const currentHeight = isExpanded ? expandedHeight : height;
   const resizeClass = !resizable
     ? undefined

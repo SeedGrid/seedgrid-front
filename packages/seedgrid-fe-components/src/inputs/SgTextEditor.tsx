@@ -127,6 +127,7 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
   const isControlled = typeof valueHtml === "string";
   const editor = useEditor({
+    immediatelyRender: false,
     editable: !disabled,
     extensions: [
       StarterKit.configure({ codeBlock: {} }),
