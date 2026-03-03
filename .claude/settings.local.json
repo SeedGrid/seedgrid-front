@@ -58,7 +58,8 @@
       "Bash(tar -tzf seedgrid-fe-components-0.2.9.tgz)",
       "Bash(grep -h \"^import {\" c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/sg-*/page.tsx c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/digits/*/page.tsx c:/empreendedorismo/seedgrid/front/apps/showcase/src/app/components/gadgets/*/page.tsx)",
       "Bash(tar -xzf seedgrid-fe-components-0.2.9.tgz package/dist/index.js)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:sandpack.seedgrid.com.br)"
     ]
   }
 }

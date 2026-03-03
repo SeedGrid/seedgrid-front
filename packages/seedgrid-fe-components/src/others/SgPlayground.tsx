@@ -1036,6 +1036,10 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       hidden: true
     };
 
+    files["/node_modules/@tiptap/react/package.json"] = {
+      code: JSON.stringify({ name: "@tiptap/react", version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
+      hidden: true
+    };
     files["/node_modules/@tiptap/react/index.js"] = {
       code: SANDPACK_TIPTAP_REACT_SHIM_INDEX_JS,
       hidden: true
@@ -1046,6 +1050,10 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     };
 
     for (const packageName of TIPTAP_SHIM_PACKAGES) {
+      files[`/node_modules/${packageName}/package.json`] = {
+        code: JSON.stringify({ name: packageName, version: "0.0.0-shim", main: "index.js", module: "index.mjs" }),
+        hidden: true
+      };
       files[`/node_modules/${packageName}/index.js`] = {
         code: SANDPACK_TIPTAP_EXTENSION_SHIM_INDEX_JS,
         hidden: true
