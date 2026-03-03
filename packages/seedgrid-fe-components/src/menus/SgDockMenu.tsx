@@ -445,6 +445,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
           ...style,
           transform: txParts.join(" "),
           cursor: enableDragDrop ? (isDragging ? "grabbing" : "grab") : "default",
+          ...(enableDragDrop ? { touchAction: "none" } : {}),
         }}
         onPointerDown={handlePointerDown}
         onContextMenu={handleContextMenu}

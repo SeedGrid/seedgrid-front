@@ -110,6 +110,14 @@ export default function CreditsPage() {
       url: "https://lucide.dev/",
       description: "Clean and consistent icon library used throughout the component set.",
       usedIn: texts.usedInVarious
+    },
+    {
+      name: "@dnd-kit/core",
+      version: "6.x",
+      license: "MIT",
+      url: "https://dndkit.com/",
+      description: "Lightweight, performant drag and drop toolkit with Pointer Events support, enabling mobile-friendly drag interactions.",
+      usedIn: texts.usedInVarious
     }
   ];
 

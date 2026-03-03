@@ -803,6 +803,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
           width: wh, height: wh,
           backgroundColor: bg, color: fg,
           ["--tw-ring-color" as string]: ring,
+          ...(enableDragDrop ? { touchAction: "none" } : {}),
           ...anim,
         }}
         onClick={handleClick}
