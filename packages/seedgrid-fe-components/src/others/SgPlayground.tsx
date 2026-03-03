@@ -1000,18 +1000,13 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   };
 
   if (includeSeedgridDependency) {
-    // Override @seedgrid/fe-components package.json to point at the pre-compiled sandbox bundle
+    // Intercept the package entry point and redirect to the pre-compiled sandbox bundle
     // (dist/sandbox.cjs) instead of the tsc barrel file (dist/index.js).
-    // This makes the Sandpack bundler fetch and process ONE file instead of 200+ individual files,
-    // which dramatically reduces memory usage and eliminates "loading everything" on every run.
+    // This makes the Sandpack bundler fetch and process ONE file instead of 200+ individual files.
+    // The real package.json from npm is left intact so version resolution works normally.
     // Requires @seedgrid/fe-components to be built with: pnpm run build:sandbox
-    files["/node_modules/@seedgrid/fe-components/package.json"] = {
-      code: JSON.stringify({
-        name: "@seedgrid/fe-components",
-        version: "0.0.0-sandbox",
-        main: "dist/sandbox.cjs",
-        exports: { ".": { require: "./dist/sandbox.cjs", default: "./dist/sandbox.cjs" } }
-      }),
+    files["/node_modules/@seedgrid/fe-components/dist/index.js"] = {
+      code: `module.exports = require("./sandbox.cjs");`,
       hidden: true
     };
 
