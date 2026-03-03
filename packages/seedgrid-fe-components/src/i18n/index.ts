@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import ptBr from "./pt-BR.json";
-import ptPt from "./pt-PT.json";
-import enUs from "./en-US.json";
-import es from "./es.json";
+import ptBr from "./pt-BR.js";
+import ptPt from "./pt-PT.js";
+import enUs from "./en-US.js";
+import es from "./es.js";
 
 export type SgComponentsLocale = "pt-BR" | "pt-PT" | "en-US" | "es" | (string & {});
 

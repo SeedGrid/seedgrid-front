@@ -516,14 +516,6 @@ function resolveDefaultNpmRegistriesFromEnv(): SgPlaygroundNpmRegistry[] | undef
   ];
 }
 
-function buildCjsModule(value: unknown): string {
-  const serialized = JSON.stringify(value);
-  return `const data = ${serialized};
-module.exports = data;
-module.exports.default = data;
-`;
-}
-
 const SANDPACK_MIN_COMPONENT_MESSAGES: Record<string, string> = {
   "components.actions.clear": "Clear",
   "components.actions.cancel": "Cancel",
@@ -545,11 +537,13 @@ const SANDPACK_MIN_COMPONENT_MESSAGES: Record<string, string> = {
   "components.radiogroup.cancel": "No option"
 };
 
-const SANDPACK_SEEDGRID_PT_BR_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
-const SANDPACK_SEEDGRID_PT_PT_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
-const SANDPACK_SEEDGRID_EN_US_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
-const SANDPACK_SEEDGRID_ES_JSON_SHIM = buildCjsModule(SANDPACK_MIN_COMPONENT_MESSAGES);
-const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = buildCjsModule({
+// These shims use valid JSON so the Sandpack bundler can parse them as JSON modules.
+// (The self-hosted bundler evaluates .json files as JS, wrapping them with module.exports = {...}.)
+const SANDPACK_SEEDGRID_PT_BR_JSON_SHIM = JSON.stringify(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_PT_PT_JSON_SHIM = JSON.stringify(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_EN_US_JSON_SHIM = JSON.stringify(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_ES_JSON_SHIM = JSON.stringify(SANDPACK_MIN_COMPONENT_MESSAGES);
+const SANDPACK_SEEDGRID_BLOCKED_EMAIL_DOMAINS_JSON_SHIM = JSON.stringify({
   blockedEmailDomains: []
 });
 

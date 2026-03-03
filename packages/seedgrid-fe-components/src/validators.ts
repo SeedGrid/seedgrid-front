@@ -1,4 +1,4 @@
-import blockedEmailDomainsConfig from "./blocked-email-domains.json";
+import blockedEmailDomainsConfig from "./blocked-email-domains.js";
 import { resolveComponentsI18n, t, type SgComponentsI18n, type SgComponentsI18nInput } from "./i18n";
 
 type BlockedEmailDomainsConfig = {

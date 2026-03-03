@@ -1,0 +1,43 @@
+const blockedEmailDomains: { blockedEmailDomains: string[] } = {
+  blockedEmailDomains: [
+    "yopmail.com",
+    "yopmail.fr",
+    "yopmail.net",
+    "cool.fr.nf",
+    "jetable.fr.nf",
+    "guerrillamail.com",
+    "guerrillamail.net",
+    "guerrillamail.org",
+    "guerrillamail.de",
+    "guerrillamailblock.com",
+    "sharklasers.com",
+    "10minutemail.com",
+    "10minutemail.net",
+    "10minemail.com",
+    "20minutemail.com",
+    "30minutemail.com",
+    "minuteinbox.com",
+    "emailondeck.com",
+    "mailinator.com",
+    "mailinator.net",
+    "mailinator.org",
+    "temp-mail.org",
+    "temp-mail.io",
+    "tempmail.com",
+    "tempail.com",
+    "temp-mail.de",
+    "tempmailer.com",
+    "tempmailo.com",
+    "throwawaymail.com",
+    "fakeinbox.com",
+    "trashmail.com",
+    "trashmail.net",
+    "dispostable.com",
+    "getnada.com",
+    "maildrop.cc",
+    "moakt.com",
+    "mintemail.com"
+  ]
+};
+
+export default blockedEmailDomains;
