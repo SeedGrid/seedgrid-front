@@ -794,7 +794,7 @@ export function SgToolbarIconButton(
     const toolbarRect = toolbarRoot instanceof HTMLElement ? toolbarRoot.getBoundingClientRect() : null;
     if (isHorizontalToolbar) {
       const refRect = toolbarRect ?? buttonRect;
-      const above = refRect.top > 48;
+      const above = refRect.top > 80;
       setHintPosition({
         x: buttonRect.left + (buttonRect.width / 2),
         y: above ? refRect.top - 8 : refRect.bottom + 8,
