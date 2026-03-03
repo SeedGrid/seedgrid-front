@@ -1,10 +1,15 @@
 import "./globals.css";
 import React from "react";
+import type { Metadata } from "next";
 import ShowcaseShell from "./ShowcaseShell";
 import { SeedThemeProvider } from "@seedgrid/fe-theme";
 
-export const metadata = {
-  title: "SeedGrid Components Showcase"
+export const metadata: Metadata = {
+  title: "SeedGrid Components Showcase",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg"
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
