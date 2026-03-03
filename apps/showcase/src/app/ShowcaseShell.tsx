@@ -633,8 +633,16 @@ export default function ShowcaseShell(props: {
               menu={shellMenu}
               selection={{ activeUrl: pathname ?? undefined }}
               brand={{
-                imageSrc: "/logo-seedgrid.svg",
-                title: "Components Showcase",
+                image: (
+                  <div className="flex flex-col items-center gap-0.5 py-1">
+                    <img src="/logo-seedgrid-icon.svg" className="h-10 w-auto" alt="" />
+                    <span className="text-xl font-black leading-none tracking-tight">
+                      <span style={{ color: "#2b1f14" }}>Seed</span>
+                      <span style={{ color: "#C56A2D" }}>Grid</span>
+                    </span>
+                  </div>
+                ),
+                title: "",
                 onClick: () => router.push("/")
               }}
               variant="sidebar"

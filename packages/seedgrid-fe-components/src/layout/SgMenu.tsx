@@ -1510,7 +1510,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           {brand.image ? (
             <span className="inline-flex shrink-0 items-center justify-center">{brand.image}</span>
           ) : brand.imageSrc ? (
-            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-7 w-auto max-w-[120px]" />
+            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className="h-12 w-auto max-w-[160px]" />
           ) : null}
           <span className="truncate text-sm font-semibold">{brand.title ?? "Menu"}</span>
         </button>

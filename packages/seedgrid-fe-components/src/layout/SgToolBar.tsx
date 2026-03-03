@@ -771,7 +771,7 @@ export function SgToolbarIconButton(
   const [isPending, setIsPending] = React.useState(false);
   const isLoading = loading || isPending;
   const showHintTooltip = Boolean(hint) && !hideLabel;
-  const [hintPosition, setHintPosition] = React.useState({ x: 0, y: 0 });
+  const [hintPosition, setHintPosition] = React.useState({ x: 0, y: 0, above: true });
   const [isHintHovered, setIsHintHovered] = React.useState(false);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const handleClick = React.useCallback(() => {
@@ -793,10 +793,12 @@ export function SgToolbarIconButton(
     const toolbarRoot = buttonRef.current.closest("[data-sg-toolbar-root='true']");
     const toolbarRect = toolbarRoot instanceof HTMLElement ? toolbarRoot.getBoundingClientRect() : null;
     if (isHorizontalToolbar) {
-      const baseY = toolbarRect ? toolbarRect.top : buttonRect.top;
+      const refRect = toolbarRect ?? buttonRect;
+      const above = refRect.top > 48;
       setHintPosition({
         x: buttonRect.left + (buttonRect.width / 2),
-        y: baseY - 8
+        y: above ? refRect.top - 8 : refRect.bottom + 8,
+        above
       });
       return;
     }
@@ -804,7 +806,8 @@ export function SgToolbarIconButton(
     const baseX = toolbarRect ? toolbarRect.right : buttonRect.right;
     setHintPosition({
       x: baseX + 8,
-      y: buttonRect.top + (buttonRect.height / 2)
+      y: buttonRect.top + (buttonRect.height / 2),
+      above: true
     });
   }, [isHorizontalToolbar]);
 
@@ -831,7 +834,9 @@ export function SgToolbarIconButton(
           style={{
             left: hintPosition.x,
             top: hintPosition.y,
-            transform: isHorizontalToolbar ? "translate(-50%, -100%)" : "translateY(-50%)"
+            transform: isHorizontalToolbar
+              ? hintPosition.above ? "translate(-50%, -100%)" : "translate(-50%, 0%)"
+              : "translateY(-50%)"
           }}
         >
           {hint}
