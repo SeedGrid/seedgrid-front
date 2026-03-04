@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import Link from "next/link";
@@ -42,12 +42,12 @@ type PropRow = {
 };
 
 const RATING_PROPS: PropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador unico do componente." },
-  { prop: "label", type: "string", defaultValue: "-", description: "Texto do label exibido acima do rating." },
-  { prop: "value", type: "number", defaultValue: "0", description: "Valor atual da avaliacao." },
+  { prop: "id", type: "string", defaultValue: "-", description: "Unique component identifier." },
+  { prop: "label", type: "string", defaultValue: "-", description: "Label text displayed above the rating." },
+  { prop: "value", type: "number", defaultValue: "0", description: "Current rating value." },
   { prop: "stars", type: "number", defaultValue: "5", description: "Quantidade total de estrelas." },
   { prop: "allowHalf", type: "boolean", defaultValue: "false", description: "Permite selecao de meia estrela." },
-  { prop: "cancel", type: "boolean", defaultValue: "true", description: "Exibe botao para limpar a avaliacao." },
+  { prop: "cancel", type: "boolean", defaultValue: "true", description: "Shows a button to clear the rating." },
   { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita a interacao com o componente." },
   { prop: "readOnly", type: "boolean", defaultValue: "false", description: "Mantem visualizacao sem permitir alteracao." },
   { prop: "size", type: "\"sm\" | \"md\" | \"lg\" | \"xl\"", defaultValue: "\"md\"", description: "Define o tamanho das estrelas." },
@@ -55,16 +55,16 @@ const RATING_PROPS: PropRow[] = [
   { prop: "onIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado para estado preenchido." },
   { prop: "offIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado para estado vazio." },
   { prop: "cancelIcon", type: "ReactNode", defaultValue: "-", description: "Icone customizado do botao de limpar." },
-  { prop: "color", type: "string", defaultValue: "\"hsl(var(--primary))\"", description: "Cor do icone preenchido." },
-  { prop: "emptyColor", type: "string", defaultValue: "\"hsl(var(--muted-foreground))\"", description: "Cor do icone vazio." },
+  { prop: "color", type: "string", defaultValue: "\"hsl(var(--primary))\"", description: "Color of the filled icon." },
+  { prop: "emptyColor", type: "string", defaultValue: "\"hsl(var(--muted-foreground))\"", description: "Color of the empty icon." },
   { prop: "showTooltip", type: "boolean", defaultValue: "false", description: "Exibe tooltip com valor ao passar o mouse." },
   { prop: "onChange", type: "(value: number) => void", defaultValue: "-", description: "Callback disparado quando o valor muda." },
   { prop: "onHover", type: "(value: number | null) => void", defaultValue: "-", description: "Callback disparado no hover das estrelas." },
-  { prop: "register", type: "UseFormRegister<FieldValues>", defaultValue: "-", description: "Integracao React Hook Form via register." },
+  { prop: "register", type: "UseFormRegister<FieldValues>", defaultValue: "-", description: "React Hook Form integration via register." },
   { prop: "name", type: "string", defaultValue: "-", description: "Nome do campo para integracao com formulario." },
   { prop: "control", type: "any", defaultValue: "-", description: "Control do React Hook Form." },
   { prop: "error", type: "string", defaultValue: "-", description: "Mensagem de erro externa." },
-  { prop: "required", type: "boolean", defaultValue: "false", description: "Define o campo como obrigatorio." },
+  { prop: "required", type: "boolean", defaultValue: "false", description: "Marks the field as required." },
   { prop: "requiredMessage", type: "string", defaultValue: "-", description: "Mensagem de validacao para required." }
 ];
 
@@ -85,18 +85,18 @@ type RatingTexts = {
 
 const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
   "pt-BR": {
-    subtitle: "Componente de avaliacao com suporte a meia estrela, estados visuais, customizacao de icones e integracao com React Hook Form.",
-    examplesLabel: "Exemplos",
+    subtitle: "Rating component with half-star support, visual states, icon customization and React Hook Form integration.",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
     sectionTitles: [
       "1) Basico",
       "2) Meia estrela + tooltip",
-      "3) Somente leitura e desabilitado",
+      "3) Read-only e desabilitado",
       "4) Tamanhos e quantidade de estrelas",
       "5) Cores e icones customizados",
       "6) Callbacks",
@@ -105,31 +105,31 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
       "9) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo controlado com estado React.",
+      "Example controlado com estado React.",
       "Permite clicar nas metades e exibir valor no hover.",
       "Visualizacao sem interacao e estado disabled.",
       "Controle de size e stars.",
       "Troca de cores e icones de preenchido/vazio.",
-      "Exemplo com onChange e onHover + log de eventos.",
+      "Example com onChange e onHover + log de eventos.",
       "Uso com control/name e submit.",
-      "Exemplo com required e requiredMessage.",
+      "Example com required e requiredMessage.",
       "Simule as props principais em tempo real."
     ],
     playgroundTitle: "SgRating Playground"
   },
   "pt-PT": {
-    subtitle: "Componente de avaliacao com suporte a meia estrela, estados visuais, customizacao de icones e integracao com React Hook Form.",
-    examplesLabel: "Exemplos",
+    subtitle: "Rating component with half-star support, visual states, icon customization and React Hook Form integration.",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
     sectionTitles: [
       "1) Basico",
       "2) Meia estrela + tooltip",
-      "3) Somente leitura e desabilitado",
+      "3) Read-only e desabilitado",
       "4) Tamanhos e quantidade de estrelas",
       "5) Cores e icones customizados",
       "6) Callbacks",
@@ -138,14 +138,14 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
       "9) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo controlado com estado React.",
+      "Example controlado com estado React.",
       "Permite clicar nas metades e exibir valor no hover.",
       "Visualizacao sem interacao e estado disabled.",
       "Controle de size e stars.",
       "Troca de cores e icones de preenchido/vazio.",
-      "Exemplo com onChange e onHover + log de eventos.",
+      "Example com onChange e onHover + log de eventos.",
       "Uso com control/name e submit.",
-      "Exemplo com required e requiredMessage.",
+      "Example com required e requiredMessage.",
       "Simule as props principais em tempo real."
     ],
     playgroundTitle: "SgRating Playground"
@@ -184,7 +184,7 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
     playgroundTitle: "SgRating Playground"
   },
   es: {
-    subtitle: "Componente de valoracion con soporte de media estrella, estados visuales, personalizacion de iconos e integracion con React Hook Form.",
+    subtitle: "Rating component with half-star support, visual states, icon customization, and React Hook Form integration.",
     examplesLabel: "Ejemplos",
     propsLinkLabel: "Referencia de Props",
     propsTitle: "Referencia de Props",
@@ -231,7 +231,7 @@ export default function Example() {
     <div className="space-y-2">
       <SgRating value={value} onChange={setValue} />
       <p className="text-sm text-muted-foreground">
-        Valor atual: <strong>{value}</strong>
+        Current value: <strong>{value}</strong>
       </p>
     </div>
   );
@@ -247,7 +247,7 @@ export default function Example() {
   return (
     <div className="space-y-2">
       <SgRating
-        label="Passe o mouse e clique nas metades"
+        label="Hover and click half stars"
         value={value}
         allowHalf
         showTooltip
@@ -255,7 +255,7 @@ export default function Example() {
         onHover={setHover}
       />
       <p className="text-sm text-muted-foreground">
-        Selecionado: <strong>{value}</strong> | Hover: <strong>{hover ?? "nenhum"}</strong>
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
       </p>
     </div>
   );
@@ -268,7 +268,7 @@ export default function Example() {
   return (
     <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
       <SgRating
-        label="Somente leitura"
+        label="Read-only"
         value={3.5}
         allowHalf
         readOnly
@@ -330,7 +330,7 @@ export default function Example() {
   return (
     <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
       <SgRating
-        label="Coracao"
+        label="Heart"
         value={heartValue}
         color="#ec4899"
         emptyColor="#f9a8d4"
@@ -340,7 +340,7 @@ export default function Example() {
       />
 
       <SgRating
-        label="Curtidas"
+        label="Likes"
         value={likeValue}
         color="#2563eb"
         emptyColor="#93c5fd"
@@ -389,22 +389,22 @@ export default function Example() {
 
       <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Zerar
+          Reset
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Maximo
+          Max
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setLogs([])}>
-          Limpar log
+          Clear log
         </SgButton>
       </SgGrid>
 
       <p className="text-sm text-muted-foreground">
-        Selecionado: <strong>{value}</strong> | Hover: <strong>{hover ?? "nenhum"}</strong>
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
       </p>
 
       <div className="h-28 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
-        {logs.length === 0 ? "Sem eventos" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
+        {logs.length === 0 ? "No events" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
       </div>
     </div>
   );
@@ -426,20 +426,20 @@ export default function Example() {
   return (
     <form onSubmit={handleSubmit((data) => setSubmitResult(JSON.stringify(data)))} className="space-y-4">
       <SgRating
-        label="Avalie o produto"
+        label="Rate the product"
         name="productRating"
         control={control}
       />
 
       <SgRating
-        label="Avalie o filme"
+        label="Rate the movie"
         name="movieRating"
         control={control}
         allowHalf
       />
 
       <SgButton type="submit" size="sm">
-        Enviar avaliacao
+        Submit rating
       </SgButton>
 
       <p className="text-xs text-muted-foreground">
@@ -447,7 +447,7 @@ export default function Example() {
         {" | "}
         watch.movieRating: <strong>{String(watch("movieRating"))}</strong>
       </p>
-      <p className="text-xs text-muted-foreground">Ultimo submit: {submitResult}</p>
+      <p className="text-xs text-muted-foreground">Last submit: {submitResult}</p>
     </form>
   );
 }`;
@@ -461,27 +461,27 @@ export default function Example() {
   return (
     <div className="space-y-3">
       <SgRating
-        label="Avaliacao obrigatoria"
+        label="Required rating"
         value={value}
         required
-        requiredMessage="Informe uma avaliacao antes de continuar"
+        requiredMessage="Provide a rating before continuing"
         onChange={setValue}
       />
 
       <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Limpar
+          Clear
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(1)}>
-          Nota 1
+          Rate 1
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Nota 5
+          Rate 5
         </SgButton>
       </SgGrid>
 
       <p className="text-sm text-muted-foreground">
-        Valor atual: <strong>{value}</strong>
+        Current value: <strong>{value}</strong>
       </p>
     </div>
   );
@@ -522,10 +522,10 @@ export default function App() {
           + stars
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Limpar
+          Clear
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(stars)}>
-          Maximo
+          Max
         </SgButton>
       </SgGrid>
 
@@ -593,7 +593,7 @@ function BasicExample() {
     <div className="space-y-2">
       <SgRating value={value} onChange={setValue} />
       <p className="text-sm text-muted-foreground">
-        Valor atual: <strong>{value}</strong>
+        Current value: <strong>{value}</strong>
       </p>
     </div>
   );
@@ -606,7 +606,7 @@ function HalfTooltipExample() {
   return (
     <div className="space-y-2">
       <SgRating
-        label="Passe o mouse e clique nas metades"
+        label="Hover and click half stars"
         value={value}
         allowHalf
         showTooltip
@@ -614,7 +614,7 @@ function HalfTooltipExample() {
         onHover={setHover}
       />
       <p className="text-sm text-muted-foreground">
-        Selecionado: <strong>{value}</strong> | Hover: <strong>{hover ?? "nenhum"}</strong>
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
       </p>
     </div>
   );
@@ -624,7 +624,7 @@ function ReadonlyDisabledExample() {
   return (
     <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
       <SgRating
-        label="Somente leitura"
+        label="Read-only"
         value={3.5}
         allowHalf
         readOnly
@@ -679,7 +679,7 @@ function ColorsIconsExample() {
   return (
     <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
       <SgRating
-        label="Coracao"
+        label="Heart"
         value={heartValue}
         color="#ec4899"
         emptyColor="#f9a8d4"
@@ -689,7 +689,7 @@ function ColorsIconsExample() {
       />
 
       <SgRating
-        label="Curtidas"
+        label="Likes"
         value={likeValue}
         color="#2563eb"
         emptyColor="#93c5fd"
@@ -735,22 +735,22 @@ function CallbackExample() {
 
       <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Zerar
+          Reset
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Maximo
+          Max
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setLogs([])}>
-          Limpar log
+          Clear log
         </SgButton>
       </SgGrid>
 
       <p className="text-sm text-muted-foreground">
-        Selecionado: <strong>{value}</strong> | Hover: <strong>{hover ?? "nenhum"}</strong>
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
       </p>
 
       <div className="h-28 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
-        {logs.length === 0 ? "Sem eventos" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
+        {logs.length === 0 ? "No events" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
       </div>
     </div>
   );
@@ -768,20 +768,20 @@ function RhfExample() {
   return (
     <form onSubmit={handleSubmit((data) => setSubmitResult(JSON.stringify(data)))} className="space-y-4">
       <SgRating
-        label="Avalie o produto"
+        label="Rate the product"
         name="productRating"
         control={control}
       />
 
       <SgRating
-        label="Avalie o filme"
+        label="Rate the movie"
         name="movieRating"
         control={control}
         allowHalf
       />
 
       <SgButton type="submit" size="sm">
-        Enviar avaliacao
+        Submit rating
       </SgButton>
 
       <p className="text-xs text-muted-foreground">
@@ -789,7 +789,7 @@ function RhfExample() {
         {" | "}
         watch.movieRating: <strong>{String(watch("movieRating"))}</strong>
       </p>
-      <p className="text-xs text-muted-foreground">Ultimo submit: {submitResult}</p>
+      <p className="text-xs text-muted-foreground">Last submit: {submitResult}</p>
     </form>
   );
 }
@@ -800,27 +800,27 @@ function RequiredExample() {
   return (
     <div className="space-y-3">
       <SgRating
-        label="Avaliacao obrigatoria"
+        label="Required rating"
         value={value}
         required
-        requiredMessage="Informe uma avaliacao antes de continuar"
+        requiredMessage="Provide a rating before continuing"
         onChange={setValue}
       />
 
       <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Limpar
+          Clear
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(1)}>
-          Nota 1
+          Rate 1
         </SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Nota 5
+          Rate 5
         </SgButton>
       </SgGrid>
 
       <p className="text-sm text-muted-foreground">
-        Valor atual: <strong>{value}</strong>
+        Current value: <strong>{value}</strong>
       </p>
     </div>
   );
@@ -1058,6 +1058,7 @@ export default function SgRatingPage() {
     </I18NReady>
   );
 }
+
 
 
 

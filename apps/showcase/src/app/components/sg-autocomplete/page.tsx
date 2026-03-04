@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgAutocomplete, SgPlayground, type SgAutocompleteItem } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
@@ -142,7 +143,7 @@ export default function App() {
       </div>
 
       <div className="rounded border border-border bg-muted/30 p-3 text-xs">
-        {selected ? \`Selecionado: \${selected.label} (id \${selected.id})\` : "Nenhum item selecionado"}
+        {selected ? \`Selected: \${selected.label} (id \${selected.id})\` : "No item selected"}
       </div>
     </div>
   );
@@ -194,6 +195,22 @@ export default function SgAutocompletePage() {
     group: raw.description[0],
     data: raw
   });
+  const autocompletePropsRows = React.useMemo<ShowcasePropRow[]>(
+    () => [
+      { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.id") },
+      { prop: "label", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.label") },
+      { prop: "source", type: "array | async function", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.source") },
+      { prop: "mapItem", type: "(raw) => item", defaultValue: "auto", description: t(i18n, "showcase.component.autocomplete.props.rows.mapItem") },
+      { prop: "grouped", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.autocomplete.props.rows.grouped") },
+      { prop: "minLengthForSearch", type: "number", defaultValue: "0", description: t(i18n, "showcase.component.autocomplete.props.rows.minLengthForSearch") },
+      { prop: "showDropDownButton", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.autocomplete.props.rows.showDropDownButton") },
+      { prop: "borderRadius", type: "number | string", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.borderRadius") },
+      { prop: "openOnFocus", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.autocomplete.props.rows.openOnFocus") },
+      { prop: "renderItem / renderFooter", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.renderItemRenderFooter") },
+      { prop: "onSelect", type: "(item) => void", defaultValue: "-", description: t(i18n, "showcase.component.autocomplete.props.rows.onSelect") }
+    ],
+    [i18n]
+  );
 
   return (
     <I18NReady>
@@ -419,8 +436,8 @@ export default function SgAutocompletePage() {
       </Section>
 
       <Section
-        title="7) Border radius"
-        description="Aplica o raio no input e no dropdown."
+        title={`7) ${t(i18n, "showcase.component.autocomplete.sections.radius.title")}`}
+        description={t(i18n, "showcase.component.autocomplete.sections.radius.description")}
       >
         <div className="w-80">
           <SgAutocomplete
@@ -484,7 +501,7 @@ export default function Example() {
       </Section>
 
       <Section
-        title="8) Playground"
+        title={`8) ${t(i18n, "showcase.component.autocomplete.sections.playground.title")}`}
         description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgAutocomplete" })}
       >
         <SgPlayground
@@ -497,40 +514,15 @@ export default function Example() {
         />
       </Section>
 
-      <section
+      <ShowcasePropsReference
         id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">source</td><td className="py-2 pr-4">array | async function</td><td className="py-2 pr-4">-</td><td className="py-2">Origem dos itens pesquisáveis.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">mapItem</td><td className="py-2 pr-4">(raw) =&gt; item</td><td className="py-2 pr-4">auto</td><td className="py-2">Mapeamento do item bruto para item visual.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">grouped</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Agrupa itens por `group`.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minLengthForSearch</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">0</td><td className="py-2">Quantidade mínima de caracteres para pesquisar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">showDropDownButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe botão para abrir lista.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Define o raio de borda do campo e do dropdown.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">openOnFocus</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Abre lista ao focar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">renderItem / renderFooter</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Renderizações customizadas dos itens e rodapé.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onSelect</td><td className="py-2 pr-4">(item) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback quando item é selecionado.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        title={t(i18n, "showcase.component.autocomplete.props.title")}
+        rows={autocompletePropsRows}
+      />
 
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
     </div>
     </I18NReady>
   );
 }
+

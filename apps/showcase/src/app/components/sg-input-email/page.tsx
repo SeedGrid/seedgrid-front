@@ -55,7 +55,7 @@ export default function App() {
       <SgInputEmail
         id="playground-input-email"
         label="SgInputEmail Playground"
-        hintText="Digite um e-mail vÃ¡lido"
+        hintText="Type a valid email"
         required={required}
         blockFakeMail={blockFakeMail}
         filled={filled}
@@ -80,7 +80,7 @@ export default function App() {
       </div>
 
       <div className="rounded border border-border bg-muted/40 p-3 text-xs">
-        Valor atual: <strong>{value || "-"}</strong>
+        Current value: <strong>{value || "-"}</strong>
       </div>
     </div>
   );

@@ -1,10 +1,11 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
 import { SgFloatActionButton, SgGrid, SgPlayground, type SgFABAction } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
@@ -24,7 +25,7 @@ function CodeBlock(props: { code: string }) {
   return <CodeBlockBase code={props.code} />;
 }
 
-/* ── icons ── */
+/* â”€â”€ icons â”€â”€ */
 const UserPlusIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
 );
@@ -47,7 +48,7 @@ const SettingsIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
 );
 
-/* ── demo container for absolute positioning ── */
+/* â”€â”€ demo container for absolute positioning â”€â”€ */
 function DemoBox(props: { children: React.ReactNode; className?: string; height?: string }) {
   return (
     <div className={`relative w-full rounded-md border border-dashed border-border bg-muted/20 pt-10 ${props.height ?? "h-48"} ${props.className ?? ""}`}>
@@ -79,8 +80,8 @@ import { Heart, Plus, Star } from "lucide-react";
 import { SgButton, SgGrid, SgFloatActionButton } from "@seedgrid/fe-components";
 
 const actions = [
-  { icon: <Plus className="size-4" />, label: "Novo", onClick: () => {} },
-  { icon: <Star className="size-4" />, label: "Favorito", onClick: () => {} },
+  { icon: <Plus className="size-4" />, label: "New", onClick: () => {} },
+  { icon: <Star className="size-4" />, label: "Favorite", onClick: () => {} },
 ];
 
 export default function App() {
@@ -141,6 +142,26 @@ export default function SgFloatActionButtonPage() {
   ];
 
   const actionsNoLabel: SgFABAction[] = actions.map(({ label: _, ...rest }) => rest);
+  const fabPropsRows = React.useMemo<ShowcasePropRow[]>(
+    () => [
+      { prop: "icon / activeIcon", type: "ReactNode", defaultValue: "default / -", description: t(i18n, "showcase.component.fab.props.rows.iconActiveIcon") },
+      { prop: "actions", type: "SgFABAction[]", defaultValue: "[]", description: t(i18n, "showcase.component.fab.props.rows.actions") },
+      { prop: "type", type: "\"none\" | \"linear\" | \"circle\" | \"semi-circle\" | \"quarter-circle\"", defaultValue: "\"none\"", description: t(i18n, "showcase.component.fab.props.rows.type") },
+      { prop: "direction", type: "\"up\" | \"down\" | \"left\" | \"right\"", defaultValue: "\"up\"", description: t(i18n, "showcase.component.fab.props.rows.direction") },
+      { prop: "radius", type: "number", defaultValue: "96", description: t(i18n, "showcase.component.fab.props.rows.radius") },
+      { prop: "severity / color", type: "token / string", defaultValue: "primary / -", description: t(i18n, "showcase.component.fab.props.rows.severityColor") },
+      { prop: "shape", type: "\"circle\" | \"rounded\" | \"square\"", defaultValue: "\"circle\"", description: t(i18n, "showcase.component.fab.props.rows.shape") },
+      { prop: "size", type: "\"sm\" | \"md\" | \"lg\"", defaultValue: "\"md\"", description: t(i18n, "showcase.component.fab.props.rows.size") },
+      { prop: "position / absolute", type: "position token / boolean", defaultValue: "right-bottom / false", description: t(i18n, "showcase.component.fab.props.rows.positionAbsolute") },
+      { prop: "elevation", type: "\"none\" | \"sm\" | \"md\" | \"lg\"", defaultValue: "\"md\"", description: t(i18n, "showcase.component.fab.props.rows.elevation") },
+      { prop: "hint / hintPosition / hintDelay", type: "string / token / number", defaultValue: "- / top / 300", description: t(i18n, "showcase.component.fab.props.rows.hint") },
+      { prop: "animation / animationOn", type: "token / \"hover\" | \"always\"", defaultValue: "scale / hover", description: t(i18n, "showcase.component.fab.props.rows.animation") },
+      { prop: "disabled / loading", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.fab.props.rows.disabledLoading") },
+      { prop: "enableDragDrop / dragId", type: "boolean / string", defaultValue: "false / -", description: t(i18n, "showcase.component.fab.props.rows.enableDragDropDragId") },
+      { prop: "onClick", type: "() => void", defaultValue: "-", description: t(i18n, "showcase.component.fab.props.rows.onClick") }
+    ],
+    [i18n]
+  );
 
   const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);
   const [anchorOffset, setAnchorOffset] = React.useState(320);
@@ -262,7 +283,7 @@ export default function SgFloatActionButtonPage() {
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.fab.title")}</h1>
             <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.fab.subtitle")}</p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(i18n, "showcase.common.examples")}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {FAB_EXAMPLE_LINKS.map((example) => (
                 <Link
@@ -279,13 +300,13 @@ export default function SgFloatActionButtonPage() {
                 onClick={(event) => handleAnchorClick(event, "props-reference")}
                 className="rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted/40"
               >
-                Props Reference
+                {t(i18n, "showcase.component.fab.props.title")}
               </Link>
             </SgGrid>
           </div>
         </div>
 
-      {/* ── Positions ── */}
+      {/* â”€â”€ Positions â”€â”€ */}
       <Section
         id="exemplo-1"
         title={`1) ${t(i18n, "showcase.component.fab.sections.positions.title")}`}
@@ -314,7 +335,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />`} />
       </Section>
 
-      {/* ── Variants ── */}
+      {/* â”€â”€ Variants â”€â”€ */}
       <Section
         id="exemplo-2"
         title={`2) ${t(i18n, "showcase.component.fab.sections.variants.title")}`}
@@ -338,7 +359,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton severity="plain" />`} />
       </Section>
 
-      {/* ── Shapes & Sizes ── */}
+      {/* â”€â”€ Shapes & Sizes â”€â”€ */}
       <Section
         id="exemplo-3"
         title={`3) ${t(i18n, "showcase.component.fab.sections.shapesAndSizes.title")}`}
@@ -367,7 +388,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton shape="square" size="lg" />`} />
       </Section>
 
-      {/* ── Elevation ── */}
+      {/* â”€â”€ Elevation â”€â”€ */}
       <Section
         id="exemplo-4"
         title={`4) ${t(i18n, "showcase.component.fab.sections.elevation.title")}`}
@@ -387,7 +408,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton elevation="lg" />`} />
       </Section>
 
-      {/* ── Hint ── */}
+      {/* â”€â”€ Hint â”€â”€ */}
       <Section
         id="exemplo-5"
         title={`5) ${t(i18n, "showcase.component.fab.sections.hint.title")}`}
@@ -415,7 +436,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Actions - Linear Layout ── */}
+      {/* â”€â”€ Actions - Linear Layout â”€â”€ */}
       <Section
         id="exemplo-6"
         title={`6) ${t(i18n, "showcase.component.fab.sections.actions.title")}`}
@@ -451,7 +472,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton actions={actions} type="linear" direction="right" />`} />
       </Section>
 
-      {/* ── Circle Layout ── */}
+      {/* â”€â”€ Circle Layout â”€â”€ */}
       <Section
         id="exemplo-7"
         title="7) Circle Layout"
@@ -476,11 +497,11 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Semi-Circle Layout ── */}
+      {/* â”€â”€ Semi-Circle Layout â”€â”€ */}
       <Section
         id="exemplo-8"
         title="8) Semi-Circle Layout"
-        description="Actions arranged in a semi-circle (180°) in different directions"
+        description="Actions arranged in a semi-circle (180Â°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
           <DemoBox height="h-72" className="flex items-end justify-center">
@@ -552,11 +573,11 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Quarter-Circle Layout ── */}
+      {/* â”€â”€ Quarter-Circle Layout â”€â”€ */}
       <Section
         id="exemplo-9"
         title="9) Quarter-Circle Layout"
-        description="Actions arranged in a quarter circle (90°) in different directions"
+        description="Actions arranged in a quarter circle (90Â°) in different directions"
       >
         <div className="grid grid-cols-2 gap-8 w-full">
           <DemoBox height="h-64" className="flex items-end justify-center">
@@ -630,7 +651,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Active Icon ── */}
+      {/* â”€â”€ Active Icon â”€â”€ */}
       <Section
         id="exemplo-10"
         title="10) Active Icon"
@@ -657,7 +678,7 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      {/* ── Animations ── */}
+      {/* â”€â”€ Animations â”€â”€ */}
       <Section
         id="exemplo-11"
         title={`11) ${t(i18n, "showcase.component.fab.sections.animations.title")}`}
@@ -688,7 +709,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
       </Section>
 
-      {/* ── Custom Color ── */}
+      {/* â”€â”€ Custom Color â”€â”€ */}
       <Section
         id="exemplo-12"
         title={`12) ${t(i18n, "showcase.component.fab.sections.customColor.title")}`}
@@ -713,7 +734,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton color="#f97316" icon={<Settings />} />`} />
       </Section>
 
-      {/* ── Disabled & Loading ── */}
+      {/* â”€â”€ Disabled & Loading â”€â”€ */}
       <Section
         id="exemplo-13"
         title={`13) ${t(i18n, "showcase.component.fab.sections.disabled.title")}`}
@@ -733,7 +754,7 @@ export default function SgFloatActionButtonPage() {
 <SgFloatActionButton loading />`} />
       </Section>
 
-      {/* ── Drag & Drop ── */}
+      {/* â”€â”€ Drag & Drop â”€â”€ */}
       <Section
         id="exemplo-14"
         title={`14) ${t(i18n, "showcase.component.fab.sections.dragDrop.title")}`}
@@ -763,7 +784,11 @@ export default function SgFloatActionButtonPage() {
 />`} />
       </Section>
 
-      <Section id="exemplo-15" title="15) Playground" description="Ajuste as principais props do FAB em tempo real.">
+      <Section
+        id="exemplo-15"
+        title={`15) ${t(i18n, "showcase.component.fab.sections.playground.title")}`}
+        description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgFloatActionButton" })}
+      >
         <SgPlayground
           title="SgFloatActionButton Playground"
           interactive
@@ -774,43 +799,16 @@ export default function SgFloatActionButtonPage() {
         />
       </Section>
 
-      <section
+      <ShowcasePropsReference
         id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">icon / activeIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">default / -</td><td className="py-2">Icone principal e icone alternativo quando aberto.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">actions</td><td className="py-2 pr-4">SgFABAction[]</td><td className="py-2 pr-4">[]</td><td className="py-2">Lista de acoes expandidas.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">type</td><td className="py-2 pr-4">"none" | "linear" | "circle" | "semi-circle" | "quarter-circle"</td><td className="py-2 pr-4">"none"</td><td className="py-2">Tipo de distribuicao das acoes.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">direction</td><td className="py-2 pr-4">"up" | "down" | "left" | "right"</td><td className="py-2 pr-4">"up"</td><td className="py-2">Direcao usada em layouts lineares/parciais.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">radius</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">96</td><td className="py-2">Raio para layouts circulares.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">severity / color</td><td className="py-2 pr-4">token / string</td><td className="py-2 pr-4">primary / -</td><td className="py-2">Tema pronto ou cor customizada.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">shape</td><td className="py-2 pr-4">"circle" | "rounded" | "square"</td><td className="py-2 pr-4">"circle"</td><td className="py-2">Formato do botao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">size</td><td className="py-2 pr-4">"sm" | "md" | "lg"</td><td className="py-2 pr-4">"md"</td><td className="py-2">Tamanho do FAB.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">position / absolute</td><td className="py-2 pr-4">position token / boolean</td><td className="py-2 pr-4">right-bottom / false</td><td className="py-2">Posicionamento no container.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"md"</td><td className="py-2">Intensidade da sombra.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">hint / hintPosition / hintDelay</td><td className="py-2 pr-4">string / token / number</td><td className="py-2 pr-4">- / top / 300</td><td className="py-2">Tooltip de ajuda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">animation / animationOn</td><td className="py-2 pr-4">token / "hover" | "always"</td><td className="py-2 pr-4">scale / hover</td><td className="py-2">Animacao visual do botao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">disabled / loading</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Estados de interacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enableDragDrop / dragId</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / -</td><td className="py-2">Ativa arrastar e soltar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onClick</td><td className="py-2 pr-4">() =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Acao principal do FAB.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        title={t(i18n, "showcase.component.fab.props.title")}
+        rows={fabPropsRows}
+      />
+
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
+

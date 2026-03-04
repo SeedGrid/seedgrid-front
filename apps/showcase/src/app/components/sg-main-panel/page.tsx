@@ -253,10 +253,10 @@ export default function Example() {
   );
 }`;
 const MAIN_PANEL_PROPS: ShowcasePropRow[] = [
-  { prop: "gap", type: "number", defaultValue: "0", description: "EspaÃ§amento entre painÃ©is filhos." },
+  { prop: "gap", type: "number", defaultValue: "0", description: "Spacing between child panels." },
   { prop: "padding", type: "number", defaultValue: "0", description: "Padding interno do container." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "PainÃ©is alinhados (`top|left|right|bottom|client`)." },
-  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "CustomizaÃ§Ã£o visual e layout adicional." }
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Aligned panels (`top|left|right|bottom|client`)." },
+  { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Additional visual and layout customization." }
 ];
 
 type MainPanelTexts = {
@@ -271,7 +271,7 @@ type MainPanelTexts = {
 const MAIN_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MainPanelTexts> = {
   "pt-BR": {
     subtitle: "Layout estilo Delphi com align=\"top|left|bottom|right|client\". width e height numericos viram porcentagem.",
-    section1Title: "1) Exemplo Completo",
+    section1Title: "1) Complete Example",
     section1Description: "Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack em uma tela de dashboard.",
     section2Title: "2) Playground (SgPlayground)",
     section2Description: "Teste rapido das principais props do SgMainPanel.",
@@ -279,7 +279,7 @@ const MAIN_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MainPanelText
   },
   "pt-PT": {
     subtitle: "Layout estilo Delphi com align=\"top|left|bottom|right|client\". width e height numericos viram percentagem.",
-    section1Title: "1) Exemplo Completo",
+    section1Title: "1) Complete Example",
     section1Description: "Combina SgScreen, SgMainPanel, SgPanel, SgGrid e SgStack num ecra de dashboard.",
     section2Title: "2) Playground (SgPlayground)",
     section2Description: "Teste rapido das principais props do SgMainPanel.",
@@ -413,7 +413,7 @@ export default function SgMainPanelPage() {
                   <span className="text-xs text-muted-foreground">Footer (height = 7%)</span>
                   <SgStack direction="row" gap={8}>
                     <SgButton size="sm" appearance="outline">Ajuda</SgButton>
-                    <SgButton size="sm">Salvar</SgButton>
+                    <SgButton size="sm">Save</SgButton>
                   </SgStack>
                 </SgStack>
               </SgPanel>

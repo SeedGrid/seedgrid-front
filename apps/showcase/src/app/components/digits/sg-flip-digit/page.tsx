@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { SgButton, SgFlipDigit, SgGrid, SgPlayground } from "@seedgrid/fe-components";
@@ -41,15 +41,15 @@ type FlipDigitTexts = {
 
 const FLIP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FlipDigitTexts> = {
   "pt-BR": {
-    headerSubtitle: "Componente de flip animado para exibicao de digitos e caracteres unicos.",
+    headerSubtitle: "Animated flip component for displaying digits and single characters.",
     section1Title: "Basico (0-9)",
-    section1Description: "Incremento, decremento e valor aleatorio.",
+    section1Description: "Increment, decrement, and random value.",
     section2Title: "Letras (A-Z)",
     section2Description: "Tambem aceita caracteres alfabeticos.",
     section3Title: "Variacoes de tamanho",
     section3Description: "Ajuste de width, height e fontSize.",
     section4Title: "Sequencia estilo relogio",
-    section4Description: "Composicao de varios SgFlipDigit em linha.",
+    section4Description: "Composition of multiple SgFlipDigit in a row.",
     section5Title: "Auto increment",
     section5Description: "Atualizacao automatica para validar transicao continua.",
     section6Title: "Playground",
@@ -57,15 +57,15 @@ const FLIP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FlipDigitTexts> = {
     propsReferenceTitle: "Referencia de Props",
   },
   "pt-PT": {
-    headerSubtitle: "Componente de flip animado para exibicao de digitos e caracteres unicos.",
+    headerSubtitle: "Animated flip component for displaying digits and single characters.",
     section1Title: "Basico (0-9)",
-    section1Description: "Incremento, decremento e valor aleatorio.",
+    section1Description: "Increment, decrement, and random value.",
     section2Title: "Letras (A-Z)",
     section2Description: "Tambem aceita caracteres alfabeticos.",
     section3Title: "Variacoes de tamanho",
     section3Description: "Ajuste de width, height e fontSize.",
     section4Title: "Sequencia estilo relogio",
-    section4Description: "Composicao de varios SgFlipDigit em linha.",
+    section4Description: "Composition of multiple SgFlipDigit in a row.",
     section5Title: "Auto increment",
     section5Description: "Atualizacao automatica para validar transicao continua.",
     section6Title: "Playground",
@@ -126,9 +126,9 @@ const randomDigit = () => setDigit(String(Math.floor(Math.random() * 10)));
 <div className="flex items-center gap-4">
   <SgFlipDigit value={digit} />
   <div className="flex flex-col gap-2">
-    <SgButton onClick={nextDigit} size="sm">Proximo (+1)</SgButton>
-    <SgButton onClick={prevDigit} size="sm" severity="secondary">Anterior (-1)</SgButton>
-    <SgButton onClick={randomDigit} size="sm" severity="info">Aleatorio</SgButton>
+    <SgButton onClick={nextDigit} size="sm">Next (+1)</SgButton>
+    <SgButton onClick={prevDigit} size="sm" severity="secondary">Previous (-1)</SgButton>
+    <SgButton onClick={randomDigit} size="sm" severity="info">Random</SgButton>
   </div>
 </div>`;
 
@@ -147,15 +147,15 @@ const nextLetter = () => {
 
 const SIZE_EXAMPLE_CODE = `<div className="flex items-center gap-6">
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Pequeno</p>
+    <p className="mb-2 text-xs text-muted-foreground">Small</p>
     <SgFlipDigit value={digit} width={50} height={75} fontSize={45} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Medio</p>
+    <p className="mb-2 text-xs text-muted-foreground">Medium</p>
     <SgFlipDigit value={digit} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Grande</p>
+    <p className="mb-2 text-xs text-muted-foreground">Large</p>
     <SgFlipDigit value={digit} width={120} height={180} fontSize={120} />
   </div>
 </div>`;
@@ -200,7 +200,7 @@ export default function App() {
     <div className="space-y-4 p-2">
       <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
         <SgButton size="sm" onClick={next}>+1</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={random}>Aleatorio</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={random}>Random</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue("A")}>A</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setValue("Z")}>Z</SgButton>
       </SgGrid>
@@ -285,9 +285,9 @@ export default function SgFlipDigitShowcase() {
           <div className="flex items-center gap-4">
             <SgFlipDigit value={digit} />
             <div className="flex flex-col gap-2">
-              <SgButton onClick={nextDigit} size="sm">Proximo (+1)</SgButton>
-              <SgButton onClick={prevDigit} size="sm" severity="secondary">Anterior (-1)</SgButton>
-              <SgButton onClick={randomDigit} size="sm" severity="info">Aleatorio</SgButton>
+              <SgButton onClick={nextDigit} size="sm">Next (+1)</SgButton>
+              <SgButton onClick={prevDigit} size="sm" severity="secondary">Previous (-1)</SgButton>
+              <SgButton onClick={randomDigit} size="sm" severity="info">Random</SgButton>
             </div>
           </div>
           <CodeBlockBase code={BASIC_EXAMPLE_CODE} />
@@ -310,15 +310,15 @@ export default function SgFlipDigitShowcase() {
         >
           <div className="flex items-center gap-6">
             <div className="text-center">
-              <p className="mb-2 text-xs text-muted-foreground">Pequeno</p>
+              <p className="mb-2 text-xs text-muted-foreground">Small</p>
               <SgFlipDigit value={digit} width={50} height={75} fontSize={45} />
             </div>
             <div className="text-center">
-              <p className="mb-2 text-xs text-muted-foreground">Medio</p>
+              <p className="mb-2 text-xs text-muted-foreground">Medium</p>
               <SgFlipDigit value={digit} />
             </div>
             <div className="text-center">
-              <p className="mb-2 text-xs text-muted-foreground">Grande</p>
+              <p className="mb-2 text-xs text-muted-foreground">Large</p>
               <SgFlipDigit value={digit} width={120} height={180} fontSize={120} />
             </div>
           </div>
@@ -372,3 +372,4 @@ export default function SgFlipDigitShowcase() {
     </I18NReady>
   );
 }
+

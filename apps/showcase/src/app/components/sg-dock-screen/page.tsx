@@ -151,7 +151,7 @@ const DOCK_SCREEN_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockScreenTe
     section1Title: "1) Basico",
     section1Description: "Uso direto do SgDockScreen com quatro dock zones e area livre central, sem posicionamento manual.",
     section2Title: "2) Playground (SgPlayground)",
-    section2Description: "Exemplo interativo para testar drag/drop entre zonas.",
+    section2Description: "Interactive example to test drag/drop between zones.",
     playgroundTitle: "SgDockScreen Playground",
     propsTitle: "Referencia de Props - SgDockScreen"
   },
@@ -160,7 +160,7 @@ const DOCK_SCREEN_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockScreenTe
     section1Title: "1) Basico",
     section1Description: "Uso direto do SgDockScreen com quatro dock zones e area livre central, sem posicionamento manual.",
     section2Title: "2) Playground (SgPlayground)",
-    section2Description: "Exemplo interativo para testar drag/drop entre zonas.",
+    section2Description: "Interactive example to test drag/drop between zones.",
     playgroundTitle: "SgDockScreen Playground",
     propsTitle: "Referencia de Props - SgDockScreen"
   },
@@ -220,7 +220,7 @@ export default function SgDockScreenPage() {
           >
             <SgDockZone zone="top">
               <SgToolBar id="tb-top-dock-screen-v1" dockZone="top" orientationDirection="horizontal-left" title="Topo" draggable>
-                <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+                <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para inicio" />
                 <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar dados" />
               </SgToolBar>
             </SgDockZone>

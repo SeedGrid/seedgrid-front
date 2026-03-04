@@ -79,7 +79,7 @@ export default function App() {
       <SgInputPostalCode
         id="playground-postal"
         country={country}
-        label="CÃ³digo postal"
+        label="Postal code"
         hintText={hintByCountry[country]}
         required={required}
         filled={filled}

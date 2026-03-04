@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -94,7 +94,7 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       "6) Tamanhos",
       "7) Com icones",
       "8) Separadores de menu",
-      "9) Desabilitado",
+      "9) Disabled",
       "10) Loading",
       "11) Itens desabilitados",
       "12) Playground (SgPlayground)"
@@ -114,27 +114,27 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       "Ajuste props principais do SgSplitButton."
     ],
     labels: {
-      save: "Salvar",
-      update: "Atualizar",
-      delete: "Excluir",
-      homepage: "Inicio",
+      save: "Save",
+      update: "Update",
+      delete: "Delete",
+      homepage: "Home",
       file: "Arquivo",
       copy: "Copiar",
       print: "Imprimir",
       exportPdf: "Exportar PDF",
       shareEmail: "Compartilhar por e-mail",
-      disabledOutline: "Outline desabilitado",
+      disabledOutline: "Disabled outline",
       saving: "Salvando...",
       processing: "Processando...",
       actions: "Acoes",
-      deleteDisabled: "Excluir (desabilitado)",
+      deleteDisabled: "Delete (disabled)",
       newAction: "Novo",
       import: "Importar",
       downloadTemplate: "Baixar modelo",
       share: "Compartilhar",
-      small: "Pequeno",
-      medium: "Medio",
-      large: "Grande",
+      small: "Small",
+      medium: "Medium",
+      large: "Large",
       propsTitle: "Referencia de Props",
       playgroundTitle: "SgSplitButton Playground"
     }
@@ -171,9 +171,9 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
     ],
     labels: {
       save: "Guardar",
-      update: "Atualizar",
+      update: "Update",
       delete: "Eliminar",
-      homepage: "Inicio",
+      homepage: "Home",
       file: "Ficheiro",
       copy: "Copiar",
       print: "Imprimir",
@@ -188,9 +188,9 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       import: "Importar",
       downloadTemplate: "Descarregar modelo",
       share: "Partilhar",
-      small: "Pequeno",
-      medium: "Medio",
-      large: "Grande",
+      small: "Small",
+      medium: "Medium",
+      large: "Large",
       propsTitle: "Referencia de Props",
       playgroundTitle: "SgSplitButton Playground"
     }
@@ -259,7 +259,7 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       "3) Outlined",
       "4) Ghost",
       "5) Elevated",
-      "6) Tamaños",
+      "6) Sizes",
       "7) Con iconos",
       "8) Separadores de menu",
       "9) Deshabilitado",
@@ -285,7 +285,7 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       save: "Guardar",
       update: "Actualizar",
       delete: "Eliminar",
-      homepage: "Inicio",
+      homepage: "Home",
       file: "Archivo",
       copy: "Copiar",
       print: "Imprimir",
@@ -300,9 +300,9 @@ const SPLIT_BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", SplitButton
       import: "Importar",
       downloadTemplate: "Descargar plantilla",
       share: "Compartir",
-      small: "Pequeño",
-      medium: "Medio",
-      large: "Grande",
+      small: "Small",
+      medium: "Medium",
+      large: "Large",
       propsTitle: "Referencia de Props",
       playgroundTitle: "SgSplitButton Playground"
     }
@@ -541,3 +541,4 @@ export default function SgSplitButtonShowcase() {
     </I18NReady>
   );
 }
+

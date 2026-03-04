@@ -75,7 +75,7 @@ const STACK_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StackTexts> = {
   "pt-BR": {
     subtitle: "Wrapper flex declarativo para direcao, alinhamento, distribuicao e espacamento.",
     section1Title: "1) Column + Row",
-    section1Description: "Exemplos comuns de layout com stack.",
+    section1Description: "Common layout examples with stack.",
     section2Title: "2) Playground (SgPlayground)",
     section2Description: "Teste rapido das props principais do SgStack.",
     playgroundTitle: "SgStack Playground"
@@ -83,7 +83,7 @@ const STACK_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StackTexts> = {
   "pt-PT": {
     subtitle: "Wrapper flex declarativo para direcao, alinhamento, distribuicao e espacamento.",
     section1Title: "1) Column + Row",
-    section1Description: "Exemplos comuns de layout com stack.",
+    section1Description: "Common layout examples with stack.",
     section2Title: "2) Playground (SgPlayground)",
     section2Description: "Teste rapido das props principais do SgStack.",
     playgroundTitle: "SgStack Playground"
@@ -138,7 +138,7 @@ export default function SgStackPage() {
             <SgPanel padding={12} className="rounded-lg">
               <SgStack gap={8}>
                 <p className="text-sm font-medium">Stack em coluna</p>
-                <SgButton>Salvar</SgButton>
+                <SgButton>Save</SgButton>
                 <SgButton appearance="outline">Cancelar</SgButton>
                 <SgButton appearance="ghost">Ajuda</SgButton>
               </SgStack>
@@ -146,7 +146,7 @@ export default function SgStackPage() {
 
             <SgPanel padding={12} className="rounded-lg">
               <SgStack direction="row" justify="between" align="center" gap={8}>
-                <p className="text-sm font-medium">Titulo</p>
+                <p className="text-sm font-medium">Title</p>
                 <SgStack direction="row" gap={8}>
                   <SgButton size="sm" appearance="outline">Voltar</SgButton>
                   <SgButton size="sm">Confirmar</SgButton>
@@ -160,12 +160,12 @@ export default function SgStackPage() {
               code={`import { SgStack, SgButton } from "@seedgrid/fe-components";
 
 <SgStack gap={8}>
-  <SgButton>Salvar</SgButton>
+  <SgButton>Save</SgButton>
   <SgButton appearance="outline">Cancelar</SgButton>
 </SgStack>
 
 <SgStack direction="row" justify="between" align="center">
-  <span>Titulo</span>
+  <span>Title</span>
   <SgButton size="sm">Confirmar</SgButton>
 </SgStack>`}
             />

@@ -151,7 +151,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
   "pt-BR": {
     headerSubtitle:
       "Um componente de carrossel responsivo com navegacao horizontal/vertical, autoplay e indicadores.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Props Reference",
     sectionTitles: [
       "1) Basico - Horizontal",
@@ -164,7 +164,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
       "8) Sem Navegadores",
       "9) Gap Customizado",
       "10) Com Callbacks",
-      "11) Exemplo Responsivo",
+      "11) Example Responsivo",
       "12) Playground Interativo",
     ],
     sectionDescriptions: [
@@ -184,13 +184,13 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "pt-PT": {
     headerSubtitle:
       "Um componente de carrossel responsivo com navegacao horizontal/vertical, autoplay e indicadores.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Props Reference",
     sectionTitles: [
       "1) Basico - Horizontal",
@@ -203,7 +203,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
       "8) Sem Navegadores",
       "9) Gap Customizado",
       "10) Com Callbacks",
-      "11) Exemplo Responsivo",
+      "11) Example Responsivo",
       "12) Playground Interativo",
     ],
     sectionDescriptions: [
@@ -223,8 +223,8 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "en-US": {
     headerSubtitle:

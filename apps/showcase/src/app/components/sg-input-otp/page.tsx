@@ -57,7 +57,7 @@ type OtpTexts = {
 const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
   "pt-BR": {
     subtitle: "Input OTP com digitos separados, suporte a colagem e mascara configuravel.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     sectionTitles: [
       "1) Basico",
@@ -68,7 +68,7 @@ const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
     ],
     sectionDescriptions: [
       "Mascara padrao: 999999.",
-      "Exemplo: \"###-###-99\".",
+      "Example: \"###-###-99\".",
       "Cole um OTP e receba callback ao completar.",
       "Focar, limpar e ler valores via API do ref.",
       "Simule as principais props em tempo real."
@@ -77,12 +77,12 @@ const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao"
+    propsColDefault: "Default",
+    propsColDescription: "Description"
   },
   "pt-PT": {
     subtitle: "Input OTP com digitos separados, suporte a colagem e mascara configuravel.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     sectionTitles: [
       "1) Basico",
@@ -93,7 +93,7 @@ const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
     ],
     sectionDescriptions: [
       "Mascara padrao: 999999.",
-      "Exemplo: \"###-###-99\".",
+      "Example: \"###-###-99\".",
       "Cole um OTP e receba callback ao completar.",
       "Focar, limpar e ler valores via API do ref.",
       "Simule as principais props em tempo real."
@@ -102,8 +102,8 @@ const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao"
+    propsColDefault: "Default",
+    propsColDescription: "Description"
   },
   "en-US": {
     subtitle: "OTP input with separated digits, paste support, and configurable mask.",

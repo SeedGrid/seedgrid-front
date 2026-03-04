@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -135,8 +135,8 @@ const prev = () => setDigit((prev) => String((Number(prev) - 1 + 10) % 10));
 <div className="flex items-center gap-4">
   <SgNeonDigit value={digit} color="#f8fafc" backgroundColor="#120f2b" shadowColor="#8b5cf6" />
   <div className="flex flex-col gap-2">
-    <SgButton size="sm" onClick={next}>Proximo (+1)</SgButton>
-    <SgButton size="sm" severity="secondary" onClick={prev}>Anterior (-1)</SgButton>
+    <SgButton size="sm" onClick={next}>Next (+1)</SgButton>
+    <SgButton size="sm" severity="secondary" onClick={prev}>Previous (-1)</SgButton>
   </div>
 </div>`;
 
@@ -147,7 +147,7 @@ const nextWord = () => setWordIndex((prev) => (prev + 1) % WORDS.length);
 
 <div className="space-y-3">
   <SgNeonDigit value={word} color="#e2f6ff" backgroundColor="#101934" shadowColor="#47d1ff" />
-  <SgButton size="sm" onClick={nextWord}>Trocar texto</SgButton>
+  <SgButton size="sm" onClick={nextWord}>Change text</SgButton>
 </div>`;
 
 const SCRIPT_CODE = `const SCRIPT_FONT = "\\"Brush Script MT\\", \\"Segoe Script\\", \\"Lucida Handwriting\\", cursive";
@@ -200,15 +200,15 @@ const THEMES_CODE = `<SgGrid columns={{ base: 1, md: 3 }} gap={12}>
 
 const SIZE_CODE = `<SgGrid columns={{ base: 1, md: 3 }} gap={12}>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Pequeno</p>
+    <p className="text-xs text-muted-foreground">Small</p>
     <SgNeonDigit value="5" fontSize={24} padding={10} />
   </div>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Medio</p>
+    <p className="text-xs text-muted-foreground">Medium</p>
     <SgNeonDigit value="5" fontSize={44} padding={14} />
   </div>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Grande</p>
+    <p className="text-xs text-muted-foreground">Large</p>
     <SgNeonDigit value="5" fontSize={72} padding={18} />
   </div>
 </SgGrid>`;
@@ -346,8 +346,8 @@ export default function SgNeonDigitShowcase() {
           <div className="flex items-center gap-4">
             <SgNeonDigit value={digit} color="#f8fafc" backgroundColor="#120f2b" shadowColor="#8b5cf6" />
             <div className="flex flex-col gap-2">
-              <SgButton size="sm" onClick={nextDigit}>Proximo (+1)</SgButton>
-              <SgButton size="sm" severity="secondary" onClick={prevDigit}>Anterior (-1)</SgButton>
+              <SgButton size="sm" onClick={nextDigit}>Next (+1)</SgButton>
+              <SgButton size="sm" severity="secondary" onClick={prevDigit}>Previous (-1)</SgButton>
             </div>
           </div>
           <CodeBlockBase code={BASIC_CODE} />
@@ -356,7 +356,7 @@ export default function SgNeonDigitShowcase() {
         <Section title={texts.section2Title} description={texts.section2Description}>
           <div className="space-y-3">
             <SgNeonDigit value={word} color="#e2f6ff" backgroundColor="#101934" shadowColor="#47d1ff" />
-            <SgButton size="sm" onClick={nextWord}>Trocar texto</SgButton>
+            <SgButton size="sm" onClick={nextWord}>Change text</SgButton>
           </div>
           <CodeBlockBase code={WORDS_CODE} />
         </Section>
@@ -416,15 +416,15 @@ export default function SgNeonDigitShowcase() {
         <Section title={texts.section5Title} description={texts.section5Description}>
           <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Pequeno</p>
+              <p className="text-xs text-muted-foreground">Small</p>
               <SgNeonDigit value="5" fontSize={24} padding={10} />
             </div>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Medio</p>
+              <p className="text-xs text-muted-foreground">Medium</p>
               <SgNeonDigit value="5" fontSize={44} padding={14} />
             </div>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Grande</p>
+              <p className="text-xs text-muted-foreground">Large</p>
               <SgNeonDigit value="5" fontSize={72} padding={18} />
             </div>
           </SgGrid>
@@ -448,3 +448,4 @@ export default function SgNeonDigitShowcase() {
     </I18NReady>
   );
 }
+

@@ -88,7 +88,7 @@ type PanelTexts = {
 
 const PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PanelTexts> = {
   "pt-BR": {
-    subtitle: "Showcase com exemplos de todas as props do SgPanel.",
+    subtitle: "Showcase with examples of all SgPanel props.",
     section1Title: "1) align + width + height",
     section1Description: "`align` so faz sentido dentro do `SgMainPanel`. `width`/`height` em numero sao tratados como porcentagem.",
     section2Title: "2) span + rowSpan",
@@ -97,14 +97,14 @@ const PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PanelTexts> = {
     section3Description: "Estilizacao basica do panel.",
     section4Title: "4) scrollable + scrollbarGutter",
     section4Description: "Cobertura de scrollable boolean | auto | y | x e uso de scrollbarGutter.",
-    section5Title: "5) Exemplo combinado",
-    section5Description: "Exemplo unico com props de dock/layout e de grid, com codigo 1:1.",
+    section5Title: "5) Combined example",
+    section5Description: "Single example with dock/layout and grid props, with 1:1 code.",
     section6Title: "6) Playground (SgPlayground)",
     section6Description: "Teste rapido das principais props do SgPanel.",
     playgroundTitle: "SgPanel Playground"
   },
   "pt-PT": {
-    subtitle: "Showcase com exemplos de todas as props do SgPanel.",
+    subtitle: "Showcase with examples of all SgPanel props.",
     section1Title: "1) align + width + height",
     section1Description: "`align` so faz sentido dentro do `SgMainPanel`. `width`/`height` em numero sao tratados como percentagem.",
     section2Title: "2) span + rowSpan",
@@ -113,8 +113,8 @@ const PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PanelTexts> = {
     section3Description: "Estilizacao basica do panel.",
     section4Title: "4) scrollable + scrollbarGutter",
     section4Description: "Cobertura de scrollable boolean | auto | y | x e uso de scrollbarGutter.",
-    section5Title: "5) Exemplo combinado",
-    section5Description: "Exemplo unico com props de dock/layout e de grid, com codigo 1:1.",
+    section5Title: "5) Combined example",
+    section5Description: "Single example with dock/layout and grid props, with 1:1 code.",
     section6Title: "6) Playground (SgPlayground)",
     section6Description: "Teste rapido das principais props do SgPanel.",
     playgroundTitle: "SgPanel Playground"

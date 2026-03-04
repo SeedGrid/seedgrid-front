@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgPlayground, SgTextEditor } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";
 import { useShowcaseAnchors } from "../useShowcaseAnchors";
 import { t, useShowcaseI18n } from "../../../i18n";
@@ -76,8 +77,23 @@ export default function SgTextEditorPage() {
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({ deps: [i18n.locale] });
   const [htmlBody, setHtmlBody] = React.useState<string>("<p><strong>SeedGrid</strong> editor</p>");
   const [cssText, setCssText] = React.useState<string>("body { font-family: Arial; }");
-  const [minimalBody, setMinimalBody] = React.useState<string>("<p>Editor sem CSS</p>");
-  const [radiusBody, setRadiusBody] = React.useState<string>("<p>Editor com borderRadius customizado</p>");
+  const [minimalBody, setMinimalBody] = React.useState<string>("<p>Editor without CSS</p>");
+  const [radiusBody, setRadiusBody] = React.useState<string>("<p>Editor with custom border radius</p>");
+  const textEditorPropsRows = React.useMemo<ShowcasePropRow[]>(
+    () => [
+      { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.textEditor.props.rows.id") },
+      { prop: "valueHtml / onChangeHtml", type: "string / function", defaultValue: "-", description: t(i18n, "showcase.component.textEditor.props.rows.valueHtmlOnChangeHtml") },
+      { prop: "cssText / onCssTextChange", type: "string / function", defaultValue: "\"\" / -", description: t(i18n, "showcase.component.textEditor.props.rows.cssTextOnCssTextChange") },
+      { prop: "showCssEditor", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.textEditor.props.rows.showCssEditor") },
+      { prop: "disabled", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.textEditor.props.rows.disabled") },
+      { prop: "borderRadius", type: "number | string", defaultValue: "-", description: t(i18n, "showcase.component.textEditor.props.rows.borderRadius") },
+      { prop: "onSave", type: "(file, meta) => void", defaultValue: "-", description: t(i18n, "showcase.component.textEditor.props.rows.onSave") },
+      { prop: "onLoad", type: "(meta) => void", defaultValue: "-", description: t(i18n, "showcase.component.textEditor.props.rows.onLoad") },
+      { prop: "height", type: "number", defaultValue: "320", description: t(i18n, "showcase.component.textEditor.props.rows.height") },
+      { prop: "fileName", type: "string", defaultValue: "\"{id}.html\"", description: t(i18n, "showcase.component.textEditor.props.rows.fileName") }
+    ],
+    [i18n]
+  );
 
   const onSave = React.useCallback((file: File) => {
     const url = URL.createObjectURL(file);
@@ -139,7 +155,10 @@ export default function Example() {
           />
         </Section>
 
-        <Section title="2) Modo Sem CSS" description="Exemplo com editor de CSS oculto.">
+        <Section
+          title={`2) ${t(i18n, "showcase.component.textEditor.sections.noCss.title")}`}
+          description={t(i18n, "showcase.component.textEditor.sections.noCss.description")}
+        >
           <SgTextEditor
             id="sg-text-editor-no-css"
             valueHtml={minimalBody}
@@ -152,7 +171,7 @@ export default function Example() {
 import { SgTextEditor } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [htmlBody, setHtmlBody] = React.useState("<p>Editor sem CSS</p>");
+  const [htmlBody, setHtmlBody] = React.useState("<p>Editor without CSS</p>");
 
   return (
     <SgTextEditor
@@ -167,10 +186,13 @@ export default function Example() {
           />
         </Section>
 
-        <Section title="3) Desabilitado" description="Renderização somente visual do conteúdo.">
+        <Section
+          title={`3) ${t(i18n, "showcase.component.textEditor.sections.disabled.title")}`}
+          description={t(i18n, "showcase.component.textEditor.sections.disabled.description")}
+        >
           <SgTextEditor
             id="sg-text-editor-disabled"
-            valueHtml="<p><strong>Conteúdo bloqueado</strong></p>"
+            valueHtml="<p><strong>Locked content</strong></p>"
             disabled
             showCssEditor={false}
           />
@@ -181,7 +203,7 @@ export default function Example() {
   return (
     <SgTextEditor
       id="sg-text-editor-disabled"
-      valueHtml="<p><strong>Conteúdo bloqueado</strong></p>"
+      valueHtml="<p><strong>Locked content</strong></p>"
       disabled
       showCssEditor={false}
     />
@@ -190,7 +212,10 @@ export default function Example() {
           />
         </Section>
 
-        <Section title="4) Border radius" description="Aplica o raio no editor e na área de CSS.">
+        <Section
+          title={`4) ${t(i18n, "showcase.component.textEditor.sections.radius.title")}`}
+          description={t(i18n, "showcase.component.textEditor.sections.radius.description")}
+        >
           <SgTextEditor
             id="sg-text-editor-radius"
             valueHtml={radiusBody}
@@ -206,7 +231,7 @@ export default function Example() {
 import { SgTextEditor } from "@seedgrid/fe-components";
 
 export default function Example() {
-  const [radiusBody, setRadiusBody] = React.useState("<p>Editor com borderRadius customizado</p>");
+  const [radiusBody, setRadiusBody] = React.useState("<p>Editor with custom border radius</p>");
   const [cssText, setCssText] = React.useState("body { font-family: Arial; }");
   const onSave = (file: File) => console.log(file.name);
 
@@ -226,7 +251,10 @@ export default function Example() {
           />
         </Section>
 
-        <Section title="5) Playground" description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgTextEditor" })}>
+        <Section
+          title={`5) ${t(i18n, "showcase.component.textEditor.sections.playground.title")}`}
+          description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgTextEditor" })}
+        >
           <SgPlayground
             title="SgTextEditor Playground"
             interactive
@@ -237,40 +265,17 @@ export default function Example() {
           />
         </Section>
 
-        <section
+        <ShowcasePropsReference
           id="props-reference"
-          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-        >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">Prop</th>
-                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                  <th className="pb-2 font-semibold">Descrição</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do editor.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">valueHtml / onChangeHtml</td><td className="py-2 pr-4">string / function</td><td className="py-2 pr-4">-</td><td className="py-2">Valor HTML controlado e callback de mudança.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">cssText / onCssTextChange</td><td className="py-2 pr-4">string / function</td><td className="py-2 pr-4">"" / -</td><td className="py-2">CSS embutido e callback de alteração.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">showCssEditor</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe área de edição de CSS.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">disabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Desabilita edição e ações do editor.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Define o raio de borda do editor e do textarea de CSS.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onSave</td><td className="py-2 pr-4">(file, meta) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback ao exportar HTML.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onLoad</td><td className="py-2 pr-4">(meta) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback ao carregar arquivo HTML.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">height</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">320</td><td className="py-2">Altura da área de edição.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">fileName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">{`"${"{id}.html"}"`}</td><td className="py-2">Nome do arquivo gerado no salvar.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+          title={t(i18n, "showcase.component.textEditor.props.title")}
+          rows={textEditorPropsRows}
+        />
 
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
+
 

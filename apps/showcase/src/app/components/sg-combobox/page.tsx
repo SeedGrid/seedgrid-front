@@ -130,7 +130,7 @@ export default function App() {
     <div className="space-y-4 p-2">
       {!hasCombobox ? (
         <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgCombobox ainda nao esta disponivel na versao publicada usada pelo Sandpack. Exibindo fallback local.
+          SgCombobox is not available in the published Sandpack version. Showing local fallback.
         </div>
       ) : null}
 
@@ -257,7 +257,7 @@ const COMBOBOX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ComboboxTexts> 
     section1Description:
       'Sem input livre: com foco no campo, digite letras e ele "pula" para o item correspondente.',
     section2Title: "2) Controlado por value",
-    section2Description: "Use value/onValueChange para setar um valor valido programaticamente.",
+    section2Description: "Use value/onValueChange to programmatically set a valid value.",
     section3Title: "3) Source async + custom render",
     section3Description: "Suporte a loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip.",
     section4Title: "4) Border radius",
@@ -265,11 +265,11 @@ const COMBOBOX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ComboboxTexts> 
     section5Title: "5) Playground (SgPlayground)",
     section5Description: "Simule cenarios com source local/async, grouped, openOnFocus e eventos.",
     propsTitle: "Referencia de Props",
-    propsDescription: "Propriedades publicas do SgCombobox.",
+    propsDescription: "Public properties of SgCombobox.",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "pt-PT": {
     headerSubtitle:
@@ -278,7 +278,7 @@ const COMBOBOX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ComboboxTexts> 
     section1Description:
       'Sem input livre: com foco no campo, digite letras e ele "pula" para o item correspondente.',
     section2Title: "2) Controlado por value",
-    section2Description: "Use value/onValueChange para setar um valor valido programaticamente.",
+    section2Description: "Use value/onValueChange to programmatically set a valid value.",
     section3Title: "3) Source async + custom render",
     section3Description: "Suporte a loadingText, renderItem, renderGroupHeader, renderFooter e itemTooltip.",
     section4Title: "4) Border radius",
@@ -286,11 +286,11 @@ const COMBOBOX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ComboboxTexts> 
     section5Title: "5) Playground (SgPlayground)",
     section5Description: "Simule cenarios com source local/async, grouped, openOnFocus e eventos.",
     propsTitle: "Referencia de Props",
-    propsDescription: "Propriedades publicas do SgCombobox.",
+    propsDescription: "Public properties of SgCombobox.",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "en-US": {
     headerSubtitle:
@@ -388,7 +388,7 @@ export default function SgComboboxPage() {
           <div className="w-96">
             <SgCombobox<Country>
               id="cb-basic"
-              label="Pais"
+              label="Country"
               source={COUNTRIES}
               openOnFocus
               grouped
@@ -401,7 +401,7 @@ export default function SgComboboxPage() {
               onSelect={(value) => setSelectedCountry(value)}
             />
             <div className="mt-2 rounded border border-border bg-foreground/5 p-2 text-xs">
-              {selectedCountry ? JSON.stringify(selectedCountry, null, 2) : "Nenhum item selecionado"}
+              {selectedCountry ? JSON.stringify(selectedCountry, null, 2) : "No item selected"}
             </div>
           </div>
           <CodeBlockBase
@@ -409,7 +409,7 @@ export default function SgComboboxPage() {
 
 <SgCombobox<Country>
   id="cb-basic"
-  label="Pais"
+  label="Country"
   source={COUNTRIES}
   openOnFocus
   grouped
@@ -423,7 +423,7 @@ export default function SgComboboxPage() {
 />
 
 <div>
-  {selectedCountry ? JSON.stringify(selectedCountry, null, 2) : "Nenhum item selecionado"}
+  {selectedCountry ? JSON.stringify(selectedCountry, null, 2) : "No item selected"}
 </div>`}
           />
         </Section>
@@ -435,7 +435,7 @@ export default function SgComboboxPage() {
           <div className="w-96">
             <SgCombobox<Country>
               id="cb-controlled"
-              label="Pais (controlado)"
+              label="Country (controlled)"
               value={selectedId}
               source={COUNTRIES}
               openOnFocus
@@ -450,24 +450,24 @@ export default function SgComboboxPage() {
             />
             <div className="mt-2 flex flex-wrap gap-2">
               <SgButton size="sm" appearance="outline" onClick={() => setSelectedId(5)}>
-                Setar Germany (id 5)
+                Set Germany (id 5)
               </SgButton>
               <SgButton size="sm" appearance="outline" onClick={() => setSelectedId(9)}>
-                Setar Japan (id 9)
+                Set Japan (id 9)
               </SgButton>
               <SgButton size="sm" appearance="outline" onClick={() => setSelectedId(null)}>
-                Limpar value
+                Clear value
               </SgButton>
             </div>
             <div className="mt-2 rounded border border-border bg-foreground/5 p-2 text-xs">
-              <div>value: {selectedId == null || selectedId === "" ? "(vazio)" : String(selectedId)}</div>
+              <div>value: {selectedId == null || selectedId === "" ? "(empty)" : String(selectedId)}</div>
               <div>
-                resolvido pelo value:{" "}
-                {selectedByValue ? `${selectedByValue.description} (${selectedByValue.code})` : "(nenhum)"}
+                resolved by value:{" "}
+                {selectedByValue ? `${selectedByValue.description} (${selectedByValue.code})` : "(none)"}
               </div>
               <div>
-                ultimo onSelect:{" "}
-                {selectedControlled ? `${selectedControlled.description} (${selectedControlled.code})` : "(nenhum)"}
+                last onSelect:{" "}
+                {selectedControlled ? `${selectedControlled.description} (${selectedControlled.code})` : "(none)"}
               </div>
             </div>
           </div>
@@ -478,7 +478,7 @@ const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(sele
 
 <SgCombobox<Country>
   id="cb-controlled"
-  label="Pais (controlado)"
+  label="Country (controlled)"
   value={selectedId}
   source={COUNTRIES}
   openOnFocus
@@ -492,17 +492,17 @@ const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(sele
   onSelect={setSelectedControlled}
 />
 
-<SgButton onClick={() => setSelectedId(5)}>Setar Germany (id 5)</SgButton>
-<SgButton onClick={() => setSelectedId(9)}>Setar Japan (id 9)</SgButton>
-<SgButton onClick={() => setSelectedId(null)}>Limpar value</SgButton>
+<SgButton onClick={() => setSelectedId(5)}>Set Germany (id 5)</SgButton>
+<SgButton onClick={() => setSelectedId(9)}>Set Japan (id 9)</SgButton>
+<SgButton onClick={() => setSelectedId(null)}>Clear value</SgButton>
 
 <div>
-  <div>value: {selectedId == null || selectedId === "" ? "(vazio)" : String(selectedId)}</div>
+  <div>value: {selectedId == null || selectedId === "" ? "(empty)" : String(selectedId)}</div>
   <div>
-    resolvido pelo value: {selectedByValue ? \`\${selectedByValue.description} (\${selectedByValue.code})\` : "(nenhum)"}
+    resolved by value: {selectedByValue ? \`\${selectedByValue.description} (\${selectedByValue.code})\` : "(none)"}
   </div>
   <div>
-    ultimo onSelect: {selectedControlled ? \`\${selectedControlled.description} (\${selectedControlled.code})\` : "(nenhum)"}
+    last onSelect: {selectedControlled ? \`\${selectedControlled.description} (\${selectedControlled.code})\` : "(none)"}
   </div>
 </div>`}
           />
@@ -515,11 +515,11 @@ const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(sele
           <div className="w-96">
             <SgCombobox<Country>
               id="cb-async"
-              label="Pais (async)"
+              label="Country (async)"
               source={asyncSource}
               openOnFocus
               grouped
-              loadingText="Carregando paises..."
+              loadingText="Loading countries..."
               mapItem={(raw) => ({
                 id: raw.id,
                 label: raw.description,
@@ -536,13 +536,13 @@ const selectedByValue = COUNTRIES.find((item) => String(item.id) === String(sele
               itemTooltip={(item) => <span>{item.label}</span>}
               renderFooter={(_, hasResults) => (
                 <span className="text-xs text-muted-foreground">
-                  {hasResults ? "Selecione um item da lista." : "Sem registros."}
+                  {hasResults ? "Select one item from the list." : "No records."}
                 </span>
               )}
               onSelect={setSelectedAsync}
             />
             <div className="mt-2 rounded border border-border bg-foreground/5 p-2 text-xs">
-              {selectedAsync ? `Selecionado: ${selectedAsync.description} (${selectedAsync.code})` : "Nenhum item selecionado"}
+              {selectedAsync ? `Selected: ${selectedAsync.description} (${selectedAsync.code})` : "No item selected"}
             </div>
           </div>
           <CodeBlockBase
@@ -554,11 +554,11 @@ const [selectedAsync, setSelectedAsync] = React.useState<Country | null>(null);
 
 <SgCombobox<Country>
   id="cb-async"
-  label="Pais (async)"
+  label="Country (async)"
   source={source}
   openOnFocus
   grouped
-  loadingText="Carregando paises..."
+  loadingText="Loading countries..."
   mapItem={(raw) => ({
     id: raw.id,
     label: raw.description,
@@ -575,14 +575,14 @@ const [selectedAsync, setSelectedAsync] = React.useState<Country | null>(null);
   itemTooltip={(item) => <span>{item.label}</span>}
   renderFooter={(_, hasResults) => (
     <span className="text-xs text-muted-foreground">
-      {hasResults ? "Selecione um item da lista." : "Sem registros."}
+      {hasResults ? "Select one item from the list." : "No records."}
     </span>
   )}
   onSelect={setSelectedAsync}
 />
 
 <div>
-  {selectedAsync ? \`Selecionado: \${selectedAsync.description} (\${selectedAsync.code})\` : "Nenhum item selecionado"}
+  {selectedAsync ? \`Selected: \${selectedAsync.description} (\${selectedAsync.code})\` : "No item selected"}
 </div>`}
           />
         </Section>
@@ -594,7 +594,7 @@ const [selectedAsync, setSelectedAsync] = React.useState<Country | null>(null);
           <div className="w-96">
             <SgCombobox<Country>
               id="cb-radius"
-              label="Pais com raio customizado"
+              label="Country with custom radius"
               source={COUNTRIES}
               openOnFocus
               grouped
@@ -636,7 +636,7 @@ export default function Example() {
     <div className="w-96">
       <SgCombobox<Country>
         id="cb-radius"
-        label="Pais com raio customizado"
+        label="Country with custom radius"
         source={COUNTRIES}
         openOnFocus
         grouped
@@ -685,19 +685,19 @@ export default function Example() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                <tr><td className="py-2 pr-4 font-mono text-xs">source</td><td className="py-2 pr-4">array | async function</td><td className="py-2 pr-4">-</td><td className="py-2">Origem dos itens da lista.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">value</td><td className="py-2 pr-4">string | number | null</td><td className="py-2 pr-4">null</td><td className="py-2">Valor selecionado no modo controlado.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onValueChange</td><td className="py-2 pr-4">(value) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Dispara quando o valor muda.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onSelect</td><td className="py-2 pr-4">(item) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Retorna o item selecionado.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">mapItem</td><td className="py-2 pr-4">(raw) =&gt; item</td><td className="py-2 pr-4">auto</td><td className="py-2">Mapeia item bruto para formato do combobox.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">grouped / groupped</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Agrupa os itens por grupo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">openOnFocus</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Abre a lista ao focar.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Define o raio de borda do campo e do dropdown.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">loadingText / emptyText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">i18n</td><td className="py-2">Textos para carregamento e lista vazia.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderItem</td><td className="py-2 pr-4">(item, isActive) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do item.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderGroupHeader</td><td className="py-2 pr-4">(group) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do cabeÃ§alho de grupo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">renderFooter</td><td className="py-2 pr-4">(query, hasResults) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">RenderizaÃ§Ã£o customizada do rodapÃ© da lista.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">itemTooltip</td><td className="py-2 pr-4">(item) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">ConteÃºdo de tooltip para item.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">source</td><td className="py-2 pr-4">array | async function</td><td className="py-2 pr-4">-</td><td className="py-2">Source for list items.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">value</td><td className="py-2 pr-4">string | number | null</td><td className="py-2 pr-4">null</td><td className="py-2">Selected value in controlled mode.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">onValueChange</td><td className="py-2 pr-4">(value) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Fired when value changes.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">onSelect</td><td className="py-2 pr-4">(item) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Returns the selected item.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">mapItem</td><td className="py-2 pr-4">(raw) =&gt; item</td><td className="py-2 pr-4">auto</td><td className="py-2">Maps raw item to combobox format.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">grouped / groupped</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Groups items by group.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">openOnFocus</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Opens list on focus.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">-</td><td className="py-2">Sets border radius for field and dropdown.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">loadingText / emptyText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">i18n</td><td className="py-2">Texts for loading and empty list states.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderItem</td><td className="py-2 pr-4">(item, isActive) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Custom item rendering.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderGroupHeader</td><td className="py-2 pr-4">(group) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Custom group header rendering.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">renderFooter</td><td className="py-2 pr-4">(query, hasResults) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Custom list footer rendering.</td></tr>
+                <tr><td className="py-2 pr-4 font-mono text-xs">itemTooltip</td><td className="py-2 pr-4">(item) =&gt; ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Tooltip content for item.</td></tr>
               </tbody>
             </table>
           </div>
@@ -707,4 +707,5 @@ export default function Example() {
     </I18NReady>
   );
 }
+
 

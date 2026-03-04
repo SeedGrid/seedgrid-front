@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
@@ -48,45 +48,45 @@ const ACCORDION_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", AccordionTexts
   "pt-BR": {
     headerSubtitle: "Accordion com configuracao vertical/horizontal, modo single ou multiple e controle externo.",
     section1Title: "1) Basico vertical (single)",
-    section1Description: "Comportamento padrao em coluna, abrindo um painel por vez.",
+    section1Description: "Default column behavior, opening one panel at a time.",
     section2Title: "2) Multiple + collapsible",
     section2Description: "Abra varios paineis ao mesmo tempo e controle estado ativo externamente.",
     section3Title: "3) Horizontal",
     section3Description: "Headers em trilho lateral e conteudo expandindo horizontalmente.",
     section4Title: "4) Controlado por estado",
     section4Description: "Use activeIndex/onActiveIndexChange para abrir/fechar via botoes externos.",
-    section5Title: "5) Itens customizados + fundo do titulo",
+    section5Title: "5) Custom items + header background",
     section5Description:
       "Fundo do titulo usa primary-50 por padrao e pode ser customizado globalmente ou por item.",
-    section6Title: "6) Exemplo de customizacao de cor",
-    section6Description: "Customize a cor global do titulo e veja override por item no ultimo painel.",
+    section6Title: "6) Color customization example",
+    section6Description: "Customize the global header color and see per-item override on the last panel.",
     section7Title: "7) Playground (SgPlayground)",
     section7Description:
       "Playground para o dev testar orientacao, modo multiple, estado controlado e cores do titulo.",
     colorPickerLabel: "Color picker",
-    colorValueLabel: "Valor de cor",
+    colorValueLabel: "Color value",
     propsReferenceTitle: "Referencia de Props",
   },
   "pt-PT": {
     headerSubtitle: "Accordion com configuracao vertical/horizontal, modo single ou multiple e controlo externo.",
     section1Title: "1) Basico vertical (single)",
-    section1Description: "Comportamento padrao em coluna, abrindo um painel de cada vez.",
+    section1Description: "Default column behavior, opening one panel at a time.",
     section2Title: "2) Multiple + collapsible",
     section2Description: "Abra varios paineis ao mesmo tempo e controle o estado ativo externamente.",
     section3Title: "3) Horizontal",
     section3Description: "Headers em trilho lateral e conteudo a expandir horizontalmente.",
     section4Title: "4) Controlado por estado",
     section4Description: "Use activeIndex/onActiveIndexChange para abrir/fechar via botoes externos.",
-    section5Title: "5) Itens customizados + fundo do titulo",
+    section5Title: "5) Custom items + header background",
     section5Description:
       "Fundo do titulo usa primary-50 por padrao e pode ser customizado globalmente ou por item.",
-    section6Title: "6) Exemplo de customizacao de cor",
-    section6Description: "Customize a cor global do titulo e veja override por item no ultimo painel.",
+    section6Title: "6) Color customization example",
+    section6Description: "Customize the global header color and see per-item override on the last panel.",
     section7Title: "7) Playground (SgPlayground)",
     section7Description:
       "Playground para o dev testar orientacao, modo multiple, estado controlado e cores do titulo.",
     colorPickerLabel: "Color picker",
-    colorValueLabel: "Valor de cor",
+    colorValueLabel: "Color value",
     propsReferenceTitle: "Referencia de Props",
   },
   "en-US": {
@@ -321,7 +321,7 @@ export default function Example() {
         <SgButton size="sm" appearance="outline" onClick={() => setOpen([0])}>Apenas 1</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setOpen([1, 2])}>2 e 3</SgButton>
         <SgButton size="sm" appearance="outline" onClick={() => setOpen([0, 1, 2])}>Todos</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setOpen([])}>Nenhum</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([])}>None</SgButton>
       </div>
     </div>
   );
@@ -543,16 +543,16 @@ export default function App() {
 
 const ACCORDION_PROPS: ShowcasePropRow[] = [
   { prop: "id", type: "string", defaultValue: "-", description: "Identificador do accordion." },
-  { prop: "items", type: "SgAccordionItem[]", defaultValue: "[]", description: "Lista de itens com título e conteúdo." },
-  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "Direção de renderização dos painéis." },
-  { prop: "multiple / collapsible", type: "boolean", defaultValue: "false / true", description: "Controla múltiplos itens abertos e fechamento." },
+  { prop: "items", type: "SgAccordionItem[]", defaultValue: "[]", description: "List of items with title and content." },
+  { prop: "orientation", type: "\"vertical\" | \"horizontal\"", defaultValue: "vertical", description: "Rendering direction of panels." },
+  { prop: "multiple / collapsible", type: "boolean", defaultValue: "false / true", description: "Controls multiple opened items and collapsing." },
   { prop: "activeIndex / defaultActiveIndex", type: "number[] | number / idem", defaultValue: "controlado / 0", description: "Estado controlado ou inicial." },
-  { prop: "onActiveIndexChange / onItemToggle", type: "callbacks", defaultValue: "-", description: "Eventos de mudança de estado." },
-  { prop: "defaultOpenFirst / keepMounted", type: "boolean", defaultValue: "false / false", description: "Abertura inicial e persistência no DOM." },
-  { prop: "headerBackgroundColor", type: "string", defaultValue: "primary-50", description: "Cor de fundo global dos cabeçalhos." },
-  { prop: "panelClassName / headerClassName / contentClassName", type: "string", defaultValue: "-", description: "Customização de estilos por área." },
-  { prop: "animationDuration", type: "number", defaultValue: "220", description: "Duração da animação de abrir/fechar." },
-  { prop: "horizontalHeaderWidth / horizontalMinHeight", type: "number", defaultValue: "56 / 220", description: "Dimensões no modo horizontal." }
+  { prop: "onActiveIndexChange / onItemToggle", type: "callbacks", defaultValue: "-", description: "State change events." },
+  { prop: "defaultOpenFirst / keepMounted", type: "boolean", defaultValue: "false / false", description: "Initial open behavior and DOM persistence." },
+  { prop: "headerBackgroundColor", type: "string", defaultValue: "primary-50", description: "Global header background color." },
+  { prop: "panelClassName / headerClassName / contentClassName", type: "string", defaultValue: "-", description: "Style customization per area." },
+  { prop: "animationDuration", type: "number", defaultValue: "220", description: "Open/close animation duration." },
+  { prop: "horizontalHeaderWidth / horizontalMinHeight", type: "number", defaultValue: "56 / 220", description: "Dimensions in horizontal mode." }
 ];
 
 export default function SgAccordionPage() {
@@ -602,7 +602,7 @@ export default function SgAccordionPage() {
           <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([0])}>Apenas 1</SgButton>
           <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([1, 2])}>2 e 3</SgButton>
           <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([0, 1, 2])}>Todos</SgButton>
-          <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([])}>Nenhum</SgButton>
+          <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([])}>None</SgButton>
         </div>
         <CodeBlockBase code={MULTIPLE_CODE} />
       </Section>
@@ -702,3 +702,4 @@ export default function SgAccordionPage() {
     </I18NReady>
   );
 }
+

@@ -53,7 +53,7 @@ const AVATAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", AvatarTexts> = {
     section3Title: "3) Severity e Cores Customizadas",
     section3Description: "Preset por severity e override de cores.",
     section4Title: "4) Avatar Group",
-    section4Description: "Agrupamento com sobreposicao e contador automatico.",
+    section4Description: "Grouping with overlap and automatic counter.",
     section5Title: "5) Playground",
     section5Description: "Ajuste shape, size, severity e borda em tempo real.",
     propsReferenceTitle: "Referencia de Props",
@@ -67,7 +67,7 @@ const AVATAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", AvatarTexts> = {
     section3Title: "3) Severity e Cores Customizadas",
     section3Description: "Preset por severity e override de cores.",
     section4Title: "4) Avatar Group",
-    section4Description: "Agrupamento com sobreposicao e contador automatico.",
+    section4Description: "Grouping with overlap and automatic counter.",
     section5Title: "5) Playground",
     section5Description: "Ajuste shape, size, severity e borda em tempo real.",
     propsReferenceTitle: "Referencia de Props",
@@ -234,18 +234,18 @@ export default function App() {
 }`;
 
 const AVATAR_PROPS: ShowcasePropRow[] = [
-  { prop: "src / alt", type: "string", defaultValue: "- / Avatar", description: "Imagem do avatar e texto alternativo." },
-  { prop: "label / icon / fallback / children", type: "ReactNode", defaultValue: "-", description: "ConteÃºdo visual do avatar." },
+  { prop: "src / alt", type: "string", defaultValue: "- / Avatar", description: "Avatar image and alt text." },
+  { prop: "label / icon / fallback / children", type: "ReactNode", defaultValue: "-", description: "Visual avatar content." },
   { prop: "size", type: "\"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\"", defaultValue: "md", description: "Tamanho do avatar." },
   { prop: "shape", type: "\"circle\" | \"square\"", defaultValue: "circle", description: "Formato do avatar." },
-  { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"info\" | \"neutral\" | \"custom\"", defaultValue: "primary", description: "VariaÃ§Ã£o visual baseada no tema." },
+  { prop: "severity", type: "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"info\" | \"neutral\" | \"custom\"", defaultValue: "primary", description: "Theme-based visual variant." },
   { prop: "bordered / disabled", type: "boolean", defaultValue: "true / false", description: "Borda e estado desabilitado." },
-  { prop: "customColors", type: "{ bg, fg, border, ring }", defaultValue: "-", description: "Override de cores quando necessÃ¡rio." },
+  { prop: "customColors", type: "{ bg, fg, border, ring }", defaultValue: "-", description: "Color overrides when needed." },
   { prop: "imageClassName / className", type: "string", defaultValue: "-", description: "Classes CSS para imagem e container." },
   { prop: "onImageError", type: "(event) => void", defaultValue: "-", description: "Callback para falha ao carregar imagem." },
   { prop: "SgAvatarGroup.children", type: "ReactNode", defaultValue: "-", description: "Lista de avatares no grupo." },
   { prop: "SgAvatarGroup.max / total", type: "number", defaultValue: "- / children.length", description: "Controle de quantos avatares exibir e total real." },
-  { prop: "SgAvatarGroup.overlap", type: "\"none\" | \"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "SobreposiÃ§Ã£o entre itens." },
+  { prop: "SgAvatarGroup.overlap", type: "\"none\" | \"sm\" | \"md\" | \"lg\"", defaultValue: "md", description: "Overlap between items." },
   { prop: "SgAvatarGroup.moreSeverity / moreLabel", type: "severity / (remaining) => ReactNode", defaultValue: "neutral / +N", description: "Avatar de excesso de itens." },
   { prop: "SgAvatarGroup.size / shape / bordered", type: "avatar props", defaultValue: "md / circle / true", description: "Estilo aplicado ao avatar de excesso." }
 ];

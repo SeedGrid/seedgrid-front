@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -52,7 +52,7 @@ const MATRIX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MatrixDigitTexts>
     section2Title: "2) Texto matricial",
     section2Description: "Exibicao de texto com letras, numeros e simbolos.",
     section3Title: "3) Variacoes de color/backgroundColor",
-    section3Description: "Exemplos de temas visuais.",
+    section3Description: "Visual theme examples.",
     section4Title: "4) Escala da matriz",
     section4Description: "Ajuste de dotSize, gap e charGap.",
     section5Title: "5) Playground (SgPlayground)",
@@ -66,7 +66,7 @@ const MATRIX_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MatrixDigitTexts>
     section2Title: "2) Texto matricial",
     section2Description: "Exibicao de texto com letras, numeros e simbolos.",
     section3Title: "3) Variacoes de color/backgroundColor",
-    section3Description: "Exemplos de temas visuais.",
+    section3Description: "Visual theme examples.",
     section4Title: "4) Escala da matriz",
     section4Description: "Ajuste de dotSize, gap e charGap.",
     section5Title: "5) Playground (SgPlayground)",
@@ -125,9 +125,9 @@ const random = () => setDigit(String(Math.floor(Math.random() * 10)));
 <div className="flex items-center gap-4">
   <SgMatrixDigit value={digit} color="#22d3ee" backgroundColor="#0b1220" />
   <div className="flex flex-col gap-2">
-    <SgButton size="sm" onClick={next}>Proximo (+1)</SgButton>
-    <SgButton size="sm" severity="secondary" onClick={prev}>Anterior (-1)</SgButton>
-    <SgButton size="sm" severity="info" onClick={random}>Aleatorio</SgButton>
+    <SgButton size="sm" onClick={next}>Next (+1)</SgButton>
+    <SgButton size="sm" severity="secondary" onClick={prev}>Previous (-1)</SgButton>
+    <SgButton size="sm" severity="info" onClick={random}>Random</SgButton>
   </div>
 </div>`;
 
@@ -146,7 +146,7 @@ const nextMessage = () => setMessageIndex((prev) => (prev + 1) % MESSAGES.length
     gap={2}
     charGap={6}
   />
-  <SgButton size="sm" onClick={nextMessage}>Trocar texto</SgButton>
+  <SgButton size="sm" onClick={nextMessage}>Change text</SgButton>
 </div>`;
 
 const COLOR_CODE = `<SgGrid columns={{ base: 1, md: 3 }} gap={12}>
@@ -159,22 +159,22 @@ const COLOR_CODE = `<SgGrid columns={{ base: 1, md: 3 }} gap={12}>
     <SgMatrixDigit value="HELLO" color="#a3e635" backgroundColor="#05070b" />
   </div>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Laranja</p>
+    <p className="text-xs text-muted-foreground">Orange</p>
     <SgMatrixDigit value="SG" color="#fb923c" backgroundColor="#101826" />
   </div>
 </SgGrid>`;
 
 const SIZE_CODE = `<SgGrid columns={{ base: 1, md: 3 }} gap={12}>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Pequeno</p>
+    <p className="text-xs text-muted-foreground">Small</p>
     <SgMatrixDigit value="123" dotSize={6} gap={2} charGap={4} />
   </div>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Medio</p>
+    <p className="text-xs text-muted-foreground">Medium</p>
     <SgMatrixDigit value="123" dotSize={9} gap={3} charGap={7} />
   </div>
   <div className="space-y-2">
-    <p className="text-xs text-muted-foreground">Grande</p>
+    <p className="text-xs text-muted-foreground">Large</p>
     <SgMatrixDigit value="123" dotSize={13} gap={4} charGap={10} />
   </div>
 </SgGrid>`;
@@ -229,18 +229,18 @@ export default function App() {
 }`;
 
 const MATRIX_PROPS: ShowcasePropRow[] = [
-  { prop: "value", type: "string", defaultValue: "-", description: "Texto exibido em matriz de pontos." },
-  { prop: "color", type: "string", defaultValue: "\"#22d3ee\"", description: "Cor dos pontos ativos." },
-  { prop: "backgroundColor", type: "string", defaultValue: "\"#0b1220\"", description: "Cor de fundo do painel matricial." },
-  { prop: "offColor", type: "string", defaultValue: "\"rgba(148, 163, 184, 0.22)\"", description: "Cor dos pontos inativos." },
-  { prop: "dotSize", type: "number", defaultValue: "9", description: "Tamanho de cada ponto em pixels." },
-  { prop: "gap", type: "number", defaultValue: "3", description: "Espacamento entre pontos em pixels." },
-  { prop: "charGap", type: "number", defaultValue: "7", description: "Espacamento entre caracteres em pixels." },
-  { prop: "padding", type: "number", defaultValue: "8", description: "Padding interno do painel em pixels." },
-  { prop: "rounded", type: "number", defaultValue: "10", description: "Raio de borda do painel em pixels." },
-  { prop: "glow", type: "boolean", defaultValue: "true", description: "Liga brilho nos pontos ativos." },
-  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS extras no container externo." },
-  { prop: "style", type: "React.CSSProperties", defaultValue: "-", description: "Estilo inline adicional no container externo." }
+  { prop: "value", type: "string", defaultValue: "-", description: "Text displayed in dot matrix." },
+  { prop: "color", type: "string", defaultValue: "\"#22d3ee\"", description: "Color of active dots." },
+  { prop: "backgroundColor", type: "string", defaultValue: "\"#0b1220\"", description: "Dot matrix panel background color." },
+  { prop: "offColor", type: "string", defaultValue: "\"rgba(148, 163, 184, 0.22)\"", description: "Color of inactive dots." },
+  { prop: "dotSize", type: "number", defaultValue: "9", description: "Size of each dot in pixels." },
+  { prop: "gap", type: "number", defaultValue: "3", description: "Spacing between dots in pixels." },
+  { prop: "charGap", type: "number", defaultValue: "7", description: "Spacing between characters in pixels." },
+  { prop: "padding", type: "number", defaultValue: "8", description: "Internal panel padding in pixels." },
+  { prop: "rounded", type: "number", defaultValue: "10", description: "Panel border radius in pixels." },
+  { prop: "glow", type: "boolean", defaultValue: "true", description: "Enables glow on active dots." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Extra CSS classes on external container." },
+  { prop: "style", type: "React.CSSProperties", defaultValue: "-", description: "Additional inline style on external container." }
 ];
 
 export default function SgMatrixDigitShowcase() {
@@ -279,9 +279,9 @@ export default function SgMatrixDigitShowcase() {
           <div className="flex items-center gap-4">
             <SgMatrixDigit value={digit} color="#22d3ee" backgroundColor="#0b1220" />
             <div className="flex flex-col gap-2">
-              <SgButton size="sm" onClick={nextDigit}>Proximo (+1)</SgButton>
-              <SgButton size="sm" severity="secondary" onClick={prevDigit}>Anterior (-1)</SgButton>
-              <SgButton size="sm" severity="info" onClick={randomDigit}>Aleatorio</SgButton>
+              <SgButton size="sm" onClick={nextDigit}>Next (+1)</SgButton>
+              <SgButton size="sm" severity="secondary" onClick={prevDigit}>Previous (-1)</SgButton>
+              <SgButton size="sm" severity="info" onClick={randomDigit}>Random</SgButton>
             </div>
           </div>
           <CodeBlockBase code={BASIC_CODE} />
@@ -297,7 +297,7 @@ export default function SgMatrixDigitShowcase() {
               gap={2}
               charGap={6}
             />
-            <SgButton size="sm" onClick={nextMessage}>Trocar texto</SgButton>
+            <SgButton size="sm" onClick={nextMessage}>Change text</SgButton>
           </div>
           <CodeBlockBase code={TEXT_CODE} />
         </Section>
@@ -313,7 +313,7 @@ export default function SgMatrixDigitShowcase() {
               <SgMatrixDigit value="HELLO" color="#a3e635" backgroundColor="#05070b" />
             </div>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Laranja</p>
+              <p className="text-xs text-muted-foreground">Orange</p>
               <SgMatrixDigit value="SG" color="#fb923c" backgroundColor="#101826" />
             </div>
           </SgGrid>
@@ -323,15 +323,15 @@ export default function SgMatrixDigitShowcase() {
         <Section title={texts.section4Title} description={texts.section4Description}>
           <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Pequeno</p>
+              <p className="text-xs text-muted-foreground">Small</p>
               <SgMatrixDigit value="123" dotSize={6} gap={2} charGap={4} />
             </div>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Medio</p>
+              <p className="text-xs text-muted-foreground">Medium</p>
               <SgMatrixDigit value="123" dotSize={9} gap={3} charGap={7} />
             </div>
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground">Grande</p>
+              <p className="text-xs text-muted-foreground">Large</p>
               <SgMatrixDigit value="123" dotSize={13} gap={4} charGap={10} />
             </div>
           </SgGrid>
@@ -355,3 +355,4 @@ export default function SgMatrixDigitShowcase() {
     </I18NReady>
   );
 }
+

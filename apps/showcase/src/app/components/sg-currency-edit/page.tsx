@@ -352,7 +352,7 @@ export default function SgCurrencyEditPage() {
               {t(i18n, "showcase.component.currencyEdit.subtitle")}
             </p>
             <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Exemplos
+              {t(i18n, "showcase.common.examples")}
             </p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (
@@ -959,7 +959,7 @@ export default function Example() {
             onEnter={() => log("onEnter (focus)")}
             onExit={() => log("onExit (blur)")}
             onClear={() => log("onClear")}
-            onValidation={(msg) => log(`onValidation: ${msg ?? "valido"}`)}
+            onValidation={(msg) => log(`onValidation: ${msg ?? t(i18n, "showcase.component.currencyEdit.labels.valid")}`)}
           />
           <div className="mt-3 h-40 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
             {eventLog.length === 0 ? (

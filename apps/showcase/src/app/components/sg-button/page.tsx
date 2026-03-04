@@ -109,7 +109,7 @@ type ButtonTexts = {
 const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
   "pt-BR": {
     headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Props Reference",
     sectionTitles: [
       "1) Basico",
@@ -130,7 +130,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     ],
     sectionDescriptions: [
       "Botao padrao com onClick e estado disabled.",
-      "Exemplos completos com icones para validar appearance/shape/elevation.",
+      "Examples completos com icones para validar appearance/shape/elevation.",
       'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
       'appearance="solid" + elevation="sm".',
       'shape="rounded" para formato pill.',
@@ -153,12 +153,12 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "pt-PT": {
     headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Props Reference",
     sectionTitles: [
       "1) Basico",
@@ -179,7 +179,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     ],
     sectionDescriptions: [
       "Botao padrao com onClick e estado disabled.",
-      "Exemplos completos com icones para validar appearance/shape/elevation.",
+      "Examples completos com icones para validar appearance/shape/elevation.",
       'severity="primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"',
       'appearance="solid" + elevation="sm".',
       'shape="rounded" para formato pill.',
@@ -202,8 +202,8 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
   },
   "en-US": {
     headerSubtitle: "Button with support for severity, appearance, shape, elevation, icons, and loading.",

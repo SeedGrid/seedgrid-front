@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -63,14 +63,14 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
     headerSubtitle:
       "Bloco de folhas com animacao 3D de descarte: a folha do topo sai e revela a proxima.",
     section1Title: "1) Basico",
-    section1Description: "Clique em Proximo para adicionar uma folha e em Anterior para remover uma folha.",
-    section1NextButton: "Proximo (+1 folha)",
-    section1PreviousButton: "Anterior (-1 folha)",
+    section1Description: "Click Next to add one card and Previous to remove one card.",
+    section1NextButton: "Next (+1 folha)",
+    section1PreviousButton: "Previous (-1 folha)",
     section2Title: "2) Folhas sequenciais",
     section2Description: "Cada clique descarta uma folha e revela a seguinte.",
     section2DiscardButton: "Descartar folha",
     section3Title: "3) Variacoes de papel",
-    section3Description: "Exemplos com color + backgroundColor diferentes.",
+    section3Description: "Examples with different color + backgroundColor.",
     section4Title: "4) Fontes",
     section4Description: "Comparacao de fontes no mesmo efeito de pilha.",
     section5Title: "5) Auto descarte",
@@ -82,7 +82,7 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
       "totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().",
     section6PageLabelPrefix: "Pagina",
     section6PageLabelConnector: "de",
-    section6PreviousButton: "Anterior",
+    section6PreviousButton: "Previous",
     section6NextButton: "Proxima",
     section7Title: "7) Playground (SgPlayground)",
     section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
@@ -92,14 +92,14 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
     headerSubtitle:
       "Bloco de folhas com animacao 3D de descarte: a folha no topo sai e revela a seguinte.",
     section1Title: "1) Basico",
-    section1Description: "Clique em Proximo para adicionar uma folha e em Anterior para remover uma folha.",
-    section1NextButton: "Proximo (+1 folha)",
-    section1PreviousButton: "Anterior (-1 folha)",
+    section1Description: "Click Next to add one card and Previous to remove one card.",
+    section1NextButton: "Next (+1 folha)",
+    section1PreviousButton: "Previous (-1 folha)",
     section2Title: "2) Folhas sequenciais",
     section2Description: "Cada clique descarta uma folha e revela a seguinte.",
     section2DiscardButton: "Descartar folha",
     section3Title: "3) Variacoes de papel",
-    section3Description: "Exemplos com color + backgroundColor diferentes.",
+    section3Description: "Examples with different color + backgroundColor.",
     section4Title: "4) Fontes",
     section4Description: "Comparacao de fontes no mesmo efeito de pilha.",
     section5Title: "5) Auto descarte",
@@ -111,7 +111,7 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
       "totalNumberPages define o total de folhas. O ref expoe increasePage(), decreasePage() e page().",
     section6PageLabelPrefix: "Pagina",
     section6PageLabelConnector: "de",
-    section6PreviousButton: "Anterior",
+    section6PreviousButton: "Previous",
     section6NextButton: "Proxima",
     section7Title: "7) Playground (SgPlayground)",
     section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
@@ -150,9 +150,9 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
     headerSubtitle:
       "Bloque de hojas con animacion 3D de descarte: la hoja superior sale y revela la siguiente.",
     section1Title: "1) Basico",
-    section1Description: "Haz clic en Siguiente para agregar una hoja y en Anterior para quitar una hoja.",
+    section1Description: "Haz clic en Siguiente para agregar una hoja y en Previous para quitar una hoja.",
     section1NextButton: "Siguiente (+1 hoja)",
-    section1PreviousButton: "Anterior (-1 hoja)",
+    section1PreviousButton: "Previous (-1 hoja)",
     section2Title: "2) Hojas secuenciales",
     section2Description: "Cada clic descarta una hoja y revela la siguiente.",
     section2DiscardButton: "Descartar hoja",
@@ -169,7 +169,7 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
       "totalNumberPages define el total de hojas. El ref expone increasePage(), decreasePage() y page().",
     section6PageLabelPrefix: "Pagina",
     section6PageLabelConnector: "de",
-    section6PreviousButton: "Anterior",
+    section6PreviousButton: "Previous",
     section6NextButton: "Siguiente",
     section7Title: "7) Playground (SgPlayground)",
     section7Description: "Ajuste en tiempo real de color, font, backgroundColor y animacion.",
@@ -414,7 +414,7 @@ export default function App() {
           <div className="space-y-2">
             <p className="text-xs text-muted-foreground">Pagina {pagina} de {totalNumberPages}</p>
             <div className="flex gap-2">
-              <SgButton size="sm" onClick={anterior} disabled={pagina <= 1}>Anterior</SgButton>
+              <SgButton size="sm" onClick={anterior} disabled={pagina <= 1}>Previous</SgButton>
               <SgButton size="sm" onClick={proxima} disabled={pagina >= totalNumberPages}>Proxima</SgButton>
             </div>
           </div>
@@ -454,7 +454,7 @@ export default function SgDiscardDigitShowcase() {
   const discardRef = React.useRef<SgDiscardDigitHandle>(null);
   const [paginaAtual, setPaginaAtual] = React.useState(1);
 
-  const handleAnterior = React.useCallback(() => {
+  const handlePrevious = React.useCallback(() => {
     discardRef.current?.decreasePage();
     setPaginaAtual((p) => Math.max(1, p - 1));
   }, []);
@@ -620,7 +620,7 @@ export default function SgDiscardDigitShowcase() {
                 {texts.section6PageLabelConnector} {TOTAL_PAGES}
               </p>
               <div className="flex gap-2">
-                <SgButton size="sm" onClick={handleAnterior} disabled={paginaAtual <= 1}>
+                <SgButton size="sm" onClick={handlePrevious} disabled={paginaAtual <= 1}>
                   {texts.section6PreviousButton}
                 </SgButton>
                 <SgButton size="sm" onClick={handleProxima} disabled={paginaAtual >= TOTAL_PAGES}>
@@ -649,3 +649,4 @@ export default function SgDiscardDigitShowcase() {
     </I18NReady>
   );
 }
+

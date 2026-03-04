@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -118,48 +118,48 @@ const MEGA_MENU: SgMenuNode[] = [
 ];
 
 const USER_MENU: SgMenuNode[] = [
-  { id: "perfil", label: "Meu perfil", onClick: () => {} },
-  { id: "preferencias", label: "Preferencias", onClick: () => {} },
-  { id: "logout", label: "Sair", onClick: () => {} }
+  { id: "perfil", label: "My profile", onClick: () => {} },
+  { id: "preferencias", label: "Preferences", onClick: () => {} },
+  { id: "logout", label: "Sign out", onClick: () => {} }
 ];
 
 const DOCKABLE_MENU: SgMenuNode[] = [
   { id: "dk-dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
   {
     id: "dk-financeiro",
-    label: "Financeiro",
+    label: "Finance",
     icon: <DollarSign className="size-4" />,
     children: [
       {
         id: "dk-contas-pagar",
-        label: "Contas a Pagar",
+        label: "Accounts Payable",
         icon: <CreditCard className="size-4" />,
         children: [
-          { id: "dk-pagar-aberto", label: "Em Aberto", url: "/financeiro/pagar/aberto", badge: 12 },
-          { id: "dk-pagar-vencidas", label: "Vencidas", url: "/financeiro/pagar/vencidas", badge: 3 }
+          { id: "dk-pagar-aberto", label: "Open", url: "/financeiro/pagar/aberto", badge: 12 },
+          { id: "dk-pagar-vencidas", label: "Overdue", url: "/financeiro/pagar/vencidas", badge: 3 }
         ]
       },
       {
         id: "dk-contas-receber",
-        label: "Contas a Receber",
+        label: "Accounts Receivable",
         icon: <Wallet className="size-4" />,
         children: [
-          { id: "dk-receber-aberto", label: "Em Aberto", url: "/financeiro/receber/aberto", badge: 8 },
-          { id: "dk-receber-recebidas", label: "Recebidas", url: "/financeiro/receber/recebidas" }
+          { id: "dk-receber-aberto", label: "Open", url: "/financeiro/receber/aberto", badge: 8 },
+          { id: "dk-receber-recebidas", label: "Received", url: "/financeiro/receber/recebidas" }
         ]
       },
-      { id: "dk-financeiro-rel", label: "Relatórios", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
+      { id: "dk-financeiro-rel", label: "Reports", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
     ]
   },
   {
     id: "dk-clientes",
-    label: "Clientes",
+    label: "Customers",
     icon: <Users className="size-4" />,
     children: [
-      { id: "dk-clientes-cadastro", label: "Cadastro", url: "/clientes/cadastro" },
+      { id: "dk-clientes-cadastro", label: "Register", url: "/clientes/cadastro" },
       {
         id: "dk-clientes-relatorios",
-        label: "Relatórios",
+        label: "Reports",
         icon: <ClipboardList className="size-4" />,
         children: [
           { id: "dk-clientes-cohort", label: "Cohort", url: "/clientes/relatorios/cohort" },
@@ -170,38 +170,38 @@ const DOCKABLE_MENU: SgMenuNode[] = [
   },
   {
     id: "dk-pedidos",
-    label: "Pedidos",
+    label: "Orders",
     icon: <ShoppingCart className="size-4" />,
     children: [
       {
         id: "dk-pedidos-vendas",
-        label: "Vendas",
+        label: "Sales",
         icon: <Search className="size-4" />,
         children: [
-          { id: "dk-pedidos-abertos", label: "Em Aberto", url: "/pedidos/vendas/aberto", badge: 4 },
-          { id: "dk-pedidos-fechados", label: "Encerrados", url: "/pedidos/vendas/encerrados" }
+          { id: "dk-pedidos-abertos", label: "Open", url: "/pedidos/vendas/aberto", badge: 4 },
+          { id: "dk-pedidos-fechados", label: "Closed", url: "/pedidos/vendas/encerrados" }
         ]
       },
-      { id: "dk-pedidos-devolucoes", label: "Devoluções", url: "/pedidos/devolucoes", badge: 7 }
+      { id: "dk-pedidos-devolucoes", label: "Returns", url: "/pedidos/devolucoes", badge: 7 }
     ]
   },
   {
     id: "dk-configuracoes",
-    label: "Configurações",
+    label: "Settings",
     icon: <Settings className="size-4" />,
     children: [
-      { id: "dk-config-usuarios", label: "Usuários", url: "/configuracoes/usuarios" },
-      { id: "dk-config-perfis", label: "Perfis de Acesso", url: "/configuracoes/perfis" },
-      { id: "dk-config-sistema", label: "Sistema", url: "/configuracoes/sistema" }
+      { id: "dk-config-usuarios", label: "Users", url: "/configuracoes/usuarios" },
+      { id: "dk-config-perfis", label: "Access Profiles", url: "/configuracoes/perfis" },
+      { id: "dk-config-sistema", label: "System", url: "/configuracoes/sistema" }
     ]
   }
 ];
 
 const DOCKABLE_USER_MENU: SgMenuNode[] = [
-  { id: "dk-meu-perfil", label: "Meu Perfil", onClick: () => {} },
-  { id: "dk-preferencias", label: "Preferências", onClick: () => {} },
-  { id: "dk-trocar-empresa", label: "Trocar Empresa", onClick: () => {} },
-  { id: "dk-logout", label: "Sair", onClick: () => {} }
+  { id: "dk-meu-perfil", label: "My Profile", onClick: () => {} },
+  { id: "dk-preferencias", label: "Preferences", onClick: () => {} },
+  { id: "dk-trocar-empresa", label: "Switch Company", onClick: () => {} },
+  { id: "dk-logout", label: "Sign out", onClick: () => {} }
 ];
 
 const DOCKABLE_SHELL_STYLE = {
@@ -334,9 +334,9 @@ const MEGA_MENU_CODE_SNIPPET = `const MEGA_MENU = [
 ];`;
 
 const USER_MENU_CODE_SNIPPET = `const USER_MENU = [
-  { id: "perfil", label: "Meu perfil", onClick: () => {} },
-  { id: "preferencias", label: "Preferencias", onClick: () => {} },
-  { id: "logout", label: "Sair", onClick: () => {} }
+  { id: "perfil", label: "My profile", onClick: () => {} },
+  { id: "preferencias", label: "Preferences", onClick: () => {} },
+  { id: "logout", label: "Sign out", onClick: () => {} }
 ];`;
 
 const EXAMPLE_SIDEBAR_CODE = `import React from "react";
@@ -362,16 +362,16 @@ export default function Example() {
           collapsed={collapsed}
           onCollapsedChange={setCollapsed}
           showCollapseButton
-          search={{ enabled: true, placeholder: "Buscar modulo..." }}
+          search={{ enabled: true, placeholder: "Search module..." }}
           brand={{ title: "SeedGrid ERP" }}
-          user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+          user={{ name: "Lucia Souza", subtitle: "Finance" }}
           userMenu={USER_MENU}
           onNavigate={(node) => setActiveId(node.id)}
         />
         <div className="flex-1 space-y-3 p-4">
-          <h3 className="text-base font-semibold">Conteudo principal</h3>
+          <h3 className="text-base font-semibold">Main content</h3>
           <p className="text-sm text-muted-foreground">
-            Item ativo: <span className="font-medium text-foreground">{activeId}</span>
+            Active item: <span className="font-medium text-foreground">{activeId}</span>
           </p>
         </div>
       </div>
@@ -393,9 +393,9 @@ export default function Example() {
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        <SgButton onClick={() => setDrawerOpen(true)}>Abrir menu mobile</SgButton>
+        <SgButton onClick={() => setDrawerOpen(true)}>Open mobile menu</SgButton>
         <SgButton appearance="outline" onClick={() => setDrawerPinned((v) => !v)}>
-          \${drawerPinned ? "Desafixar drawer" : "Fixar drawer"}
+          \${drawerPinned ? "Unpin drawer" : "Pin drawer"}
         </SgButton>
       </div>
 
@@ -409,7 +409,7 @@ export default function Example() {
         onPinnedChange={setDrawerPinned}
         showPinButton
         closeOnNavigate
-        search={{ enabled: true, placeholder: "Buscar..." }}
+        search={{ enabled: true, placeholder: "Search..." }}
         brand={{ title: "SeedGrid ERP" }}
         onNavigate={(node) => setActiveId(node.id)}
       />
@@ -499,39 +499,39 @@ const DOCKABLE_MENU = [
   { id: "dk-dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
   {
     id: "dk-financeiro",
-    label: "Financeiro",
+    label: "Finance",
     icon: <DollarSign className="size-4" />,
     children: [
       {
         id: "dk-contas-pagar",
-        label: "Contas a Pagar",
+        label: "Accounts Payable",
         icon: <CreditCard className="size-4" />,
         children: [
-          { id: "dk-pagar-aberto", label: "Em Aberto", url: "/financeiro/pagar/aberto", badge: 12 },
-          { id: "dk-pagar-vencidas", label: "Vencidas", url: "/financeiro/pagar/vencidas", badge: 3 }
+          { id: "dk-pagar-aberto", label: "Open", url: "/financeiro/pagar/aberto", badge: 12 },
+          { id: "dk-pagar-vencidas", label: "Overdue", url: "/financeiro/pagar/vencidas", badge: 3 }
         ]
       },
       {
         id: "dk-contas-receber",
-        label: "Contas a Receber",
+        label: "Accounts Receivable",
         icon: <Wallet className="size-4" />,
         children: [
-          { id: "dk-receber-aberto", label: "Em Aberto", url: "/financeiro/receber/aberto", badge: 8 },
-          { id: "dk-receber-recebidas", label: "Recebidas", url: "/financeiro/receber/recebidas" }
+          { id: "dk-receber-aberto", label: "Open", url: "/financeiro/receber/aberto", badge: 8 },
+          { id: "dk-receber-recebidas", label: "Received", url: "/financeiro/receber/recebidas" }
         ]
       },
-      { id: "dk-financeiro-rel", label: "Relatórios", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
+      { id: "dk-financeiro-rel", label: "Reports", icon: <BarChart2 className="size-4" />, url: "/financeiro/relatorios" }
     ]
   },
   {
     id: "dk-clientes",
-    label: "Clientes",
+    label: "Customers",
     icon: <Users className="size-4" />,
     children: [
-      { id: "dk-clientes-cadastro", label: "Cadastro", url: "/clientes/cadastro" },
+      { id: "dk-clientes-cadastro", label: "Register", url: "/clientes/cadastro" },
       {
         id: "dk-clientes-relatorios",
-        label: "Relatórios",
+        label: "Reports",
         icon: <ClipboardList className="size-4" />,
         children: [
           { id: "dk-clientes-cohort", label: "Cohort", url: "/clientes/relatorios/cohort" },
@@ -542,38 +542,38 @@ const DOCKABLE_MENU = [
   },
   {
     id: "dk-pedidos",
-    label: "Pedidos",
+    label: "Orders",
     icon: <ShoppingCart className="size-4" />,
     children: [
       {
         id: "dk-pedidos-vendas",
-        label: "Vendas",
+        label: "Sales",
         icon: <Search className="size-4" />,
         children: [
-          { id: "dk-pedidos-abertos", label: "Em Aberto", url: "/pedidos/vendas/aberto", badge: 4 },
-          { id: "dk-pedidos-fechados", label: "Encerrados", url: "/pedidos/vendas/encerrados" }
+          { id: "dk-pedidos-abertos", label: "Open", url: "/pedidos/vendas/aberto", badge: 4 },
+          { id: "dk-pedidos-fechados", label: "Closed", url: "/pedidos/vendas/encerrados" }
         ]
       },
-      { id: "dk-pedidos-devolucoes", label: "Devoluções", url: "/pedidos/devolucoes", badge: 7 }
+      { id: "dk-pedidos-devolucoes", label: "Returns", url: "/pedidos/devolucoes", badge: 7 }
     ]
   },
   {
     id: "dk-configuracoes",
-    label: "Configurações",
+    label: "Settings",
     icon: <Settings className="size-4" />,
     children: [
-      { id: "dk-config-usuarios", label: "Usuários", url: "/configuracoes/usuarios" },
-      { id: "dk-config-perfis", label: "Perfis de Acesso", url: "/configuracoes/perfis" },
-      { id: "dk-config-sistema", label: "Sistema", url: "/configuracoes/sistema" }
+      { id: "dk-config-usuarios", label: "Users", url: "/configuracoes/usuarios" },
+      { id: "dk-config-perfis", label: "Access Profiles", url: "/configuracoes/perfis" },
+      { id: "dk-config-sistema", label: "System", url: "/configuracoes/sistema" }
     ]
   }
 ];
 
 const DOCKABLE_USER_MENU = [
-  { id: "dk-meu-perfil", label: "Meu Perfil", onClick: () => {} },
-  { id: "dk-preferencias", label: "Preferências", onClick: () => {} },
-  { id: "dk-trocar-empresa", label: "Trocar Empresa", onClick: () => {} },
-  { id: "dk-logout", label: "Sair", onClick: () => {} }
+  { id: "dk-meu-perfil", label: "My Profile", onClick: () => {} },
+  { id: "dk-preferencias", label: "Preferences", onClick: () => {} },
+  { id: "dk-trocar-empresa", label: "Switch Company", onClick: () => {} },
+  { id: "dk-logout", label: "Sign out", onClick: () => {} }
 ];
 
 const DOCKABLE_MENU_STYLE_OPTIONS = [
@@ -621,7 +621,7 @@ export default function Example() {
           <SgDockZone zone="right" />
           <SgDockZone zone="bottom" />
           <SgDockZone zone="free">
-            <div className="pointer-events-none text-sm text-[#7e5f46]">Área central livre</div>
+            <div className="pointer-events-none text-sm text-[#7e5f46]">Free center area</div>
           </SgDockZone>
 
           <SgMenu
@@ -635,9 +635,9 @@ export default function Example() {
             dockZone="left"
             draggable
             showCollapseButton
-            search={{ enabled: true, placeholder: "Buscar módulo..." }}
+            search={{ enabled: true, placeholder: "Search module..." }}
             brand={{ title: "SeedGrid ERP", imageSrc: "/logo-seedgrid.svg" }}
-            user={{ name: "Lucia Souza", subtitle: "Financeiro" }}
+            user={{ name: "Lucia Souza", subtitle: "Finance" }}
             userMenu={DOCKABLE_USER_MENU}
             userSectionStyle={{ backgroundColor: "#ebe0d4" }}
             onNavigate={(node) => setDockActiveId(node.id)}
@@ -647,14 +647,14 @@ export default function Example() {
             id="toolbar-dock-v1"
             dockZone="top"
             orientationDirection="horizontal-left"
-            title="Ferramentas"
+            title="Tools"
             draggable
             collapsible={false}
           >
-            <SgToolbarIconButton icon={<Plus className="size-4" />} hint="Novo registro" severity="primary" />
+            <SgToolbarIconButton icon={<Plus className="size-4" />} hint="New record" severity="primary" />
             <SgToolbarIconButton icon={<Save className="size-4" />} hint="Salvar" />
-            <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Imprimir" />
-            <SgToolbarIconButton icon={<Download className="size-4" />} hint="Exportar" />
+            <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Print" />
+            <SgToolbarIconButton icon={<Download className="size-4" />} hint="Export" />
             <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="Excluir" severity="danger" />
           </SgToolBar>
         </SgDockLayout>
@@ -707,7 +707,7 @@ export default function App() {
           onOpenChange={setOpen}
           showCollapseButton
           onNavigate={(node) => setActiveId(node.id)}
-          search={{ enabled: true, placeholder: "Buscar..." }}
+          search={{ enabled: true, placeholder: "Search..." }}
         />
       </div>
     </div>
@@ -715,86 +715,86 @@ export default function App() {
 }`;
 
 const MENU_PROPS: ShowcasePropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador estavel do menu (recomendado para dockable com persistencia)." },
-  { prop: "menu", type: "SgMenuNode[]", defaultValue: "-", description: "Arvore de navegacao exibida pelo menu." },
-  { prop: "selection", type: "SgMenuSelection", defaultValue: "-", description: "Item ativo por id ou por url." },
-  { prop: "brand", type: "SgMenuBrand", defaultValue: "-", description: "Bloco de marca no topo." },
-  { prop: "user", type: "SgMenuUser", defaultValue: "-", description: "Bloco de usuario no topo/rodape do menu." },
-  { prop: "userMenu", type: "SgMenuNode[]", defaultValue: "-", description: "Acoes exibidas no menu do usuario." },
-  { prop: "variant", type: "\"sidebar\" | \"drawer\" | \"inline\" | \"hybrid\"", defaultValue: "sidebar", description: "Modo geral de apresentacao." },
-  { prop: "menuStyle", type: "SgMenuStyle", defaultValue: "panel", description: "Estilo interno: panel, tiered, mega-horizontal ou mega-vertical." },
-  { prop: "position", type: "\"left\" | \"right\"", defaultValue: "left", description: "Posicao horizontal do menu." },
-  { prop: "density", type: "\"compact\" | \"comfortable\"", defaultValue: "comfortable", description: "Densidade visual das linhas e icones." },
-  { prop: "indent", type: "number", defaultValue: "16", description: "Recuo por nivel de profundidade." },
-  { prop: "collapsedWidth", type: "number | string", defaultValue: "72", description: "Largura quando colapsado." },
-  { prop: "expandedWidth", type: "number | string", defaultValue: "280", description: "Largura quando expandido." },
-  { prop: "overlaySize", type: "SgExpandablePanelSize", defaultValue: "-", description: "Tamanho do overlay nos modos drawer/hybrid." },
-  { prop: "overlayBackdrop", type: "boolean", defaultValue: "-", description: "Controla backdrop no overlay." },
-  { prop: "dockable", type: "boolean", defaultValue: "false", description: "Quando true e dentro de SgDockLayout, o menu pode ser dockado em zonas." },
-  { prop: "dockZone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "left", description: "Zona inicial no modo dockable (quando nao informado, pode ser inferida por orientationDirection)." },
-  { prop: "draggable", type: "boolean", defaultValue: "false", description: "No modo dockable, exibe handle para arrastar entre dock zones." },
-  { prop: "orientationDirection", type: "\"horizontal-left\" | \"horizontal-right\" | \"vertical-up\" | \"vertical-top\" | \"vertical-down\"", defaultValue: "-", description: "Direcao opcional usada como fallback para inferir a dockZone inicial." },
-  { prop: "mode", type: "\"accordion\" | \"multiple\"", defaultValue: "multiple", description: "Estrategia de expansao dos grupos." },
-  { prop: "expandedIds", type: "string[]", defaultValue: "-", description: "Controle externo dos grupos expandidos." },
-  { prop: "defaultExpandedIds", type: "string[]", defaultValue: "[]", description: "Estado inicial dos grupos expandidos." },
-  { prop: "onExpandedIdsChange", type: "(ids: string[]) => void", defaultValue: "-", description: "Callback ao alterar grupos expandidos." },
-  { prop: "collapsed", type: "boolean", defaultValue: "-", description: "Controle externo do estado colapsado." },
-  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado." },
-  { prop: "onCollapsedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao colapsar/expandir." },
-  { prop: "showCollapseButton", type: "boolean", defaultValue: "false", description: "Exibe botao de colapso no cabecalho." },
-  { prop: "open", type: "boolean", defaultValue: "-", description: "Controle externo de abertura no drawer/overlay." },
-  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Estado inicial de abertura no drawer/overlay." },
-  { prop: "onOpenChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao abrir/fechar overlay." },
-  { prop: "closeOnNavigate", type: "boolean", defaultValue: "-", description: "Fecha o drawer apos navegacao." },
-  { prop: "pinned", type: "boolean", defaultValue: "-", description: "Controle externo do estado fixado." },
-  { prop: "defaultPinned", type: "boolean", defaultValue: "false", description: "Estado inicial fixado." },
-  { prop: "onPinnedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback ao fixar/desafixar." },
-  { prop: "showPinButton", type: "boolean", defaultValue: "false", description: "Exibe botao de pin no cabecalho." },
-  { prop: "onNavigate", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em itens de navegacao (url)." },
-  { prop: "onAction", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em itens de acao." },
-  { prop: "onItemClick", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Disparado em qualquer clique de item." },
-  { prop: "ariaLabel", type: "string", defaultValue: "\"Menu\"", description: "Rotulo de acessibilidade do nav." },
-  { prop: "keyboardNavigation", type: "boolean", defaultValue: "true", description: "Ativa navegacao por teclado." },
-  { prop: "openSubmenuOnHover", type: "boolean", defaultValue: "false", description: "No estilo tiered, abre submenu no hover quando true; no default abre no clique." },
-  { prop: "search", type: "{ enabled: boolean; placeholder?: string }", defaultValue: "{ enabled: false }", description: "Configuracao da busca integrada." },
-  { prop: "elevation", type: "\"none\" | \"sm\" | \"md\"", defaultValue: "none", description: "Elevacao/sombra do container." },
-  { prop: "border", type: "boolean", defaultValue: "true", description: "Exibe borda externa do menu." },
-  { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no root." },
-  { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Estilos inline no root." },
-  { prop: "userSectionClassName", type: "string", defaultValue: "-", description: "Classes CSS adicionais na secao do usuario (area de footer do menu)." },
-  { prop: "userSectionStyle", type: "CSSProperties", defaultValue: "-", description: "Estilos inline na secao do usuario, util para customizar cor de fundo." },
-  { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Conteudo de rodape do menu." }
+  { prop: "id", type: "string", defaultValue: "-", description: "Stable menu identifier (recommended for dockable persistence)." },
+  { prop: "menu", type: "SgMenuNode[]", defaultValue: "-", description: "Navigation tree rendered by the menu." },
+  { prop: "selection", type: "SgMenuSelection", defaultValue: "-", description: "Active item by id or URL." },
+  { prop: "brand", type: "SgMenuBrand", defaultValue: "-", description: "Brand block at the top." },
+  { prop: "user", type: "SgMenuUser", defaultValue: "-", description: "User block at the top/footer of the menu." },
+  { prop: "userMenu", type: "SgMenuNode[]", defaultValue: "-", description: "Actions shown in the user menu." },
+  { prop: "variant", type: "\"sidebar\" | \"drawer\" | \"inline\" | \"hybrid\"", defaultValue: "sidebar", description: "General presentation mode." },
+  { prop: "menuStyle", type: "SgMenuStyle", defaultValue: "panel", description: "Internal style: panel, tiered, mega-horizontal, or mega-vertical." },
+  { prop: "position", type: "\"left\" | \"right\"", defaultValue: "left", description: "Horizontal menu position." },
+  { prop: "density", type: "\"compact\" | \"comfortable\"", defaultValue: "comfortable", description: "Visual density of rows and icons." },
+  { prop: "indent", type: "number", defaultValue: "16", description: "Indent per depth level." },
+  { prop: "collapsedWidth", type: "number | string", defaultValue: "72", description: "Width when collapsed." },
+  { prop: "expandedWidth", type: "number | string", defaultValue: "280", description: "Width when expanded." },
+  { prop: "overlaySize", type: "SgExpandablePanelSize", defaultValue: "-", description: "Overlay size in drawer/hybrid modes." },
+  { prop: "overlayBackdrop", type: "boolean", defaultValue: "-", description: "Controls overlay backdrop." },
+  { prop: "dockable", type: "boolean", defaultValue: "false", description: "When true and inside SgDockLayout, the menu can be docked in zones." },
+  { prop: "dockZone", type: "\"top\" | \"bottom\" | \"left\" | \"right\" | \"free\"", defaultValue: "left", description: "Initial zone in dockable mode (if omitted, can be inferred from orientationDirection)." },
+  { prop: "draggable", type: "boolean", defaultValue: "false", description: "In dockable mode, shows drag handle between dock zones." },
+  { prop: "orientationDirection", type: "\"horizontal-left\" | \"horizontal-right\" | \"vertical-up\" | \"vertical-top\" | \"vertical-down\"", defaultValue: "-", description: "Optional direction used as fallback to infer initial dockZone." },
+  { prop: "mode", type: "\"accordion\" | \"multiple\"", defaultValue: "multiple", description: "Group expansion strategy." },
+  { prop: "expandedIds", type: "string[]", defaultValue: "-", description: "External control of expanded groups." },
+  { prop: "defaultExpandedIds", type: "string[]", defaultValue: "[]", description: "Initial state of expanded groups." },
+  { prop: "onExpandedIdsChange", type: "(ids: string[]) => void", defaultValue: "-", description: "Callback when expanded groups change." },
+  { prop: "collapsed", type: "boolean", defaultValue: "-", description: "External control of collapsed state." },
+  { prop: "defaultCollapsed", type: "boolean", defaultValue: "false", description: "Initial collapsed state." },
+  { prop: "onCollapsedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback when collapsing/expanding." },
+  { prop: "showCollapseButton", type: "boolean", defaultValue: "false", description: "Shows collapse button in the header." },
+  { prop: "open", type: "boolean", defaultValue: "-", description: "External control of drawer/overlay open state." },
+  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Initial open state in drawer/overlay." },
+  { prop: "onOpenChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback when opening/closing overlay." },
+  { prop: "closeOnNavigate", type: "boolean", defaultValue: "-", description: "Closes drawer after navigation." },
+  { prop: "pinned", type: "boolean", defaultValue: "-", description: "External control of pinned state." },
+  { prop: "defaultPinned", type: "boolean", defaultValue: "false", description: "Initial pinned state." },
+  { prop: "onPinnedChange", type: "(value: boolean) => void", defaultValue: "-", description: "Callback when pinning/unpinning." },
+  { prop: "showPinButton", type: "boolean", defaultValue: "false", description: "Shows pin button in the header." },
+  { prop: "onNavigate", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Fired for navigation items (URL)." },
+  { prop: "onAction", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Fired for action items." },
+  { prop: "onItemClick", type: "(node: SgMenuNode) => void", defaultValue: "-", description: "Fired on any item click." },
+  { prop: "ariaLabel", type: "string", defaultValue: "\"Menu\"", description: "Accessibility label for nav." },
+  { prop: "keyboardNavigation", type: "boolean", defaultValue: "true", description: "Enables keyboard navigation." },
+  { prop: "openSubmenuOnHover", type: "boolean", defaultValue: "false", description: "In tiered style, opens submenu on hover when true; default opens on click." },
+  { prop: "search", type: "{ enabled: boolean; placeholder?: string }", defaultValue: "{ enabled: false }", description: "Integrated search configuration." },
+  { prop: "elevation", type: "\"none\" | \"sm\" | \"md\"", defaultValue: "none", description: "Container elevation/shadow." },
+  { prop: "border", type: "boolean", defaultValue: "true", description: "Shows external menu border." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Additional CSS classes on root." },
+  { prop: "style", type: "CSSProperties", defaultValue: "-", description: "Inline styles on root." },
+  { prop: "userSectionClassName", type: "string", defaultValue: "-", description: "Additional CSS classes in the user section (menu footer area)." },
+  { prop: "userSectionStyle", type: "CSSProperties", defaultValue: "-", description: "Inline styles in the user section, useful to customize background color." },
+  { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Menu footer content." }
 ];
 
 const MENU_NODE_PROPS: ShowcasePropRow[] = [
-  { prop: "id", type: "string", defaultValue: "-", description: "Identificador unico do item." },
-  { prop: "label", type: "string", defaultValue: "-", description: "Texto exibido no item." },
-  { prop: "url", type: "string", defaultValue: "-", description: "Rota de navegacao do item." },
-  { prop: "children", type: "SgMenuNode[]", defaultValue: "-", description: "Subitens do no atual." },
-  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Desabilita interacao do item." },
-  { prop: "icon", type: "ReactNode", defaultValue: "-", description: "Icone direto do item." },
-  { prop: "badge", type: "string | number", defaultValue: "-", description: "Badge auxiliar ao lado do label." },
-  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao local do item." }
+  { prop: "id", type: "string", defaultValue: "-", description: "Unique item identifier." },
+  { prop: "label", type: "string", defaultValue: "-", description: "Text displayed on the item." },
+  { prop: "url", type: "string", defaultValue: "-", description: "Navigation route for the item." },
+  { prop: "children", type: "SgMenuNode[]", defaultValue: "-", description: "Child items of the current node." },
+  { prop: "disabled", type: "boolean", defaultValue: "false", description: "Disables item interaction." },
+  { prop: "icon", type: "ReactNode", defaultValue: "-", description: "Direct item icon." },
+  { prop: "badge", type: "string | number", defaultValue: "-", description: "Auxiliary badge next to the label." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Local item action." }
 ];
 
 const MENU_SELECTION_PROPS: ShowcasePropRow[] = [
-  { prop: "activeId", type: "string", defaultValue: "-", description: "Id do item ativo." },
-  { prop: "activeUrl", type: "string", defaultValue: "-", description: "URL ativa para selecao por rota." }
+  { prop: "activeId", type: "string", defaultValue: "-", description: "Active item id." },
+  { prop: "activeUrl", type: "string", defaultValue: "-", description: "Active URL for route-based selection." }
 ];
 
 const MENU_BRAND_PROPS: ShowcasePropRow[] = [
-  { prop: "title", type: "string", defaultValue: "-", description: "Titulo exibido no bloco de marca." },
-  { prop: "imageSrc", type: "string", defaultValue: "-", description: "URL da imagem da marca." },
-  { prop: "image", type: "ReactNode", defaultValue: "-", description: "Elemento customizado de imagem." },
-  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao ao clicar na marca." }
+  { prop: "title", type: "string", defaultValue: "-", description: "Title displayed in the brand block." },
+  { prop: "imageSrc", type: "string", defaultValue: "-", description: "Brand image URL." },
+  { prop: "image", type: "ReactNode", defaultValue: "-", description: "Custom image element." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Action when clicking the brand." }
 ];
 
 const MENU_USER_PROPS: ShowcasePropRow[] = [
-  { prop: "name", type: "string", defaultValue: "-", description: "Nome exibido no bloco do usuario." },
-  { prop: "subtitle", type: "string", defaultValue: "-", description: "Texto auxiliar do usuario." },
-  { prop: "avatarSrc", type: "string", defaultValue: "-", description: "URL do avatar do usuario." },
-  { prop: "avatar", type: "ReactNode", defaultValue: "-", description: "Avatar customizado." },
-  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Acao ao clicar no bloco do usuario." }
+  { prop: "name", type: "string", defaultValue: "-", description: "Name displayed in the user block." },
+  { prop: "subtitle", type: "string", defaultValue: "-", description: "User helper text." },
+  { prop: "avatarSrc", type: "string", defaultValue: "-", description: "User avatar URL." },
+  { prop: "avatar", type: "ReactNode", defaultValue: "-", description: "Custom avatar." },
+  { prop: "onClick", type: "() => void", defaultValue: "-", description: "Action when clicking the user block." }
 ];
 
 type MenuShowcaseTexts = {
@@ -849,36 +849,36 @@ const MENU_SHOWCASE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MenuShowca
     section2Title: "2) Drawer Mobile",
     section2Description: "Abre em overlay e pode ser fixado por pin.",
     section3Title: "3) PanelMenu",
-    section3Description: "Exemplo isolado para visualizar apenas o estilo panel.",
+    section3Description: "Isolated example to preview only the panel style.",
     section4Title: "4) Tiered",
-    section4Description: "Exemplo isolado para visualizar apenas o estilo tiered.",
+    section4Description: "Isolated example to preview only the tiered style.",
     section5Title: "5) MegaMenu Horizontal",
-    section5Description: "Exemplo isolado para visualizar apenas o mega menu horizontal.",
+    section5Description: "Isolated example to preview only the horizontal mega menu.",
     section6Title: "6) MegaMenu Vertical",
-    section6Description: "Exemplo isolado para visualizar apenas o mega menu vertical.",
+    section6Description: "Isolated example to preview only the vertical mega menu.",
     section7Title: "7) Sidebar Dockable",
     section7Description:
       "SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.",
     section8Title: "8) Playground",
     section8Description: "Teste variant, style, collapsed e open.",
-    sidebarSearchPlaceholder: "Buscar modulo...",
-    sidebarUserSubtitle: "Financeiro",
-    mainContentTitle: "Conteudo principal",
-    activeItemLabel: "Item ativo",
-    drawerOpenButton: "Abrir menu mobile",
-    drawerPinButton: "Fixar drawer",
-    drawerUnpinButton: "Desafixar drawer",
-    drawerSearchPlaceholder: "Buscar...",
+    sidebarSearchPlaceholder: "Search module...",
+    sidebarUserSubtitle: "Finance",
+    mainContentTitle: "Main content",
+    activeItemLabel: "Active item",
+    drawerOpenButton: "Open mobile menu",
+    drawerPinButton: "Pin drawer",
+    drawerUnpinButton: "Unpin drawer",
+    drawerSearchPlaceholder: "Search...",
     dockMenuStyleTitle: "Menu Style",
     dockFreeAreaLabel: "Area central livre",
-    dockSearchPlaceholder: "Buscar modulo...",
-    dockUserSubtitle: "Financeiro",
-    toolbarTitle: "Ferramentas",
-    toolbarHintNew: "Novo registro",
-    toolbarHintSave: "Salvar",
-    toolbarHintPrint: "Imprimir",
-    toolbarHintExport: "Exportar",
-    toolbarHintDelete: "Excluir",
+    dockSearchPlaceholder: "Search module...",
+    dockUserSubtitle: "Finance",
+    toolbarTitle: "Tools",
+    toolbarHintNew: "New record",
+    toolbarHintSave: "Save",
+    toolbarHintPrint: "Print",
+    toolbarHintExport: "Export",
+    toolbarHintDelete: "Delete",
     playgroundTitle: "SgMenu Playground",
     propsMenuTitle: "Referencia de Props - SgMenu",
     propsNodeTitle: "Referencia de Props - SgMenuNode",
@@ -893,36 +893,36 @@ const MENU_SHOWCASE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MenuShowca
     section2Title: "2) Drawer Mobile",
     section2Description: "Abre em overlay e pode ser fixado por pin.",
     section3Title: "3) PanelMenu",
-    section3Description: "Exemplo isolado para visualizar apenas o estilo panel.",
+    section3Description: "Isolated example to preview only the panel style.",
     section4Title: "4) Tiered",
-    section4Description: "Exemplo isolado para visualizar apenas o estilo tiered.",
+    section4Description: "Isolated example to preview only the tiered style.",
     section5Title: "5) MegaMenu Horizontal",
-    section5Description: "Exemplo isolado para visualizar apenas o mega menu horizontal.",
+    section5Description: "Isolated example to preview only the horizontal mega menu.",
     section6Title: "6) MegaMenu Vertical",
-    section6Description: "Exemplo isolado para visualizar apenas o mega menu vertical.",
+    section6Description: "Isolated example to preview only the vertical mega menu.",
     section7Title: "7) Sidebar Dockable",
     section7Description:
       "SgMenu dockable com menu completo, brand, userMenu, SgToolBar integrada e identidade visual do showcase.",
     section8Title: "8) Playground",
     section8Description: "Teste variant, style, collapsed e open.",
-    sidebarSearchPlaceholder: "Buscar modulo...",
-    sidebarUserSubtitle: "Financeiro",
-    mainContentTitle: "Conteudo principal",
-    activeItemLabel: "Item ativo",
-    drawerOpenButton: "Abrir menu mobile",
-    drawerPinButton: "Fixar drawer",
-    drawerUnpinButton: "Desafixar drawer",
-    drawerSearchPlaceholder: "Buscar...",
+    sidebarSearchPlaceholder: "Search module...",
+    sidebarUserSubtitle: "Finance",
+    mainContentTitle: "Main content",
+    activeItemLabel: "Active item",
+    drawerOpenButton: "Open mobile menu",
+    drawerPinButton: "Pin drawer",
+    drawerUnpinButton: "Unpin drawer",
+    drawerSearchPlaceholder: "Search...",
     dockMenuStyleTitle: "Menu Style",
     dockFreeAreaLabel: "Area central livre",
-    dockSearchPlaceholder: "Buscar modulo...",
-    dockUserSubtitle: "Financeiro",
-    toolbarTitle: "Ferramentas",
-    toolbarHintNew: "Novo registro",
-    toolbarHintSave: "Salvar",
-    toolbarHintPrint: "Imprimir",
-    toolbarHintExport: "Exportar",
-    toolbarHintDelete: "Excluir",
+    dockSearchPlaceholder: "Search module...",
+    dockUserSubtitle: "Finance",
+    toolbarTitle: "Tools",
+    toolbarHintNew: "New record",
+    toolbarHintSave: "Save",
+    toolbarHintPrint: "Print",
+    toolbarHintExport: "Export",
+    toolbarHintDelete: "Delete",
     playgroundTitle: "SgMenu Playground",
     propsMenuTitle: "Referencia de Props - SgMenu",
     propsNodeTitle: "Referencia de Props - SgMenuNode",
@@ -993,23 +993,23 @@ const MENU_SHOWCASE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", MenuShowca
       "SgMenu dockable con menu completo, brand, userMenu, SgToolBar integrada e identidad visual del showcase.",
     section8Title: "8) Playground",
     section8Description: "Prueba variant, style, collapsed y open.",
-    sidebarSearchPlaceholder: "Buscar modulo...",
+    sidebarSearchPlaceholder: "Search module...",
     sidebarUserSubtitle: "Finanzas",
     mainContentTitle: "Contenido principal",
     activeItemLabel: "Item activo",
-    drawerOpenButton: "Abrir menu mobile",
+    drawerOpenButton: "Open mobile menu",
     drawerPinButton: "Fijar drawer",
     drawerUnpinButton: "Desfijar drawer",
-    drawerSearchPlaceholder: "Buscar...",
+    drawerSearchPlaceholder: "Search...",
     dockMenuStyleTitle: "Estilo del Menu",
     dockFreeAreaLabel: "Area central libre",
-    dockSearchPlaceholder: "Buscar modulo...",
+    dockSearchPlaceholder: "Search module...",
     dockUserSubtitle: "Finanzas",
     toolbarTitle: "Herramientas",
     toolbarHintNew: "Nuevo registro",
     toolbarHintSave: "Guardar",
-    toolbarHintPrint: "Imprimir",
-    toolbarHintExport: "Exportar",
+    toolbarHintPrint: "Print",
+    toolbarHintExport: "Export",
     toolbarHintDelete: "Eliminar",
     playgroundTitle: "SgMenu Playground",
     propsMenuTitle: "Referencia de Props - SgMenu",
@@ -1242,4 +1242,6 @@ export default function SgMenuPage() {
     </I18NReady>
   );
 }
+
+
 

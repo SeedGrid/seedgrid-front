@@ -316,7 +316,7 @@ export default function App() {
 
 const EXPANDABLE_PANEL_PROPS: ShowcasePropRow[] = [
   { prop: "header", type: "ReactNode", defaultValue: "-", description: "Conteudo opcional do cabecalho." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteudo principal do painel." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Main panel content." },
   { prop: "footer", type: "ReactNode", defaultValue: "-", description: "Conteudo opcional do rodape." },
   { prop: "handle", type: "ReactNode", defaultValue: "-", description: "Elemento visual acima do header." },
 
@@ -365,7 +365,7 @@ type ExpandablePanelTexts = {
 
 const EXPANDABLE_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ExpandablePanelTexts> = {
   "pt-BR": {
-    subtitle: "Mais exemplos cobrindo as principais propriedades de modo inline e overlay.",
+    subtitle: "More examples covering the main properties in inline and overlay modes.",
     sectionTitles: [
       "1) Inline Controlado + Resize",
       "2) Overlay + Comportamento",
@@ -386,7 +386,7 @@ const EXPANDABLE_PANEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", Expanda
     propsTitle: "Referencia de Props"
   },
   "pt-PT": {
-    subtitle: "Mais exemplos cobrindo as principais propriedades de modo inline e overlay.",
+    subtitle: "More examples covering the main properties in inline and overlay modes.",
     sectionTitles: [
       "1) Inline Controlado + Resize",
       "2) Overlay + Comportamento",
@@ -493,7 +493,7 @@ export default function SgExpandablePanelPage() {
             <div className="flex h-full">
               <div className="flex-1 space-y-3 p-4">
                 <h3 className="text-base font-semibold">Area principal</h3>
-                <p className="text-sm text-muted-foreground">Exemplo inline controlado com resize.</p>
+                <p className="text-sm text-muted-foreground">Example inline controlado com resize.</p>
                 <div className="flex flex-wrap gap-2">
                   <SgButton size="sm" onClick={() => setInlineOpen((v) => !v)}>
                     {inlineOpen ? "Fechar inspector" : "Abrir inspector"}
@@ -677,3 +677,4 @@ export default function SgExpandablePanelPage() {
     </I18NReady>
   );
 }
+

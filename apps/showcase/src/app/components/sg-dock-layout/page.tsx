@@ -101,17 +101,17 @@ type DockLayoutPageTexts = {
 
 const DOCK_LAYOUT_PAGE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockLayoutPageTexts> = {
   "pt-BR": {
-    sectionBasicDescription: "Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis.",
+    sectionBasicDescription: "Four zones (top/bottom/left/right) and six draggable toolbars.",
     sectionPlaygroundTitle: "2) Playground (SgPlayground)",
-    sectionPlaygroundDescription: "Exemplo interativo com zonas de dock e toolbars.",
+    sectionPlaygroundDescription: "Interactive example with dock zones and toolbars.",
     playgroundTitle: "SgDockLayout Playground",
     propsTitleLayout: "Referencia de Props - SgDockLayout",
     propsTitleZone: "Referencia de Props - SgDockZone"
   },
   "pt-PT": {
-    sectionBasicDescription: "Quatro zonas (top/bottom/left/right) e seis toolbars arrastaveis.",
+    sectionBasicDescription: "Four zones (top/bottom/left/right) and six draggable toolbars.",
     sectionPlaygroundTitle: "2) Playground (SgPlayground)",
-    sectionPlaygroundDescription: "Exemplo interativo com zonas de dock e toolbars.",
+    sectionPlaygroundDescription: "Interactive example with dock zones and toolbars.",
     playgroundTitle: "SgDockLayout Playground",
     propsTitleLayout: "Referencia de Props - SgDockLayout",
     propsTitleZone: "Referencia de Props - SgDockZone"
@@ -125,9 +125,9 @@ const DOCK_LAYOUT_PAGE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DockLay
     propsTitleZone: "Props Reference - SgDockZone"
   },
   es: {
-    sectionBasicDescription: "Cuatro zonas (top/bottom/left/right) y seis toolbars arrastrables.",
+    sectionBasicDescription: "Four zones (top/bottom/left/right) and six draggable toolbars.",
     sectionPlaygroundTitle: "2) Playground (SgPlayground)",
-    sectionPlaygroundDescription: "Ejemplo interactivo con zonas de dock y toolbars.",
+    sectionPlaygroundDescription: "Interactive example with dock zones and toolbars.",
     playgroundTitle: "SgDockLayout Playground",
     propsTitleLayout: "Referencia de Props - SgDockLayout",
     propsTitleZone: "Referencia de Props - SgDockZone"
@@ -170,7 +170,7 @@ export default function SgDockLayoutPage() {
           <SgDockLayout id="showcase-dock-basic-v9" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
             <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
               <SgToolBar id="tb-main-basic-v9" dockZone="top" orientationDirection="horizontal-left" title={topLabel} draggable>
-                <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+                <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para inicio" />
                 <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
               </SgToolBar>
               <SgToolBar id="tb-top-extra-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="Acoes" draggable>
@@ -200,7 +200,7 @@ export default function SgDockLayoutPage() {
               </SgToolBar>
               <SgToolBar id="tb-bottom-b-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape B" draggable>
                 <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Tarefas" hint="Abrir tarefas" />
-                <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Voltar ao inicio" />
+                <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Voltar ao inicio" />
               </SgToolBar>
             </SgDockZone>
           </SgDockLayout>
@@ -216,7 +216,7 @@ export default function Example() {
       <SgDockLayout id="showcase-dock-basic-v9" className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]">
         <SgDockZone zone="top" className="col-span-3 row-start-1 items-start border-b border-white/20">
           <SgToolBar id="tb-main-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
-            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para inicio" />
             <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
           </SgToolBar>
           <SgToolBar id="tb-top-extra-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="Acoes" draggable>
@@ -246,7 +246,7 @@ export default function Example() {
           </SgToolBar>
           <SgToolBar id="tb-bottom-b-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape B" draggable>
             <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Tarefas" hint="Abrir tarefas" />
-            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Voltar ao inicio" />
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Voltar ao inicio" />
           </SgToolBar>
         </SgDockZone>
       </SgDockLayout>

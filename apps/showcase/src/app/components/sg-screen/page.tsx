@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { SgScreen, SgMainPanel, SgPanel, SgPlayground, SgStack } from "@seedgrid/fe-components";
@@ -110,7 +110,7 @@ const SCREEN_PROPS: ShowcasePropRow[] = [
   { prop: "fullscreen", type: "boolean", defaultValue: "true", description: "Define se ocupa toda a viewport." },
   { prop: "width / height", type: "number | string", defaultValue: "-", description: "Dimensoes explicitas do container (ex.: 960, 100%, 60vh)." },
   { prop: "padding", type: "number", defaultValue: "0", description: "Padding interno aplicado ao root da tela." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteudo principal da tela." },
+  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Main screen content." },
   { prop: "className / style", type: "string / CSSProperties", defaultValue: "-", description: "Customizacao visual do container." }
 ];
 
@@ -125,19 +125,19 @@ type ScreenTexts = {
 
 const SCREEN_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ScreenTexts> = {
   "pt-BR": {
-    subtitle: "Container raiz para telas. O exemplo abaixo esta completo para copiar e colar.",
-    section1Title: "1) Exemplo Completo",
+    subtitle: "Root container for screens. The example below is complete for copy/paste.",
+    section1Title: "1) Complete Example",
     section1Description: "Uso com fullscreen=false em area controlada, incluindo layout top/left/right/bottom/client.",
     section2Title: "2) Playground (SgPlayground)",
-    section2Description: "Exemplo simples e direto com top, left, right, bottom e client.",
+    section2Description: "Simple and direct example with top, left, right, bottom, and client.",
     playgroundTitle: "SgScreen Playground"
   },
   "pt-PT": {
     subtitle: "Container raiz para ecras. O exemplo abaixo esta completo para copiar e colar.",
-    section1Title: "1) Exemplo Completo",
+    section1Title: "1) Complete Example",
     section1Description: "Uso com fullscreen=false em area controlada, incluindo layout top/left/right/bottom/client.",
     section2Title: "2) Playground (SgPlayground)",
-    section2Description: "Exemplo simples e direto com top, left, right, bottom e client.",
+    section2Description: "Simple and direct example with top, left, right, bottom, and client.",
     playgroundTitle: "SgScreen Playground"
   },
   "en-US": {
@@ -255,3 +255,4 @@ export default function SgScreenPage() {
     </I18NReady>
   );
 }
+

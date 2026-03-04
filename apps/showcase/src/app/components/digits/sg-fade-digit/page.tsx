@@ -64,9 +64,9 @@ const FADE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FadeDigitTexts> = {
     section5Description:
       "Composicao de varios SgFadeDigit em linha - cada digito atualiza de forma independente.",
     section6Title: "Tamanhos",
-    section6Description: "Ajuste de escala via prop fontSize - largura e altura do card sao proporcionais.",
+    section6Description: "Scale adjustment via fontSize prop - card width and height are proportional.",
     section7Title: "Playground",
-    section7Description: "Relogio interativo com paleta de cores e fontSize configuravel.",
+    section7Description: "Interactive clock with color palette and configurable fontSize.",
     propsReferenceTitle: "Referencia de Props",
   },
   "pt-PT": {
@@ -84,9 +84,9 @@ const FADE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FadeDigitTexts> = {
     section5Description:
       "Composicao de varios SgFadeDigit em linha - cada digito atualiza de forma independente.",
     section6Title: "Tamanhos",
-    section6Description: "Ajuste de escala via prop fontSize - largura e altura do card sao proporcionais.",
+    section6Description: "Scale adjustment via fontSize prop - card width and height are proportional.",
     section7Title: "Playground",
-    section7Description: "Relogio interativo com paleta de cores e fontSize configuravel.",
+    section7Description: "Interactive clock with color palette and configurable fontSize.",
     propsReferenceTitle: "Referencia de Props",
   },
   "en-US": {
@@ -167,9 +167,9 @@ const random = () => setDigit(String(Math.floor(Math.random() * 10)));
 <div className="flex items-center gap-4">
   <SgFadeDigit value={digit} />
   <div className="flex flex-col gap-2">
-    <SgButton size="sm" onClick={next}>Proximo (+1)</SgButton>
-    <SgButton size="sm" severity="secondary" onClick={prev}>Anterior (-1)</SgButton>
-    <SgButton size="sm" severity="info" onClick={random}>Aleatorio</SgButton>
+    <SgButton size="sm" onClick={next}>Next (+1)</SgButton>
+    <SgButton size="sm" severity="secondary" onClick={prev}>Previous (-1)</SgButton>
+    <SgButton size="sm" severity="info" onClick={random}>Random</SgButton>
   </div>
 </div>`;
 
@@ -182,9 +182,9 @@ function Ex1() {
     <div className="flex items-center gap-4">
       <SgFadeDigit value={digit} />
       <div className="flex flex-col gap-2">
-        <SgButton size="sm" onClick={next}>Proximo (+1)</SgButton>
-        <SgButton size="sm" severity="secondary" onClick={prev}>Anterior (-1)</SgButton>
-        <SgButton size="sm" severity="info" onClick={random}>Aleatorio</SgButton>
+        <SgButton size="sm" onClick={next}>Next (+1)</SgButton>
+        <SgButton size="sm" severity="secondary" onClick={prev}>Previous (-1)</SgButton>
+        <SgButton size="sm" severity="info" onClick={random}>Random</SgButton>
       </div>
     </div>
   );
@@ -408,15 +408,15 @@ function Ex5() {
 // ---------------------------------------------------------------------------
 const EX6_CODE = `<div className="flex items-end gap-6">
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Pequeno (40px)</p>
+    <p className="mb-2 text-xs text-muted-foreground">Small (40px)</p>
     <SgFadeDigit value="5" fontSize={40} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Medio (70px)</p>
+    <p className="mb-2 text-xs text-muted-foreground">Medium (70px)</p>
     <SgFadeDigit value="5" fontSize={70} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Grande (110px)</p>
+    <p className="mb-2 text-xs text-muted-foreground">Large (110px)</p>
     <SgFadeDigit value="5" fontSize={110} />
   </div>
 </div>`;
@@ -425,15 +425,15 @@ function Ex6() {
   return (
     <div className="flex items-end gap-6">
       <div className="text-center">
-        <p className="mb-2 text-xs text-muted-foreground">Pequeno (40px)</p>
+        <p className="mb-2 text-xs text-muted-foreground">Small (40px)</p>
         <SgFadeDigit value="5" fontSize={40} />
       </div>
       <div className="text-center">
-        <p className="mb-2 text-xs text-muted-foreground">Medio (70px)</p>
+        <p className="mb-2 text-xs text-muted-foreground">Medium (70px)</p>
         <SgFadeDigit value="5" fontSize={70} />
       </div>
       <div className="text-center">
-        <p className="mb-2 text-xs text-muted-foreground">Grande (110px)</p>
+        <p className="mb-2 text-xs text-muted-foreground">Large (110px)</p>
         <SgFadeDigit value="5" fontSize={110} />
       </div>
     </div>
@@ -658,4 +658,5 @@ export default function SgFadeDigitShowcase() {
     </I18NReady>
   );
 }
+
 

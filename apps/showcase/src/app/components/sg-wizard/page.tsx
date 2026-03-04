@@ -42,7 +42,7 @@ export default function App() {
     <div className="space-y-4 p-2">
       <SgWizard
         stepper="numbered"
-        labels={{ next: "Proximo", previous: "Voltar", finish: "Concluir" }}
+        labels={{ next: "Next", previous: "Back", finish: "Finish" }}
         validateStep={(index) => {
           if (index !== 0) return true;
           return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
@@ -310,13 +310,13 @@ const [formValues, setFormValues] = React.useState({
           <SgWizardPage title="Posicao" icon={<MapPin className="size-5" />}>
             <div className="rounded border border-border bg-foreground/5 p-4">
               <div className="text-sm font-semibold">Passo 1 - Posicao</div>
-              <p className="mt-1 text-sm text-muted-foreground">Selecione a posicao desejada.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Select the desired position.</p>
             </div>
           </SgWizardPage>
           <SgWizardPage title="Categoria" icon={<Tag className="size-5" />}>
             <div className="rounded border border-border bg-foreground/5 p-4">
               <div className="text-sm font-semibold">Passo 2 - Categoria</div>
-              <p className="mt-1 text-sm text-muted-foreground">Escolha a categoria.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Choose the category.</p>
             </div>
           </SgWizardPage>
           <SgWizardPage title="Enviar" icon={<Send className="size-5" />}>
@@ -333,13 +333,13 @@ import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
   <SgWizardPage title="Posicao" icon={<MapPin className="size-5" />}>
     <div className="rounded border border-border bg-foreground/5 p-4">
       <div className="text-sm font-semibold">Passo 1 - Posicao</div>
-      <p className="mt-1 text-sm text-muted-foreground">Selecione a posicao desejada.</p>
+      <p className="mt-1 text-sm text-muted-foreground">Select the desired position.</p>
     </div>
   </SgWizardPage>
   <SgWizardPage title="Categoria" icon={<Tag className="size-5" />}>
     <div className="rounded border border-border bg-foreground/5 p-4">
       <div className="text-sm font-semibold">Passo 2 - Categoria</div>
-      <p className="mt-1 text-sm text-muted-foreground">Escolha a categoria.</p>
+      <p className="mt-1 text-sm text-muted-foreground">Choose the category.</p>
     </div>
   </SgWizardPage>
   <SgWizardPage title="Enviar" icon={<Send className="size-5" />}>
@@ -584,3 +584,5 @@ const [formValues, setFormValues] = React.useState({ name: "", email: "" });
   </I18NReady>
   );
 }
+
+

@@ -86,7 +86,7 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
       "5) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo vertical simples com botoes de navegacao.",
+      "Example vertical simples com botoes de navegacao.",
       "Quando onClick retorna Promise, o botao mostra loading ate concluir.",
       "Comparacao entre horizontal-left e vertical-down com buttonsPerDirection.",
       "Uso de bgColor e bgColorTitle para destacar a toolbar.",
@@ -95,31 +95,31 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
     labels: {
       navigation: "Navegacao",
       quickActions: "Acoes rapidas",
-      home: "Inicio",
+      home: "Home",
       users: "Usuarios",
       settings: "Configuracoes",
       create: "Criar",
       edit: "Editar",
-      delete: "Excluir",
+      delete: "Delete",
       filter: "Filtro",
-      refresh: "Atualizar",
+      refresh: "Update",
       panelBody: "Cor no corpo",
-      highlightedTitle: "Titulo destacado"
+      highlightedTitle: "Highlighted title"
     },
     hints: {
-      goHome: "Ir para Inicio",
+      goHome: "Go to Home",
       openUsers: "Abrir lista de usuarios",
       openSettings: "Abrir configuracoes",
       createRecord: "Criar novo registro",
-      editRecord: "Editar registro selecionado",
-      deleteRecord: "Excluir registro selecionado",
+      editRecord: "Edit selected record",
+      deleteRecord: "Delete selected record",
       filterResults: "Filtrar resultados",
-      refreshData: "Atualizar dados da tela"
+      refreshData: "Refresh screen data"
     },
     toasts: {
       createDone: "Acao Criar concluida",
       editDone: "Acao Editar concluida",
-      deleteDone: "Acao Excluir concluida"
+      deleteDone: "Delete action completed"
     },
     playgroundTitle: "SgToolBar Playground",
     propsTitle: "Referencia de Props"
@@ -134,7 +134,7 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
       "5) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo vertical simples com botoes de navegacao.",
+      "Example vertical simples com botoes de navegacao.",
       "Quando onClick retorna Promise, o botao mostra loading ate concluir.",
       "Comparacao entre horizontal-left e vertical-down com buttonsPerDirection.",
       "Uso de bgColor e bgColorTitle para destacar a toolbar.",
@@ -143,31 +143,31 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
     labels: {
       navigation: "Navegacao",
       quickActions: "Acoes rapidas",
-      home: "Inicio",
+      home: "Home",
       users: "Utilizadores",
       settings: "Configuracoes",
       create: "Criar",
       edit: "Editar",
-      delete: "Excluir",
+      delete: "Delete",
       filter: "Filtro",
-      refresh: "Atualizar",
+      refresh: "Update",
       panelBody: "Cor no corpo",
-      highlightedTitle: "Titulo destacado"
+      highlightedTitle: "Highlighted title"
     },
     hints: {
-      goHome: "Ir para Inicio",
+      goHome: "Go to Home",
       openUsers: "Abrir lista de utilizadores",
       openSettings: "Abrir configuracoes",
       createRecord: "Criar novo registo",
-      editRecord: "Editar registo selecionado",
-      deleteRecord: "Excluir registo selecionado",
+      editRecord: "Edit selected record",
+      deleteRecord: "Delete selected record",
       filterResults: "Filtrar resultados",
-      refreshData: "Atualizar dados do ecra"
+      refreshData: "Refresh screen data"
     },
     toasts: {
       createDone: "Acao Criar concluida",
       editDone: "Acao Editar concluida",
-      deleteDone: "Acao Excluir concluida"
+      deleteDone: "Delete action completed"
     },
     playgroundTitle: "SgToolBar Playground",
     propsTitle: "Referencia de Props"
@@ -221,7 +221,7 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
     propsTitle: "Props Reference"
   },
   es: {
-    subtitle: "Toolbar reutilizable con orientacion vertical/horizontal, acciones asincronas y personalizacion visual.",
+    subtitle: "Reusable toolbar with vertical/horizontal orientation, async actions, and visual customization.",
     sectionTitles: [
       "1) Basico",
       "2) onClick asincrono con toast",
@@ -239,7 +239,7 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
     labels: {
       navigation: "Navegacion",
       quickActions: "Acciones rapidas",
-      home: "Inicio",
+      home: "Home",
       users: "Usuarios",
       settings: "Configuraciones",
       create: "Crear",
@@ -248,10 +248,10 @@ const TOOLBAR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToolbarTexts> = 
       filter: "Filtro",
       refresh: "Actualizar",
       panelBody: "Color del cuerpo",
-      highlightedTitle: "Titulo destacado"
+      highlightedTitle: "Highlighted title"
     },
     hints: {
-      goHome: "Ir a Inicio",
+      goHome: "Ir a Home",
       openUsers: "Abrir lista de usuarios",
       openSettings: "Abrir configuraciones",
       createRecord: "Crear nuevo registro",
@@ -333,32 +333,32 @@ export default function App() {
 }`;
 
 const TOOLBAR_PROPS: ShowcasePropRow[] = [
-  { prop: "SgToolBar.id", type: "string", defaultValue: "-", description: "Identificador unico da toolbar." },
-  { prop: "SgToolBar.title", type: "ReactNode", defaultValue: "-", description: "Titulo exibido no cabecalho." },
-  { prop: "SgToolBar.orientationDirection", type: '"vertical-up" | "vertical-down" | "horizontal-left" | "horizontal-right"', defaultValue: '"vertical-down"', description: "Define orientacao e direcao de abertura em uma unica prop." },
-  { prop: "SgToolBar.buttonsPerDirection", type: "number", defaultValue: "-", description: "Quantidade por direcao principal: horizontal por linha, vertical por coluna." },
-  { prop: "SgToolBar.bgColorTitle", type: "string", defaultValue: "-", description: "Cor de fundo do cabecalho." },
-  { prop: "SgToolBar.bgColor", type: "string", defaultValue: "-", description: "Cor de fundo da area principal da toolbar." },
-  { prop: "SgToolBar.size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Dimensoes fixas da toolbar." },
-  { prop: "SgToolBar.className", type: "string", defaultValue: "-", description: "Classes CSS adicionais." },
-  { prop: "SgToolBar.style", type: "CSSProperties", defaultValue: "-", description: "Estilo inline adicional." },
-  { prop: "SgToolBar.dockZone", type: '"top" | "bottom" | "left" | "right" | "free"', defaultValue: '"free"', description: "Zona inicial quando usada com dock." },
-  { prop: "SgToolBar.draggable", type: "boolean", defaultValue: "false", description: "Permite iniciar arraste." },
-  { prop: "SgToolBar.freeDrag", type: "boolean", defaultValue: "false", description: "Ativa arraste livre com posicao x e y." },
-  { prop: "SgToolBar.defaultPosition", type: "{ x: number; y: number }", defaultValue: "-", description: "Posicao inicial quando nao existe estado salvo." },
-  { prop: "SgToolBar.collapsible", type: "boolean", defaultValue: "true", description: "Habilita botao de expandir e contrair." },
-  { prop: "SgToolBar.collapsed", type: "boolean", defaultValue: "controlado", description: "Controla o estado colapsado externamente." },
-  { prop: "SgToolBar.defaultCollapsed", type: "boolean", defaultValue: "false", description: "Estado inicial colapsado no modo nao controlado." },
-  { prop: "SgToolBar.onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Callback ao alternar colapso." },
-  { prop: "SgToolBar.children", type: "ReactNode", defaultValue: "-", description: "Itens internos, normalmente SgToolbarIconButton." },
-  { prop: "SgToolbarIconButton.icon", type: "ReactNode | string", defaultValue: "-", description: "Icone ou texto exibido no botao." },
-  { prop: "SgToolbarIconButton.label", type: "string", defaultValue: "-", description: "Texto visivel no botao." },
-  { prop: "SgToolbarIconButton.showLabel", type: "boolean", defaultValue: "true", description: "Controla exibicao do label." },
-  { prop: "SgToolbarIconButton.hint", type: "string", defaultValue: "-", description: "Texto de dica/tooltip." },
-  { prop: "SgToolbarIconButton.loading", type: "boolean", defaultValue: "false", description: "Forca estado de loading com spinner e bloqueia clique." },
-  { prop: "SgToolbarIconButton.severity", type: '"primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger" | "plain"', defaultValue: '"plain"', description: "Variacao de cor do botao." },
-  { prop: "SgToolbarIconButton.disabled", type: "boolean", defaultValue: "false", description: "Desabilita interacao." },
-  { prop: "SgToolbarIconButton.onClick", type: "() => void | Promise<void>", defaultValue: "-", description: "Acao executada no clique." }
+  { prop: "SgToolBar.id", type: "string", defaultValue: "-", description: "Unique toolbar identifier." },
+  { prop: "SgToolBar.title", type: "ReactNode", defaultValue: "-", description: "Title displayed in the header." },
+  { prop: "SgToolBar.orientationDirection", type: '"vertical-up" | "vertical-down" | "horizontal-left" | "horizontal-right"', defaultValue: '"vertical-down"', description: "Defines orientation and opening direction in a single prop." },
+  { prop: "SgToolBar.buttonsPerDirection", type: "number", defaultValue: "-", description: "Amount per main direction: horizontal per row, vertical per column." },
+  { prop: "SgToolBar.bgColorTitle", type: "string", defaultValue: "-", description: "Header background color." },
+  { prop: "SgToolBar.bgColor", type: "string", defaultValue: "-", description: "Toolbar main area background color." },
+  { prop: "SgToolBar.size", type: "{ w?: number; h?: number }", defaultValue: "-", description: "Fixed toolbar dimensions." },
+  { prop: "SgToolBar.className", type: "string", defaultValue: "-", description: "Additional CSS classes." },
+  { prop: "SgToolBar.style", type: "CSSProperties", defaultValue: "-", description: "Additional inline style." },
+  { prop: "SgToolBar.dockZone", type: '"top" | "bottom" | "left" | "right" | "free"', defaultValue: '"free"', description: "Initial zone when used with dock." },
+  { prop: "SgToolBar.draggable", type: "boolean", defaultValue: "false", description: "Allows starting drag." },
+  { prop: "SgToolBar.freeDrag", type: "boolean", defaultValue: "false", description: "Enables free drag with x and y position." },
+  { prop: "SgToolBar.defaultPosition", type: "{ x: number; y: number }", defaultValue: "-", description: "Initial position when no saved state exists." },
+  { prop: "SgToolBar.collapsible", type: "boolean", defaultValue: "true", description: "Enables expand/collapse button." },
+  { prop: "SgToolBar.collapsed", type: "boolean", defaultValue: "controlado", description: "Controls collapsed state externally." },
+  { prop: "SgToolBar.defaultCollapsed", type: "boolean", defaultValue: "false", description: "Initial collapsed state in uncontrolled mode." },
+  { prop: "SgToolBar.onCollapsedChange", type: "(collapsed: boolean) => void", defaultValue: "-", description: "Callback when collapse toggles." },
+  { prop: "SgToolBar.children", type: "ReactNode", defaultValue: "-", description: "Internal items, usually SgToolbarIconButton." },
+  { prop: "SgToolbarIconButton.icon", type: "ReactNode | string", defaultValue: "-", description: "Icon or text displayed on the button." },
+  { prop: "SgToolbarIconButton.label", type: "string", defaultValue: "-", description: "Visible button text." },
+  { prop: "SgToolbarIconButton.showLabel", type: "boolean", defaultValue: "true", description: "Controls label visibility." },
+  { prop: "SgToolbarIconButton.hint", type: "string", defaultValue: "-", description: "Hint/tooltip text." },
+  { prop: "SgToolbarIconButton.loading", type: "boolean", defaultValue: "false", description: "Forces loading state with spinner and blocks click." },
+  { prop: "SgToolbarIconButton.severity", type: '"primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger" | "plain"', defaultValue: '"plain"', description: "Button color variant." },
+  { prop: "SgToolbarIconButton.disabled", type: "boolean", defaultValue: "false", description: "Disables interaction." },
+  { prop: "SgToolbarIconButton.onClick", type: "() => void | Promise<void>", defaultValue: "-", description: "Action executed on click." }
 ];
 
 export default function SgToolBarPage() {
@@ -643,3 +643,4 @@ export default function Example() {
     </I18NReady>
   );
 }
+

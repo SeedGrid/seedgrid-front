@@ -41,10 +41,10 @@ type RollerTexts = {
 
 const ROLLER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RollerTexts> = {
   "pt-BR": {
-    headerSubtitle: "Tambor vertical animado - exibe qualquer valor de uma lista com transicao suave via CSS.",
+    headerSubtitle: "Animated vertical drum - displays any value from a list with smooth CSS transition.",
     section1Title: "Basico (0-9)",
     section1Description: "Rola entre digitos simples.",
-    section2Title: "Valor padded de 2 digitos",
+    section2Title: "2-digit padded value",
     section2Description: "Items customizados: 00 a 59 (minutos/segundos).",
     section3Title: "Letras (A-Z)",
     section3Description: "Qualquer conjunto de caracteres pode ser usado.",
@@ -58,10 +58,10 @@ const ROLLER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RollerTexts> = {
     propsReferenceTitle: "Referencia de Props",
   },
   "pt-PT": {
-    headerSubtitle: "Tambor vertical animado - exibe qualquer valor de uma lista com transicao suave via CSS.",
+    headerSubtitle: "Animated vertical drum - displays any value from a list with smooth CSS transition.",
     section1Title: "Basico (0-9)",
     section1Description: "Rola entre digitos simples.",
-    section2Title: "Valor padded de 2 digitos",
+    section2Title: "2-digit padded value",
     section2Description: "Items customizados: 00 a 59 (minutos/segundos).",
     section3Title: "Letras (A-Z)",
     section3Description: "Qualquer conjunto de caracteres pode ser usado.",
@@ -95,8 +95,8 @@ const ROLLER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RollerTexts> = {
     headerSubtitle: "Tambor vertical animado - muestra cualquier valor de una lista con transicion CSS suave.",
     section1Title: "Basico (0-9)",
     section1Description: "Rota entre digitos simples.",
-    section2Title: "Valor padded de 2 digitos",
-    section2Description: "Items personalizados: 00 a 59 (minutos/segundos).",
+    section2Title: "2-digit padded value",
+    section2Description: "Custom items: 00 to 59 (minutes/seconds).",
     section3Title: "Letras (A-Z)",
     section3Description: "Se puede usar cualquier conjunto de caracteres.",
     section4Title: "Animacion de nombres",
@@ -132,8 +132,8 @@ const prev = () => setDigit((prev) => String((Number(prev) - 1 + 10) % 10));
 <div className="flex items-center gap-4">
   <SgRoller3DDigit value={digit} fontSize={32} />
   <div className="flex flex-col gap-2">
-    <SgButton onClick={next} size="sm">Proximo (+1)</SgButton>
-    <SgButton onClick={prev} size="sm" severity="secondary">Anterior (-1)</SgButton>
+    <SgButton onClick={next} size="sm">Next (+1)</SgButton>
+    <SgButton onClick={prev} size="sm" severity="secondary">Previous (-1)</SgButton>
   </div>
 </div>`;
 
@@ -207,15 +207,15 @@ const animate = () => {
 
 const SIZE_CODE = `<div className="flex items-end gap-4">
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Pequeno</p>
+    <p className="mb-2 text-xs text-muted-foreground">Small</p>
     <SgRoller3DDigit value="5" fontSize={16} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Medio</p>
+    <p className="mb-2 text-xs text-muted-foreground">Medium</p>
     <SgRoller3DDigit value="5" fontSize={32} />
   </div>
   <div className="text-center">
-    <p className="mb-2 text-xs text-muted-foreground">Grande</p>
+    <p className="mb-2 text-xs text-muted-foreground">Large</p>
     <SgRoller3DDigit value="5" fontSize={56} />
   </div>
 </div>`;
@@ -263,16 +263,16 @@ export default function App() {
           <SgRoller3DDigit key={i} value={ch} items={ALPHA} fontSize={32} transitionMs={110} />
         ))}
       </div>
-      <SgButton onClick={animate}>Proximo nome</SgButton>
+      <SgButton onClick={animate}>Next name</SgButton>
     </div>
   );
 }`;
 
 const PROPS: ShowcasePropRow[] = [
-  { prop: "value", type: "string", defaultValue: "-", description: "Valor atual exibido. Deve estar presente em items." },
-  { prop: "items", type: "string[]", defaultValue: '["0"..."9"]', description: "Lista ordenada de todos os valores possÃ­veis. O tambor rola ate a posicao de value." },
+  { prop: "value", type: "string", defaultValue: "-", description: "Current displayed value. Must exist in items." },
+  { prop: "items", type: "string[]", defaultValue: '["0"..."9"]', description: "Ordered list of all possible values. The drum rolls to the value position." },
   { prop: "fontSize", type: "number", defaultValue: "32", description: "Tamanho da fonte em pixels. Controla a escala geral do componente." },
-  { prop: "transitionMs", type: "number", defaultValue: "500", description: "Duracao da transicao de rolagem em milissegundos." },
+  { prop: "transitionMs", type: "number", defaultValue: "500", description: "Roll transition duration in milliseconds." },
   { prop: "className", type: "string", defaultValue: "-", description: "Classes CSS adicionais no container externo." },
 ];
 
@@ -355,8 +355,8 @@ export default function SgRoller3DDigitShowcase() {
           <div className="flex items-center gap-4">
             <SgRoller3DDigit value={digit} fontSize={32} />
             <div className="flex flex-col gap-2">
-              <SgButton onClick={nextDigit} size="sm">Proximo (+1)</SgButton>
-              <SgButton onClick={prevDigit} size="sm" severity="secondary">Anterior (-1)</SgButton>
+              <SgButton onClick={nextDigit} size="sm">Next (+1)</SgButton>
+              <SgButton onClick={prevDigit} size="sm" severity="secondary">Previous (-1)</SgButton>
             </div>
           </div>
           <CodeBlockBase code={BASIC_CODE} />
@@ -415,4 +415,5 @@ export default function SgRoller3DDigitShowcase() {
     </I18NReady>
   );
 }
+
 

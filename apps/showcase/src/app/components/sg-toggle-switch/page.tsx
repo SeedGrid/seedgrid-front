@@ -332,13 +332,13 @@ type ToggleTexts = {
 const TOGGLE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToggleTexts> = {
   "pt-BR": {
     subtitle: "Toggle switch inspirado no PrimeFaces (toggleSwitch) com suporte a icones, estados disabled/readonly e integracao com react-hook-form.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
     sectionTitles: [
       "1) Basico",
       "2) Com icones (on/off)",
@@ -349,10 +349,10 @@ const TOGGLE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToggleTexts> = {
       "7) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo simples controlado por estado React.",
+      "Example simples controlado por estado React.",
       "Variacao visual com icones dentro do thumb, seguindo a ideia do exemplo com icon no PrimeFaces.",
       "Ao alterar o switch, simulamos uma atualizacao remota para reproduzir o fluxo comum do showcase PrimeFaces.",
-      "Exemplo de value controlado por estado externo e captura via onChange.",
+      "Example de value controlado por estado externo e captura via onChange.",
       "Suporte nativo para register e control.",
       "Demonstracao de estados disabled e readOnly.",
       "Ajuste as principais props do SgToolBar."
@@ -361,13 +361,13 @@ const TOGGLE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToggleTexts> = {
   },
   "pt-PT": {
     subtitle: "Toggle switch inspirado no PrimeFaces (toggleSwitch) com suporte a icones, estados disabled/readonly e integracao com react-hook-form.",
-    examplesLabel: "Exemplos",
+    examplesLabel: "Examples",
     propsLinkLabel: "Referencia de Props",
     propsTitle: "Referencia de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
-    propsColDefault: "Padrao",
-    propsColDescription: "Descricao",
+    propsColDefault: "Default",
+    propsColDescription: "Description",
     sectionTitles: [
       "1) Basico",
       "2) Com icones (on/off)",
@@ -378,10 +378,10 @@ const TOGGLE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ToggleTexts> = {
       "7) Playground (SgPlayground)"
     ],
     sectionDescriptions: [
-      "Exemplo simples controlado por estado React.",
+      "Example simples controlado por estado React.",
       "Variacao visual com icones dentro do thumb, seguindo a ideia do exemplo com icon no PrimeFaces.",
       "Ao alterar o switch, simulamos uma atualizacao remota para reproduzir o fluxo comum do showcase PrimeFaces.",
-      "Exemplo de value controlado por estado externo e captura via onChange.",
+      "Example de value controlado por estado externo e captura via onChange.",
       "Suporte nativo para register e control.",
       "Demonstracao de estados disabled e readOnly.",
       "Ajuste as principais props do SgToolBar."
