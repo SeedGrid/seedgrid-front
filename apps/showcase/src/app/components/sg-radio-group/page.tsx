@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
-import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
+import { t, useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 type PropDef = {
   name: string;
@@ -420,7 +420,7 @@ const PRIORITY_OPTIONS: SgRadioGroupOption[] = [
 
 export default function SgRadioGroupShowcase() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof RADIO_GROUP_TEXTS = isSupportedRadioLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof RADIO_GROUP_TEXTS = isSupportedRadioLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = RADIO_GROUP_TEXTS[locale];
   const [selectedBasic, setSelectedBasic] = React.useState<string | number | null>("option1");
   const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>(null);
@@ -439,109 +439,109 @@ export default function SgRadioGroupShowcase() {
     {
       name: "id",
       type: "string",
-      description: "ID unico para o grupo de radio buttons"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.id")
     },
     {
       name: "title",
       type: "string",
-      description: "Titulo exibido acima do grupo"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.title")
     },
     {
       name: "source",
       type: "SgRadioGroupOption[]",
-      description: "Array de opcoes. Cada opcao deve ter label, value, e opcionalmente icon e disabled"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.source")
     },
     {
       name: "value",
       type: "string | number",
-      description: "Valor selecionado (para controle externo)"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.value")
     },
     {
       name: "orientation",
       type: '"horizontal" | "vertical"',
       defaultValue: '"vertical"',
-      description: "Orientacao do layout das opcoes"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.orientation")
     },
     {
       name: "selectionStyle",
       type: '"radio" | "highlight"',
       defaultValue: '"radio"',
-      description: "Define o estilo visual da selecao (radio padrao ou destaque em linha)"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.selectionStyle")
     },
     {
       name: "iconOnly",
       type: "boolean",
       defaultValue: "false",
-      description: "Exibe apenas os icones, sem os labels"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.iconOnly")
     },
     {
       name: "showCancel",
       type: "boolean",
       defaultValue: "false",
-      description: "Mostra opcao para cancelar/limpar selecao"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.showCancel")
     },
     {
       name: "cancelLabel",
       type: "string",
-      description: "Label customizado para a opcao de cancelar"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.cancelLabel")
     },
     {
       name: "disabled",
       type: "boolean",
       defaultValue: "false",
-      description: "Desabilita todo o grupo"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.disabled")
     },
     {
       name: "readOnly",
       type: "boolean",
       defaultValue: "false",
-      description: "Torna o grupo apenas leitura"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.readOnly")
     },
     {
       name: "required",
       type: "boolean",
       defaultValue: "false",
-      description: "Marca o campo como obrigatorio (com validacao)"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.required")
     },
     {
       name: "onChange",
       type: "(value: string | number | null) => void",
-      description: "Callback quando o valor muda"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.onChange")
     },
     {
       name: "name",
       type: "string",
-      description: "Nome do campo (para React Hook Form)"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.name")
     },
     {
       name: "control",
       type: "Control",
-      description: "Controle do React Hook Form"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.control")
     },
     {
       name: "register",
       type: "UseFormRegister",
-      description: "Funcao register do React Hook Form"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.register")
     },
     {
       name: "error",
       type: "string",
-      description: "Mensagem de erro para exibir"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.error")
     },
     {
       name: "className",
       type: "string",
-      description: "Classes CSS adicionais para o container"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.className")
     },
     {
       name: "optionClassName",
       type: "string",
-      description: "Classes CSS adicionais para cada opcao"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.optionClassName")
     },
     {
       name: "groupBoxProps",
       type: "object",
-      description: "Props adicionais para o SgGroupBox interno"
+      description: t(i18n, "showcase.component.radioGroup.props.rows.groupBoxProps")
     }
   ];
 

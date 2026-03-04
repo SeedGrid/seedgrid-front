@@ -69,15 +69,34 @@ export default function App() {
   );
 }`;
 
-const GROUP_BOX_PROPS: ShowcasePropRow[] = [
-  { prop: "title", type: "string", defaultValue: "-", description: "Título exibido no cabeçalho do group box." },
-  { prop: "width / height", type: "number", defaultValue: "auto", description: "Dimensões do container quando necessário." },
-  { prop: "children", type: "ReactNode", defaultValue: "-", description: "Conteúdo interno do bloco." },
-  { prop: "className", type: "string", defaultValue: "-", description: "Classes extras no container externo." }
-];
-
 export default function SgGroupBoxPage() {
   const i18n = useShowcaseI18n();
+  const groupBoxProps: ShowcasePropRow[] = [
+    {
+      prop: "title",
+      type: "string",
+      defaultValue: "-",
+      description: t(i18n, "showcase.component.groupBox.props.rows.title")
+    },
+    {
+      prop: "width / height",
+      type: "number",
+      defaultValue: "auto",
+      description: t(i18n, "showcase.component.groupBox.props.rows.widthHeight")
+    },
+    {
+      prop: "children",
+      type: "ReactNode",
+      defaultValue: "-",
+      description: t(i18n, "showcase.component.groupBox.props.rows.children")
+    },
+    {
+      prop: "className",
+      type: "string",
+      defaultValue: "-",
+      description: t(i18n, "showcase.component.groupBox.props.rows.className")
+    }
+  ];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
   });
@@ -234,7 +253,10 @@ export default function Example() {
 </SgGroupBox>`} />
       </Section>
 
-        <Section title="5) Playground (SgPlayground)" description="Ajuste as principais props do SgGroupBox.">
+        <Section
+          title="5) Playground (SgPlayground)"
+          description={t(i18n, "showcase.common.playground.description.withComponent", { component: "SgGroupBox" })}
+        >
           <SgPlayground
             title="SgGroupBox Playground"
             interactive
@@ -245,7 +267,7 @@ export default function Example() {
           />
         </Section>
 
-        <ShowcasePropsReference rows={GROUP_BOX_PROPS} />
+        <ShowcasePropsReference rows={groupBoxProps} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

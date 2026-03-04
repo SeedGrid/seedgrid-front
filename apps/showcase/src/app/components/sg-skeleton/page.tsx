@@ -170,7 +170,7 @@ export default function App() {
     <div className="space-y-4 p-2">
       {!hasSkeleton ? (
         <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgSkeleton ainda nao esta na versao publicada usada pelo Sandpack. Exibindo fallback.
+          SgSkeleton is not in the published package version used by Sandpack yet. Showing fallback.
         </div>
       ) : null}
 
@@ -211,7 +211,7 @@ export default function App() {
         </label>
 
         <label className="text-xs">
-          <span className="mb-1 block font-medium">Border radius (opcional)</span>
+          <span className="mb-1 block font-medium">Border radius (optional)</span>
           <input value={customRadius} onChange={(e) => setCustomRadius(e.target.value)} placeholder="ex: 18px" className="w-full rounded border border-slate-300 px-2 py-1" />
         </label>
       </div>
@@ -240,11 +240,11 @@ export default function App() {
 }`;
 
 const SKELETON_PROPS: ShowcasePropRow[] = [
-  { prop: "shape", type: "\"text\" | \"rectangle\" | \"rounded\" | \"square\" | \"circle\"", defaultValue: "text", description: "Forma base do placeholder." },
-  { prop: "animation", type: "\"wave\" | \"pulse\" | \"none\"", defaultValue: "wave", description: "Tipo de animação visual." },
-  { prop: "width / height", type: "number | string", defaultValue: "100% / 1rem", description: "Dimensões principais do skeleton." },
-  { prop: "size", type: "number | string", defaultValue: "-", description: "Atalho para largura e altura em shapes simétricos." },
-  { prop: "borderRadius", type: "number | string", defaultValue: "auto", description: "Raio de borda customizado." }
+  { prop: "shape", type: "\"text\" | \"rectangle\" | \"rounded\" | \"square\" | \"circle\"", defaultValue: "text", description: "Base placeholder shape." },
+  { prop: "animation", type: "\"wave\" | \"pulse\" | \"none\"", defaultValue: "wave", description: "Visual animation type." },
+  { prop: "width / height", type: "number | string", defaultValue: "100% / 1rem", description: "Main skeleton dimensions." },
+  { prop: "size", type: "number | string", defaultValue: "-", description: "Width/height shortcut for symmetric shapes." },
+  { prop: "borderRadius", type: "number | string", defaultValue: "auto", description: "Custom border radius." }
 ];
 
 export default function SgSkeletonPage() {
@@ -260,14 +260,14 @@ export default function SgSkeletonPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgSkeleton"
-          subtitle="Placeholder visual para estados de carregamento inspirado no Skeleton do PrimeFaces."
+          subtitle="Visual placeholder for loading states inspired by PrimeFaces Skeleton."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) Shapes basicos"
-        description='Variacoes principais: "text", "rectangle", "rounded", "square" e "circle".'
+        title="1) Basic shapes"
+        description='Main variants: "text", "rectangle", "rounded", "square" and "circle".'
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <SgSkeleton shape="text" />
@@ -282,8 +282,8 @@ export default function SgSkeletonPage() {
       </Section>
 
       <Section
-        title="2) Larguras de texto"
-        description="Use o shape text em larguras diferentes para simular linhas reais."
+        title="2) Text widths"
+        description="Use text shape with different widths to simulate real lines."
       >
         <div className="max-w-md space-y-2">
           <SgSkeleton shape="text" width="100%" />
@@ -297,8 +297,8 @@ export default function SgSkeletonPage() {
       </Section>
 
       <Section
-        title="3) Animacao"
-        description='Escolha entre "wave", "pulse" ou "none".'
+        title="3) Animation"
+        description='Choose between "wave", "pulse" or "none".'
       >
         <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-2">
@@ -321,7 +321,7 @@ export default function SgSkeletonPage() {
 
       <Section
         title="4) Card placeholder"
-        description="Exemplo de loading para card (imagem + titulo + texto)."
+        description="Loading example for a card (image + title + text)."
       >
         <div className="w-full max-w-sm rounded-xl border border-border p-4">
           <SgSkeleton shape="rounded" height={160} />
@@ -337,8 +337,8 @@ export default function SgSkeletonPage() {
       </Section>
 
       <Section
-        title="5) Lista e tabela"
-        description="Composicoes comuns para placeholders em telas de dados."
+        title="5) List and table"
+        description="Common placeholder compositions for data screens."
       >
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-3">
@@ -375,7 +375,7 @@ export default function SgSkeletonPage() {
 
       <Section
         title="6) Playground (SgPlayground)"
-        description="Playground para simular shape, tamanho, raio e animacao em tempo real."
+        description="Playground to simulate shape, size, radius and animation in real time."
       >
         <SgPlayground
           title="SgSkeleton Playground"

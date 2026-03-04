@@ -143,7 +143,7 @@ function isSupportedAccordionLocale(locale: ShowcaseLocale): locale is Supported
 }
 
 function getAccordionTexts(locale: ShowcaseLocale): AccordionTexts {
-  const normalized: SupportedAccordionLocale = isSupportedAccordionLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedAccordionLocale = isSupportedAccordionLocale(locale) ? locale : "en-US";
   return ACCORDION_TEXTS[normalized];
 }
 

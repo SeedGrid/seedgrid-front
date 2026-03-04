@@ -828,7 +828,7 @@ function RequiredExample() {
 
 export default function SgRatingPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof RATING_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof RATING_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = RATING_TEXTS[locale];
   const exampleLinks = React.useMemo(() => texts.sectionTitles.map((label, index) => ({ id: `exemplo-${index + 1}`, label })), [texts]);
   const stickyHeaderRef = React.useRef<HTMLDivElement | null>(null);

@@ -117,7 +117,7 @@ function isSupportedRollerLocale(locale: ShowcaseLocale): locale is SupportedRol
 }
 
 function getRollerTexts(locale: ShowcaseLocale): RollerTexts {
-  const normalized: SupportedRollerLocale = isSupportedRollerLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedRollerLocale = isSupportedRollerLocale(locale) ? locale : "en-US";
   return ROLLER_TEXTS[normalized];
 }
 

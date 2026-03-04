@@ -22,11 +22,11 @@ type StickyHeaderTexts = {
 const STICKY_HEADER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StickyHeaderTexts> = {
   "pt-BR": {
     examplesLabel: "Exemplos",
-    propsReferenceLabel: "Referência de Props"
+    propsReferenceLabel: "Referencia de Props"
   },
   "pt-PT": {
     examplesLabel: "Exemplos",
-    propsReferenceLabel: "Referência de Props"
+    propsReferenceLabel: "Referencia de Props"
   },
   "en-US": {
     examplesLabel: "Examples",
@@ -44,7 +44,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof STICK
 
 export default function ShowcaseStickyHeader(props: Readonly<ShowcaseStickyHeaderProps>) {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof STICKY_HEADER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof STICKY_HEADER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = STICKY_HEADER_TEXTS[locale];
 
   return (

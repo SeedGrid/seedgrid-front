@@ -24,8 +24,8 @@ type ShowcaseGlobal = {
 };
 
 const DEFAULT_I18N: ShowcaseI18n = {
-  locale: "pt-BR",
-  messages: ptBr
+  locale: "en-US",
+  messages: enUs
 };
 
 function getRuntimeI18n(): ShowcaseI18n | null {

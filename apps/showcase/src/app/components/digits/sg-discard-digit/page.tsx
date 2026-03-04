@@ -184,7 +184,7 @@ function isSupportedDiscardLocale(locale: ShowcaseLocale): locale is SupportedDi
 }
 
 function getDiscardTexts(locale: ShowcaseLocale): DiscardDigitTexts {
-  const normalized: SupportedDiscardLocale = isSupportedDiscardLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedDiscardLocale = isSupportedDiscardLocale(locale) ? locale : "en-US";
   return DISCARD_TEXTS[normalized];
 }
 

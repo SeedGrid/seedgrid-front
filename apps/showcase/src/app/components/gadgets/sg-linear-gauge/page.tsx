@@ -135,20 +135,20 @@ export default function App() {
 }`;
 
 const LINEAR_GAUGE_PROPS: ShowcasePropRow[] = [
-  { prop: "min / max", type: "number", defaultValue: "0 / 100", description: "Faixa de valores do gauge." },
-  { prop: "value / defaultValue / onValueChange", type: "number / number / callback", defaultValue: "controlado pelo uso", description: "Ponteiro principal e evento de alteração." },
-  { prop: "pointers / onPointerValueChange", type: "SgLinearGaugePointer[] / callback", defaultValue: "[]", description: "Ponteiros adicionais e callback por ponteiro." },
-  { prop: "ranges", type: "SgLinearGaugeRange[]", defaultValue: "[]", description: "Faixas coloridas da escala." },
-  { prop: "orientation / isAxisInversed", type: "\"horizontal|vertical\" / boolean", defaultValue: "horizontal / false", description: "Orientação e direção do eixo." },
-  { prop: "showPrimaryPointer / primaryPointer*", type: "boolean + props", defaultValue: "true", description: "Configuração do ponteiro principal (shape, color, size, draggable)." },
-  { prop: "barPointer / barColor / barThickness", type: "boolean / string / number", defaultValue: "true / primary / 8", description: "Barra preenchida até o valor atual." },
-  { prop: "showTicks / showLabels / majorTickCount / minorTicksPerInterval / labelFormatter", type: "tick/label props", defaultValue: "true / true / 5 / 1 / -", description: "Configuração de marcações e rótulos." },
-  { prop: "axisColor / axisThickness", type: "string / number", defaultValue: "border / 10", description: "Estilo do eixo principal." },
-  { prop: "width / height", type: "number", defaultValue: "360x120 (horizontal)", description: "Dimensões do SVG." },
-  { prop: "animate / animationDuration", type: "boolean / number", defaultValue: "true / 350", description: "Animação das transições." },
-  { prop: "className / style / ariaLabel", type: "string / CSSProperties / string", defaultValue: "- / - / Linear gauge", description: "Customização e acessibilidade." },
-  { prop: "SgLinearGaugeRange.start / end / color / thickness / opacity / label", type: "range props", defaultValue: "-", description: "Configuração das faixas." },
-  { prop: "SgLinearGaugePointer.id / value / color / size / shape / draggable / onValueChange / label", type: "pointer props", defaultValue: "-", description: "Configuração dos ponteiros." }
+  { prop: "min / max", type: "number", defaultValue: "0 / 100", description: "Gauge value range." },
+  { prop: "value / defaultValue / onValueChange", type: "number / number / callback", defaultValue: "usage-defined", description: "Primary pointer value and change event." },
+  { prop: "pointers / onPointerValueChange", type: "SgLinearGaugePointer[] / callback", defaultValue: "[]", description: "Additional pointers and per-pointer callback." },
+  { prop: "ranges", type: "SgLinearGaugeRange[]", defaultValue: "[]", description: "Colored scale ranges." },
+  { prop: "orientation / isAxisInversed", type: "\"horizontal|vertical\" / boolean", defaultValue: "horizontal / false", description: "Axis orientation and direction." },
+  { prop: "showPrimaryPointer / primaryPointer*", type: "boolean + props", defaultValue: "true", description: "Primary pointer settings (shape, color, size, draggable)." },
+  { prop: "barPointer / barColor / barThickness", type: "boolean / string / number", defaultValue: "true / primary / 8", description: "Filled bar up to current value." },
+  { prop: "showTicks / showLabels / majorTickCount / minorTicksPerInterval / labelFormatter", type: "tick/label props", defaultValue: "true / true / 5 / 1 / -", description: "Tick and label configuration." },
+  { prop: "axisColor / axisThickness", type: "string / number", defaultValue: "border / 10", description: "Main axis style." },
+  { prop: "width / height", type: "number", defaultValue: "360x120 (horizontal)", description: "SVG dimensions." },
+  { prop: "animate / animationDuration", type: "boolean / number", defaultValue: "true / 350", description: "Transition animation settings." },
+  { prop: "className / style / ariaLabel", type: "string / CSSProperties / string", defaultValue: "- / - / Linear gauge", description: "Styling and accessibility." },
+  { prop: "SgLinearGaugeRange.start / end / color / thickness / opacity / label", type: "range props", defaultValue: "-", description: "Range configuration." },
+  { prop: "SgLinearGaugePointer.id / value / color / size / shape / draggable / onValueChange / label", type: "pointer props", defaultValue: "-", description: "Pointer configuration." }
 ];
 
 export default function SgLinearGaugePage() {
@@ -175,12 +175,12 @@ export default function SgLinearGaugePage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgLinearGauge"
-          subtitle="Gauge linear com axis, ranges, bar pointer, marker pointers e arraste."
+          subtitle="Linear gauge with axis, ranges, bar pointer, marker pointers, and drag support."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Default (Horizontal)" description="Faixas coloridas e ponteiro principal controlável.">
+        <Section title="1) Default (Horizontal)" description="Colored ranges with a controllable primary pointer.">
           <div className="space-y-4 rounded-lg border border-border p-4">
             <SgLinearGauge
               min={0}
@@ -213,7 +213,7 @@ export default function SgLinearGaugePage() {
           <CodeBlock code={EXAMPLE_DEFAULT_CODE} />
         </Section>
 
-        <Section title="2) Vertical + Multi Pointers" description="Orientação vertical com dois ponteiros arrastáveis.">
+        <Section title="2) Vertical + Multi Pointers" description="Vertical orientation with two draggable pointers.">
           <div className="flex flex-wrap items-start gap-6 rounded-lg border border-border p-4">
             <SgLinearGauge
               min={-10}
@@ -244,13 +244,13 @@ export default function SgLinearGaugePage() {
 
             <div className="space-y-3 text-sm">
               <p>
-                Temperatura atual: <span className="font-semibold">{Math.round(temperature)}°C</span>
+                Current temperature: <span className="font-semibold">{Math.round(temperature)}°C</span>
               </p>
               <p>
-                Meta: <span className="font-semibold">{Math.round(target)}°C</span>
+                Target: <span className="font-semibold">{Math.round(target)}°C</span>
               </p>
               <label className="block">
-                Atual
+                Current
                 <input
                   type="range"
                   min={-10}
@@ -261,7 +261,7 @@ export default function SgLinearGaugePage() {
                 />
               </label>
               <label className="block">
-                Meta
+                Target
                 <input
                   type="range"
                   min={-10}
@@ -276,7 +276,7 @@ export default function SgLinearGaugePage() {
           <CodeBlock code={EXAMPLE_VERTICAL_CODE} />
         </Section>
 
-        <Section title="3) Playground" description="Teste orientação, ticks e labels.">
+        <Section title="3) Playground" description="Try orientation, ticks, and labels.">
           <SgPlayground
             title="SgLinearGauge Playground"
             interactive
@@ -293,4 +293,3 @@ export default function SgLinearGaugePage() {
     </I18NReady>
   );
 }
-

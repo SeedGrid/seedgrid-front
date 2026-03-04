@@ -554,7 +554,7 @@ function isSupportedDockMenuLocale(locale: ShowcaseLocale): locale is SupportedD
 }
 
 function getDockMenuTexts(locale: ShowcaseLocale): DockMenuTexts {
-  const normalized: SupportedDockMenuLocale = isSupportedDockMenuLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedDockMenuLocale = isSupportedDockMenuLocale(locale) ? locale : "en-US";
   return DOCK_MENU_TEXTS[normalized];
 }
 

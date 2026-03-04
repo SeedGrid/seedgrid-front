@@ -17,7 +17,8 @@ type UseShowcaseAnchorsOptions = {
 function getExampleLabel(locale: ShowcaseLocale): string {
   if (locale === "en-US") return "Example";
   if (locale === "es") return "Ejemplo";
-  return "Exemplo";
+  if (locale === "pt-BR" || locale === "pt-PT") return "Exemplo";
+  return "Example";
 }
 
 export function useShowcaseAnchors(options?: UseShowcaseAnchorsOptions) {

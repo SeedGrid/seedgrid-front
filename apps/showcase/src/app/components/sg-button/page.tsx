@@ -312,7 +312,7 @@ function isSupportedButtonLocale(locale: ShowcaseLocale): locale is SupportedBut
 }
 
 function getButtonTexts(locale: ShowcaseLocale): ButtonTexts {
-  const normalized: SupportedButtonLocale = isSupportedButtonLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedButtonLocale = isSupportedButtonLocale(locale) ? locale : "en-US";
   return BUTTON_TEXTS[normalized];
 }
 

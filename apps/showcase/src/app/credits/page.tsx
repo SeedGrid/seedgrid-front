@@ -67,7 +67,7 @@ const LICENSE_COLORS: Record<string, string> = {
 
 export default function CreditsPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof CREDITS_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof CREDITS_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = CREDITS_TEXTS[locale];
 
   const thirdPartyLibs: ThirdPartyLib[] = [

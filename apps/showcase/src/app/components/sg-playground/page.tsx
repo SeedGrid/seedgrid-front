@@ -29,14 +29,14 @@ function ExampleCodeCard(props: { code: string }) {
   );
 }
 
-const READONLY_CODE = `<SgButton severity="primary">Salvar</SgButton>
-<SgButton appearance="outline">Cancelar</SgButton>`;
+const READONLY_CODE = `<SgButton severity="primary">Save</SgButton>
+<SgButton appearance="outline">Cancel</SgButton>`;
 
 const RENDER_BODY_CODE = `<SgStack gap={12}>
-  <SgInputText id="nome" label="Nome" />
+  <SgInputText id="name" label="Name" />
   <SgStack direction="row" gap={8}>
-    <SgButton severity="primary">Salvar</SgButton>
-    <SgButton appearance="outline">Cancelar</SgButton>
+    <SgButton severity="primary">Save</SgButton>
+    <SgButton appearance="outline">Cancel</SgButton>
   </SgStack>
 </SgStack>`;
 
@@ -47,16 +47,16 @@ export default function App() {
   const [name, setName] = React.useState("");
 
   return (
-    <SgCard title="Cadastro rapido" description="Exemplo no modo appFile">
+    <SgCard title="Quick Form" description="appFile mode example">
       <SgStack gap={12}>
         <SgInputText
           id="name"
-          label="Nome"
+          label="Name"
           value={name}
           onChange={setName}
         />
-        <SgButton severity="primary" onClick={() => alert("Salvo: " + name)}>
-          Salvar
+        <SgButton severity="primary" onClick={() => alert("Saved: " + name)}>
+          Save
         </SgButton>
       </SgStack>
     </SgCard>
@@ -64,16 +64,16 @@ export default function App() {
 }`;
 
 const READONLY_EXAMPLE_IMPL = `<SgPlayground
-  title="Snippet somente leitura"
-  description="Ideal para documentacao simples."
+  title="Read-only snippet"
+  description="Ideal for simple documentation."
   code={READONLY_CODE}
   defaultOpen={false}
 />;
 `;
 
 const RENDER_BODY_EXAMPLE_IMPL = `<SgPlayground
-  title="Editor + preview em tempo real"
-  description="Use Run para atualizar o preview."
+  title="Editor + real-time preview"
+  description="Use Run to refresh the preview."
   interactive
   code={RENDER_BODY_CODE}
   defaultImports={'import { SgButton, SgInputText, SgStack } from "@seedgrid/fe-components";'}
@@ -82,7 +82,7 @@ const RENDER_BODY_EXAMPLE_IMPL = `<SgPlayground
 `;
 
 const APP_FILE_EXAMPLE_IMPL = `<SgPlayground
-  title="App.tsx completo"
+  title="Complete App.tsx"
   interactive
   codeContract="appFile"
   code={APP_FILE_CODE}
@@ -103,16 +103,16 @@ const VISUAL_VARIANTS_EXAMPLE_IMPL = `<SgPlayground
 `;
 
 const SG_PLAYGROUND_PROPS: ShowcasePropRow[] = [
-  { prop: "title / description", type: "string", defaultValue: "- / -", description: "Cabecalho exibido no card do playground." },
-  { prop: "interactive", type: "boolean", defaultValue: "false", description: "Liga editor + preview executavel." },
-  { prop: "code", type: "string", defaultValue: "-", description: "Codigo inicial exibido no editor/bloco." },
-  { prop: "codeContract", type: "\"renderBody\" | \"appFile\"", defaultValue: "\"renderBody\"", description: "Contrato do codigo interpretado no sandbox." },
-  { prop: "defaultImports", type: "string", defaultValue: "-", description: "Imports injetados automaticamente no modo renderBody." },
-  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Define estado inicial expandido." },
-  { prop: "height", type: "number", defaultValue: "420", description: "Altura da area de preview/editor." },
-  { prop: "withCard", type: "boolean", defaultValue: "true", description: "Renderiza ou nao card externo." },
-  { prop: "expandable / resizable", type: "boolean / boolean", defaultValue: "true / true", description: "Controla expansao e resize da UI." },
-  { prop: "previewPadding", type: "number", defaultValue: "24", description: "Padding aplicado no iframe/preview." }
+  { prop: "title / description", type: "string", defaultValue: "- / -", description: "Header shown in the playground card." },
+  { prop: "interactive", type: "boolean", defaultValue: "false", description: "Enables executable editor + preview." },
+  { prop: "code", type: "string", defaultValue: "-", description: "Initial code shown in editor/block." },
+  { prop: "codeContract", type: "\"renderBody\" | \"appFile\"", defaultValue: "\"renderBody\"", description: "Code contract interpreted by sandbox." },
+  { prop: "defaultImports", type: "string", defaultValue: "-", description: "Imports injected automatically in renderBody mode." },
+  { prop: "defaultOpen", type: "boolean", defaultValue: "false", description: "Sets initial expanded state." },
+  { prop: "height", type: "number", defaultValue: "420", description: "Preview/editor area height." },
+  { prop: "withCard", type: "boolean", defaultValue: "true", description: "Renders external card wrapper." },
+  { prop: "expandable / resizable", type: "boolean / boolean", defaultValue: "true / true", description: "Controls expand and resize behavior." },
+  { prop: "previewPadding", type: "number", defaultValue: "24", description: "Padding applied to iframe/preview." }
 ];
 
 export default function SgPlaygroundPage() {
@@ -128,19 +128,19 @@ export default function SgPlaygroundPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgPlayground"
-          subtitle="Playground com editor de codigo + preview, com suporte a renderBody e appFile."
+          subtitle="Playground with code editor + preview, supporting renderBody and appFile."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) Modo leitura (somente codigo)"
-        description="Quando interactive=false, ele funciona como bloco de codigo colapsavel."
+        title="1) Read-only mode (code only)"
+        description="When interactive=false, it works as a collapsible code block."
       >
         <div className="space-y-4">
           <SgPlayground
-            title="Snippet somente leitura"
-            description="Ideal para documentacao simples."
+            title="Read-only snippet"
+            description="Ideal for simple documentation."
             code={READONLY_CODE}
             defaultOpen={false}
           />
@@ -149,13 +149,13 @@ export default function SgPlaygroundPage() {
       </Section>
 
       <Section
-        title="2) Modo interativo (renderBody)"
-        description="Recebe apenas o corpo do JSX e monta um App de exemplo automaticamente."
+        title="2) Interactive mode (renderBody)"
+        description="Receives only JSX body and auto-builds an example App."
       >
         <div className="space-y-4">
           <SgPlayground
-            title="Editor + preview em tempo real"
-            description="Use Run para atualizar o preview."
+            title="Editor + real-time preview"
+            description="Use Run to refresh the preview."
             interactive
             code={RENDER_BODY_CODE}
             defaultImports={`import { SgButton, SgInputText, SgStack } from "@seedgrid/fe-components";`}
@@ -166,12 +166,12 @@ export default function SgPlaygroundPage() {
       </Section>
 
       <Section
-        title="3) Modo appFile"
-        description="Quando codeContract=appFile, voce controla o arquivo App.tsx completo."
+        title="3) appFile mode"
+        description="When codeContract=appFile, you control the full App.tsx file."
       >
         <div className="space-y-4">
           <SgPlayground
-            title="App.tsx completo"
+            title="Complete App.tsx"
             interactive
             codeContract="appFile"
             code={APP_FILE_CODE}
@@ -182,8 +182,8 @@ export default function SgPlaygroundPage() {
       </Section>
 
       <Section
-        title="4) Variacoes visuais"
-        description="Exemplo sem card externo e sem resize/expand."
+        title="4) Visual variations"
+        description="Example without external card and without resize/expand."
       >
         <div className="space-y-4">
           <SgPlayground

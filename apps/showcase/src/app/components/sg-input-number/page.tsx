@@ -310,6 +310,30 @@ export default function SgInputNumberPage() {
     ],
     [i18n.locale]
   );
+  const inputNumberPropsRows = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.id") },
+    { prop: "label", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.label") },
+    { prop: "decimals", type: "number", defaultValue: "2", description: t(i18n, "showcase.component.inputNumber.props.rows.decimals") },
+    { prop: "allowNegative", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputNumber.props.rows.allowNegative") },
+    { prop: "emptyValue", type: '"null" | "zero"', defaultValue: '"zero"', description: t(i18n, "showcase.component.inputNumber.props.rows.emptyValue") },
+    { prop: "prefixText / suffixText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.prefixSuffix") },
+    { prop: "minValue / maxValue", type: "number", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.minMax") },
+    { prop: "required", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.inputNumber.props.rows.required") },
+    { prop: "requiredMessage", type: "string", defaultValue: "auto", description: t(i18n, "showcase.component.inputNumber.props.rows.requiredMessage") },
+    { prop: "validation", type: "(value) => string | null", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.validation") },
+    { prop: "onValidation", type: "(msg) => void", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.onValidation") },
+    { prop: "onChange / onEnter / onExit / onClear", type: "callbacks", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.events") },
+    { prop: "inputProps", type: "InputHTMLAttributes", defaultValue: "{}", description: t(i18n, "showcase.component.inputNumber.props.rows.inputProps") },
+    { prop: "clearButton", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputNumber.props.rows.clearButton") },
+    { prop: "enabled / readOnly", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.inputNumber.props.rows.enabledReadOnly") },
+    { prop: "withBorder / filled", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.inputNumber.props.rows.withBorderFilled") },
+    { prop: "labelPosition", type: '"float" | "top" | "left"', defaultValue: '"float"', description: t(i18n, "showcase.common.props.rows.labelPosition") },
+    { prop: "labelWidth", type: "number | string", defaultValue: '"11rem"', description: t(i18n, "showcase.common.props.rows.labelWidth") },
+    { prop: "labelAlign", type: '"start" | "center" | "end"', defaultValue: '"start"', description: t(i18n, "showcase.common.props.rows.labelAlign") },
+    { prop: "elevation", type: '"none" | "sm" | "md" | "lg"', defaultValue: '"sm"', description: t(i18n, "showcase.common.props.rows.elevation") },
+    { prop: "width / borderRadius", type: "number | string", defaultValue: "100% / -", description: t(i18n, "showcase.component.inputNumber.props.rows.widthBorderRadius") },
+    { prop: "register / control / name", type: "react-hook-form", defaultValue: "-", description: t(i18n, "showcase.component.inputNumber.props.rows.rhf") }
+  ];
 
   return (
     <I18NReady>
@@ -1043,40 +1067,26 @@ export default function Example() {
         id="props-reference"
         className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
       >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referencia de Props</h2>
+        <h2 data-anchor-title="true" className="text-lg font-semibold">{t(i18n, "showcase.component.inputNumber.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrao</th>
-                <th className="pb-2 font-semibold">Descricao</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputNumber.props.headers.prop")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputNumber.props.headers.type")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.inputNumber.props.headers.default")}</th>
+                <th className="pb-2 font-semibold">{t(i18n, "showcase.component.inputNumber.props.headers.description")}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Label exibido acima do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">decimals</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">2</td><td className="py-2">Quantidade de casas decimais.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">allowNegative</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Permite valores negativos.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">emptyValue</td><td className="py-2 pr-4">"null" | "zero"</td><td className="py-2 pr-4">"zero"</td><td className="py-2">Comportamento quando vazio.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">prefixText / suffixText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Prefixo e sufixo de texto.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minValue / maxValue</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limites numericos aceitos.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Define o campo como obrigatorio.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para validacao required.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">Validacao customizada.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback de retorno da validacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao de limpar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado habilitado e somente leitura.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Variacoes visuais do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensao e borda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com React Hook Form.</td></tr>
+              {inputNumberPropsRows.map((row) => (
+                <tr key={row.prop}>
+                  <td className="py-2 pr-4 font-mono text-xs">{row.prop}</td>
+                  <td className="py-2 pr-4">{row.type}</td>
+                  <td className="py-2 pr-4">{row.defaultValue}</td>
+                  <td className="py-2">{row.description}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -262,7 +262,7 @@ function PaletteScale({ name, label }: { name: string; label: string }) {
 export default function ThemeShowcase() {
   const { currentMode } = useSgTheme();
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof THEME_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof THEME_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = THEME_TEXTS[locale];
 
   return (
@@ -473,4 +473,3 @@ const sgPalette = (name: string) => ({
     </I18NReady>
   );
 }
-

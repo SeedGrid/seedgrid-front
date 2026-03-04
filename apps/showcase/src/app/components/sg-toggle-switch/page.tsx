@@ -453,7 +453,7 @@ function isSupportedToggleLocale(locale: ShowcaseLocale): locale is keyof typeof
 }
 export default function SgToggleSwitchPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof TOGGLE_TEXTS = isSupportedToggleLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof TOGGLE_TEXTS = isSupportedToggleLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = TOGGLE_TEXTS[locale];
   const [basicValue, setBasicValue] = React.useState(false);
   const [iconValue, setIconValue] = React.useState(true);

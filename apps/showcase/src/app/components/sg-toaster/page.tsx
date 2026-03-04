@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import {
@@ -33,12 +33,12 @@ function CodeBlock(props: { code: string }) {
 }
 
 const TOAST_TITLES_BY_TYPE: Record<SgToastType, string> = {
-  default: "Mensagem padrao",
-  success: "Tudo certo!",
-  info: "Informacao importante",
-  warning: "Atencao!",
-  error: "Falhou!",
-  loading: "Carregando..."
+  default: "Default message",
+  success: "All good!",
+  info: "Important info",
+  warning: "Attention!",
+  error: "Failed!",
+  loading: "Loading..."
 };
 
 function emitToastByType(type: SgToastType, options?: SgToastOptions) {
@@ -69,54 +69,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 const TYPES_CODE = `import { toast } from "@seedgrid/fe-components";
 
-toast.message("Mensagem neutra");
-toast.success("Operacao concluida");
-toast.info("Informacao importante");
-toast.warning("Atencao");
-toast.error("Falha ao salvar");
-toast.loading("Processando...");
+toast.message("Neutral message");
+toast.success("Operation completed");
+toast.info("Important info");
+toast.warning("Attention");
+toast.error("Failed to save");
+toast.loading("Processing...");
 `;
 
-const LOADING_BY_ID_CODE = `const id = toast.loading("Exportando relatorio...");
+const LOADING_BY_ID_CODE = `const id = toast.loading("Exporting report...");
 
 // atualiza o mesmo toast pelo id
-toast.success("Exportacao concluida", { id });
+toast.success("Export completed", { id });
 // ou
-toast.error("Nao foi possivel exportar", { id });
+toast.error("Could not export", { id });
 
 // remover todos
 toast.dismiss();
 `;
 
 const PROMISE_CODE = `await toast.promise(
-  () => salvarNoServidor(),
+  () => saveOnServer(),
   {
-    loading: "Salvando...",
-    success: (result) => "Salvo com sucesso: " + result.id,
-    error: (err) => "Falha: " + (err instanceof Error ? err.message : "erro")
+    loading: "Saving...",
+    success: (result) => "Saved successfully: " + result.id,
+    error: (err) => "Failure: " + (err instanceof Error ? err.message : "error")
   },
   {
-    description: "O helper cuida do ciclo loading/sucesso/erro."
+    description: "Helper handles loading/success/error lifecycle."
   }
 );`;
 
-const CUSTOM_CODE = `toast.warning("Item arquivado", {
-  description: "Voce pode desfazer a acao.",
+const CUSTOM_CODE = `toast.warning("Item archived", {
+  description: "You can undo this action.",
   action: {
-    label: "Desfazer",
-    onClick: () => toast.success("Acao desfeita")
+    label: "Undo",
+    onClick: () => toast.success("Action undone")
   }
 });
 
 toast.custom((id) => (
   <div className="rounded-md border border-primary/40 bg-background p-3">
-    <div className="text-sm font-semibold">Toast customizado</div>
-    <button onClick={() => toast.dismiss(id)}>Fechar</button>
+    <div className="text-sm font-semibold">Custom toast</div>
+    <button onClick={() => toast.dismiss(id)}>Close</button>
   </div>
 ));`;
 
-const OPTIONS_CODE = `toast.info("Toast com opcoes", {
-  description: "Duracao longa, sem botao fechar e estilo custom.",
+const OPTIONS_CODE = `toast.info("Toast with options", {
+  description: "Long duration, no close button, custom style.",
   duration: 10000,
   closeButton: false,
   className: "border-[#c56a2d]",
@@ -130,9 +130,9 @@ const TOASTER_TRANSPARENCY_CODE = `import { SgToaster, toast } from "@seedgrid/f
 
 <SgToaster transparency={80} />;
 
-toast.success("Tudo certo!");
-toast.warning("Atencao!");
-toast.error("Falhou!");
+toast.success("All good!");
+toast.warning("Attention!");
+toast.error("Failed!");
 `;
 
 const TOASTER_CUSTOM_COLORS_CODE = `import { SgToaster, toast } from "@seedgrid/fe-components";
@@ -148,8 +148,8 @@ const TOASTER_CUSTOM_COLORS_CODE = `import { SgToaster, toast } from "@seedgrid/
   }}
 />;
 
-toast.message("Mensagem padrao");
-toast.warning("Atencao!");
+toast.message("Default message");
+toast.warning("Attention!");
 `;
 
 const PLAYGROUND_APP_FILE = `import * as React from "react";
@@ -292,12 +292,12 @@ export default function App() {
       </SgStack>
 
       <SgStack direction="row" wrap gap={8}>
-        <SgButton onClick={() => toast.message("Mensagem padrao", resolveToastVisual("default"))}>Message</SgButton>
-        <SgButton severity="success" onClick={() => toast.success("Tudo certo!", resolveToastVisual("success"))}>Success</SgButton>
-        <SgButton severity="info" onClick={() => toast.info("Informacao", resolveToastVisual("info"))}>Info</SgButton>
-        <SgButton severity="warning" onClick={() => toast.warning("Atencao!", resolveToastVisual("warning"))}>Warning</SgButton>
-        <SgButton severity="danger" onClick={() => toast.error("Falhou!", resolveToastVisual("error"))}>Error</SgButton>
-        <SgButton appearance="outline" onClick={() => toast.loading("Carregando...", { duration: 2500, ...resolveToastVisual("loading") })}>Loading</SgButton>
+        <SgButton onClick={() => toast.message("Default message", resolveToastVisual("default"))}>Message</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("All good!", resolveToastVisual("success"))}>Success</SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Info", resolveToastVisual("info"))}>Info</SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Attention!", resolveToastVisual("warning"))}>Warning</SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Failed!", resolveToastVisual("error"))}>Error</SgButton>
+        <SgButton appearance="outline" onClick={() => toast.loading("Loading...", { duration: 2500, ...resolveToastVisual("loading") })}>Loading</SgButton>
         <SgButton appearance="outline" onClick={() => toast.dismiss()}>Dismiss all</SgButton>
       </SgStack>
     </div>
@@ -309,18 +309,18 @@ const TOASTER_PROPS: ShowcasePropRow[] = [
     prop: "position",
     type: "\"top-right\" | \"top-left\" | \"top-center\" | \"bottom-right\" | \"bottom-left\" | \"bottom-center\"",
     defaultValue: "\"top-right\"",
-    description: "Posicao do container de toasts."
+    description: "Toast container position."
   },
-  { prop: "duration", type: "number", defaultValue: "4000", description: "Duracao padrao em ms para auto-close." },
-  { prop: "visibleToasts", type: "number", defaultValue: "6", description: "Quantidade maxima visivel simultaneamente." },
-  { prop: "closeButton", type: "boolean", defaultValue: "true", description: "Exibe botao de fechar em cada toast." },
-  { prop: "richColors", type: "boolean", defaultValue: "true", description: "Usa paleta forte por severidade." },
-  { prop: "transparency", type: "number (0-100)", defaultValue: "0", description: "Nivel de transparencia aplicado aos toasts." },
+  { prop: "duration", type: "number", defaultValue: "4000", description: "Default duration in ms for auto-close." },
+  { prop: "visibleToasts", type: "number", defaultValue: "6", description: "Maximum number visible simultaneously." },
+  { prop: "closeButton", type: "boolean", defaultValue: "true", description: "Shows close button on each toast." },
+  { prop: "richColors", type: "boolean", defaultValue: "true", description: "Uses strong palette by severity." },
+  { prop: "transparency", type: "number (0-100)", defaultValue: "0", description: "Transparency level applied to toasts." },
   {
     prop: "customColors",
     type: "Partial<Record<SgToastType, SgToasterTypeColors>>",
     defaultValue: "-",
-    description: "Sobrescreve bg/fg/border por tipo."
+    description: "Overrides bg/fg/border by type."
   }
 ];
 
@@ -329,34 +329,34 @@ export default function SgToasterPage() {
   const [loadingId, setLoadingId] = React.useState<SgToastId | null>(null);
 
   const startLoading = React.useCallback(() => {
-    const id = toast.loading("Processando lote...", {
-      description: "Esse toast fica aberto ate voce atualizar ou fechar."
+    const id = toast.loading("Processing batch...", {
+      description: "This toast stays open until you update or close it."
     });
     setLoadingId(id);
   }, []);
 
   const finishLoadingSuccess = React.useCallback(() => {
     if (!loadingId) {
-      toast.warning("Nenhum loading ativo");
+      toast.warning("No active loading");
       return;
     }
 
     toast.success("Processamento concluido", {
       id: loadingId,
-      description: "Atualizacao usando o mesmo id."
+      description: "Update using the same id."
     });
     setLoadingId(null);
   }, [loadingId]);
 
   const finishLoadingError = React.useCallback(() => {
     if (!loadingId) {
-      toast.warning("Nenhum loading ativo");
+      toast.warning("No active loading");
       return;
     }
 
-    toast.error("Falha no processamento", {
+    toast.error("Processing failed", {
       id: loadingId,
-      description: "Atualizacao de loading para erro."
+      description: "Loading updated to error."
     });
     setLoadingId(null);
   }, [loadingId]);
@@ -365,30 +365,30 @@ export default function SgToasterPage() {
     const task = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1200));
       if (Math.random() < 0.35) {
-        throw new Error("Erro aleatorio de demonstracao");
+        throw new Error("Random demo error");
       }
       return { id: "ORD-2026-001" };
     };
 
     try {
       await toast.promise(task, {
-        loading: "Salvando pedido...",
-        success: (value) => `Pedido salvo: ${value.id}`,
-        error: (error) => `Falha: ${error instanceof Error ? error.message : "erro"}`
+        loading: "Saving order...",
+        success: (value) => `Order saved: ${value.id}`,
+        error: (error) => `Failure: ${error instanceof Error ? error.message : "error"}`
       });
     } catch {
-      // erro ja tratado pelo toast.promise
+      // error already handled by toast.promise
     }
   }, []);
 
   const runActionDemo = React.useCallback(() => {
-    toast.warning("Item arquivado", {
-      description: "Clique em desfazer para restaurar.",
+    toast.warning("Item archived", {
+      description: "Click undo to restore.",
       action: {
-        label: "Desfazer",
+        label: "Undo",
         onClick: () =>
-          toast.success("Acao desfeita", {
-            description: "O item voltou para a lista."
+          toast.success("Action undone", {
+            description: "The item returned to the list."
           })
       }
     });
@@ -398,11 +398,11 @@ export default function SgToasterPage() {
     toast.custom(
       (id) => (
         <div className="w-full max-w-[280px] rounded-md border border-[#c56a2d]/50 bg-[#fff7f1] p-3">
-          <div className="text-sm font-semibold text-[#8f4b1f]">Toast customizado</div>
-          <p className="mt-1 text-xs text-[#6b4b33]">Conteudo renderizado via toast.custom(...)</p>
+          <div className="text-sm font-semibold text-[#8f4b1f]">Custom toast</div>
+          <p className="mt-1 text-xs text-[#6b4b33]">Content rendered via toast.custom(...)</p>
           <div className="mt-2 flex gap-2">
             <SgButton size="sm" onClick={() => toast.dismiss(id)}>
-              Fechar
+              Close
             </SgButton>
           </div>
         </div>
@@ -412,8 +412,8 @@ export default function SgToasterPage() {
   }, []);
 
   const runOptionsDemo = React.useCallback(() => {
-    toast.info("Toast com opcoes customizadas", {
-      description: "Duracao 10s, sem closeButton e estilo proprio.",
+    toast.info("Toast with custom options", {
+      description: "10s duration, no closeButton, custom style.",
       duration: 10000,
       closeButton: false,
       className: "border-[#c56a2d]",
@@ -464,18 +464,18 @@ export default function SgToasterPage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgToaster"
-          subtitle="Sistema de notificacao com API imperativa (toast) e renderer (SgToaster)."
+          subtitle="Notification system with imperative API (toast) and renderer (SgToaster)."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
       <Section
-        title="1) Setup base"
-        description="No showcase, o SgToaster ja esta montado no layout. Em app real, monte uma vez no root."
+        title="1) Base setup"
+        description="In this showcase, SgToaster is already mounted in layout. In a real app, mount it once at root."
       >
         <div className="flex flex-wrap gap-2">
-          <SgButton onClick={() => toast.message("Mensagem basica")}>toast.message</SgButton>
-          <SgButton severity="success" onClick={() => toast.success("Sucesso!")}>
+          <SgButton onClick={() => toast.message("Basic message")}>toast.message</SgButton>
+          <SgButton severity="success" onClick={() => toast.success("Success!")}>
             toast.success
           </SgButton>
           <SgButton appearance="outline" onClick={() => toast.dismiss()}>
@@ -486,24 +486,24 @@ export default function SgToasterPage() {
       </Section>
 
       <Section
-        title="2) Tipos de toast"
-        description="Use metodos especificos por severidade."
+        title="2) Toast types"
+        description="Use type-specific methods by severity."
       >
         <div className="flex flex-wrap gap-2">
-          <SgButton onClick={() => toast.message("Mensagem neutra")}>default</SgButton>
-          <SgButton severity="success" onClick={() => toast.success("Operacao concluida")}>
+          <SgButton onClick={() => toast.message("Neutral message")}>default</SgButton>
+          <SgButton severity="success" onClick={() => toast.success("Operation completed")}>
             success
           </SgButton>
-          <SgButton severity="info" onClick={() => toast.info("Informacao importante")}>
+          <SgButton severity="info" onClick={() => toast.info("Important info")}>
             info
           </SgButton>
-          <SgButton severity="warning" onClick={() => toast.warning("Atencao no fluxo")}>
+          <SgButton severity="warning" onClick={() => toast.warning("Attention in flow")}>
             warning
           </SgButton>
-          <SgButton severity="danger" onClick={() => toast.error("Falha ao salvar")}>
+          <SgButton severity="danger" onClick={() => toast.error("Failed to save")}>
             error
           </SgButton>
-          <SgButton appearance="outline" onClick={() => toast.loading("Processando...")}>
+          <SgButton appearance="outline" onClick={() => toast.loading("Processing...")}>
             loading
           </SgButton>
         </div>
@@ -511,22 +511,22 @@ export default function SgToasterPage() {
       </Section>
 
       <Section
-        title="3) Loading por id (update do mesmo toast)"
-        description="Guarde o id retornado e reutilize para trocar estado sem criar outro toast."
+        title="3) Loading by id (update same toast)"
+        description="Store returned id and reuse it to switch state without creating another toast."
       >
         <div className="flex flex-wrap items-center gap-2">
-          <SgButton onClick={startLoading}>Iniciar loading</SgButton>
+          <SgButton onClick={startLoading}>Start loading</SgButton>
           <SgButton severity="success" onClick={finishLoadingSuccess}>
-            Finalizar com sucesso
+            Finish with success
           </SgButton>
           <SgButton severity="danger" onClick={finishLoadingError}>
-            Finalizar com erro
+            Finish with error
           </SgButton>
           <SgButton appearance="outline" onClick={() => toast.dismiss()}>
-            Limpar todos
+            Clear all
           </SgButton>
           <span className="text-xs text-muted-foreground">
-            loadingId: <code>{loadingId ?? "nenhum"}</code>
+            loadingId: <code>{loadingId ?? "none"}</code>
           </span>
         </div>
         <CodeBlock code={LOADING_BY_ID_CODE} />
@@ -534,42 +534,42 @@ export default function SgToasterPage() {
 
       <Section
         title="4) toast.promise"
-        description="Conveniencia para ciclo loading/success/error em promessas."
+        description="Convenience helper for loading/success/error lifecycle in promises."
       >
         <div className="flex flex-wrap gap-2">
-          <SgButton onClick={runPromiseDemo}>Executar promise demo</SgButton>
+          <SgButton onClick={runPromiseDemo}>Run promise demo</SgButton>
         </div>
         <CodeBlock code={PROMISE_CODE} />
       </Section>
 
       <Section
-        title="5) Acoes e toast customizado"
-        description="Use action para CTA rapido e custom para render livre."
+        title="5) Actions and custom toast"
+        description="Use action for quick CTA and custom for free-form render."
       >
         <div className="flex flex-wrap gap-2">
           <SgButton severity="warning" onClick={runActionDemo}>
-            Toast com action
+            Toast with action
           </SgButton>
           <SgButton appearance="outline" onClick={runCustomDemo}>
-            Toast custom
+            Custom toast
           </SgButton>
         </div>
         <CodeBlock code={CUSTOM_CODE} />
       </Section>
 
       <Section
-        title="6) Opcoes por toast"
-        description="Cada toast aceita duration, closeButton, className e style."
+        title="6) Options per toast"
+        description="Each toast accepts duration, closeButton, className, and style."
       >
         <div className="flex flex-wrap gap-2">
-          <SgButton onClick={runOptionsDemo}>Disparar toast com opcoes</SgButton>
+          <SgButton onClick={runOptionsDemo}>Trigger toast with options</SgButton>
         </div>
         <CodeBlock code={OPTIONS_CODE} />
       </Section>
 
       <Section
-        title="7) Transparencia"
-        description="Exemplo focado apenas em transparencia (80%)."
+        title="7) Transparency"
+        description="Example focused only on transparency (80%)."
       >
         <div className="flex flex-wrap gap-2">
           <SgButton onClick={() => runTransparencyByType("default")}>default</SgButton>
@@ -585,7 +585,7 @@ export default function SgToasterPage() {
 
       <Section
         title="8) Custom Colors"
-        description="Exemplo focado somente em cores customizadas por tipo."
+        description="Example focused only on custom colors per type."
       >
         <div className="flex flex-wrap gap-2">
           <SgButton onClick={() => runCustomColorsByType("default")}>default</SgButton>
@@ -600,8 +600,8 @@ export default function SgToasterPage() {
       </Section>
 
       <Section
-        title="9) Playground isolado do SgToaster"
-        description="Aqui voce altera todas as props em tempo real (position, duration, visibleToasts, closeButton, richColors, transparency e customColors)."
+        title="9) Isolated SgToaster Playground"
+        description="Here you can change all props in real time (position, duration, visibleToasts, closeButton, richColors, transparency and customColors)."
       >
         <SgPlayground
           title="SgToaster Playground"
@@ -619,3 +619,5 @@ export default function SgToasterPage() {
     </I18NReady>
   );
 }
+
+

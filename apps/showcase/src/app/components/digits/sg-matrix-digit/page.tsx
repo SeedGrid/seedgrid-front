@@ -110,7 +110,7 @@ function isSupportedMatrixLocale(locale: ShowcaseLocale): locale is SupportedMat
 }
 
 function getMatrixTexts(locale: ShowcaseLocale): MatrixDigitTexts {
-  const normalized: SupportedMatrixLocale = isSupportedMatrixLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedMatrixLocale = isSupportedMatrixLocale(locale) ? locale : "en-US";
   return MATRIX_TEXTS[normalized];
 }
 

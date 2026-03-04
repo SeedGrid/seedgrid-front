@@ -131,7 +131,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof GRID_
 
 export default function SgGridPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof GRID_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof GRID_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = GRID_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
@@ -226,4 +226,3 @@ export default function SgGridPage() {
     </I18NReady>
   );
 }
-

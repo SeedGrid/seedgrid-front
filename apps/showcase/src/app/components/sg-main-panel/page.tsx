@@ -309,7 +309,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof MAIN_
 
 export default function SgMainPanelPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof MAIN_PANEL_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof MAIN_PANEL_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = MAIN_PANEL_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]

@@ -1027,7 +1027,7 @@ function isSupportedMenuShowcaseLocale(locale: ShowcaseLocale): locale is Suppor
 }
 
 function getMenuShowcaseTexts(locale: ShowcaseLocale): MenuShowcaseTexts {
-  const normalized: SupportedMenuShowcaseLocale = isSupportedMenuShowcaseLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedMenuShowcaseLocale = isSupportedMenuShowcaseLocale(locale) ? locale : "en-US";
   return MENU_SHOWCASE_TEXTS[normalized];
 }
 

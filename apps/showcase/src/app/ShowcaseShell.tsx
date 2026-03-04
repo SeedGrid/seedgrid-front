@@ -377,7 +377,7 @@ const THEME_HINT_TEXTS_BY_SLUG: Record<string, Record<ShowcaseLocale, string>> =
 };
 
 function getLocalizedHint(locale: ShowcaseLocale, hints: Partial<Record<ShowcaseLocale, string>>): string {
-  return hints[locale] ?? hints["pt-BR"] ?? hints["pt-PT"] ?? hints["en-US"] ?? hints.es ?? "";
+  return hints[locale] ?? hints["en-US"] ?? hints["pt-BR"] ?? hints["pt-PT"] ?? hints.es ?? "";
 }
 
 function getComponentHint(
@@ -507,15 +507,16 @@ export default function ShowcaseShell(props: {
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [locale, setLocale] = React.useState<ShowcaseLocale>(props.initialLocale ?? "pt-BR");
+  const initialLocale = props.initialLocale ?? "pt-BR";
+  const [locale, setLocale] = React.useState<ShowcaseLocale>(initialLocale);
   const [messages, setMessages] = React.useState<Record<string, string>>(
-    props.initialMessages ?? showcaseMessagesPtBr
+    props.initialMessages ?? MESSAGES_BY_LOCALE[initialLocale] ?? showcaseMessagesEnUs
   );
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(true);
   const [isMobileViewport, setIsMobileViewport] = React.useState(false);
 
   const applyLocale = React.useCallback((next: ShowcaseLocale) => {
-    const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesPtBr;
+    const nextMessages = MESSAGES_BY_LOCALE[next] ?? showcaseMessagesEnUs;
     setLocale(next);
     setMessages(nextMessages);
   }, []);
@@ -528,9 +529,9 @@ export default function ShowcaseShell(props: {
       stored = null;
     }
     if (stored && MESSAGES_BY_LOCALE[stored]) {
-      const nextMessages = MESSAGES_BY_LOCALE[stored] ?? showcaseMessagesPtBr;
+      const nextMessages = MESSAGES_BY_LOCALE[stored] ?? showcaseMessagesEnUs;
       const nextComponentMessages =
-        COMPONENTS_MESSAGES_BY_LOCALE[stored] ?? componentsMessagesPtBr;
+        COMPONENTS_MESSAGES_BY_LOCALE[stored] ?? componentsMessagesEnUs;
       setLocale(stored);
       setMessages(nextMessages);
       setShowcaseI18n({ locale: stored, messages: nextMessages });
@@ -540,7 +541,7 @@ export default function ShowcaseShell(props: {
     setShowcaseI18n({ locale, messages });
     setComponentsI18n({
       locale,
-      messages: COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr
+      messages: COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesEnUs
     });
   }, []);
 
@@ -548,7 +549,7 @@ export default function ShowcaseShell(props: {
     setShowcaseI18n({ locale, messages });
     setComponentsI18n({
       locale,
-      messages: COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr
+      messages: COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesEnUs
     });
     try {
       localStorage.setItem("seedgrid-showcase-locale", locale);
@@ -595,7 +596,7 @@ export default function ShowcaseShell(props: {
     <ShowcaseI18nProvider locale={locale} messages={messages}>
       <SgComponentsI18nProvider
         locale={locale}
-        messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesPtBr}
+        messages={COMPONENTS_MESSAGES_BY_LOCALE[locale] ?? componentsMessagesEnUs}
       >
         <SgDockScreen
           id="showcase-shell-dock"

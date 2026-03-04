@@ -164,7 +164,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof SCREE
 
 export default function SgScreenPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof SCREEN_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof SCREEN_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = SCREEN_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
@@ -255,4 +255,3 @@ export default function SgScreenPage() {
     </I18NReady>
   );
 }
-

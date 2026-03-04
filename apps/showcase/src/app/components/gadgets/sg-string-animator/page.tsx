@@ -599,7 +599,7 @@ function isSupportedStringAnimatorLocale(locale: ShowcaseLocale): locale is Supp
 }
 
 function getStringAnimatorTexts(locale: ShowcaseLocale): StringAnimatorTexts {
-  const normalized: SupportedStringAnimatorLocale = isSupportedStringAnimatorLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedStringAnimatorLocale = isSupportedStringAnimatorLocale(locale) ? locale : "en-US";
   return STRING_ANIMATOR_TEXTS[normalized];
 }
 

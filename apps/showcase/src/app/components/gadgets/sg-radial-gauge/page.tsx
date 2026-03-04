@@ -61,7 +61,7 @@ export default function Example() {
       />
       <div className="space-y-2 text-sm">
         <p>
-          Valor atual: <span className="font-semibold">{Math.round(rpm)}</span>
+          Current value: <span className="font-semibold">{Math.round(rpm)}</span>
         </p>
         <input
           type="range"
@@ -121,7 +121,7 @@ export default function Example() {
           Ring thickness: <span className="font-semibold">36px</span>
         </p>
         <p>
-          Valor: <span className="font-semibold">{Math.round(value)}</span>
+          Value: <span className="font-semibold">{Math.round(value)}</span>
         </p>
         <input
           type="range"
@@ -256,7 +256,7 @@ export default function Example() {
       />
 
       <div className="space-y-2 text-sm">
-        <p>Principal: <span className="font-semibold">{Math.round(rpm)}</span></p>
+        <p>Primary: <span className="font-semibold">{Math.round(rpm)}</span></p>
         <p>Target marker: <span className="font-semibold">{Math.round(target)}</span></p>
         <p>Range pointer: <span className="font-semibold">{Math.round(consumption)}</span></p>
       </div>
@@ -344,9 +344,9 @@ export default function Example() {
         />
 
         <div className="space-y-2 text-sm">
-          <p>
-            Valor atual: <span className="font-semibold">{Math.round(value)}%</span>
-          </p>
+      <p>
+        Current value: <span className="font-semibold">{Math.round(value)}%</span>
+      </p>
           <input
             type="range"
             min={0}
@@ -415,21 +415,21 @@ export default function App() {
 }`;
 
 const RADIAL_GAUGE_PROPS: ShowcasePropRow[] = [
-  { prop: "min / max", type: "number", defaultValue: "0 / 100", description: "Faixa de valores do gauge." },
-  { prop: "value / defaultValue / onValueChange", type: "number / number / callback", defaultValue: "controlado pelo uso", description: "Ponteiro principal e evento de alteracao." },
-  { prop: "pointers / onPointerValueChange", type: "SgRadialGaugePointer[] / callback", defaultValue: "[]", description: "Ponteiros extras e callback por ponteiro." },
-  { prop: "ranges", type: "SgRadialGaugeRange[]", defaultValue: "[]", description: "Faixas coloridas do arco." },
-  { prop: "annotations", type: "SgRadialGaugeAnnotation[]", defaultValue: "[]", description: "Anotacoes posicionadas por valor/angulo." },
-  { prop: "startAngle / endAngle / isAxisInversed", type: "number / number / boolean", defaultValue: "135 / 45 / false", description: "Configuracao do arco e direcao da escala." },
-  { prop: "showPrimaryPointer / primaryPointer*", type: "boolean + props", defaultValue: "true", description: "Configuracao do ponteiro principal (needle/marker/range)." },
-  { prop: "showTicks / showLabels / majorTickCount / minorTicksPerInterval / labelFormatter", type: "tick/label props", defaultValue: "true / true / 5 / 1 / -", description: "Marcas e rotulos da escala." },
-  { prop: "axisColor / axisWidth / ringThickness / radiusFactor / centerContent", type: "style props", defaultValue: "border / 14 / - / 0.9 / auto", description: "Estilo do anel principal, espessura e conteudo central." },
-  { prop: "width / height", type: "number", defaultValue: "300 / 300", description: "Dimensoes do SVG." },
-  { prop: "animate / animationDuration", type: "boolean / number", defaultValue: "true / 350", description: "Animacao das transicoes." },
-  { prop: "className / style / ariaLabel", type: "string / CSSProperties / string", defaultValue: "- / - / Radial gauge", description: "Customizacao e acessibilidade." },
-  { prop: "SgRadialGaugePointer.id / type / value / color / width / size / shape / draggable / onValueChange / label", type: "pointer props", defaultValue: "-", description: "Configuracao dos ponteiros." },
-  { prop: "SgRadialGaugeRange.start / end / color / width / opacity", type: "range props", defaultValue: "-", description: "Configuracao das faixas." },
-  { prop: "SgRadialGaugeAnnotation.id / value / angle / radiusFactor / content", type: "annotation props", defaultValue: "-", description: "Configuracao das anotacoes." }
+  { prop: "min / max", type: "number", defaultValue: "0 / 100", description: "Gauge value range." },
+  { prop: "value / defaultValue / onValueChange", type: "number / number / callback", defaultValue: "usage-defined", description: "Primary pointer value and change event." },
+  { prop: "pointers / onPointerValueChange", type: "SgRadialGaugePointer[] / callback", defaultValue: "[]", description: "Extra pointers and per-pointer callback." },
+  { prop: "ranges", type: "SgRadialGaugeRange[]", defaultValue: "[]", description: "Colored arc ranges." },
+  { prop: "annotations", type: "SgRadialGaugeAnnotation[]", defaultValue: "[]", description: "Annotations positioned by value/angle." },
+  { prop: "startAngle / endAngle / isAxisInversed", type: "number / number / boolean", defaultValue: "135 / 45 / false", description: "Arc configuration and scale direction." },
+  { prop: "showPrimaryPointer / primaryPointer*", type: "boolean + props", defaultValue: "true", description: "Primary pointer settings (needle/marker/range)." },
+  { prop: "showTicks / showLabels / majorTickCount / minorTicksPerInterval / labelFormatter", type: "tick/label props", defaultValue: "true / true / 5 / 1 / -", description: "Scale ticks and labels." },
+  { prop: "axisColor / axisWidth / ringThickness / radiusFactor / centerContent", type: "style props", defaultValue: "border / 14 / - / 0.9 / auto", description: "Main ring style, thickness and center content." },
+  { prop: "width / height", type: "number", defaultValue: "300 / 300", description: "SVG dimensions." },
+  { prop: "animate / animationDuration", type: "boolean / number", defaultValue: "true / 350", description: "Transition animation settings." },
+  { prop: "className / style / ariaLabel", type: "string / CSSProperties / string", defaultValue: "- / - / Radial gauge", description: "Styling and accessibility." },
+  { prop: "SgRadialGaugePointer.id / type / value / color / width / size / shape / draggable / onValueChange / label", type: "pointer props", defaultValue: "-", description: "Pointer configuration." },
+  { prop: "SgRadialGaugeRange.start / end / color / width / opacity", type: "range props", defaultValue: "-", description: "Range configuration." },
+  { prop: "SgRadialGaugeAnnotation.id / value / angle / radiusFactor / content", type: "annotation props", defaultValue: "-", description: "Annotation configuration." }
 ];
 
 export default function SgRadialGaugePage() {
@@ -475,12 +475,12 @@ export default function SgRadialGaugePage() {
         <ShowcaseStickyHeader
           stickyHeaderRef={stickyHeaderRef}
           title="SgRadialGauge"
-          subtitle="Gauge radial com ranges, ponteiros e agora com controle de anel mais espesso (ringThickness)."
+          subtitle="Radial gauge with ranges, pointers, and ring thickness control (ringThickness)."
           exampleLinks={exampleLinks}
           onAnchorClick={handleAnchorClick}
         />
 
-        <Section title="1) Speedometer Style" description="Needle pointer principal com ranges de risco.">
+        <Section title="1) Speedometer Style" description="Primary needle pointer with warning ranges.">
           <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border p-4">
             <SgRadialGauge
               min={0}
@@ -510,7 +510,7 @@ export default function SgRadialGaugePage() {
             />
             <div className="space-y-2 text-sm">
               <p>
-                Valor atual: <span className="font-semibold">{Math.round(rpm)}</span>
+                Current value: <span className="font-semibold">{Math.round(rpm)}</span>
               </p>
               <input
                 type="range"
@@ -526,8 +526,8 @@ export default function SgRadialGaugePage() {
         </Section>
 
         <Section
-          title="2) Relogio Mais Grosso (ringThickness)"
-          description="Exemplo com anel espesso, sem clipping visual, usando ringThickness={36}."
+          title="2) Thicker Ring (ringThickness)"
+          description="Example with thick ring and no visual clipping using ringThickness={36}."
         >
           <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border p-4">
             <SgRadialGauge
@@ -567,7 +567,7 @@ export default function SgRadialGaugePage() {
                 Ring thickness: <span className="font-semibold">36px</span>
               </p>
               <p>
-                Valor: <span className="font-semibold">{Math.round(thickValue)}</span>
+                Value: <span className="font-semibold">{Math.round(thickValue)}</span>
               </p>
               <input
                 type="range"
@@ -584,7 +584,7 @@ export default function SgRadialGaugePage() {
 
         <Section
           title="3) Axis Inversed + Angulos Custom"
-          description="Com isAxisInversed, angulos customizados e animate={false}."
+          description="With isAxisInversed, custom angles, and animate={false}."
         >
           <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border p-4">
             <SgRadialGauge
@@ -624,7 +624,7 @@ export default function SgRadialGaugePage() {
           <CodeBlock code={EXAMPLE_AXIS_INVERSED_CODE} />
         </Section>
 
-        <Section title="4) Multi Pointers + Annotation" description="Combina marker, range pointer e anotacao por valor.">
+        <Section title="4) Multi Pointers + Annotation" description="Combines marker, range pointer, and value-based annotation.">
           <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border p-4">
             <SgRadialGauge
               min={0}
@@ -667,7 +667,7 @@ export default function SgRadialGaugePage() {
             />
 
             <div className="space-y-2 text-sm">
-              <p>Principal: <span className="font-semibold">{Math.round(rpm)}</span></p>
+          <p>Primary: <span className="font-semibold">{Math.round(rpm)}</span></p>
               <p>Target marker: <span className="font-semibold">{Math.round(target)}</span></p>
               <p>Range pointer: <span className="font-semibold">{Math.round(consumption)}</span></p>
             </div>
@@ -703,8 +703,8 @@ export default function SgRadialGaugePage() {
         </Section>
 
         <Section
-          title="6) Outras Props (size, labels e acessibilidade)"
-          description="Exemplo com width/height, axisWidth, animationDuration, primaryPointerLabel, labelFormatter e ariaLabel."
+          title="6) Other Props (size, labels and accessibility)"
+          description="Example with width/height, axisWidth, animationDuration, primaryPointerLabel, labelFormatter and ariaLabel."
         >
           <div className="space-y-4 rounded-lg border border-border p-4">
             <div className="grid gap-2 sm:grid-cols-4">
@@ -753,7 +753,7 @@ export default function SgRadialGaugePage() {
 
               <div className="space-y-2 text-sm">
                 <p>
-                  Valor atual: <span className="font-semibold">{Math.round(otherPropsValue)}%</span>
+              Current value: <span className="font-semibold">{Math.round(otherPropsValue)}%</span>
                 </p>
                 <input
                   type="range"
@@ -771,7 +771,7 @@ export default function SgRadialGaugePage() {
 
         <Section
           title="7) Playground"
-          description="Teste pointerType, ringThickness, eixo invertido e exibicao de ticks/labels."
+          description="Try pointerType, ringThickness, inverted axis, and ticks/labels visibility."
         >
           <SgPlayground
             title="SgRadialGauge Playground"

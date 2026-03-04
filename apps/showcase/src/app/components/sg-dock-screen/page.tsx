@@ -190,7 +190,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof DOCK_
 
 export default function SgDockScreenPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof DOCK_SCREEN_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof DOCK_SCREEN_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = DOCK_SCREEN_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
@@ -274,4 +274,3 @@ export default function SgDockScreenPage() {
     </I18NReady>
   );
 }
-

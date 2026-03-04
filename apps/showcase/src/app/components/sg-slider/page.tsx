@@ -327,7 +327,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof SLIDE
 
 export default function SgSliderPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof SLIDER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof SLIDER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = SLIDER_TEXTS[locale];
   const [basicValue, setBasicValue] = React.useState(50);
   const [controlledValue, setControlledValue] = React.useState(35);

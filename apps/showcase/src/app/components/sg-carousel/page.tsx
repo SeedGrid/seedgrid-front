@@ -313,7 +313,7 @@ function isSupportedCarouselLocale(locale: ShowcaseLocale): locale is SupportedC
 }
 
 function getCarouselTexts(locale: ShowcaseLocale): CarouselTexts {
-  const normalized: SupportedCarouselLocale = isSupportedCarouselLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedCarouselLocale = isSupportedCarouselLocale(locale) ? locale : "en-US";
   return CAROUSEL_TEXTS[normalized];
 }
 

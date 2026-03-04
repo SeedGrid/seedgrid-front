@@ -113,7 +113,7 @@ function isSupportedFlipLocale(locale: ShowcaseLocale): locale is SupportedFlipL
 }
 
 function getFlipTexts(locale: ShowcaseLocale): FlipDigitTexts {
-  const normalized: SupportedFlipLocale = isSupportedFlipLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedFlipLocale = isSupportedFlipLocale(locale) ? locale : "en-US";
   return FLIP_TEXTS[normalized];
 }
 

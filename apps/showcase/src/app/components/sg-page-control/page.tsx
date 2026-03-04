@@ -266,7 +266,7 @@ function isSupportedPageControlLocale(locale: ShowcaseLocale): locale is keyof t
 }
 export default function SgPageControlShowcasePage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof PAGE_CONTROL_TEXTS = isSupportedPageControlLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof PAGE_CONTROL_TEXTS = isSupportedPageControlLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = PAGE_CONTROL_TEXTS[locale];
   const [activePageId, setActivePageId] = React.useState<string>("registration");
   const [hiddenPageIds, setHiddenPageIds] = React.useState<string[]>([]);

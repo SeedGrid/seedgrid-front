@@ -152,7 +152,7 @@ function isSupportedBreadcrumbLocale(locale: ShowcaseLocale): locale is Supporte
 }
 
 function getBreadcrumbTexts(locale: ShowcaseLocale): BreadcrumbTexts {
-  const normalized: SupportedBreadcrumbLocale = isSupportedBreadcrumbLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedBreadcrumbLocale = isSupportedBreadcrumbLocale(locale) ? locale : "en-US";
   return BREADCRUMB_TEXTS[normalized];
 }
 

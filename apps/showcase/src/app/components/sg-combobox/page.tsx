@@ -343,7 +343,7 @@ function isSupportedComboboxLocale(locale: ShowcaseLocale): locale is SupportedC
 }
 
 function getComboboxTexts(locale: ShowcaseLocale): ComboboxTexts {
-  const normalized: SupportedComboboxLocale = isSupportedComboboxLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedComboboxLocale = isSupportedComboboxLocale(locale) ? locale : "en-US";
   return COMBOBOX_TEXTS[normalized];
 }
 

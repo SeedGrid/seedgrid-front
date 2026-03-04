@@ -109,7 +109,7 @@ function isSupportedAvatarLocale(locale: ShowcaseLocale): locale is SupportedAva
 }
 
 function getAvatarTexts(locale: ShowcaseLocale): AvatarTexts {
-  const normalized: SupportedAvatarLocale = isSupportedAvatarLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedAvatarLocale = isSupportedAvatarLocale(locale) ? locale : "en-US";
   return AVATAR_TEXTS[normalized];
 }
 

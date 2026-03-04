@@ -205,7 +205,7 @@ export default function App() {
 
 export default function SgInputOTPPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof OTP_TEXTS = isSupportedOtpLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof OTP_TEXTS = isSupportedOtpLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = OTP_TEXTS[locale];
   const otpRef = React.useRef<SgInputOTPRef | null>(null);
   const [basicMasked, setBasicMasked] = React.useState("");

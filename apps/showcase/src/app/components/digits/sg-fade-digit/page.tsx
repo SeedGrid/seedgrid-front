@@ -139,7 +139,7 @@ function isSupportedFadeLocale(locale: ShowcaseLocale): locale is SupportedFadeL
 }
 
 function getFadeTexts(locale: ShowcaseLocale): FadeDigitTexts {
-  const normalized: SupportedFadeLocale = isSupportedFadeLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedFadeLocale = isSupportedFadeLocale(locale) ? locale : "en-US";
   return FADE_TEXTS[normalized];
 }
 

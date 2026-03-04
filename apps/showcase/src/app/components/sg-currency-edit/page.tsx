@@ -312,6 +312,32 @@ export default function SgCurrencyEditPage() {
     ],
     [i18n.locale]
   );
+  const currencyEditPropsRows = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.id") },
+    { prop: "label", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.label") },
+    { prop: "currency", type: "string", defaultValue: '"BRL"', description: t(i18n, "showcase.component.currencyEdit.props.rows.currency") },
+    { prop: "locale", type: "string", defaultValue: "i18n locale", description: t(i18n, "showcase.component.currencyEdit.props.rows.locale") },
+    { prop: "decimals", type: "number", defaultValue: "minor unit", description: t(i18n, "showcase.component.currencyEdit.props.rows.decimals") },
+    { prop: "currencyDisplay", type: '"symbol" | "code" | ...', defaultValue: '"symbol"', description: t(i18n, "showcase.component.currencyEdit.props.rows.currencyDisplay") },
+    { prop: "showCurrencySymbol", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.currencyEdit.props.rows.showCurrencySymbol") },
+    { prop: "allowNegative", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.currencyEdit.props.rows.allowNegative") },
+    { prop: "minValue / maxValue", type: "number", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.minMax") },
+    { prop: "required", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.currencyEdit.props.rows.required") },
+    { prop: "requiredMessage", type: "string", defaultValue: "auto", description: t(i18n, "showcase.component.currencyEdit.props.rows.requiredMessage") },
+    { prop: "validation", type: "(value) => string | null", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.validation") },
+    { prop: "onValidation", type: "(msg) => void", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.onValidation") },
+    { prop: "onChange / onEnter / onExit / onClear", type: "callbacks", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.events") },
+    { prop: "inputProps", type: "InputHTMLAttributes", defaultValue: "{}", description: t(i18n, "showcase.component.currencyEdit.props.rows.inputProps") },
+    { prop: "clearButton", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.currencyEdit.props.rows.clearButton") },
+    { prop: "enabled / readOnly", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.currencyEdit.props.rows.enabledReadOnly") },
+    { prop: "withBorder / filled", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.currencyEdit.props.rows.withBorderFilled") },
+    { prop: "labelPosition", type: '"float" | "top" | "left"', defaultValue: '"float"', description: t(i18n, "showcase.common.props.rows.labelPosition") },
+    { prop: "labelWidth", type: "number | string", defaultValue: '"11rem"', description: t(i18n, "showcase.common.props.rows.labelWidth") },
+    { prop: "labelAlign", type: '"start" | "center" | "end"', defaultValue: '"start"', description: t(i18n, "showcase.common.props.rows.labelAlign") },
+    { prop: "elevation", type: '"none" | "sm" | "md" | "lg"', defaultValue: '"sm"', description: t(i18n, "showcase.common.props.rows.elevation") },
+    { prop: "width / borderRadius", type: "number | string", defaultValue: "100% / -", description: t(i18n, "showcase.component.currencyEdit.props.rows.widthBorderRadius") },
+    { prop: "register / control / name", type: "react-hook-form", defaultValue: "-", description: t(i18n, "showcase.component.currencyEdit.props.rows.rhf") }
+  ];
 
   return (
     <I18NReady>
@@ -1007,38 +1033,26 @@ export default function Example() {
         id="props-reference"
         className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
       >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referencia de Props</h2>
+        <h2 data-anchor-title="true" className="text-lg font-semibold">{t(i18n, "showcase.component.currencyEdit.props.title")}</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrao</th>
-                <th className="pb-2 font-semibold">Descricao</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.currencyEdit.props.headers.prop")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.currencyEdit.props.headers.type")}</th>
+                <th className="pb-2 pr-4 font-semibold">{t(i18n, "showcase.component.currencyEdit.props.headers.default")}</th>
+                <th className="pb-2 font-semibold">{t(i18n, "showcase.component.currencyEdit.props.headers.description")}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Label exibido acima do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">currency</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"BRL"</td><td className="py-2">Moeda usada na exibicao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">locale</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">i18n locale</td><td className="py-2">Localizacao para formatacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">decimals</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">minor unit</td><td className="py-2">Casas decimais do valor.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">currencyDisplay</td><td className="py-2 pr-4">"symbol" | "code" | ...</td><td className="py-2 pr-4">"symbol"</td><td className="py-2">Formato do simbolo da moeda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">showCurrencySymbol</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe/oculta simbolo da moeda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">allowNegative</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Permite valores negativos.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">minValue / maxValue</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">-</td><td className="py-2">Limites numericos aceitos.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Define o campo como obrigatorio.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">requiredMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para validacao required.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation</td><td className="py-2 pr-4">(value) =&gt; string | null</td><td className="py-2 pr-4">-</td><td className="py-2">validacao customizada.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onValidation</td><td className="py-2 pr-4">(msg) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback de retorno da validacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interacao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe botao de limpar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado habilitado e somente leitura.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Variacoes visuais do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensao e borda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com React Hook Form.</td></tr>
+              {currencyEditPropsRows.map((row) => (
+                <tr key={row.prop}>
+                  <td className="py-2 pr-4 font-mono text-xs">{row.prop}</td>
+                  <td className="py-2 pr-4">{row.type}</td>
+                  <td className="py-2 pr-4">{row.defaultValue}</td>
+                  <td className="py-2">{row.description}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -120,7 +120,7 @@ function isSupportedNeonLocale(locale: ShowcaseLocale): locale is SupportedNeonL
 }
 
 function getNeonTexts(locale: ShowcaseLocale): NeonDigitTexts {
-  const normalized: SupportedNeonLocale = isSupportedNeonLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedNeonLocale = isSupportedNeonLocale(locale) ? locale : "en-US";
   return NEON_TEXTS[normalized];
 }
 

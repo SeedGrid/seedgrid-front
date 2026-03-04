@@ -192,7 +192,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof STEPP
 
 export default function SgStepperInputPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof STEPPER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof STEPPER_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = STEPPER_TEXTS[locale];
   const [basicValue, setBasicValue] = React.useState(12);
   const [controlledValue, setControlledValue] = React.useState(18);
@@ -281,4 +281,3 @@ export default function SgStepperInputPage() {
     </I18NReady>
   );
 }
-

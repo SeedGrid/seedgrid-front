@@ -50,7 +50,7 @@ function isSupportedBenchmarkLocale(locale: ShowcaseLocale): locale is Supported
 }
 
 function getBenchmarkTexts(locale: ShowcaseLocale): BenchmarkTexts {
-  const normalized: SupportedBenchmarkLocale = isSupportedBenchmarkLocale(locale) ? locale : "pt-BR";
+  const normalized: SupportedBenchmarkLocale = isSupportedBenchmarkLocale(locale) ? locale : "en-US";
   return BENCHMARK_TEXTS[normalized];
 }
 

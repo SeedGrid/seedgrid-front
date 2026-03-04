@@ -61,7 +61,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof PROPS
 
 export default function ShowcasePropsReference(props: Readonly<ShowcasePropsReferenceProps>) {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof PROPS_REFERENCE_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof PROPS_REFERENCE_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = PROPS_REFERENCE_TEXTS[locale];
   const sectionId = props.id ?? "props-reference";
   const sectionTitle = props.title ?? texts.title;
@@ -97,4 +97,3 @@ export default function ShowcasePropsReference(props: Readonly<ShowcasePropsRefe
     </section>
   );
 }
-

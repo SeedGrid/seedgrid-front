@@ -140,7 +140,7 @@ function isSupportedDockLayoutLocale(locale: string): locale is keyof typeof DOC
 
 export default function SgDockLayoutPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof DOCK_LAYOUT_PAGE_TEXTS = isSupportedDockLayoutLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof DOCK_LAYOUT_PAGE_TEXTS = isSupportedDockLayoutLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = DOCK_LAYOUT_PAGE_TEXTS[locale];
   const topLabel = t(i18n, "showcase.component.dockLayout.labels.top");
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({

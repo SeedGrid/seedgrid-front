@@ -222,6 +222,22 @@ export default function SgInputPasswordPage() {
     ],
     [i18n.locale]
   );
+  const inputPasswordPropsRows = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.id") },
+    { prop: "label / hintText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.labelHintText") },
+    { prop: "required / requiredMessage", type: "boolean / string", defaultValue: "false / auto", description: t(i18n, "showcase.component.inputPassword.props.rows.required") },
+    { prop: "validation / onValidation", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.validation") },
+    { prop: "maxLength / minSize", type: "number", defaultValue: "- / 8", description: t(i18n, "showcase.component.inputPassword.props.rows.lengthRules") },
+    { prop: "showStrengthBar", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputPassword.props.rows.showStrengthBar") },
+    { prop: "commonPasswordCheck", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputPassword.props.rows.commonPasswordCheck") },
+    { prop: "clearButton / withBorder / filled / enabled / readOnly", type: "boolean", defaultValue: "varies", description: t(i18n, "showcase.component.inputPassword.props.rows.visualFlags") },
+    { prop: "labelPosition", type: '"float" | "top" | "left"', defaultValue: '"float"', description: t(i18n, "showcase.common.props.rows.labelPosition") },
+    { prop: "labelWidth", type: "number | string", defaultValue: '"11rem"', description: t(i18n, "showcase.common.props.rows.labelWidth") },
+    { prop: "labelAlign", type: '"start" | "center" | "end"', defaultValue: '"start"', description: t(i18n, "showcase.common.props.rows.labelAlign") },
+    { prop: "elevation", type: '"none" | "sm" | "md" | "lg"', defaultValue: '"sm"', description: t(i18n, "showcase.common.props.rows.elevation") },
+    { prop: "width / borderRadius", type: "number | string", defaultValue: "100% / -", description: t(i18n, "showcase.component.inputPassword.props.rows.widthBorderRadius") },
+    { prop: "onChange / onEnter / onExit / onClear", type: "callbacks", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.events") }
+  ];
 
   return (
     <I18NReady>

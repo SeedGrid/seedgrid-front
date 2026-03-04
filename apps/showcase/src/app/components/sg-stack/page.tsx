@@ -112,7 +112,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof STACK
 
 export default function SgStackPage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof STACK_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof STACK_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = STACK_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
@@ -189,4 +189,3 @@ export default function SgStackPage() {
     </I18NReady>
   );
 }
-

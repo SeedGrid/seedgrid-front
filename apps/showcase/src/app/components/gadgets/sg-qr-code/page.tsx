@@ -315,7 +315,7 @@ function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof QR_CO
 
 export default function SgQRCodePage() {
   const i18n = useShowcaseI18n();
-  const locale: keyof typeof QR_CODE_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "pt-BR";
+  const locale: keyof typeof QR_CODE_TEXTS = isSupportedLocale(i18n.locale) ? i18n.locale : "en-US";
   const texts = QR_CODE_TEXTS[locale];
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
