@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SgGrid, SgInputPhone, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
@@ -223,6 +224,25 @@ export default function SgInputPhonePage() {
     ],
     [i18n.locale]
   );
+  const inputPhonePropsRows: ShowcasePropRow[] = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPhone.props.rows.id") },
+    { prop: "label", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPhone.props.rows.label") },
+    { prop: "hintText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPhone.props.rows.hintText") },
+    { prop: "required / requiredMessage", type: "boolean / string", defaultValue: "false / auto", description: t(i18n, "showcase.component.inputPhone.props.rows.required") },
+    { prop: "invalidMessage", type: "string", defaultValue: "auto", description: t(i18n, "showcase.component.inputPhone.props.rows.invalid") },
+    { prop: "validation / onValidation", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.inputPhone.props.rows.validation") },
+    { prop: "withBorder", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputPhone.props.rows.withBorder") },
+    { prop: "labelPosition", type: '"float" | "top" | "left"', defaultValue: '"float"', description: t(i18n, "showcase.common.props.rows.labelPosition") },
+    { prop: "labelWidth", type: "number | string", defaultValue: '"11rem"', description: t(i18n, "showcase.common.props.rows.labelWidth") },
+    { prop: "labelAlign", type: '"start" | "center" | "end"', defaultValue: '"start"', description: t(i18n, "showcase.common.props.rows.labelAlign") },
+    { prop: "elevation", type: '"none" | "sm" | "md" | "lg"', defaultValue: '"sm"', description: t(i18n, "showcase.common.props.rows.elevation") },
+    { prop: "filled", type: "boolean", defaultValue: "false", description: t(i18n, "showcase.component.inputPhone.props.rows.filled") },
+    { prop: "clearButton", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputPhone.props.rows.clearButton") },
+    { prop: "width / borderRadius", type: "number | string", defaultValue: "100% / -", description: t(i18n, "showcase.component.inputPhone.props.rows.widthBorderRadius") },
+    { prop: "enabled", type: "boolean", defaultValue: "true", description: t(i18n, "showcase.component.inputPhone.props.rows.enabled") },
+    { prop: "inputProps", type: "InputHTMLAttributes", defaultValue: "{}", description: t(i18n, "showcase.component.inputPhone.props.rows.inputProps") },
+    { prop: "onChange / onEnter / onExit / onClear", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.inputPhone.props.rows.events") }
+  ];
 
   return (
     <I18NReady>
@@ -236,7 +256,7 @@ export default function SgInputPhonePage() {
             <p className="mt-2 text-muted-foreground">
               {t(i18n, "showcase.component.inputPhone.subtitle")}
             </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(i18n, "showcase.common.examples")}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (
                 <Link
@@ -509,43 +529,7 @@ export default function SgInputPhonePage() {
         />
       </Section>
 
-      <section
-        id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto de dica abaixo do label.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">invalidMessage</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">auto</td><td className="py-2">Mensagem para telefone inválido.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback de resultado.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe borda do input.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">filled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Aplica estilo preenchido.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Mostra botão de limpar.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Controle de largura e arredondamento.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Habilita ou desabilita o campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props nativas do input interno.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interação.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <ShowcasePropsReference rows={inputPhonePropsRows} />
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

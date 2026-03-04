@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SgGrid, SgInputPassword, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
@@ -222,7 +223,7 @@ export default function SgInputPasswordPage() {
     ],
     [i18n.locale]
   );
-  const inputPasswordPropsRows = [
+  const inputPasswordPropsRows: ShowcasePropRow[] = [
     { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.id") },
     { prop: "label / hintText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPassword.props.rows.labelHintText") },
     { prop: "required / requiredMessage", type: "boolean / string", defaultValue: "false / auto", description: t(i18n, "showcase.component.inputPassword.props.rows.required") },
@@ -249,7 +250,7 @@ export default function SgInputPasswordPage() {
           <div className="rounded-lg border border-border bg-background p-4 shadow-sm">
             <h1 className="text-3xl font-bold">{t(i18n, "showcase.component.inputPassword.title")}</h1>
             <p className="mt-2 text-muted-foreground">{t(i18n, "showcase.component.inputPassword.subtitle")}</p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(i18n, "showcase.common.examples")}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (
                 <Link
@@ -428,40 +429,7 @@ export default function SgInputPasswordPage() {
           />
         </Section>
 
-        <section
-          id="props-reference"
-          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-        >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">Prop</th>
-                  <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                  <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                  <th className="pb-2 font-semibold">Descrição</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">maxLength / minSize</td><td className="py-2 pr-4">number</td><td className="py-2 pr-4">- / 8</td><td className="py-2">Regras de tamanho.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">showStrengthBar</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Exibe barra de força.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">commonPasswordCheck</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true</td><td className="py-2">Bloqueia senhas comuns.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">clearButton / withBorder / filled / enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">varia</td><td className="py-2">Aparência e edição.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e borda.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos do componente.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <ShowcasePropsReference rows={inputPasswordPropsRows} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

@@ -282,7 +282,7 @@ export default function SgInputTextAreaPage() {
               {t(i18n, "showcase.component.inputTextArea.subtitle")}
             </p>
             <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Exemplos
+              {t(i18n, "showcase.common.examples")}
             </p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (

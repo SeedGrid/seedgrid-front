@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import Link from "next/link";
 import { SgGrid, SgInputPostalCode, SgPlayground, type ViaCepResponse, type PostalCodeCountry } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { t, useShowcaseI18n } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
@@ -78,7 +79,7 @@ export default function App() {
       <SgInputPostalCode
         id="playground-postal"
         country={country}
-        label="Código postal"
+        label="CÃ³digo postal"
         hintText={hintByCountry[country]}
         required={required}
         filled={filled}
@@ -288,6 +289,25 @@ export default function SgInputPostalCodePage() {
     ],
     [i18n.locale]
   );
+  const inputPostalCodePropsRows: ShowcasePropRow[] = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.id") },
+    { prop: "country", type: '"BR" | "PT" | "US" | "ES" | "UY" | "AR" | "PY"', defaultValue: '"BR"', description: t(i18n, "showcase.component.inputPostalCode.props.rows.country") },
+    { prop: "label / hintText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.labelHintText") },
+    { prop: "required / requiredMessage", type: "boolean / string", defaultValue: "false / auto", description: t(i18n, "showcase.component.inputPostalCode.props.rows.required") },
+    { prop: "validation / onValidation", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.validation") },
+    { prop: "validateWithViaCep / viaCepErrorMessage / onViaCepResult", type: "boolean / string / function", defaultValue: "false / auto / -", description: t(i18n, "showcase.component.inputPostalCode.props.rows.viaCep") },
+    { prop: "prefixIcon / prefixText / suffixText / iconButtons", type: "ReactNode / string / string / ReactNode[]", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.visualAddons") },
+    { prop: "withBorder / filled / clearButton", type: "boolean", defaultValue: "true / false / true", description: t(i18n, "showcase.component.inputPostalCode.props.rows.visualFlags") },
+    { prop: "labelPosition", type: '"float" | "top" | "left"', defaultValue: '"float"', description: t(i18n, "showcase.common.props.rows.labelPosition") },
+    { prop: "labelWidth", type: "number | string", defaultValue: '"11rem"', description: t(i18n, "showcase.common.props.rows.labelWidth") },
+    { prop: "labelAlign", type: '"start" | "center" | "end"', defaultValue: '"start"', description: t(i18n, "showcase.common.props.rows.labelAlign") },
+    { prop: "elevation", type: '"none" | "sm" | "md" | "lg"', defaultValue: '"sm"', description: t(i18n, "showcase.common.props.rows.elevation") },
+    { prop: "width / borderRadius", type: "number | string", defaultValue: "100% / -", description: t(i18n, "showcase.component.inputPostalCode.props.rows.widthBorderRadius") },
+    { prop: "enabled / readOnly", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.inputPostalCode.props.rows.enabledReadOnly") },
+    { prop: "name / register / control", type: "string / function / object", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.rhf") },
+    { prop: "inputProps", type: "InputHTMLAttributes", defaultValue: "{}", description: t(i18n, "showcase.component.inputPostalCode.props.rows.inputProps") },
+    { prop: "onChange / onEnter / onExit / onClear", type: "functions", defaultValue: "-", description: t(i18n, "showcase.component.inputPostalCode.props.rows.events") }
+  ];
 
   return (
     <I18NReady>
@@ -301,7 +321,7 @@ export default function SgInputPostalCodePage() {
             <p className="mt-2 text-muted-foreground">
               {t(i18n, "showcase.component.inputPostalCode.subtitle")}
             </p>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exemplos</p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t(i18n, "showcase.common.examples")}</p>
             <SgGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={8} className="mt-2">
               {exampleLinks.map((example) => (
                 <Link
@@ -948,45 +968,10 @@ export default function Example() {
         />
       </Section>
 
-      <section
-        id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">Referência de Props</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">Prop</th>
-                <th className="pb-2 pr-4 font-semibold">Tipo</th>
-                <th className="pb-2 pr-4 font-semibold">Padrão</th>
-                <th className="pb-2 font-semibold">Descrição</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">country</td><td className="py-2 pr-4">"BR" | "PT" | "US" | "ES" | "UY" | "AR" | "PY"</td><td className="py-2 pr-4">"BR"</td><td className="py-2">Define máscara e regra do país.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto do campo e dica.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validação obrigatória.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validation / onValidation</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Validação customizada e callback.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">validateWithViaCep / viaCepErrorMessage / onViaCepResult</td><td className="py-2 pr-4">boolean / string / function</td><td className="py-2 pr-4">false / auto / -</td><td className="py-2">Consulta ViaCEP para CEPs brasileiros.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">prefixIcon / prefixText / suffixText / iconButtons</td><td className="py-2 pr-4">ReactNode / string / string / ReactNode[]</td><td className="py-2 pr-4">-</td><td className="py-2">Customizações visuais do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">withBorder / filled / clearButton</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false / true</td><td className="py-2">Ajustes de aparência.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelPosition</td><td className="py-2 pr-4">"float" | "top" | "left"</td><td className="py-2 pr-4">"float"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelPosition")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelWidth</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">"11rem"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelWidth")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">labelAlign</td><td className="py-2 pr-4">"start" | "center" | "end"</td><td className="py-2 pr-4">"start"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.labelAlign")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"sm"</td><td className="py-2">{t(i18n, "showcase.common.props.rows.elevation")}</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">width / borderRadius</td><td className="py-2 pr-4">number | string</td><td className="py-2 pr-4">100% / -</td><td className="py-2">Dimensão e raio da borda.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Estado do campo.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">name / register / control</td><td className="py-2 pr-4">string / function / object</td><td className="py-2 pr-4">-</td><td className="py-2">Integração com React Hook Form.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">inputProps</td><td className="py-2 pr-4">InputHTMLAttributes</td><td className="py-2 pr-4">{"{}"}</td><td className="py-2">Props do input interno (ex.: ref/value).</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onEnter / onExit / onClear</td><td className="py-2 pr-4">functions</td><td className="py-2 pr-4">-</td><td className="py-2">Eventos de interação.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <ShowcasePropsReference rows={inputPostalCodePropsRows} />
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+

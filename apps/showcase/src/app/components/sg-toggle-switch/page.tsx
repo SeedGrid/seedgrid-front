@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import type { FieldValues } from "react-hook-form";
 import { SgGrid, SgPlayground, SgToggleSwitch } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
-import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
+import { t, useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -863,14 +863,14 @@ export default function SgToggleSwitchPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador Ãºnico.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Texto exibido ao lado do toggle.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">checked / defaultChecked</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Valor controlado e inicial.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(next: boolean) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Callback disparado na troca de estado.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onIcon / offIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Icones para estados ligado/desligado.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de interaÃ§Ã£o.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">ValidaÃ§Ã£o obrigatÃ³ria.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">IntegraÃ§Ã£o com React Hook Form.</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.id")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">label</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.label")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">checked / defaultChecked</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.checked")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onChange</td><td className="py-2 pr-4">(next: boolean) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.onChange")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">onIcon / offIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.icons")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.interaction")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.required")}</td></tr>
+              <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">{t(i18n, "showcase.component.toggleSwitch.props.rows.rhf")}</td></tr>
             </tbody>
           </table>
         </div>
@@ -880,4 +880,5 @@ export default function SgToggleSwitchPage() {
     </I18NReady>
   );
 }
+
 

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { SgButton, SgGrid, SgInputOTP, SgPlayground, type SgInputOTPRef } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
-import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
+import { t, useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -324,6 +325,18 @@ export default function SgInputOTPPage() {
   }, []);
 
   const exampleLinks = React.useMemo(() => texts.sectionTitles.map((label, index) => ({ id: `exemplo-${index + 1}`, label })), [texts]);
+  const inputOtpPropsRows: ShowcasePropRow[] = [
+    { prop: "id", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.id") },
+    { prop: "label / hintText", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.labelHintText") },
+    { prop: "mask", type: "string", defaultValue: "\"999999\"", description: t(i18n, "showcase.component.inputOtp.props.rows.mask") },
+    { prop: "value / defaultValue", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.valueDefault") },
+    { prop: "required / requiredMessage", type: "boolean / string", defaultValue: "false / auto", description: t(i18n, "showcase.component.inputOtp.props.rows.required") },
+    { prop: "onChange / onRawChange / onComplete", type: "callbacks", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.callbacks") },
+    { prop: "enabled / readOnly", type: "boolean", defaultValue: "true / false", description: t(i18n, "showcase.component.inputOtp.props.rows.enabledReadOnly") },
+    { prop: "className / groupClassName / slotClassName / separatorClassName", type: "string", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.classNames") },
+    { prop: "register / control / name", type: "react-hook-form", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.rhf") },
+    { prop: "ref API", type: "SgInputOTPRef", defaultValue: "-", description: t(i18n, "showcase.component.inputOtp.props.rows.refApi") }
+  ];
 
   return (
     <I18NReady>
@@ -437,36 +450,7 @@ export default function SgInputOTPPage() {
           />
         </Section>
 
-        <section
-          id="props-reference"
-          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-        >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
-                  <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                <tr><td className="py-2 pr-4 font-mono text-xs">id</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Identificador do componente.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">label / hintText</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Textos de label e dica.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">mask</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">"999999"</td><td className="py-2">Mascara (`#` alfanumerico e `9` numerico).</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">value / defaultValue</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Modo controlado e valor inicial.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">required / requiredMessage</td><td className="py-2 pr-4">boolean / string</td><td className="py-2 pr-4">false / auto</td><td className="py-2">Validacao obrigatoria.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">onChange / onRawChange / onComplete</td><td className="py-2 pr-4">callbacks</td><td className="py-2 pr-4">-</td><td className="py-2">Retorno de valor formatado, bruto e completo.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">enabled / readOnly</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">true / false</td><td className="py-2">Controle de edicao.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">className / groupClassName / slotClassName / separatorClassName</td><td className="py-2 pr-4">string</td><td className="py-2 pr-4">-</td><td className="py-2">Customizacao visual.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">register / control / name</td><td className="py-2 pr-4">react-hook-form</td><td className="py-2 pr-4">-</td><td className="py-2">Integracao com RHF.</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-xs">ref API</td><td className="py-2 pr-4">SgInputOTPRef</td><td className="py-2 pr-4">-</td><td className="py-2">Metodos: focus, clear, getRawValue, getMaskedValue.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <ShowcasePropsReference rows={inputOtpPropsRows} title={texts.propsTitle} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
