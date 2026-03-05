@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../i18n";
+import propsDescriptionTranslations from "../../i18n/showcase-props-descriptions.json";
 
 export type ShowcasePropRow = {
   prop: string;
@@ -24,20 +25,26 @@ type PropsReferenceTexts = {
   colDescription: string;
 };
 
+type PropDescriptionTranslation = {
+  pt: string;
+  en: string;
+  es: string;
+};
+
 const PROPS_REFERENCE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PropsReferenceTexts> = {
   "pt-BR": {
-    title: "Referencia de Props",
+    title: "Referência de Props",
     colProp: "Prop",
     colType: "Tipo",
-    colDefault: "Padrao",
-    colDescription: "Descricao"
+    colDefault: "Padrão",
+    colDescription: "Descrição"
   },
   "pt-PT": {
-    title: "Referencia de Props",
+    title: "Referência de Props",
     colProp: "Prop",
     colType: "Tipo",
-    colDefault: "Padrao",
-    colDescription: "Descricao"
+    colDefault: "Padrão",
+    colDescription: "Descrição"
   },
   "en-US": {
     title: "Props Reference",
@@ -51,9 +58,20 @@ const PROPS_REFERENCE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", PropsRef
     colProp: "Prop",
     colType: "Tipo",
     colDefault: "Predeterminado",
-    colDescription: "Descripcion"
+    colDescription: "Descripción"
   }
 };
+
+const PROPS_DESCRIPTION_TRANSLATIONS = propsDescriptionTranslations as Record<string, PropDescriptionTranslation>;
+
+function getLocalizedPropDescription(description: string, locale: keyof typeof PROPS_REFERENCE_TEXTS): string {
+  const translations = PROPS_DESCRIPTION_TRANSLATIONS[description];
+  if (!translations) return description;
+
+  if (locale === "en-US") return translations.en;
+  if (locale === "es") return translations.es;
+  return translations.pt;
+}
 
 function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof PROPS_REFERENCE_TEXTS {
   return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
@@ -88,7 +106,7 @@ export default function ShowcasePropsReference(props: Readonly<ShowcasePropsRefe
                 <td className="py-2 pr-4 font-mono text-xs">{row.prop}</td>
                 <td className="py-2 pr-4">{row.type}</td>
                 <td className="py-2 pr-4">{row.defaultValue}</td>
-                <td className="py-2">{row.description}</td>
+                <td className="py-2">{getLocalizedPropDescription(row.description, locale)}</td>
               </tr>
             ))}
           </tbody>

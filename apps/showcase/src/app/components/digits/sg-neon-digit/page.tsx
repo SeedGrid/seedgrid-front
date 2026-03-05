@@ -61,7 +61,7 @@ const NEON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", NeonDigitTexts> = {
     section5Description: "Variacao de tamanho para diferentes cenarios.",
     section6Title: "6) Playground (SgPlayground)",
     section6Description: "Teste as props principais em tempo real.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "pt-PT": {
     headerSubtitle: "Caracteres em neon com animacao de troca, color, font, backgroundColor e shadowColor.",
@@ -77,7 +77,7 @@ const NEON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", NeonDigitTexts> = {
     section5Description: "Variacao de tamanho para diferentes cenarios.",
     section6Title: "6) Playground (SgPlayground)",
     section6Description: "Teste as props principais em tempo real.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "en-US": {
     headerSubtitle: "Neon character component with swap animation, color, font, backgroundColor, and shadowColor.",

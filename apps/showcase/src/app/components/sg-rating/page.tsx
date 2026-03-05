@@ -12,6 +12,7 @@ import {
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference from "../ShowcasePropsReference";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: {
@@ -87,8 +88,8 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
   "pt-BR": {
     subtitle: "Rating component with half-star support, visual states, icon customization and React Hook Form integration.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Referencia de Props",
-    propsTitle: "Referencia de Props",
+    propsLinkLabel: "Referência de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -120,8 +121,8 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
   "pt-PT": {
     subtitle: "Rating component with half-star support, visual states, icon customization and React Hook Form integration.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Referencia de Props",
-    propsTitle: "Referencia de Props",
+    propsLinkLabel: "Referência de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -1025,34 +1026,7 @@ export default function SgRatingPage() {
           />
         </Section>
 
-        <section
-          id="props-reference"
-          className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-        >
-          <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
-                  <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
-                  <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {RATING_PROPS.map((row) => (
-                  <tr key={row.prop}>
-                    <td className="py-2 pr-4 font-mono text-xs">{row.prop}</td>
-                    <td className="py-2 pr-4">{row.type}</td>
-                    <td className="py-2 pr-4">{row.defaultValue}</td>
-                    <td className="py-2">{row.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <ShowcasePropsReference id="props-reference" title={texts.propsTitle} rows={RATING_PROPS} />
         <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

@@ -55,7 +55,7 @@ const ROLLER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RollerTexts> = {
     section5Description: "Ajuste de escala via prop fontSize.",
     section6Title: "Playground",
     section6Description: "Animacao de nomes interativa.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "pt-PT": {
     headerSubtitle: "Animated vertical drum - displays any value from a list with smooth CSS transition.",
@@ -72,7 +72,7 @@ const ROLLER_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RollerTexts> = {
     section5Description: "Ajuste de escala via prop fontSize.",
     section6Title: "Playground",
     section6Description: "Animacao de nomes interativa.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "en-US": {
     headerSubtitle: "Animated vertical drum - displays any value from a list with smooth CSS transition.",

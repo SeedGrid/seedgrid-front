@@ -6,6 +6,7 @@ import { Check, X, Bookmark, Search, Users, Bell, Heart } from "lucide-react";
 import { SgButton, SgGrid, SgPlayground } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
@@ -110,7 +111,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
   "pt-BR": {
     headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Props Reference",
+    propsLinkLabel: "Referência de Props",
     sectionTitles: [
       "1) Basico",
       "2) Icones",
@@ -150,7 +151,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     iconsGroupGhost: "Ghost Buttons (Flat)",
     iconsGroupOutlinedElevation: "Outlined + Elevation",
     iconsGroupOutlined: "Outlined Buttons",
-    propsTitle: "Referencia de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -159,7 +160,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
   "pt-PT": {
     headerSubtitle: "Botao com suporte a severity, appearance, shape, elevation, icons e loading.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Props Reference",
+    propsLinkLabel: "Referência de Props",
     sectionTitles: [
       "1) Basico",
       "2) Icones",
@@ -199,7 +200,7 @@ const BUTTON_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", ButtonTexts> = {
     iconsGroupGhost: "Ghost Buttons (Flat)",
     iconsGroupOutlinedElevation: "Outlined + Elevation",
     iconsGroupOutlined: "Outlined Buttons",
-    propsTitle: "Referencia de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -360,6 +361,75 @@ export default function App() {
     </div>
   );
 }`;
+
+const BUTTON_PROPS: ShowcasePropRow[] = [
+  {
+    prop: "severity",
+    type: "\"primary\" | \"secondary\" | \"success\" | \"info\" | \"warning\" | \"help\" | \"danger\"",
+    defaultValue: "\"primary\"",
+    description: "Varia o tema visual do botao."
+  },
+  {
+    prop: "appearance",
+    type: "\"solid\" | \"outline\" | \"ghost\"",
+    defaultValue: "\"solid\"",
+    description: "Define estilo de preenchimento."
+  },
+  {
+    prop: "size",
+    type: "\"sm\" | \"md\" | \"lg\"",
+    defaultValue: "\"md\"",
+    description: "Tamanho do componente."
+  },
+  {
+    prop: "shape",
+    type: "\"default\" | \"rounded\"",
+    defaultValue: "\"default\"",
+    description: "Formato das bordas."
+  },
+  {
+    prop: "elevation",
+    type: "\"none\" | \"sm\" | \"md\" | \"lg\"",
+    defaultValue: "\"none\"",
+    description: "Nivel de elevacao/sombra."
+  },
+  {
+    prop: "leftIcon / rightIcon",
+    type: "ReactNode",
+    defaultValue: "-",
+    description: "Icones antes/depois do texto."
+  },
+  {
+    prop: "loading",
+    type: "boolean",
+    defaultValue: "false",
+    description: "Exibe spinner e bloqueia clique."
+  },
+  {
+    prop: "disabled",
+    type: "boolean",
+    defaultValue: "false",
+    description: "Desabilita o botao."
+  },
+  {
+    prop: "customColors",
+    type: "object",
+    defaultValue: "-",
+    description: "Sobrescreve cores de fundo, texto, borda e foco."
+  },
+  {
+    prop: "onClick",
+    type: "(event) => void",
+    defaultValue: "-",
+    description: "Manipulador de clique."
+  },
+  {
+    prop: "children",
+    type: "ReactNode",
+    defaultValue: "-",
+    description: "Conteudo interno do botao."
+  }
+];
 
 export default function SgButtonShowcase() {
   const submit = useFakeProcess(2000);
@@ -872,37 +942,7 @@ import { SgButton } from "@seedgrid/fe-components";
         />
       </Section>
 
-      <section
-        id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
-                <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr><td className="py-2 pr-4 font-mono text-xs">severity</td><td className="py-2 pr-4">"primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger"</td><td className="py-2 pr-4">"primary"</td><td className="py-2">Varia o tema visual do botao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">appearance</td><td className="py-2 pr-4">"solid" | "outline" | "ghost"</td><td className="py-2 pr-4">"solid"</td><td className="py-2">Define estilo de preenchimento.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">size</td><td className="py-2 pr-4">"sm" | "md" | "lg"</td><td className="py-2 pr-4">"md"</td><td className="py-2">Tamanho do componente.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">shape</td><td className="py-2 pr-4">"default" | "rounded"</td><td className="py-2 pr-4">"default"</td><td className="py-2">Formato das bordas.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">elevation</td><td className="py-2 pr-4">"none" | "sm" | "md" | "lg"</td><td className="py-2 pr-4">"none"</td><td className="py-2">Nivel de elevacao/sombra.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">leftIcon / rightIcon</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Icones antes/depois do texto.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">loading</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Exibe spinner e bloqueia clique.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">disabled</td><td className="py-2 pr-4">boolean</td><td className="py-2 pr-4">false</td><td className="py-2">Desabilita o botao.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">customColors</td><td className="py-2 pr-4">object</td><td className="py-2 pr-4">-</td><td className="py-2">Sobrescreve cores de fundo, texto, borda e foco.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">onClick</td><td className="py-2 pr-4">(event) =&gt; void</td><td className="py-2 pr-4">-</td><td className="py-2">Manipulador de clique.</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-xs">children</td><td className="py-2 pr-4">ReactNode</td><td className="py-2 pr-4">-</td><td className="py-2">Conteudo interno do botao.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <ShowcasePropsReference id="props-reference" title={texts.propsTitle} rows={BUTTON_PROPS} />
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>

@@ -67,7 +67,7 @@ const FADE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FadeDigitTexts> = {
     section6Description: "Scale adjustment via fontSize prop - card width and height are proportional.",
     section7Title: "Playground",
     section7Description: "Interactive clock with color palette and configurable fontSize.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "pt-PT": {
     headerSubtitle:
@@ -87,7 +87,7 @@ const FADE_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", FadeDigitTexts> = {
     section6Description: "Scale adjustment via fontSize prop - card width and height are proportional.",
     section7Title: "Playground",
     section7Description: "Interactive clock with color palette and configurable fontSize.",
-    propsReferenceTitle: "Referencia de Props",
+    propsReferenceTitle: "Referência de Props",
   },
   "en-US": {
     headerSubtitle:

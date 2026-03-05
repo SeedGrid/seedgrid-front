@@ -1,0 +1,1647 @@
+{
+  "Acento visual do diálogo.": {
+    "pt": "Acento visual do diálogo.",
+    "en": "Visual accent of the dialogue.",
+    "es": "Acento visual del diálogo."
+  },
+  "Acessibilidade e foco.": {
+    "pt": "Acessibilidade e foco.",
+    "en": "Accessibility and focus.",
+    "es": "Accesibilidad y enfoque."
+  },
+  "Acessibilidade para o input.": {
+    "pt": "Acessibilidade para o input.",
+    "en": "Accessibility to the input.",
+    "es": "Accesibilidad a la entrada."
+  },
+  "Acoes do rodape.": {
+    "pt": "Acoes do rodape.",
+    "en": "Footer actions.",
+    "es": "Acciones de pie de página."
+  },
+  "Additional pointers and per-pointer callback.": {
+    "pt": "Ponteiros adicionais e retorno de chamada por ponteiro.",
+    "en": "Additional pointers and per-pointer callback.",
+    "es": "Punteros adicionales y devolución de llamada por puntero."
+  },
+  "Ajustes visuais do componente.": {
+    "pt": "Ajustes visuais do componente.",
+    "en": "Component visual adjustments.",
+    "es": "Ajustes visuales de componentes."
+  },
+  "Alinhamento do grid.": {
+    "pt": "Alinhamento do grid.",
+    "en": "Grid alignment.",
+    "es": "Alineación de cuadrícula."
+  },
+  "Altura base para uso com rowSpan.": {
+    "pt": "Altura base para uso com rowSpan.",
+    "en": "Base height for use with rowSpan.",
+    "es": "Altura de la base para usar con rowSpan."
+  },
+  "Altura do card em pixels.": {
+    "pt": "Altura do card em pixels.",
+    "en": "Card height in pixels.",
+    "es": "Alto de la tarjeta en píxeles."
+  },
+  "Altura do container.": {
+    "pt": "Altura do container.",
+    "en": "Container height.",
+    "es": "Altura del contenedor."
+  },
+  "Animacao de entrada/saida.": {
+    "pt": "Animacao de entrada/saida.",
+    "en": "Entry/exit animation.",
+    "es": "Animación de entrada/salida."
+  },
+  "Animação e duração da transição.": {
+    "pt": "Animação e duração da transição.",
+    "en": "Transition animation and duration.",
+    "es": "Animación y duración de la transición."
+  },
+  "Annotation configuration.": {
+    "pt": "Configuração de anotação.",
+    "en": "Annotation configuration.",
+    "es": "Configuración de anotaciones."
+  },
+  "Annotations positioned by value/angle.": {
+    "pt": "Anotações posicionadas por valor/ângulo.",
+    "en": "Annotations positioned by value/angle.",
+    "es": "Anotaciones posicionadas por valor/ángulo."
+  },
+  "Arc configuration and scale direction.": {
+    "pt": "Configuração do arco e direção da escala.",
+    "en": "Arc configuration and scale direction.",
+    "es": "Configuración del arco y dirección de escala."
+  },
+  "Array de itens exibidos no carrossel (obrigatorio).": {
+    "pt": "Array de itens exibidos no carrossel (obrigatorio).",
+    "en": "Array of items displayed in the carousel (required).",
+    "es": "Conjunto de elementos mostrados en el carrusel (obligatorio)."
+  },
+  "Arvore que vai consumir o ambiente via contexto.": {
+    "pt": "Arvore que vai consumir o ambiente via contexto.",
+    "en": "Tree that will consume the environment via context.",
+    "es": "Árbol que consumirá el medio ambiente a través del contexto."
+  },
+  "Ativa loop infinito.": {
+    "pt": "Ativa loop infinito.",
+    "en": "Activates infinite loop.",
+    "es": "Activa el bucle infinito."
+  },
+  "Ativa navegacao automatica.": {
+    "pt": "Ativa navegacao automatica.",
+    "en": "Activates automatic navigation.",
+    "es": "Activa la navegación automática."
+  },
+  "Atualiza o valor do input sem re-render global.": {
+    "pt": "Atualiza o valor do input sem re-render global.",
+    "en": "Updates the input value without global re-rendering.",
+    "es": "Actualiza el valor de entrada sin volver a renderizarlo globalmente."
+  },
+  "Avatar de excesso de itens.": {
+    "pt": "Avatar de excesso de itens.",
+    "en": "Excess item avatar.",
+    "es": "Avatar de artículo excesivo."
+  },
+  "Avatar image and alt text.": {
+    "pt": "Imagem do avatar e texto alternativo.",
+    "en": "Avatar image and alt text.",
+    "es": "Imagen de avatar y texto alternativo."
+  },
+  "Axis orientation and direction.": {
+    "pt": "Orientação e direção do eixo.",
+    "en": "Axis orientation and direction.",
+    "es": "Orientación y dirección del eje."
+  },
+  "Bloqueia edicao total ou parcial.": {
+    "pt": "Bloqueia edicao total ou parcial.",
+    "en": "Blocks total or partial editing.",
+    "es": "Bloquea la edición total o parcial."
+  },
+  "Borda e estado desabilitado.": {
+    "pt": "Borda e estado desabilitado.",
+    "en": "Edge and disabled state.",
+    "es": "Borde y estado deshabilitado."
+  },
+  "Botoes de navegacao customizados.": {
+    "pt": "Botoes de navegacao customizados.",
+    "en": "Customized navigation buttons.",
+    "es": "Botones de navegación personalizados."
+  },
+  "Busca e filtro da árvore.": {
+    "pt": "Busca e filtro da árvore.",
+    "en": "Tree search and filter.",
+    "es": "Búsqueda y filtrado de árboles."
+  },
+  "Callback ao alterar o valor.": {
+    "pt": "Callback ao alterar o valor.",
+    "en": "Callback when changing the value.",
+    "es": "Devolución de llamada al cambiar el valor."
+  },
+  "Callback ao trocar de etapa.": {
+    "pt": "Callback ao trocar de etapa.",
+    "en": "Callback when changing stages.",
+    "es": "Devolución de llamada al cambiar de etapa."
+  },
+  "Callback chamado quando o indice ativo muda.": {
+    "pt": "Callback chamado quando o indice ativo muda.",
+    "en": "Callback called when the active index changes.",
+    "es": "Se llama a la devolución de llamada cuando cambia el índice activo."
+  },
+  "Callback com valor normalizado.": {
+    "pt": "Callback com valor normalizado.",
+    "en": "Callback with normalized value.",
+    "es": "Devolución de llamada con valor normalizado."
+  },
+  "Callback de abertura/fechamento.": {
+    "pt": "Callback de abertura/fechamento.",
+    "en": "Open/close callback.",
+    "es": "Abrir/cerrar devolución de llamada."
+  },
+  "Callback disparado no hover das estrelas.": {
+    "pt": "Callback disparado no hover das estrelas.",
+    "en": "Callback triggered on the hover of the stars.",
+    "es": "La devolución de llamada se activa al pasar las estrellas."
+  },
+  "Callback disparado quando o valor muda.": {
+    "pt": "Callback disparado quando o valor muda.",
+    "en": "Callback triggered when the value changes.",
+    "es": "La devolución de llamada se activa cuando el valor cambia."
+  },
+  "Callback durante resize.": {
+    "pt": "Retorno de chamada durante o redimensionamento.",
+    "en": "Callback durante resize.",
+    "es": "Devolución de llamada durante el cambio de tamaño."
+  },
+  "Callback para falha ao carregar imagem.": {
+    "pt": "Callback para falha ao carregar imagem.",
+    "en": "Callback for failure to load image.",
+    "es": "Devolución de llamada por error al cargar la imagen."
+  },
+  "Callback quando abrir/fechar.": {
+    "pt": "Callback quando abrir/fechar.",
+    "en": "Callback when open/close.",
+    "es": "Devolución de llamada al abrir/cerrar."
+  },
+  "Caractere exibido no card flip (1 char recomendado).": {
+    "pt": "Caractere exibido no card flip (1 char recomendado).",
+    "en": "Character displayed on the card flip (1 character recommended).",
+    "es": "Carácter que se muestra en la tapa de la tarjeta (se recomienda 1 carácter)."
+  },
+  "Classe CSS customizada do container.": {
+    "pt": "Classe CSS customizada do container.",
+    "en": "Custom container CSS class.",
+    "es": "Clase CSS de contenedor personalizado."
+  },
+  "Classe CSS customizada dos itens.": {
+    "pt": "Classe CSS customizada dos itens.",
+    "en": "Custom CSS class of items.",
+    "es": "Clase de elementos CSS personalizada."
+  },
+  "Classe CSS customizada para o container.": {
+    "pt": "Classe CSS customizada para o container.",
+    "en": "Custom CSS class for the container.",
+    "es": "Clase CSS personalizada para el contenedor."
+  },
+  "Classe CSS extra aplicada ao input range.": {
+    "pt": "Classe CSS extra aplicada ao input range.",
+    "en": "Extra CSS class applied to the input range.",
+    "es": "Clase CSS adicional aplicada al rango de entrada."
+  },
+  "Classe extra da area de body.": {
+    "pt": "Classe extra da area de body.",
+    "en": "Extra class in the body area.",
+    "es": "Clase extra en la zona del cuerpo."
+  },
+  "Classe extra da area de footer.": {
+    "pt": "Classe extra da area de footer.",
+    "en": "Extra class of the footer area.",
+    "es": "Clase extra del área del pie de página."
+  },
+  "Classe extra da area de header.": {
+    "pt": "Classe extra da area de header.",
+    "en": "Extra class from the header area.",
+    "es": "Clase extra desde la zona de cabecera."
+  },
+  "Classe extra da camada de overlay/backdrop.": {
+    "pt": "Classe extra da camada de overlay/backdrop.",
+    "en": "Extra overlay/backdrop layer class.",
+    "es": "Clase de capa de superposición/telón de fondo adicional."
+  },
+  "Classe extra no container do painel.": {
+    "pt": "Classe extra no container do painel.",
+    "en": "Extra class in the panel container.",
+    "es": "Clase extra en el contenedor de paneles."
+  },
+  "Classe extra no container do relogio.": {
+    "pt": "Classe extra no container do relogio.",
+    "en": "Extra class in the watch container.",
+    "es": "Clase extra en el contenedor del reloj."
+  },
+  "Classe extra no wrapper de conteudo.": {
+    "pt": "Classe extra no wrapper de conteudo.",
+    "en": "Extra class in the content wrapper.",
+    "es": "Clase extra en el contenedor de contenido."
+  },
+  "Classes CSS adicionais da zona.": {
+    "pt": "Classes CSS adicionais da zona.",
+    "en": "Additional zone CSS classes.",
+    "es": "Clases CSS de zona adicionales."
+  },
+  "Classes CSS adicionais do container.": {
+    "pt": "Classes CSS adicionais do container.",
+    "en": "Additional container CSS classes.",
+    "es": "Clases CSS de contenedor adicionales."
+  },
+  "Classes CSS adicionais no container.": {
+    "pt": "Classes CSS adicionais no container.",
+    "en": "Additional CSS classes in the container.",
+    "es": "Clases CSS adicionales en el contenedor."
+  },
+  "Classes CSS para imagem e container.": {
+    "pt": "Classes CSS para imagem e container.",
+    "en": "CSS classes for image and container.",
+    "es": "Clases CSS para imagen y contenedor."
+  },
+  "Classes adicionais do container.": {
+    "pt": "Classes adicionais do container.",
+    "en": "Additional container classes.",
+    "es": "Clases de contenedores adicionales."
+  },
+  "Classes adicionais para o layout de dock interno; se nao informado, usa grid padrao.": {
+    "pt": "Classes adicionais para o layout de dock interno; se nao informado, usa grid padrao.",
+    "en": "Additional classes for the internal dock layout; if not informed, use standard grid.",
+    "es": "Clases adicionales para el diseño del muelle interno; si no está informado, utilice la cuadrícula estándar."
+  },
+  "Classes do container e do campo.": {
+    "pt": "Aulas do container e do campo.",
+    "en": "Classes do container e do campo.",
+    "es": "Clases do contenedor e do campo."
+  },
+  "Classes extras do wrapper.": {
+    "pt": "Os extras das aulas são empacotados.",
+    "en": "Classes extras do wrapper.",
+    "es": "Las clases extras hacen envoltorio."
+  },
+  "Classes extras no container.": {
+    "pt": "Aulas extras sem container.",
+    "en": "Classes extras no container.",
+    "es": "Clases extras sin contenedor."
+  },
+  "Color of the empty icon.": {
+    "pt": "Cor do ícone vazio.",
+    "en": "Color of the empty icon.",
+    "es": "Color del icono vacío."
+  },
+  "Color of the filled icon.": {
+    "pt": "Cor do ícone preenchido.",
+    "en": "Color of the filled icon.",
+    "es": "Color del icono relleno."
+  },
+  "Color overrides when needed.": {
+    "pt": "Substituições de cores quando necessário.",
+    "en": "Color overrides when needed.",
+    "es": "El color se anula cuando es necesario."
+  },
+  "Colored arc ranges.": {
+    "pt": "Faixas de arco coloridas.",
+    "en": "Colored arc ranges.",
+    "es": "Rangos de arco coloreados."
+  },
+  "Colored scale ranges.": {
+    "pt": "Intervalos de escala colorida.",
+    "en": "Colored scale ranges.",
+    "es": "Rangos de escala de colores."
+  },
+  "Comportamento de remoção.": {
+    "pt": "Comportamento de remoção.",
+    "en": "Removal behavior.",
+    "es": "Comportamiento de eliminación."
+  },
+  "Comportamento de rolagem.": {
+    "pt": "Comportamento de rolagem.",
+    "en": "Scrolling behavior.",
+    "es": "Comportamiento de desplazamiento."
+  },
+  "Comportamento de seleção com checkboxes.": {
+    "pt": "Comportamento de seleção com checkboxes.",
+    "en": "Selection behavior with checkboxes.",
+    "es": "Comportamiento de selección con casillas de verificación."
+  },
+  "Comportamento do ponteiro de segundos no analogico.": {
+    "pt": "Comportamento do ponteiro de segundos no analogico.",
+    "en": "Analog seconds hand behavior.",
+    "es": "Comportamiento del segundero analógico."
+  },
+  "Config padrao de persistencia do contexto.": {
+    "pt": "Config padrao de persistencia do contexto.",
+    "en": "Default context persistence configuration.",
+    "es": "Configuración de persistencia de contexto predeterminada."
+  },
+  "Configurações complementares da interface.": {
+    "pt": "Configurações complementares da interface.",
+    "en": "Additional interface settings.",
+    "es": "Configuraciones de interfaz adicionales."
+  },
+  "Conteudo do badge exibido na sobreposicao.": {
+    "pt": "Conteudo do badge exibido na sobreposicao.",
+    "en": "Badge content displayed in the overlay.",
+    "es": "Contenido de la insignia que se muestra en la superposición."
+  },
+  "Conteudo interno (normalmente SgDockZone).": {
+    "pt": "Conteudo interno (normalmente SgDockZone).",
+    "en": "Internal content (normally SgDockZone).",
+    "es": "Contenido interno (normalmente SgDockZone)."
+  },
+  "Conteudo interno do botao.": {
+    "pt": "Conteudo interno do botao.",
+    "en": "Internal content of the button.",
+    "es": "Contenido interno del botón."
+  },
+  "Conteudo opcional do cabecalho.": {
+    "pt": "Conteudo opcional do cabecalho.",
+    "en": "Optional header content.",
+    "es": "Contenido de encabezado opcional."
+  },
+  "Conteudo opcional do rodape.": {
+    "pt": "Conteudo opcional do rodape.",
+    "en": "Optional footer content.",
+    "es": "Contenido de pie de página opcional."
+  },
+  "Conteudo opcional sobreposto ao centro do relogio analogico.": {
+    "pt": "Conteudo opcional sobreposto ao centro do relogio analogico.",
+    "en": "Optional content superimposed on the center of the analog clock.",
+    "es": "Contenido opcional superpuesto en el centro del reloj analógico."
+  },
+  "Conteudo renderizado dentro da zona.": {
+    "pt": "Conteudo renderizado dentro da zona.",
+    "en": "Content rendered within the zone.",
+    "es": "Contenido renderizado dentro de la zona."
+  },
+  "Conteudo textual e corpo customizado.": {
+    "pt": "Conteudo textual e corpo customizado.",
+    "en": "Textual content and customized body.",
+    "es": "Contenido textual y cuerpo personalizado."
+  },
+  "Conteúdo do painel.": {
+    "pt": "Conteúdo do painel.",
+    "en": "Panel content.",
+    "es": "Contenido de los paneles."
+  },
+  "Conteúdo principal exibido no badge.": {
+    "pt": "Conteúdo principal exibido no badge.",
+    "en": "Main content displayed on the badge.",
+    "es": "Contenido principal mostrado en la insignia."
+  },
+  "Control do React Hook Form.": {
+    "pt": "Controle o Formulário React Hook.",
+    "en": "Control do React Hook Form.",
+    "es": "Controle la forma React Hook."
+  },
+  "Controle avançado de fechamento e foco.": {
+    "pt": "Controle avançado de fechamento e foco.",
+    "en": "Advanced shutter and focus control.",
+    "es": "Control avanzado de obturador y enfoque."
+  },
+  "Controle de abertura.": {
+    "pt": "Controle de abertura.",
+    "en": "Opening control.",
+    "es": "Control de apertura."
+  },
+  "Controle de colapso do conteúdo.": {
+    "pt": "Controle de colapso do conteúdo.",
+    "en": "Content collapse control.",
+    "es": "Control de colapso de contenido."
+  },
+  "Controle de quantos avatares exibir e total real.": {
+    "pt": "Controle de quantos avatares exibir e total real.",
+    "en": "Control how many avatars to display and the actual total.",
+    "es": "Controla cuántos avatares mostrar y el total real."
+  },
+  "Controle de visibilidade.": {
+    "pt": "Controle de visibilidade.",
+    "en": "Visibility control.",
+    "es": "Control de visibilidad."
+  },
+  "Controle para badges numéricos.": {
+    "pt": "Controle para badges numéricos.",
+    "en": "Control for numeric badges.",
+    "es": "Control para insignias numéricas."
+  },
+  "Cores do QR.": {
+    "pt": "Núcleos fazem QR.",
+    "en": "Cores do QR.",
+    "es": "Los núcleos hacen QR."
+  },
+  "Current rating value.": {
+    "pt": "Valor de classificação atual.",
+    "en": "Current rating value.",
+    "es": "Valor de calificación actual."
+  },
+  "Customizacao visual do SgScreen.": {
+    "pt": "Personalização visual do SgScreen.",
+    "en": "Customizacao visual do SgScreen.",
+    "es": "Personalización visual de SgScreen."
+  },
+  "Customizacao visual do container.": {
+    "pt": "Personalização visual do container.",
+    "en": "Customizacao visual do container.",
+    "es": "Personalización del contenedor visual."
+  },
+  "Customizacao visual do stack.": {
+    "pt": "Personalização visual do stack.",
+    "en": "Customizacao visual do stack.",
+    "es": "Personalización visual de la pila."
+  },
+  "Customizacoes visuais.": {
+    "pt": "Customizacoes visuais.",
+    "en": "Visual customizations.",
+    "es": "Personalizaciones visuales."
+  },
+  "Customização de estilos por bloco.": {
+    "pt": "Customização de estilos por bloco.",
+    "en": "Customizing styles per block.",
+    "es": "Personalización de estilos por bloque."
+  },
+  "Customização de estilos por seção.": {
+    "pt": "Customização de estilos por seção.",
+    "en": "Customizing styles per section.",
+    "es": "Personalización de estilos por sección."
+  },
+  "Customização visual avançada.": {
+    "pt": "Customização visual avançada.",
+    "en": "Advanced visual customization.",
+    "es": "Personalización visual avanzada."
+  },
+  "Customização visual.": {
+    "pt": "Customização visual.",
+    "en": "Visual customization.",
+    "es": "Personalización visual."
+  },
+  "Default duration in ms for auto-close.": {
+    "pt": "Duração padrão em ms para fechamento automático.",
+    "en": "Default duration in ms for auto-close.",
+    "es": "Duración predeterminada en ms para el cierre automático."
+  },
+  "Define estilo de preenchimento.": {
+    "pt": "Define estilo de preenchimento.",
+    "en": "Sets fill style.",
+    "es": "Establece el estilo de relleno."
+  },
+  "Define o tamanho das estrelas.": {
+    "pt": "Define o tamanho das estrelas.",
+    "en": "Sets the size of the stars.",
+    "es": "Establece el tamaño de las estrellas."
+  },
+  "Define o tamanho do relogio analogico ou digital.": {
+    "pt": "Define o tamanho do relogio analogico ou digital.",
+    "en": "Defines the size of the analog or digital clock.",
+    "es": "Define el tamaño del reloj analógico o digital."
+  },
+  "Define se ocupa toda a viewport.": {
+    "pt": "Define toda a viewport.",
+    "en": "Defines all of the viewport.",
+    "es": "Define se ocupa toda a viewport."
+  },
+  "Densidade e espaçamento interno.": {
+    "pt": "Densidade e espaçamento interno.",
+    "en": "Density and internal spacing.",
+    "es": "Densidad y espaciamiento interno."
+  },
+  "Desabilita a interacao com o componente.": {
+    "pt": "Desabilita a interacao com o componente.",
+    "en": "Disables interaction with the component.",
+    "es": "Desactiva la interacción con el componente."
+  },
+  "Desabilita interacao do slider.": {
+    "pt": "Desabilita interacao do slider.",
+    "en": "Disables slider interaction.",
+    "es": "Desactiva la interacción del control deslizante."
+  },
+  "Desabilita o botao.": {
+    "pt": "Desabilita o botao.",
+    "en": "Disable the button.",
+    "es": "Desactiva el botón."
+  },
+  "Dimensoes da tela base.": {
+    "pt": "Dimensoes da tela base.",
+    "en": "Base screen dimensions.",
+    "es": "Dimensiones de la pantalla base."
+  },
+  "Dimensoes explicitas do container (ex.: 960, 100%, 60vh).": {
+    "pt": "Dimensoes explicitas do container (ex.: 960, 100%, 60vh).",
+    "en": "Explicit dimensions of the container (e.g.: 960, 100%, 60vh).",
+    "es": "Dimensiones explícitas del contenedor (por ejemplo: 960, 100%, 60vh)."
+  },
+  "Dimensão do painel (número vira %).": {
+    "pt": "Dimensão do painel (número vira %).",
+    "en": "Panel dimension (number becomes %).",
+    "es": "Dimensión del panel (el número se convierte en%)."
+  },
+  "Direcao de expansao/retracao.": {
+    "pt": "Direcao de expansao/retracao.",
+    "en": "Expansion/retraction direction.",
+    "es": "Dirección de expansión/retracción."
+  },
+  "Direcao principal do flex.": {
+    "pt": "Direcao principal do flex.",
+    "en": "Main flex direction.",
+    "es": "Dirección de flexión principal."
+  },
+  "Disparado quando o usuario conclui o wizard.": {
+    "pt": "Disparado quando o usuario conclui o wizard.",
+    "en": "Fired when the user completes the wizard.",
+    "es": "Se activa cuando el usuario completa el asistente."
+  },
+  "Distancia e margem de viewport.": {
+    "pt": "Distancia e margem de viewport.",
+    "en": "Viewport distance and margin.",
+    "es": "Distancia y margen de la ventana gráfica."
+  },
+  "Distribuicao e alinhamento dos itens.": {
+    "pt": "Distribuicao e alinhamento dos itens.",
+    "en": "Distribution and alignment of items.",
+    "es": "Distribución y alineación de artículos."
+  },
+  "Elemento ancora obrigatorio.": {
+    "pt": "Elemento ainda obrigatório.",
+    "en": "Element still mandatory.",
+    "es": "Elemento todavía obligatorio."
+  },
+  "Elemento base que recebe o badge sobreposto.": {
+    "pt": "Elemento base que recebe o badge sobreposto.",
+    "en": "Base element that receives the superimposed badge.",
+    "es": "Elemento base que recibe el distintivo superpuesto."
+  },
+  "Elemento visual acima do header.": {
+    "pt": "Elemento visual acima do header.",
+    "en": "Visual element above the header.",
+    "es": "Elemento visual encima del encabezado."
+  },
+  "Elementos auxiliares no cabeçalho.": {
+    "pt": "Elementos auxiliares no cabeçalho.",
+    "en": "Auxiliary elements in the header.",
+    "es": "Elementos auxiliares en la cabecera."
+  },
+  "Elementos filhos empilhados.": {
+    "pt": "Elementos filhos empilhados.",
+    "en": "Stacked child elements.",
+    "es": "Elementos secundarios apilados."
+  },
+  "Espacamento entre itens e interno.": {
+    "pt": "Espacamento entre itens e interno.",
+    "en": "Spacing between items and internal.",
+    "es": "Espaciado entre elementos e interno."
+  },
+  "Espacamento entre itens em pixels.": {
+    "pt": "Espacamento entre itens em pixels.",
+    "en": "Spacing between items in pixels.",
+    "es": "Espaciado entre elementos en píxeles."
+  },
+  "Espacamento entre itens.": {
+    "pt": "Espacamento entre itens.",
+    "en": "Spacing between items.",
+    "es": "Espaciado entre elementos."
+  },
+  "Espaçamento interno.": {
+    "pt": "Espaçamento interno.",
+    "en": "Internal spacing.",
+    "es": "Espaciado interno."
+  },
+  "Estado controlado de abertura.": {
+    "pt": "Estado controlado de abertura.",
+    "en": "Controlled state of opening.",
+    "es": "Estado de apertura controlado."
+  },
+  "Estado de expansão.": {
+    "pt": "Estado de expansão.",
+    "en": "State of expansion.",
+    "es": "Estado de expansión."
+  },
+  "Estado de seleção.": {
+    "pt": "Estado de seleção.",
+    "en": "Selection status.",
+    "es": "Estado de selección."
+  },
+  "Estado inicial das toolbars por zona.": {
+    "pt": "Estado inicial das barras de ferramentas por zona.",
+    "en": "Initial state of toolbars by zone.",
+    "es": "Estado inicial das toolbars por zona."
+  },
+  "Estado inicial no modo nao controlado.": {
+    "pt": "Estado inicial no modo nao controlado.",
+    "en": "Initial state in uncontrolled mode.",
+    "es": "Estado inicial en modo no controlado."
+  },
+  "Estilo aplicado ao avatar de excesso.": {
+    "pt": "Estilo aplicado ao avatar de excesso.",
+    "en": "Style applied to excess avatar.",
+    "es": "Estilo aplicado al exceso de avatar."
+  },
+  "Estilo da borda do panel.": {
+    "pt": "Estilo da borda do panel.",
+    "en": "Panel border style.",
+    "es": "Estilo de borde del panel."
+  },
+  "Estilo inline do container do painel.": {
+    "pt": "Estilo inline do container do painel.",
+    "en": "Inline style of the panel container.",
+    "es": "Estilo en línea del contenedor del panel."
+  },
+  "Estilo visual do relogio digital.": {
+    "pt": "Estilo visual do relogio digital.",
+    "en": "Visual style of the digital clock.",
+    "es": "Estilo visual del reloj digital."
+  },
+  "Estrategia de persistencia custom (API/local/composite).": {
+    "pt": "Estratégia de persistência personalizada (API/local/composto).",
+    "en": "Custom persistence strategy (API/local/composite).",
+    "es": "Estrategia de persistencia custom (API/local/composite)."
+  },
+  "Estrutura hierárquica de nós.": {
+    "pt": "Estrutura hierárquica de nós.",
+    "en": "Hierarchical structure of nodes.",
+    "es": "Estructura jerárquica de nodos."
+  },
+  "Estrutura principal do conteúdo.": {
+    "pt": "Estrutura principal do conteúdo.",
+    "en": "Main structure of the content.",
+    "es": "Estructura principal del contenido."
+  },
+  "Eventos de ciclo de abertura.": {
+    "pt": "Eventos de ciclo de abertura.",
+    "en": "Opening cycle events.",
+    "es": "Eventos del ciclo de apertura."
+  },
+  "Eventos de interação.": {
+    "pt": "Eventos de interação.",
+    "en": "Interaction events.",
+    "es": "Eventos de interacción."
+  },
+  "Exibe borda do container.": {
+    "pt": "Exibe borda do container.",
+    "en": "Displays container border.",
+    "es": "Muestra el borde del contenedor."
+  },
+  "Exibe ou oculta os segundos.": {
+    "pt": "Exibe ou oculta os segundos.",
+    "en": "Shows or hides seconds.",
+    "es": "Muestra u oculta segundos."
+  },
+  "Exibe spinner e bloqueia clique.": {
+    "pt": "Exibe spinner e bloqueia clique.",
+    "en": "Displays spinner and blocks click.",
+    "es": "Muestra la ruleta y bloquea el clic."
+  },
+  "Exibe tooltip com valor ao passar o mouse.": {
+    "pt": "Exibe tooltip com valor ao passar o mouse.",
+    "en": "Displays tooltip with value on hover.",
+    "es": "Muestra información sobre herramientas con valor al pasar el mouse."
+  },
+  "Extra pointers and per-pointer callback.": {
+    "pt": "Ponteiros extras e retorno de chamada por ponteiro.",
+    "en": "Extra pointers and per-pointer callback.",
+    "es": "Punteros adicionales y devolución de llamada por puntero."
+  },
+  "Fallback quando value está vazio.": {
+    "pt": "Fallback quando value está vazio.",
+    "en": "Fallback when value is empty.",
+    "es": "Reserva cuando el valor está vacío."
+  },
+  "Fecha ao clicar fora do painel.": {
+    "pt": "Fecha ao clicar fora do painel.",
+    "en": "Closes when clicking outside the panel.",
+    "es": "Se cierra al hacer clic fuera del panel."
+  },
+  "Fecha ao pressionar ESC.": {
+    "pt": "Fecha ao pressionar ESC.",
+    "en": "Closes when pressing ESC.",
+    "es": "Se cierra al pulsar ESC."
+  },
+  "Fecha automaticamente após o tempo informado.": {
+    "pt": "Fecha automaticamente após o tempo informado.",
+    "en": "It closes automatically after the specified time.",
+    "es": "Se cierra automáticamente después del tiempo especificado."
+  },
+  "Filled bar up to current value.": {
+    "pt": "Barra preenchida até o valor atual.",
+    "en": "Filled bar up to current value.",
+    "es": "Barra rellena hasta el valor actual."
+  },
+  "Formato das bordas.": {
+    "pt": "Formato das bordas.",
+    "en": "Edge shape.",
+    "es": "Forma de borde."
+  },
+  "Formato de hora para o modo digital.": {
+    "pt": "Formato de hora para modo digital.",
+    "en": "Time format for digital mode.",
+    "es": "Formato de hora para o modo digital."
+  },
+  "Formato do avatar.": {
+    "pt": "Formato do avatar.",
+    "en": "Avatar format.",
+    "es": "Formato de avatar."
+  },
+  "Formato pílula, ponto e animação.": {
+    "pt": "Formato pílula, ponto e animação.",
+    "en": "Pill, dot and animation format.",
+    "es": "Formato de píldora, punto y animación."
+  },
+  "Fornecedor do namespace atual para isolamento dos dados.": {
+    "pt": "Fornecedor do namespace atual para isolamento dos dados.",
+    "en": "Current namespace provider for data isolation.",
+    "es": "Proveedor de espacio de nombres actual para el aislamiento de datos."
+  },
+  "Fuso usado para calcular a hora exibida.": {
+    "pt": "Fuso usado para calcular a hora exibida.",
+    "en": "Time zone used to calculate the displayed time.",
+    "es": "Zona horaria utilizada para calcular la hora mostrada."
+  },
+  "Gauge value range.": {
+    "pt": "Faixa de valores do medidor.",
+    "en": "Gauge value range.",
+    "es": "Rango de valores del calibre."
+  },
+  "Habilita modo auto-fit por largura minima.": {
+    "pt": "Habilita modo auto-fit por largura minima.",
+    "en": "Enables auto-fit mode by minimum width.",
+    "es": "Habilita el modo de ajuste automático por ancho mínimo."
+  },
+  "Habilita resize por arraste.": {
+    "pt": "Ative o redimensionamento por arrastar.",
+    "en": "Enable drag resize.",
+    "es": "Habilita resize por arraste."
+  },
+  "Hook antes de avancar para a proxima etapa.": {
+    "pt": "Gancho antes de passar para a próxima fase.",
+    "en": "Hook before moving on to the next stage.",
+    "es": "Hook antes de avancar para a proxima etapa."
+  },
+  "ID opcional do elemento raiz do SgScreen.": {
+    "pt": "ID opcional do elemento raiz do SgScreen.",
+    "en": "Optional ID of the SgScreen root element.",
+    "es": "ID opcional del elemento raíz SgScreen."
+  },
+  "Icone customizado do botao de limpar.": {
+    "pt": "Icone customizado do botao de limpar.",
+    "en": "Customized clean button icon.",
+    "es": "Icono de botón de limpieza personalizado."
+  },
+  "Icone customizado para estado preenchido.": {
+    "pt": "Icone customizado para estado preenchido.",
+    "en": "Custom icon for filled state.",
+    "es": "Icono personalizado para estado lleno."
+  },
+  "Icone customizado para estado vazio.": {
+    "pt": "Icone customizado para estado vazio.",
+    "en": "Custom icon for empty state.",
+    "es": "Icono personalizado para estado vacío."
+  },
+  "Icones antes/depois do texto.": {
+    "pt": "Icones antes/depois do texto.",
+    "en": "Icons before/after the text.",
+    "es": "Iconos antes/después del texto."
+  },
+  "Identificador da area de dock.": {
+    "pt": "Identificador da área de doca.",
+    "en": "Dock area identifier.",
+    "es": "Identificador de zona de muelle."
+  },
+  "Identificador da zona de dock.": {
+    "pt": "Identificador da zona de dock.",
+    "en": "Dock zone identifier.",
+    "es": "Identificador de zona de atraque."
+  },
+  "Identificador do SgDockLayout interno (persistencia).": {
+    "pt": "Identificador do SgDockLayout interno (persistencia).",
+    "en": "Internal SgDockLayout identifier (persistence).",
+    "es": "Identificador interno de SgDockLayout (persistencia)."
+  },
+  "Identificador do input.": {
+    "pt": "Identificador do input.",
+    "en": "Input identifier.",
+    "es": "Identificador de entrada."
+  },
+  "Identificador unico do carrossel.": {
+    "pt": "Identificador unico do carrossel.",
+    "en": "Unique carousel identifier.",
+    "es": "Identificador único de carrusel."
+  },
+  "Incremento entre posicoes.": {
+    "pt": "Incremento entre posicoes.",
+    "en": "Increment between positions.",
+    "es": "Incremento entre posiciones."
+  },
+  "Incremento/decremento por clique.": {
+    "pt": "Aumentar/diminuir por clique.",
+    "en": "Increment/decrement per click.",
+    "es": "Incremento/decremento por clique."
+  },
+  "Indice inicial da etapa ativa.": {
+    "pt": "Indice inicial da etapa ativa.",
+    "en": "Starting index of the active stage.",
+    "es": "Índice inicial de la etapa activa."
+  },
+  "Interação e metadados.": {
+    "pt": "Interação e metadados.",
+    "en": "Interaction and metadata.",
+    "es": "Interacción y metadatos."
+  },
+  "Intervalo do autoplay em milissegundos.": {
+    "pt": "Intervalo do autoplay em milissegundos.",
+    "en": "Autoplay interval in milliseconds.",
+    "es": "Intervalo de reproducción automática en milisegundos."
+  },
+  "Itens do grid (ex.: SgPanel).": {
+    "pt": "Itens do grid (ex.: SgPanel).",
+    "en": "Grid items (e.g.: SgPanel).",
+    "es": "Elementos de la cuadrícula (por ejemplo: SgPanel)."
+  },
+  "Label text displayed above the rating.": {
+    "pt": "Texto do rótulo exibido acima da classificação.",
+    "en": "Label text displayed above the rating.",
+    "es": "Texto de la etiqueta que se muestra encima de la calificación."
+  },
+  "Largura do card em pixels.": {
+    "pt": "Largura do card em pixels.",
+    "en": "Card width in pixels.",
+    "es": "Ancho de la tarjeta en píxeles."
+  },
+  "Largura do componente.": {
+    "pt": "Largura do componente.",
+    "en": "Component width.",
+    "es": "Ancho del componente."
+  },
+  "Largura do container.": {
+    "pt": "Largura do container.",
+    "en": "Container width.",
+    "es": "Ancho del contenedor."
+  },
+  "Largura do diálogo.": {
+    "pt": "Largura do diálogo.",
+    "en": "Dialog width.",
+    "es": "Ancho del diálogo."
+  },
+  "Largura do input (ex.: 320 ou 18rem).": {
+    "pt": "Largura do input (ex.: 320 ou 18rem).",
+    "en": "Input width (e.g.: 320 or 18rem).",
+    "es": "Ancho de entrada (por ejemplo: 320 o 18rem)."
+  },
+  "Limite maximo do range.": {
+    "pt": "Limite maximo do range.",
+    "en": "Maximum range limit.",
+    "es": "Límite de alcance máximo."
+  },
+  "Limite minimo do range.": {
+    "pt": "Limite minimo do range.",
+    "en": "Minimum range limit.",
+    "es": "Límite de alcance mínimo."
+  },
+  "Limites do valor permitido.": {
+    "pt": "Limites do valor permitido.",
+    "en": "Limits on the allowed value.",
+    "es": "Límites del valor permitido."
+  },
+  "Lista de avatares no grupo.": {
+    "pt": "Lista de avatares que não são de grupo.",
+    "en": "List of non-group avatars.",
+    "es": "Lista de avatares no grupo."
+  },
+  "Locale usado para formatacao da hora.": {
+    "pt": "Locale usado para formatacao da hora.",
+    "en": "Locale used for time formatting.",
+    "es": "Configuración regional utilizada para formatear la hora."
+  },
+  "Logo opcional no centro.": {
+    "pt": "Logo opcional no centro.",
+    "en": "Optional logo in the center.",
+    "es": "Logo opcional en el centro."
+  },
+  "Main axis style.": {
+    "pt": "Estilo do eixo principal.",
+    "en": "Main axis style.",
+    "es": "Estilo del eje principal."
+  },
+  "Main panel content.": {
+    "pt": "Conteúdo do painel principal.",
+    "en": "Main panel content.",
+    "es": "Contenido del panel principal."
+  },
+  "Main ring style, thickness and center content.": {
+    "pt": "Estilo do anel principal, espessura e conteúdo central.",
+    "en": "Main ring style, thickness and center content.",
+    "es": "Estilo del anillo principal, grosor y contenido central."
+  },
+  "Main screen content.": {
+    "pt": "Conteúdo da tela principal.",
+    "en": "Main screen content.",
+    "es": "Contenido de la pantalla principal."
+  },
+  "Manipulador de clique.": {
+    "pt": "Manipulador de clique.",
+    "en": "Click handler.",
+    "es": "Haga clic en el controlador."
+  },
+  "Mantem visualizacao sem permitir alteracao.": {
+    "pt": "Mantem visualizacao sem permitir alteracao.",
+    "en": "Maintains visualization without allowing changes.",
+    "es": "Mantiene la visualización sin permitir cambios."
+  },
+  "Margem interna do QR Code.": {
+    "pt": "Margem interna do QR Code.",
+    "en": "Inner margin of the QR Code.",
+    "es": "Margen interior del Código QR."
+  },
+  "Marks the field as required.": {
+    "pt": "Marca o campo como obrigatório.",
+    "en": "Marks the field as required.",
+    "es": "Marca el campo como requerido."
+  },
+  "Maximum number visible simultaneously.": {
+    "pt": "Número máximo visível simultaneamente.",
+    "en": "Maximum number visible simultaneously.",
+    "es": "Número máximo visible simultáneamente."
+  },
+  "Mensagem de erro externa.": {
+    "pt": "Mensagem de erro externa.",
+    "en": "External error message.",
+    "es": "Mensaje de error externo."
+  },
+  "Mensagem de validacao para required.": {
+    "pt": "Mensagem de validacao para required.",
+    "en": "Validation message for required.",
+    "es": "Mensaje de validación para requerido."
+  },
+  "Modo clicável e estado desabilitado.": {
+    "pt": "Modo clicável e estado desabilitado.",
+    "en": "Clickable mode and disabled state.",
+    "es": "Modo en el que se puede hacer clic y estado deshabilitado."
+  },
+  "Modo controlado ou valor inicial.": {
+    "pt": "Modo controlado ou valor inicial.",
+    "en": "Controlled mode or initial value.",
+    "es": "Modo controlado o valor inicial."
+  },
+  "Modo visual do stepper.": {
+    "pt": "Modo visual passo a passo.",
+    "en": "Stepper visual mode.",
+    "es": "Modo visual paso a paso."
+  },
+  "Mostra botoes de navegacao.": {
+    "pt": "Mostra botoes de navegacao.",
+    "en": "Shows navigation buttons.",
+    "es": "Muestra botones de navegación."
+  },
+  "Mostra camada de fundo no overlay.": {
+    "pt": "Mostra camada de fundo no overlay.",
+    "en": "Shows background layer in overlay.",
+    "es": "Muestra la capa de fondo superpuesta."
+  },
+  "Mostra indicadores (dots).": {
+    "pt": "Mostra indicadores (dots).",
+    "en": "Shows indicators (dots).",
+    "es": "Muestra indicadores (puntos)."
+  },
+  "Nivel de elevacao/sombra.": {
+    "pt": "Nível de elevação/sombra.",
+    "en": "Elevation/shade level.",
+    "es": "Nivel de elevacao/sombra."
+  },
+  "Nome do campo para integracao com formulario.": {
+    "pt": "Nome do campo para integracao com formulario.",
+    "en": "Name of the field for integration with the form.",
+    "es": "Nombre del campo para la integración con el formulario."
+  },
+  "Numero de atualizacoes executadas por rodada.": {
+    "pt": "Numero de atualizacoes executadas por rodada.",
+    "en": "Number of updates performed per round.",
+    "es": "Número de actualizaciones realizadas por ronda."
+  },
+  "Numero de itens rolados por acao.": {
+    "pt": "Numero de itens rolados por acao.",
+    "en": "Number of items rolled per action.",
+    "es": "Número de elementos obtenidos por acción."
+  },
+  "Numero de itens visiveis ao mesmo tempo.": {
+    "pt": "Numero de itens visiveis ao mesmo tempo.",
+    "en": "Number of items visible at the same time.",
+    "es": "Número de elementos visibles al mismo tiempo."
+  },
+  "Nível de correção de erro.": {
+    "pt": "Nível de correção de erro.",
+    "en": "Error correction level.",
+    "es": "Nivel de corrección de errores."
+  },
+  "Orientacao do carrossel.": {
+    "pt": "Orientacao do carrossel.",
+    "en": "Carousel orientation.",
+    "es": "Orientación del carrusel."
+  },
+  "Overlap between items.": {
+    "pt": "Sobreposição entre itens.",
+    "en": "Overlap between items.",
+    "es": "Superposición entre elementos."
+  },
+  "Override dos textos dos botoes de navegacao.": {
+    "pt": "Override dos textos dos botoes de navegacao.",
+    "en": "Override of navigation button texts.",
+    "es": "Anulación de los textos de los botones de navegación."
+  },
+  "Overrides bg/fg/border by type.": {
+    "pt": "Substitui bg/fg/border por tipo.",
+    "en": "Overrides bg/fg/border by type.",
+    "es": "Anula bg/fg/border por tipo."
+  },
+  "Padding interno aplicado ao root da tela.": {
+    "pt": "Padding interno aplicado ao root da tela.",
+    "en": "Internal padding applied to the screen root.",
+    "es": "Relleno interno aplicado a la raíz de la pantalla."
+  },
+  "Padding interno do SgScreen.": {
+    "pt": "Preenchimento interno do SgScreen.",
+    "en": "Padding interno do SgScreen.",
+    "es": "Acolchado interno de SgScreen."
+  },
+  "Paginas renderizadas em ordem dentro do wizard.": {
+    "pt": "Paginas renderizadas em ordem dentro do wizard.",
+    "en": "Pages rendered in order within the wizard.",
+    "es": "Páginas representadas en orden dentro del asistente."
+  },
+  "Painel no layout ou em overlay.": {
+    "pt": "Painel no layout ou em overlay.",
+    "en": "Panel in layout or overlay.",
+    "es": "Panel en diseño o superposición."
+  },
+  "Papel semantico aplicado ao painel.": {
+    "pt": "Papel semantico aplicado ao painel.",
+    "en": "Semantic role applied to the panel.",
+    "es": "Rol semántico aplicado al panel."
+  },
+  "Permite crescimento do container.": {
+    "pt": "Permite crescimento do container.",
+    "en": "Allows container growth.",
+    "es": "Permite el crecimiento de contenedores."
+  },
+  "Permite quebra de linha.": {
+    "pt": "Permite quebra de linha.",
+    "en": "Allows line wrapping.",
+    "es": "Permite ajustar líneas."
+  },
+  "Permite selecao de meia estrela.": {
+    "pt": "Permite selecao de meia estrela.",
+    "en": "Allows half-star selection.",
+    "es": "Permite la selección de media estrella."
+  },
+  "Pointer configuration.": {
+    "pt": "Configuração do ponteiro.",
+    "en": "Pointer configuration.",
+    "es": "Configuración del puntero."
+  },
+  "Posicao no eixo perpendicular.": {
+    "pt": "Posicao no eixo perpendicular.",
+    "en": "Position on the perpendicular axis.",
+    "es": "Posición sobre el eje perpendicular."
+  },
+  "Posicionamento da sobreposicao.": {
+    "pt": "Posicionamento da sobreposicao.",
+    "en": "Overlay positioning.",
+    "es": "Posicionamiento de superposición."
+  },
+  "Posicionamento dentro do SgMainPanel.": {
+    "pt": "Posicionamento dentro do SgMainPanel.",
+    "en": "Positioning within the SgMainPanel.",
+    "es": "Posicionamiento dentro del SgMainPanel."
+  },
+  "Posicionamento e alinhamento do popup.": {
+    "pt": "Posicionamento e alinhamento do popup.",
+    "en": "Popup positioning and alignment.",
+    "es": "Posicionamiento y alineación de ventanas emergentes."
+  },
+  "Preenche lacunas no fluxo do grid.": {
+    "pt": "Preenche lacunas no fluxo do grid.",
+    "en": "Fills gaps in the grid flow.",
+    "es": "Llena los huecos en el flujo de la red."
+  },
+  "Prende foco dentro do painel.": {
+    "pt": "Prende foco dentro do painel.",
+    "en": "Holds focus within the panel.",
+    "es": "Mantiene el foco dentro del panel."
+  },
+  "Primary pointer settings (needle/marker/range).": {
+    "pt": "Configurações do ponteiro primário (agulha/marcador/intervalo).",
+    "en": "Primary pointer settings (needle/marker/range).",
+    "es": "Configuración del puntero principal (aguja/marcador/rango)."
+  },
+  "Primary pointer settings (shape, color, size, draggable).": {
+    "pt": "Configurações primárias do ponteiro (forma, cor, tamanho, arrastável).",
+    "en": "Primary pointer settings (shape, color, size, draggable).",
+    "es": "Configuración del puntero principal (forma, color, tamaño, arrastrable)."
+  },
+  "Primary pointer value and change event.": {
+    "pt": "Valor do ponteiro primário e evento de alteração.",
+    "en": "Primary pointer value and change event.",
+    "es": "Valor del puntero principal y evento de cambio."
+  },
+  "Props extras do input nativo, exceto type/id/min/max/step/value/defaultValue/onChange/disabled/aria-label.": {
+    "pt": "Props extras do input nativo, exceto type/id/min/max/step/value/defaultValue/onChange/disabled/aria-label.",
+    "en": "Props extras do input nativo, exceto type/id/min/max/step/value/defaultValue/onChange/disabled/aria-label.",
+    "es": "Los accesorios adicionales hacen entradas nativas, excepto type/id/min/max/step/value/defaultValue/onChange/disabled/aria-label."
+  },
+  "Props extras para o input numerico.": {
+    "pt": "Prepare adereços extras para entrada numérica.",
+    "en": "Prepare extra props for numerical input.",
+    "es": "Prepare accesorios adicionales para la entrada numérica."
+  },
+  "Quando true, ocupa a viewport inteira.": {
+    "pt": "Quando true, ocupa a viewport inteira.",
+    "en": "When true, occupies the entire viewport.",
+    "es": "Cuando es verdadero, ocupa toda la ventana gráfica."
+  },
+  "Quantidade de campos renderizados em cada cenario.": {
+    "pt": "Quantidade de campos renderizados em cada cenario.",
+    "en": "Number of fields rendered in each scenario.",
+    "es": "Número de campos representados en cada escenario."
+  },
+  "Quantidade de colunas no grid.": {
+    "pt": "Quantidade de colunas no grid.",
+    "en": "Number of columns in the grid.",
+    "es": "Número de columnas de la cuadrícula."
+  },
+  "Quantidade total de estrelas.": {
+    "pt": "Quantidade total de estrelas.",
+    "en": "Total number of stars.",
+    "es": "Número total de estrellas."
+  },
+  "Raio dos cantos.": {
+    "pt": "Raio dos cantos.",
+    "en": "Corner radius.",
+    "es": "Radio de esquina."
+  },
+  "Range configuration.": {
+    "pt": "Configuração de intervalo.",
+    "en": "Range configuration.",
+    "es": "Configuración de gama."
+  },
+  "React Hook Form integration via register.": {
+    "pt": "Integração do React Hook Form via registro.",
+    "en": "React Hook Form integration via register.",
+    "es": "Integración de React Hook Form a través del registro."
+  },
+  "Regras de fechamento.": {
+    "pt": "Regras de fechamento.",
+    "en": "Closing rules.",
+    "es": "Normas de cierre."
+  },
+  "Reserva espaço para scrollbar.": {
+    "pt": "Reserva espaço para scrollbar.",
+    "en": "Reserve space for scrollbar.",
+    "es": "Reserve espacio para la barra de desplazamiento."
+  },
+  "Rotulo acessivel do painel.": {
+    "pt": "Rotulo acessivel do painel.",
+    "en": "Accessible panel label.",
+    "es": "Etiqueta de panel accesible."
+  },
+  "Rotulo de acessibilidade para leitores de tela.": {
+    "pt": "Rotulo de acessibilidade para leitores de tela.",
+    "en": "Accessibility label for screen readers.",
+    "es": "Etiqueta de accesibilidad para lectores de pantalla."
+  },
+  "SVG dimensions.": {
+    "pt": "Dimensões SVG.",
+    "en": "SVG dimensions.",
+    "es": "Dimensiones SVG."
+  },
+  "Scale ticks and labels.": {
+    "pt": "Escala de ticks e rótulos.",
+    "en": "Scale ticks and labels.",
+    "es": "Escala de ticks y etiquetas."
+  },
+  "Seed opcional de hora ISO para sincronizar o ponto inicial com o servidor.": {
+    "pt": "Seed opcional de hora ISO para sincronizar o ponto inicial com o servidor.",
+    "en": "Optional ISO time seed to synchronize the start point with the server.",
+    "es": "Semilla de tiempo ISO opcional para sincronizar el punto de inicio con el servidor."
+  },
+  "Seleciona o modo de renderizacao do relogio.": {
+    "pt": "Seleciona o modo de renderizacao do relogio.",
+    "en": "Selects the clock rendering mode.",
+    "es": "Selecciona el modo de renderizado del reloj."
+  },
+  "Seleciona tema registrado para o modo analogico.": {
+    "pt": "Seleciona tema registrado para o modo analogico.",
+    "en": "Selects registered theme for analog mode.",
+    "es": "Selecciona el tema registrado para el modo analógico."
+  },
+  "Shows a button to clear the rating.": {
+    "pt": "Mostra um botão para limpar a classificação.",
+    "en": "Shows a button to clear the rating.",
+    "es": "Muestra un botón para borrar la calificación."
+  },
+  "Shows close button on each toast.": {
+    "pt": "Mostra botão de fechar em cada toast.",
+    "en": "Shows close button on each toast.",
+    "es": "Muestra botón de cierre en cada toast."
+  },
+  "Sobrescreve cores de fundo, texto, borda e foco.": {
+    "pt": "Sobrescreve cores de fundo, texto, borda e foco.",
+    "en": "Overrides background, text, border and focus colors.",
+    "es": "Anula los colores de fondo, texto, borde y enfoque."
+  },
+  "Sombra do painel.": {
+    "pt": "Sombra do painel.",
+    "en": "Panel shadow.",
+    "es": "Sombra del panel."
+  },
+  "Span de colunas/linhas dentro do SgGrid.": {
+    "pt": "Span de colunas/linhas dentro do SgGrid.",
+    "en": "Column/row span within the SgGrid.",
+    "es": "Intervalo de columnas/filas dentro de SgGrid."
+  },
+  "Styling and accessibility.": {
+    "pt": "Estilo e acessibilidade.",
+    "en": "Styling and accessibility.",
+    "es": "Estilo y accesibilidad."
+  },
+  "Tamanho da fonte em pixels.": {
+    "pt": "Tamanho da fonte em pixels.",
+    "en": "Font size in pixels.",
+    "es": "Tamaño de fuente en píxeles."
+  },
+  "Tamanho do avatar.": {
+    "pt": "Tamanho do avatar.",
+    "en": "Avatar size.",
+    "es": "Tamaño del avatar."
+  },
+  "Tamanho do badge.": {
+    "pt": "Tamanho do badge.",
+    "en": "Badge size.",
+    "es": "Tamaño de la insignia."
+  },
+  "Tamanho do componente.": {
+    "pt": "Tamanho do componente.",
+    "en": "Component size.",
+    "es": "Tamaño del componente."
+  },
+  "Tamanho em pixels.": {
+    "pt": "Tamanho em pixels.",
+    "en": "Size in pixels.",
+    "es": "Tamaño en píxeles."
+  },
+  "Tamanho inicial e limites min/max.": {
+    "pt": "Tamanho inicial e limites min/max.",
+    "en": "Initial size and min/max limits.",
+    "es": "Tamaño inicial y límites mínimo/máximo."
+  },
+  "Tema inline para o modo analogico.": {
+    "pt": "Tema inline para ou analógico.",
+    "en": "Inline theme para or analog way.",
+    "es": "Tema en línea para o de forma analógica."
+  },
+  "Textos do cabeçalho.": {
+    "pt": "Textos do cabeçalho.",
+    "en": "Header texts.",
+    "es": "Textos de encabezado."
+  },
+  "Theme-based visual variant.": {
+    "pt": "Variante visual baseada em tema.",
+    "en": "Theme-based visual variant.",
+    "es": "Variante visual basada en temas."
+  },
+  "Tick and label configuration.": {
+    "pt": "Configuração de ticks e rótulos.",
+    "en": "Tick and label configuration.",
+    "es": "Configuración de ticks y etiquetas."
+  },
+  "Toast container position.": {
+    "pt": "Posição do container de toasts.",
+    "en": "Toast container position.",
+    "es": "Posición del contenedor de toasts."
+  },
+  "Tom visual (primary, success, danger etc.).": {
+    "pt": "Tom visual (primário, sucesso, perigo etc.).",
+    "en": "Tom visual (primary, success, danger etc.).",
+    "es": "Tom visual (primario, éxito, peligro, etc.)."
+  },
+  "Transition animation settings.": {
+    "pt": "Configurações de animação de transição.",
+    "en": "Transition animation settings.",
+    "es": "Configuración de animación de transición."
+  },
+  "Transparency level applied to toasts.": {
+    "pt": "Nível de transparência aplicado aos toasts.",
+    "en": "Transparency level applied to toasts.",
+    "es": "Nivel de transparencia aplicado a los toasts."
+  },
+  "Unique component identifier.": {
+    "pt": "Identificador exclusivo do componente.",
+    "en": "Unique component identifier.",
+    "es": "Identificador de componente único."
+  },
+  "Uses strong palette by severity.": {
+    "pt": "Usa paleta forte por severidade.",
+    "en": "Uses strong palette by severity.",
+    "es": "Utiliza una paleta fuerte por severidad."
+  },
+  "Valida uma etapa antes de avancar.": {
+    "pt": "Valide uma etapa antes de avançar.",
+    "en": "Validate a stage before moving forward.",
+    "es": "Valida una etapa antes de avanzar."
+  },
+  "Valor atual no modo controlado.": {
+    "pt": "Valor atual no modo controlado.",
+    "en": "Current value in controlled mode.",
+    "es": "Valor actual en modo controlado."
+  },
+  "Valor inicial no modo nao controlado.": {
+    "pt": "Valor inicial no modo nao controlado.",
+    "en": "Initial value in uncontrolled mode.",
+    "es": "Valor inicial en modo no controlado."
+  },
+  "Valor usado para gerar o QR Code.": {
+    "pt": "Valor usado para gerar o QR Code.",
+    "en": "Value used to generate the QR Code.",
+    "es": "Valor utilizado para generar el Código QR."
+  },
+  "Varia o tema visual do botao.": {
+    "pt": "Varia o tema visual do botao.",
+    "en": "Vary the visual theme of the button.",
+    "es": "Varíe el tema visual del botón."
+  },
+  "Variação visual do badge.": {
+    "pt": "Variação visual do badge.",
+    "en": "Visual variation of the badge.",
+    "es": "Variación visual de la insignia."
+  },
+  "Variação visual do card.": {
+    "pt": "Variação visual do card.",
+    "en": "Visual variation of the card.",
+    "es": "Variación visual de la tarjeta."
+  },
+  "Visual avatar content.": {
+    "pt": "Conteúdo visual do avatar.",
+    "en": "Visual avatar content.",
+    "es": "Contenido de avatar visual."
+  },
+  "Zonas e componentes internos do layout.": {
+    "pt": "Zonas e componentes internos do layout.",
+    "en": "Internal layout zones and components.",
+    "es": "Zonas y componentes de diseño interno."
+  },
+  "Áreas customizáveis do layout.": {
+    "pt": "Áreas customizáveis do layout.",
+    "en": "Customizable areas of the layout.",
+    "es": "Áreas personalizables del diseño."
+  },
+  "Ícones opcionais.": {
+    "pt": "Ícones opcionais.",
+    "en": "Optional icons.",
+    "es": "Iconos opcionales."
+  },
+  "String exibida antes da animacao. Ao mudar, o display reseta para ela.": {
+    "pt": "String exibida antes da animacao. Ao mudar, o display reseta para ela.",
+    "en": "String shown before animation. When it changes, the display resets to it.",
+    "es": "Cadena mostrada antes de la animaci?n. Al cambiar, la visualizaci?n se reinicia con ella."
+  },
+  "String de destino. A animacao transiciona cada caractere ate o alvo.": {
+    "pt": "String de destino. A animacao transiciona cada caractere ate o alvo.",
+    "en": "Target string. The animation transitions each character until it reaches the target.",
+    "es": "Cadena de destino. La animaci?n transiciona cada car?cter hasta llegar al objetivo."
+  },
+  "Estilo de animacao por caractere: tambor vertical, flip card, neon, fade, discard (folha voadora) ou matrix LED.": {
+    "pt": "Estilo de animacao por caractere: tambor vertical, flip card, neon, fade, discard (folha voadora) ou matrix LED.",
+    "en": "Per-character animation style: vertical roller, flip card, neon, fade, discard (flying page), or LED matrix.",
+    "es": "Estilo de animaci?n por car?cter: tambor vertical, flip card, ne?n, fade, discard (hoja voladora) o matriz LED."
+  },
+  "Velocidade de 1 (lento) a 100 (rapido). Controla o delay entre cada caractere.": {
+    "pt": "Velocidade de 1 (lento) a 100 (rapido). Controla o delay entre cada caractere.",
+    "en": "Speed from 1 (slow) to 100 (fast). Controls the delay between each character.",
+    "es": "Velocidad de 1 (lento) a 100 (r?pido). Controla el retraso entre cada car?cter."
+  },
+  "Caractere para preencher posicoes extras quando as strings tem comprimentos diferentes.": {
+    "pt": "Caractere para preencher posicoes extras quando as strings tem comprimentos diferentes.",
+    "en": "Character used to fill extra positions when strings have different lengths.",
+    "es": "Car?cter usado para rellenar posiciones extra cuando las cadenas tienen longitudes diferentes."
+  },
+  "\"left\" preenche a direita (nomes), \"right\" preenche a esquerda (numeros). Determina tambem a ordem de animacao dos caracteres.": {
+    "pt": "\"left\" preenche a direita (nomes), \"right\" preenche a esquerda (numeros). Determina tambem a ordem de animacao dos caracteres.",
+    "en": "\"left\" pads on the right (names), \"right\" pads on the left (numbers). It also defines the character animation order.",
+    "es": "\"left\" rellena a la derecha (nombres), \"right\" rellena a la izquierda (n?meros). Tambi?n define el orden de animaci?n de los caracteres."
+  },
+  "Se true, inicia animacao automaticamente ao montar e sempre que targetString mudar.": {
+    "pt": "Se true, inicia animacao automaticamente ao montar e sempre que targetString mudar.",
+    "en": "If true, starts animation automatically on mount and whenever targetString changes.",
+    "es": "Si es true, inicia la animaci?n autom?ticamente al montar y cada vez que targetString cambia."
+  },
+  "Tamanho da fonte em pixels. Controla a escala de cada digito.": {
+    "pt": "Tamanho da fonte em pixels. Controla a escala de cada digito.",
+    "en": "Font size in pixels. Controls the scale of each digit.",
+    "es": "Tama?o de fuente en p?xeles. Controla la escala de cada d?gito."
+  },
+  "Cor principal do texto/ponto. Aplicada nos estilos neon, fade, discard e matrix.": {
+    "pt": "Cor principal do texto/ponto. Aplicada nos estilos neon, fade, discard e matrix.",
+    "en": "Primary text/dot color. Applied in neon, fade, discard, and matrix styles.",
+    "es": "Color principal del texto/punto. Se aplica en los estilos ne?n, fade, discard y matrix."
+  },
+  "Cor de fundo de cada digito. Aplicada nos estilos neon, fade, discard e matrix.": {
+    "pt": "Cor de fundo de cada digito. Aplicada nos estilos neon, fade, discard e matrix.",
+    "en": "Background color of each digit. Applied in neon, fade, discard, and matrix styles.",
+    "es": "Color de fondo de cada d?gito. Se aplica en los estilos ne?n, fade, discard y matrix."
+  },
+  "Conjunto de caracteres validos para o SgRoller3DDigit. Ignorado quando style != \"roller3d\".": {
+    "pt": "Conjunto de caracteres validos para o SgRoller3DDigit. Ignorado quando style != \"roller3d\".",
+    "en": "Set of valid characters for SgRoller3DDigit. Ignored when style != \"roller3d\".",
+    "es": "Conjunto de caracteres v?lidos para SgRoller3DDigit. Se ignora cuando style != \"roller3d\"."
+  },
+  "Classes CSS adicionais no container externo.": {
+    "pt": "Classes CSS adicionais no container externo.",
+    "en": "Additional CSS classes on the outer container.",
+    "es": "Clases CSS adicionales en el contenedor externo."
+  },
+  "Ref imperativa. Expoe o metodo startAnimation() para acionar a animacao manualmente.": {
+    "pt": "Ref imperativa. Expoe o metodo startAnimation() para acionar a animacao manualmente.",
+    "en": "Imperative ref. Exposes the startAnimation() method to trigger animation manually.",
+    "es": "Ref imperativa. Expone el m?todo startAnimation() para disparar la animaci?n manualmente."
+  },
+  "Caractere exibido no card. Ao mudar, o digito atual apaga e o novo acende.": {
+    "pt": "Caractere exibido no card. Ao mudar, o digito atual apaga e o novo acende.",
+    "en": "Character displayed on the card. When changing, the current digit goes out and the new one lights up.",
+    "es": "Carácter mostrado en la tarjeta. Al cambiar, el dígito actual se apaga y se enciende el nuevo."
+  },
+  "Cor do texto e do brilho (glow). Tambem controla o halo de luz.": {
+    "pt": "Cor do texto e do brilho (glow). Tambem controla o halo de luz.",
+    "en": "Text and glow color. Also controls the light halo.",
+    "es": "Texto y color brillante. También controla el halo de luz."
+  },
+  "Cor de fundo do card.": {
+    "pt": "Cor de fundo do card.",
+    "en": "Card background color.",
+    "es": "Color de fondo de la tarjeta."
+  },
+  "CSS font-family aplicado ao digito.": {
+    "pt": "CSS font-family aplicado ao digito.",
+    "en": "CSS font-family applied to the type.",
+    "es": "Familia de fuentes CSS aplicada al tipo."
+  },
+  "Tamanho da fonte em pixels. Controla a escala geral do card (largura, altura e raio).": {
+    "pt": "Tamanho da fonte em pixels. Controla a escala geral do card (largura, altura e raio).",
+    "en": "Font size in pixels. Controls the overall scale of the card (width, height and radius).",
+    "es": "Tamaño de fuente en píxeles. Controla la escala general de la tarjeta (ancho, alto y radio)."
+  },
+  "Classes CSS adicionais no wrapper externo do card.": {
+    "pt": "Classes CSS adicionais no wrapper externo do card.",
+    "en": "Additional CSS classes in the card's outer wrapper.",
+    "es": "Clases CSS adicionales en el envoltorio exterior de la tarjeta."
+  },
+  "Current displayed value. Must exist in items.": {
+    "pt": "Valor atual exibido. Deve existir em items.",
+    "en": "Current displayed value. Must exist in items.",
+    "es": "Valor mostrado actual. Debe existir en items."
+  },
+  "Ordered list of all possible values. The drum rolls to the value position.": {
+    "pt": "Lista ordenada de todos os valores possiveis. O tambor gira ate a posicao do valor.",
+    "en": "Ordered list of all possible values. The drum rolls to the value position.",
+    "es": "Lista ordenada de todos los valores posibles. El tambor gira hasta la posicion del valor."
+  },
+  "Tamanho da fonte em pixels. Controla a escala geral do componente.": {
+    "pt": "Tamanho da fonte em pixels. Controla a escala geral do componente.",
+    "en": "Font size in pixels. Controls the overall scale of the component.",
+    "es": "Tamaño de fuente en píxeles. Controla la escala general del componente."
+  },
+  "Roll transition duration in milliseconds.": {
+    "pt": "Duracao da transicao do rolo em milissegundos.",
+    "en": "Roll transition duration in milliseconds.",
+    "es": "Duracion de la transicion del rodillo en milisegundos."
+  },
+  "Texto ou caractere exibido em estilo neon.": {
+    "pt": "Texto ou caractere exibido em estilo neon.",
+    "en": "Text or character displayed in neon style.",
+    "es": "Texto o carácter mostrado en estilo neón."
+  },
+  "Liga a animacao de apagar/trocar/acender quando o valor muda.": {
+    "pt": "Liga a animacao de apagar/trocar/acender quando o valor muda.",
+    "en": "Turns on the erase/change/light animation when the value changes.",
+    "es": "Activa la animación de borrar/cambiar/iluminar cuando cambia el valor."
+  },
+  "Duracao total da animacao em milissegundos.": {
+    "pt": "Duracao total da animacao em milissegundos.",
+    "en": "Total duration of the animation in milliseconds.",
+    "es": "Duración total de la animación en milisegundos."
+  },
+  "Cor principal do texto.": {
+    "pt": "Cor principal do texto.",
+    "en": "Main text color.",
+    "es": "Color del texto principal."
+  },
+  "Cor de fundo do componente.": {
+    "pt": "Cor de fundo do componente.",
+    "en": "Component background color.",
+    "es": "Color de fondo del componente."
+  },
+  "Cor do brilho/sombra neon.": {
+    "pt": "Cor do brilho/sombra neon.",
+    "en": "Neon glow/shadow color.",
+    "es": "Color de brillo/sombra de neón."
+  },
+  "Intensidade do brilho neon.": {
+    "pt": "Intensidade do brilho neon.",
+    "en": "Intensity of neon glow.",
+    "es": "Intensidad del brillo del neón."
+  },
+  "Peso da fonte.": {
+    "pt": "Peso da fonte.",
+    "en": "Font weight.",
+    "es": "Peso de fuente."
+  },
+  "Atalho para definir a fonte (font family).": {
+    "pt": "Atalho para definir a fonte (font family).",
+    "en": "Shortcut to define the font (font family).",
+    "es": "Acceso directo para definir la fuente (familia de fuentes)."
+  },
+  "Fonte customizada do texto.": {
+    "pt": "Fonte customizada do texto.",
+    "en": "Custom text font.",
+    "es": "Fuente de texto personalizada."
+  },
+  "Espacamento entre letras em pixels.": {
+    "pt": "Espacamento entre letras em pixels.",
+    "en": "Spacing between letters in pixels.",
+    "es": "Espaciado entre letras en píxeles."
+  },
+  "Padding interno em pixels.": {
+    "pt": "Padding interno em pixels.",
+    "en": "Internal padding in pixels.",
+    "es": "Relleno interno en píxeles."
+  },
+  "Raio de borda do container em pixels.": {
+    "pt": "Raio de borda do container em pixels.",
+    "en": "Border radius of the container in pixels.",
+    "es": "Radio del borde del contenedor en píxeles."
+  },
+  "Classes CSS extras no container.": {
+    "pt": "Classes CSS extras no container.",
+    "en": "Classes CSS extras no container.",
+    "es": "Clases CSS extras sin contenedor."
+  },
+  "Estilo inline adicional no container.": {
+    "pt": "Estilo inline adicional no container.",
+    "en": "Additional inline styling in the container.",
+    "es": "Estilo en línea adicional en el contenedor."
+  },
+  "Texto/numero exibido na folha do topo.": {
+    "pt": "Texto/numero exibido na folha do topo.",
+    "en": "Text/number displayed on the top sheet.",
+    "es": "Texto/número mostrado en la hoja superior."
+  },
+  "Cor do texto principal.": {
+    "pt": "Cor do texto principal.",
+    "en": "Main text color.",
+    "es": "Color del texto principal."
+  },
+  "Fonte (font-family) usada no texto.": {
+    "pt": "Fonte (font-family) usada no texto.",
+    "en": "Font (font-family) used in the text.",
+    "es": "Fuente (familia de fuentes) utilizada en el texto."
+  },
+  "Cor de fundo das folhas.": {
+    "pt": "Cor de fundo das folhas.",
+    "en": "Background color of leaves.",
+    "es": "Color de fondo de las hojas."
+  },
+  "Tamanho da fonte em px (escala geral do bloco).": {
+    "pt": "Tamanho da fonte em px (escala geral do bloco).",
+    "en": "Font size in px (overall block scale).",
+    "es": "Tamaño de fuente en px (escala de bloque general)."
+  },
+  "Ativa animacao de descarte quando o valor muda.": {
+    "pt": "Ativa animacao de descarte quando o valor muda.",
+    "en": "Activates discard animation when the value changes.",
+    "es": "Activa la animación de descarte cuando cambia el valor."
+  },
+  "Duracao total da animacao em ms.": {
+    "pt": "Duracao total da animacao em ms.",
+    "en": "Total duration of the animation in months.",
+    "es": "Duración total de la animación en meses."
+  },
+  "Quantidade de folhas visiveis na pilha (2 a 30). Ignorado se totalNumberPages for definido.": {
+    "pt": "Quantidade de folhas visiveis na pilha (2 a 30). Ignorado se totalNumberPages for definido.",
+    "en": "Number of visible sheets in the stack (2 to 30). Ignored if totalNumberPages is set.",
+    "es": "Número de hojas visibles en la pila (2 a 30). Se ignora si se establece totalNumberPages."
+  },
+  "Total de paginas do monte. A pilha visual encolhe a cada increasePage() via ref.": {
+    "pt": "Total de paginas do monte. A pilha visual encolhe a cada increasePage() via ref.",
+    "en": "Total number of pages in the stack. The visual stack shrinks on each increasePage() call via ref.",
+    "es": "Total de paginas del mazo. La pila visual se reduce con cada llamada a increasePage() via ref."
+  },
+  "Classes CSS adicionais.": {
+    "pt": "Classes CSS adicionais.",
+    "en": "Additional CSS classes.",
+    "es": "Clases CSS adicionales."
+  },
+  "Estilo inline adicional.": {
+    "pt": "Estilo inline adicional.",
+    "en": "Additional inline styling.",
+    "es": "Estilo en línea adicional."
+  }
+}

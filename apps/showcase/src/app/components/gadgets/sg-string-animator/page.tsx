@@ -489,7 +489,7 @@ const STRING_ANIMATOR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StringAn
     playgroundTitle: "Playground",
     playgroundDescription: "Configure todas as props em tempo real, incluindo os novos estilos e cores.",
     playgroundCardTitle: "SgStringAnimator Playground",
-    propsReferenceTitle: "Referencia de Props"
+    propsReferenceTitle: "Referência de Props"
   },
   "pt-PT": {
     headerSubtitle:
@@ -522,7 +522,7 @@ const STRING_ANIMATOR_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", StringAn
     playgroundTitle: "Playground",
     playgroundDescription: "Configure as props em tempo real, incluindo os estilos e cores.",
     playgroundCardTitle: "SgStringAnimator Playground",
-    propsReferenceTitle: "Referencia de Props"
+    propsReferenceTitle: "Referência de Props"
   },
   "en-US": {
     headerSubtitle:

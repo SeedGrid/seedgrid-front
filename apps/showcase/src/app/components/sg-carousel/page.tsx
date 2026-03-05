@@ -9,6 +9,7 @@ import {
 } from "@seedgrid/fe-components";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
+import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 
 function Section(props: {
@@ -152,7 +153,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
     headerSubtitle:
       "Um componente de carrossel responsivo com navegacao horizontal/vertical, autoplay e indicadores.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Props Reference",
+    propsLinkLabel: "Referência de Props",
     sectionTitles: [
       "1) Basico - Horizontal",
       "2) Multiplos Items Visiveis",
@@ -181,7 +182,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
       "Carrossel que se adapta ao tamanho da tela mostrando diferentes quantidades de items",
       "Brinque com as propriedades do carrossel e veja as mudancas em tempo real",
     ],
-    propsTitle: "Referencia de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -191,7 +192,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
     headerSubtitle:
       "Um componente de carrossel responsivo com navegacao horizontal/vertical, autoplay e indicadores.",
     examplesLabel: "Examples",
-    propsLinkLabel: "Props Reference",
+    propsLinkLabel: "Referência de Props",
     sectionTitles: [
       "1) Basico - Horizontal",
       "2) Multiplos Items Visiveis",
@@ -220,7 +221,7 @@ const CAROUSEL_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CarouselTexts> 
       "Carrossel que se adapta ao tamanho do ecra mostrando diferentes quantidades de items",
       "Brinque com as propriedades do carrossel e veja as mudancas em tempo real",
     ],
-    propsTitle: "Referencia de Props",
+    propsTitle: "Referência de Props",
     propsColProp: "Prop",
     propsColType: "Tipo",
     propsColDefault: "Default",
@@ -491,6 +492,51 @@ export default function App() {
   );
 }
 `;
+
+const CAROUSEL_PROPS: ShowcasePropRow[] = [
+  { prop: "id", type: "string", defaultValue: "-", description: "Identificador unico do carrossel." },
+  {
+    prop: "items",
+    type: "ReactNode[]",
+    defaultValue: "-",
+    description: "Array de itens exibidos no carrossel (obrigatorio)."
+  },
+  { prop: "numVisible", type: "number", defaultValue: "1", description: "Numero de itens visiveis ao mesmo tempo." },
+  { prop: "numScroll", type: "number", defaultValue: "1", description: "Numero de itens rolados por acao." },
+  {
+    prop: "orientation",
+    type: "\"horizontal\" | \"vertical\"",
+    defaultValue: "\"horizontal\"",
+    description: "Orientacao do carrossel."
+  },
+  { prop: "circular", type: "boolean", defaultValue: "true", description: "Ativa loop infinito." },
+  { prop: "autoPlay", type: "boolean", defaultValue: "false", description: "Ativa navegacao automatica." },
+  {
+    prop: "autoPlayInterval",
+    type: "number",
+    defaultValue: "3000",
+    description: "Intervalo do autoplay em milissegundos."
+  },
+  { prop: "showNavigators", type: "boolean", defaultValue: "true", description: "Mostra botoes de navegacao." },
+  { prop: "showIndicators", type: "boolean", defaultValue: "true", description: "Mostra indicadores (dots)." },
+  { prop: "className", type: "string", defaultValue: "-", description: "Classe CSS customizada do container." },
+  { prop: "itemClassName", type: "string", defaultValue: "-", description: "Classe CSS customizada dos itens." },
+  { prop: "width", type: "number | string", defaultValue: "\"100%\"", description: "Largura do container." },
+  { prop: "height", type: "number | string", defaultValue: "-", description: "Altura do container." },
+  { prop: "gap", type: "number", defaultValue: "16", description: "Espacamento entre itens em pixels." },
+  {
+    prop: "onIndexChange",
+    type: "(index: number) => void",
+    defaultValue: "-",
+    description: "Callback chamado quando o indice ativo muda."
+  },
+  {
+    prop: "customNavigators",
+    type: "{ prev?: ReactNode; next?: ReactNode }",
+    defaultValue: "-",
+    description: "Botoes de navegacao customizados."
+  }
+];
 
 export default function SgCarouselPage() {
   const i18n = useShowcaseI18n();
@@ -1100,134 +1146,13 @@ export default function SgCarouselPage() {
         />
       </Section>
 
-      {/* Props Reference */}
-      <section
-        id="props-reference"
-        className="scroll-mt-[var(--showcase-anchor-offset,18rem)] rounded-lg border border-border p-6"
-      >
-        <h2 data-anchor-title="true" className="text-lg font-semibold">{texts.propsTitle}</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left">
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColProp}</th>
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColType}</th>
-                <th className="pb-2 pr-4 font-semibold">{texts.propsColDefault}</th>
-                <th className="pb-2 font-semibold">{texts.propsColDescription}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">id</td>
-                <td className="py-2 pr-4">string</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Identificador único do carrossel</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">items</td>
-                <td className="py-2 pr-4">ReactNode[]</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Array de items a serem exibidos no carrossel (obrigatório)</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">numVisible</td>
-                <td className="py-2 pr-4">number</td>
-                <td className="py-2 pr-4">1</td>
-                <td className="py-2">Número de items visíveis ao mesmo tempo</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">numScroll</td>
-                <td className="py-2 pr-4">number</td>
-                <td className="py-2 pr-4">1</td>
-                <td className="py-2">Número de items que rolam por vez</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">orientation</td>
-                <td className="py-2 pr-4">&quot;horizontal&quot; | &quot;vertical&quot;</td>
-                <td className="py-2 pr-4">&quot;horizontal&quot;</td>
-                <td className="py-2">Orientação do carrossel</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">circular</td>
-                <td className="py-2 pr-4">boolean</td>
-                <td className="py-2 pr-4">true</td>
-                <td className="py-2">Ativa modo circular (loop infinito)</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">autoPlay</td>
-                <td className="py-2 pr-4">boolean</td>
-                <td className="py-2 pr-4">false</td>
-                <td className="py-2">Ativa navegação automática</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">autoPlayInterval</td>
-                <td className="py-2 pr-4">number</td>
-                <td className="py-2 pr-4">3000</td>
-                <td className="py-2">Intervalo de auto play em milissegundos</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">showNavigators</td>
-                <td className="py-2 pr-4">boolean</td>
-                <td className="py-2 pr-4">true</td>
-                <td className="py-2">Mostra botões de navegação</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">showIndicators</td>
-                <td className="py-2 pr-4">boolean</td>
-                <td className="py-2 pr-4">true</td>
-                <td className="py-2">Mostra indicadores (dots)</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">className</td>
-                <td className="py-2 pr-4">string</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Classe CSS customizada para o container</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">itemClassName</td>
-                <td className="py-2 pr-4">string</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Classe CSS customizada para os items</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">width</td>
-                <td className="py-2 pr-4">number | string</td>
-                <td className="py-2 pr-4">&quot;100%&quot;</td>
-                <td className="py-2">Largura do container do carrossel</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">height</td>
-                <td className="py-2 pr-4">number | string</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Altura do container do carrossel</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">gap</td>
-                <td className="py-2 pr-4">number</td>
-                <td className="py-2 pr-4">16</td>
-                <td className="py-2">Espaçamento entre items em pixels</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">onIndexChange</td>
-                <td className="py-2 pr-4">(index: number) =&gt; void</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Callback chamado quando o Índice ativo muda</td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 font-mono text-xs">customNavigators</td>
-                <td className="py-2 pr-4">{"{ prev?: ReactNode; next?: ReactNode }"}</td>
-                <td className="py-2 pr-4">-</td>
-                <td className="py-2">Botões de navegação customizados</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <ShowcasePropsReference id="props-reference" title={texts.propsTitle} rows={CAROUSEL_PROPS} />
       <div aria-hidden="true" className="pointer-events-none" style={{ height: `calc(${anchorOffset}px + 40vh)` }} />
       </div>
     </I18NReady>
   );
 }
+
 
 
 

@@ -95,7 +95,7 @@ Se quiser, eu implemento já a Fase 1 sem quebrar API pública atual.
 // TODO - Datatable - https://showcase.primefaces.org/ui/data/datatable/rowGroup.xhtml?jfwid=036be
 
 
-
+// TODO - por que somente alguns componentes tem o className?  (sgRadioGrouup)
 
 
 

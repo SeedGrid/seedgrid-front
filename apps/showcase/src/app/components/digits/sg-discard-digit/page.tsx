@@ -86,7 +86,7 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
     section6NextButton: "Proxima",
     section7Title: "7) Playground (SgPlayground)",
     section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
-    propsReferenceTitle: "Referencia de Props"
+    propsReferenceTitle: "Referência de Props"
   },
   "pt-PT": {
     headerSubtitle:
@@ -115,7 +115,7 @@ const DISCARD_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", DiscardDigitText
     section6NextButton: "Proxima",
     section7Title: "7) Playground (SgPlayground)",
     section7Description: "Ajuste em tempo real de color, font, backgroundColor e animacao.",
-    propsReferenceTitle: "Referencia de Props"
+    propsReferenceTitle: "Referência de Props"
   },
   "en-US": {
     headerSubtitle:
