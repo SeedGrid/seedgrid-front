@@ -438,7 +438,7 @@ function SgOrderListBase(
       aria-disabled={disabled || undefined}
       aria-readonly={readOnly || undefined}
       className={cn(
-        "w-full min-w-0 overflow-y-auto rounded-lg border border-[rgb(var(--sg-border))] bg-white p-1",
+        "w-full min-w-0 overflow-y-auto rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] p-1",
         "max-h-[22rem]",
         listClassName
       )}
@@ -472,7 +472,7 @@ function SgOrderListBase(
                   "group flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-all",
                   isItemSelected
                     ? "bg-[rgb(var(--sg-primary-100))] text-[rgb(var(--sg-text))] ring-1 ring-[rgb(var(--sg-primary-300))]"
-                    : "bg-white text-[rgb(var(--sg-text))] hover:bg-[rgb(var(--sg-primary-50))]",
+                    : "bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] text-[rgb(var(--sg-text))] hover:bg-[rgb(var(--sg-primary-50))]",
                   isItemDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   allowDrag && !item.disabled ? "active:cursor-grabbing" : "",
                   isDropTarget ? "ring-2 ring-[rgb(var(--sg-primary-400))]" : "",
@@ -585,4 +585,3 @@ function SgOrderListBase(
 export const SgOrderList = React.forwardRef<SgOrderListRef, SgOrderListProps>(
   (props, ref) => SgOrderListBase(props, ref)
 );
-

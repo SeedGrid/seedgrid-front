@@ -460,6 +460,7 @@ const SANDPACK_NODE_FS_PROMISES_PACKAGE_JSON_SHIM = JSON.stringify({
 });
 
 const SANDPACK_FALLBACK_THEME_VARS: Readonly<Record<string, string>> = {
+  "--sg-mode": "light",
   // shadcn/ui design tokens (HSL)
   "--background": "0 0% 100%",
   "--foreground": "222.2 84% 4.9%",
@@ -643,6 +644,7 @@ const SANDPACK_CORE_THEME_VARS = [
 // CSSStyleDeclaration.length/.item() does NOT enumerate CSS custom properties,
 // so we must call getPropertyValue() for each var by name.
 const SANDPACK_SG_VARS = [
+  "--sg-mode",
   // Neutrals
   "--sg-bg", "--sg-surface", "--sg-muted-surface",
   "--sg-text", "--sg-muted", "--sg-border", "--sg-ring",
@@ -963,6 +965,23 @@ function readThemeVarsFromHost(): Record<string, string> {
   return themeVars;
 }
 
+function resolveSandpackThemeFromHost(): "light" | "dark" {
+  if (typeof window === "undefined") return "light";
+
+  const root = document.documentElement;
+  const computed = window.getComputedStyle(root);
+  const mode = computed.getPropertyValue("--sg-mode").trim().toLowerCase();
+  if (mode === "dark") return "dark";
+  if (mode === "light") return "light";
+
+  const dataTheme = root.getAttribute("data-theme")?.trim().toLowerCase();
+  if (dataTheme === "dark") return "dark";
+  if (dataTheme === "light") return "light";
+
+  if (root.classList.contains("dark")) return "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 function getStyleSheetHref(styleSheet: StyleSheet): string {
   const cssSheet = styleSheet as CSSStyleSheet;
   if (cssSheet.href) return cssSheet.href;
@@ -1215,6 +1234,9 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   const [sandpackStylesCss, setSandpackStylesCss] = React.useState<string>(() =>
     buildSandpackStylesCss({}, effectivePreviewPadding)
   );
+  const [sandpackTheme, setSandpackTheme] = React.useState<"light" | "dark">(() =>
+    resolveSandpackThemeFromHost()
+  );
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [activePanel, setActivePanel] = React.useState<"code" | "preview">("code");
 
@@ -1226,6 +1248,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       const liveThemeVars = readThemeVarsFromHost();
       const hostCss = readHostNextCssText();
       setSandpackStylesCss(buildSandpackStylesCss(liveThemeVars, effectivePreviewPadding, hostCss));
+      setSandpackTheme(resolveSandpackThemeFromHost());
     };
 
     let frameId: number | null = null;
@@ -1677,6 +1700,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
         files={files}
         customSetup={sandpackCustomSetup}
         options={sandpackOptions}
+        theme={sandpackTheme}
       >
         <style>{SANDPACK_HOST_STYLES_CSS}</style>
         <div className="flex items-center justify-between border-b border-border px-3 py-2">

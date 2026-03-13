@@ -133,7 +133,7 @@ export function SgInputDate(props: SgInputDateProps) {
           ? "shadow-lg"
           : "shadow-sm";
     const baseClass =
-      "peer h-11 w-full rounded-md bg-white pl-3 pr-7 py-2.5 text-sm placeholder-transparent focus:outline-none";
+      "peer h-11 w-full rounded-md bg-[var(--sg-input-bg,hsl(var(--background)))] text-[var(--sg-input-fg,hsl(var(--foreground)))] caret-[var(--sg-input-fg,hsl(var(--foreground)))] pl-3 pr-7 py-2.5 text-sm placeholder-transparent focus:outline-none";
     const borderClass = hasError
       ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
       : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
@@ -151,7 +151,7 @@ export function SgInputDate(props: SgInputDateProps) {
         <label
           htmlFor={rest.id}
           className={[
-            "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none",
+            "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-[var(--sg-input-bg,hsl(var(--background)))] px-1 text-[11px] font-medium leading-none",
             hasError ? "text-[hsl(var(--destructive))]" : "text-foreground/70"
           ].join(" ")}
         >

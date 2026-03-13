@@ -46,7 +46,7 @@ function EnvInfo({ baseKey }: { baseKey: string }) {
   const fullKey = buildSgPersistenceKey(baseKey, namespace, env.persistence.scope);
 
   return (
-    <div className="space-y-1 rounded border border-border bg-white p-3 text-xs">
+    <div className="space-y-1 rounded border border-border bg-background p-3 text-xs">
       <div>namespace: <code>{namespace || "(vazio)"}</code></div>
       <div>baseKey: <code>{baseKey}</code></div>
       <div>fullKey: <code>{fullKey ?? "null"}</code></div>

@@ -18,6 +18,7 @@ type CreditsTexts = {
   subtitle: string;
   compliance: string;
   usedInVarious: string;
+  usedInShowcase: string;
 };
 
 const CREDITS_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CreditsTexts> = {
@@ -27,7 +28,8 @@ const CREDITS_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CreditsTexts> = 
       "Listagem de todas as bibliotecas open-source utilizadas nos componentes da SeedGrid, com suas respectivas licencas e links de referencia.",
     compliance:
       "Todas as bibliotecas listadas acima sao distribuidas sob licencas compativeis com uso open-source e comercial. Os creditos acima sao fornecidos conforme exigido por cada licenca.",
-    usedInVarious: "Varios componentes"
+    usedInVarious: "Varios componentes",
+    usedInShowcase: "App showcase"
   },
   "pt-PT": {
     title: "Creditos e Bibliotecas de Terceiros",
@@ -35,7 +37,8 @@ const CREDITS_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CreditsTexts> = 
       "Lista de todas as bibliotecas open-source usadas nos componentes da SeedGrid, com as respetivas licencas e links de referencia.",
     compliance:
       "Todas as bibliotecas acima sao distribuidas sob licencas compativeis com uso open-source e comercial. Estes creditos sao apresentados conforme exigido por cada licenca.",
-    usedInVarious: "Varios componentes"
+    usedInVarious: "Varios componentes",
+    usedInShowcase: "App showcase"
   },
   "en-US": {
     title: "Credits and Third-Party Libraries",
@@ -43,7 +46,8 @@ const CREDITS_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CreditsTexts> = 
       "List of all open-source libraries used by SeedGrid components, with their licenses and reference links.",
     compliance:
       "All libraries listed above are distributed under licenses compatible with open-source and commercial use. Credits are provided as required by each license.",
-    usedInVarious: "Various components"
+    usedInVarious: "Various components",
+    usedInShowcase: "Showcase app"
   },
   es: {
     title: "Creditos y Bibliotecas de Terceros",
@@ -51,7 +55,8 @@ const CREDITS_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", CreditsTexts> = 
       "Listado de todas las bibliotecas open-source usadas en los componentes de SeedGrid, con sus licencias y enlaces de referencia.",
     compliance:
       "Todas las bibliotecas listadas arriba se distribuyen con licencias compatibles con uso open-source y comercial. Los creditos se muestran segun lo exigido por cada licencia.",
-    usedInVarious: "Varios componentes"
+    usedInVarious: "Varios componentes",
+    usedInShowcase: "App showcase"
   }
 };
 
@@ -86,6 +91,14 @@ export default function CreditsPage() {
       url: "https://sandpack.codesandbox.io/",
       description: "In-browser code editor and live preview used in the interactive playground.",
       usedIn: "SgPlayground"
+    },
+    {
+      name: "tailwindcss",
+      version: "3.x",
+      license: "MIT",
+      url: "https://tailwindcss.com/",
+      description: "Utility-first CSS framework used by the Showcase app.",
+      usedIn: texts.usedInShowcase
     },
     {
       name: "qrcode.react",

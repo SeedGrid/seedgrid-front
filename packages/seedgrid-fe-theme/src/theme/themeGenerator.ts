@@ -1,7 +1,9 @@
 import type { SeedThemeInput, ThemeVars } from "./ThemeConfig";
 import {
   buildScaleFromHex,
+  hexToRgb,
   pickOnColor,
+  rgbToHsl,
   shiftHue,
   toRgbVarValue,
   hslToHex,
@@ -25,6 +27,12 @@ export function getSystemMode(): "light" | "dark" {
   return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light";
+}
+
+function toHslVarValue(hex: string): string {
+  const { r, g, b } = hexToRgb(hex);
+  const { h, s, l } = rgbToHsl(r, g, b);
+  return `${Math.round(h)} ${Math.round(s)}% ${Math.round(l)}%`;
 }
 
 /* ------------- Main theme generator ------------- */
@@ -77,8 +85,14 @@ export function generateThemeVars(input: SeedThemeInput, resolvedMode: "light" |
   const badgeOnHex = pickOnColor(badgeBgHex);
   const tooltipBgHex = resolvedMode === "light" ? "#111317" : "#EDEEF0";
   const tooltipOnHex = pickOnColor(tooltipBgHex);
+  const primaryHex500 = primary[500] ?? primaryBase;
+  const errorHex500 = error[500] ?? errorBase;
 
   const radius = input.radius ?? 12;
+  const onPrimaryHex = pickOnColor(primaryHex500);
+  const onSecondaryHex = pickOnColor(secondary[500] ?? secondaryBase);
+  const onTertiaryHex = pickOnColor(tertiary[500] ?? tertiaryBase);
+  const onErrorHex = pickOnColor(errorHex500);
 
   const vars: ThemeVars = {
     "--sg-mode": resolvedMode,
@@ -98,20 +112,38 @@ export function generateThemeVars(input: SeedThemeInput, resolvedMode: "light" |
     "--sg-on-badge": toRgbVarValue(badgeOnHex),
     "--sg-tooltip": toRgbVarValue(tooltipBgHex),
     "--sg-on-tooltip": toRgbVarValue(tooltipOnHex),
+    // Legacy aliases used by Tailwind semantic tokens in existing consumers.
+    "--background": toHslVarValue(neutralBgHex),
+    "--foreground": toHslVarValue(textHex),
+    "--card": toHslVarValue(neutralSurfaceHex),
+    "--card-foreground": toHslVarValue(textHex),
+    "--popover": toHslVarValue(neutralSurfaceHex),
+    "--popover-foreground": toHslVarValue(textHex),
+    "--primary": toHslVarValue(primaryHex500),
+    "--primary-foreground": toHslVarValue(onPrimaryHex),
+    "--secondary": toHslVarValue(neutralMutedSurfaceHex),
+    "--secondary-foreground": toHslVarValue(textHex),
+    "--muted": toHslVarValue(neutralMutedSurfaceHex),
+    "--muted-foreground": toHslVarValue(mutedTextHex),
+    "--accent": toHslVarValue(neutralMutedSurfaceHex),
+    "--accent-foreground": toHslVarValue(textHex),
+    "--destructive": toHslVarValue(errorHex500),
+    "--destructive-foreground": toHslVarValue(onErrorHex),
+    "--border": toHslVarValue(borderHex),
+    "--input": toHslVarValue(borderHex),
+    "--ring": toHslVarValue(ringHex),
+    "--radius": `${radius}px`,
     "--sg-radius": `${radius}px`,
   };
 
   // On colors (for 500 generally)
-  const onPrimaryHex = pickOnColor(primary[500] ?? primaryBase);
-  const onSecondaryHex = pickOnColor(secondary[500] ?? secondaryBase);
-  const onTertiaryHex = pickOnColor(tertiary[500] ?? tertiaryBase);
   vars["--sg-on-primary"] = toRgbVarValue(onPrimaryHex);
   vars["--sg-on-secondary"] = toRgbVarValue(onSecondaryHex);
   vars["--sg-on-tertiary"] = toRgbVarValue(onTertiaryHex);
 
   // Semantic on colors (base at 500)
   vars["--sg-on-warning"] = toRgbVarValue(pickOnColor(warning[500] ?? warningBase));
-  vars["--sg-on-error"] = toRgbVarValue(pickOnColor(error[500] ?? errorBase));
+  vars["--sg-on-error"] = toRgbVarValue(onErrorHex);
   vars["--sg-on-info"] = toRgbVarValue(pickOnColor(info[500] ?? infoBase));
   vars["--sg-on-success"] = toRgbVarValue(pickOnColor(success[500] ?? successBase));
 
@@ -151,4 +183,3 @@ export function generateThemeVars(input: SeedThemeInput, resolvedMode: "light" |
 
   return vars;
 }
-

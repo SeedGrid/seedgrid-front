@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgGrid, SgMainPanel, SgPanel, SgPlayground, SgStack } from "@seedgrid/fe-components";
@@ -39,9 +39,9 @@ export default function App() {
   return (
     <div className="space-y-3 p-2">
       <div className="grid gap-2 sm:grid-cols-3">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setLeftWidth((prev) => (prev === 20 ? 25 : 20))}>left: {leftWidth}%</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setRightWidth((prev) => (prev === 18 ? 22 : 18))}>right: {rightWidth}%</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setBottomHeight((prev) => (prev === 10 ? 14 : 10))}>bottom: {bottomHeight}%</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setLeftWidth((prev) => (prev === 20 ? 25 : 20))}>left: {leftWidth}%</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setRightWidth((prev) => (prev === 18 ? 22 : 18))}>right: {rightWidth}%</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setBottomHeight((prev) => (prev === 10 ? 14 : 10))}>bottom: {bottomHeight}%</button>
       </div>
 
       <div className="h-[360px] rounded-xl bg-muted/30 p-3">

@@ -107,7 +107,7 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
           <label
             htmlFor={props.id}
             className={[
-              "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-[11px] font-medium leading-none",
+              "pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-[var(--sg-input-bg,hsl(var(--background)))] px-1 text-[11px] font-medium leading-none",
               props.error ? "text-[hsl(var(--destructive))]" : "text-foreground/70"
             ].join(" ")}
           >
@@ -117,7 +117,7 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
         {(() => {
           const hasError = Boolean(props.error);
           const baseClass =
-            "peer h-11 w-full rounded-md bg-white px-3 pt-4 text-sm shadow-sm focus:outline-none";
+            "peer h-11 w-full rounded-md bg-[var(--sg-input-bg,hsl(var(--background)))] text-[var(--sg-input-fg,hsl(var(--foreground)))] px-3 pt-4 text-sm shadow-sm focus:outline-none";
           const borderClass = hasError
             ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
             : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]";
@@ -148,7 +148,7 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
           <label
             htmlFor={props.id}
             className={[
-              "absolute left-3 bg-white px-1 transition-all",
+              "absolute left-3 bg-[var(--sg-input-bg,hsl(var(--background)))] px-1 transition-all",
               isFilled ? "-top-2 text-xs" : "top-3 text-sm",
               props.error ? "text-[hsl(var(--destructive))]" : isFilled ? "text-[hsl(var(--primary))]" : "text-foreground/60",
               props.error

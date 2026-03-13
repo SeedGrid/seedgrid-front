@@ -267,7 +267,7 @@ function SgToggleSwitchBase(props: Readonly<SgToggleSwitchBaseProps>) {
           <span
             aria-hidden="true"
             className={cn(
-              "pointer-events-none relative z-10 inline-flex size-5 items-center justify-center rounded-full bg-white text-[11px] text-foreground/70 shadow-sm transition-transform duration-200",
+              "pointer-events-none relative z-10 inline-flex size-5 items-center justify-center rounded-full bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-[11px] text-foreground/70 shadow-sm transition-transform duration-200",
               checked ? "translate-x-5" : "translate-x-0",
               props.thumbClassName
             )}

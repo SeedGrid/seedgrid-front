@@ -28,7 +28,7 @@ export function SgGroupBox(props: SgGroupBoxProps) {
         ...style
       }}
     >
-      <fieldset className="relative rounded-lg border border-border bg-white px-4 pb-4 pt-5">
+      <fieldset className="relative rounded-lg border border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-4 pb-4 pt-5">
         <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-foreground/70">
           {title}
         </legend>

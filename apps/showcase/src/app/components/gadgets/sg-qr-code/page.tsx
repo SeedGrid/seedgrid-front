@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { SgButton, SgPlayground, SgQRCode } from "@seedgrid/fe-components";
@@ -79,7 +79,7 @@ const [size, setSize] = React.useState(220);
     </div>
   </div>
 
-  <div className="inline-flex h-fit rounded-xl border border-border bg-white p-4 shadow-sm">
+  <div className="inline-flex h-fit rounded-xl border border-border bg-background p-4 shadow-sm">
     <SgQRCode
       value={value}
       size={size}
@@ -100,7 +100,7 @@ const SgQRCodeFromLib = (SeedGrid as Record<string, unknown>).SgQRCode as
 function LocalFallback(props: { value: string; size: number }) {
   return (
     <div
-      className="inline-flex items-center justify-center rounded border border-slate-300 bg-slate-50 text-xs text-slate-600"
+      className="inline-flex items-center justify-center rounded border border-border bg-slate-50 text-xs text-slate-600"
       style={{ width: props.size, height: props.size }}
     >
       {props.value ? "SgQRCode indisponivel na versao publicada" : "Informe um valor"}
@@ -134,7 +134,7 @@ export default function App() {
               rows={3}
               value={value}
               onChange={(event) => setValue(event.target.value)}
-              className="w-full rounded border border-slate-300 px-2 py-1"
+              className="w-full rounded border border-border px-2 py-1"
             />
           </label>
 
@@ -143,7 +143,7 @@ export default function App() {
             <input
               value={logoSrc}
               onChange={(event) => setLogoSrc(event.target.value)}
-              className="w-full rounded border border-slate-300 px-2 py-1"
+              className="w-full rounded border border-border px-2 py-1"
             />
           </label>
 
@@ -158,11 +158,11 @@ export default function App() {
             </label>
             <label>
               <span className="mb-1 block font-medium">FG</span>
-              <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="h-8 w-full rounded border border-slate-300" />
+              <input type="color" value={fgColor} onChange={(e) => setFgColor(e.target.value)} className="h-8 w-full rounded border border-border" />
             </label>
             <label>
               <span className="mb-1 block font-medium">BG</span>
-              <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-8 w-full rounded border border-slate-300" />
+              <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-8 w-full rounded border border-border" />
             </label>
           </div>
 
@@ -171,7 +171,7 @@ export default function App() {
             <select
               value={level}
               onChange={(e) => setLevel(e.target.value as "L" | "M" | "Q" | "H")}
-              className="w-full rounded border border-slate-300 px-2 py-1"
+              className="w-full rounded border border-border px-2 py-1"
             >
               <option value="L">L</option>
               <option value="M">M</option>
@@ -181,13 +181,13 @@ export default function App() {
           </label>
 
           <div className="flex flex-wrap gap-2">
-            <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setValue("https://seedgrid.com.br")}>URL</button>
-            <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setValue("00020126580014BR.GOV.BCB.PIX0136contato@seedgrid.com.br5204000053039865802BR5922SEEDGRID TECNOLOGIA6009SAO PAULO62140510SEEDGRID1236304ABCD")}>PIX</button>
-            <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setLogoSrc("")}>Sem logo</button>
+            <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setValue("https://seedgrid.com.br")}>URL</button>
+            <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setValue("00020126580014BR.GOV.BCB.PIX0136contato@seedgrid.com.br5204000053039865802BR5922SEEDGRID TECNOLOGIA6009SAO PAULO62140510SEEDGRID1236304ABCD")}>PIX</button>
+            <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setLogoSrc("")}>Sem logo</button>
           </div>
         </div>
 
-        <div className="inline-flex h-fit rounded-xl border border-border bg-white p-4 shadow-sm">
+        <div className="inline-flex h-fit rounded-xl border border-border bg-background p-4 shadow-sm">
           {hasQrCode ? (
             <SgQRCodeFromLib
               value={value}
@@ -396,7 +396,7 @@ export default function SgQRCodePage() {
             </div>
           </div>
 
-          <div className="inline-flex h-fit rounded-xl border border-border bg-white p-4 shadow-sm">
+          <div className="inline-flex h-fit rounded-xl border border-border bg-background p-4 shadow-sm">
             <SgQRCode
               value={value}
               size={size}

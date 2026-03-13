@@ -78,18 +78,17 @@ export function SgClockThemePicker({
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left shadow-sm",
-          "hover:bg-neutral-50",
-          "dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-900/40"
+          "w-full rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-3 py-2 text-left text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-sm",
+          "hover:bg-[rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))]"
         )}
       >
         <div className="flex items-center gap-3">
           {currentTheme ? (
-            <div className="text-neutral-800 dark:text-neutral-200">
+            <div className="text-[rgb(var(--sg-text,var(--sg-fg)))]">
               <SgClockThemePreview theme={currentTheme} size={previewSize} />
             </div>
           ) : (
-            <div className="h-[56px] w-[56px] rounded-md border border-neutral-200 dark:border-neutral-800" />
+            <div className="h-[56px] w-[56px] rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))]" />
           )}
 
           <div className="min-w-0 flex-1">
@@ -106,8 +105,7 @@ export function SgClockThemePicker({
       {open && (
         <div
           className={cn(
-            "absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-lg",
-            "dark:border-neutral-800 dark:bg-neutral-950"
+            "absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-lg"
           )}
         >
           {searchable && (
@@ -158,12 +156,12 @@ export function SgClockThemePicker({
                       className={cn(
                         "w-full rounded-lg p-2 text-left transition",
                         active
-                          ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                          : "hover:bg-neutral-50 dark:hover:bg-neutral-900/40"
+                          ? "bg-[rgb(var(--sg-primary))] text-[rgb(var(--sg-primary-contrast,var(--sg-bg)))]"
+                          : "hover:bg-[rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))]"
                       )}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={cn(active ? "text-white dark:text-neutral-900" : "text-neutral-800 dark:text-neutral-200")}>
+                        <div className={cn(active ? "text-[rgb(var(--sg-primary-contrast,var(--sg-bg)))]" : "text-[rgb(var(--sg-text,var(--sg-fg)))]")}>
                           <SgClockThemePreview theme={t} size={44} />
                         </div>
                         <div className="min-w-0 flex-1">

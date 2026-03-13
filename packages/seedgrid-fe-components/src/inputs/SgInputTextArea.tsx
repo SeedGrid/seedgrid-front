@@ -228,9 +228,11 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
   const hasSuffix = canShowClear;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
-  const placeholderClass = isFloatLabel ? "placeholder-transparent" : "placeholder:text-foreground/50";
+  const placeholderClass = isFloatLabel
+    ? "placeholder-transparent"
+    : "placeholder:text-[var(--sg-input-placeholder,hsl(var(--muted-foreground)))]";
   const baseClass =
-    `peer w-full rounded-md text-sm focus:outline-none ${placeholderClass}`;
+    `peer w-full rounded-md text-sm text-[var(--sg-input-fg,hsl(var(--foreground)))] caret-[var(--sg-input-fg,hsl(var(--foreground)))] disabled:text-[var(--sg-input-disabled-fg,hsl(var(--muted-foreground)))] disabled:bg-[var(--sg-input-disabled-bg,hsl(var(--muted)))] focus:outline-none ${placeholderClass}`;
   const hasError = Boolean(props.error ?? internalError);
   const elevationClass = props.elevation === "none"
     ? ""
@@ -244,7 +246,9 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
       ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
       : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
     : "border border-transparent";
-  const bgClass = props.filled ? "bg-muted/40" : "bg-white";
+  const bgClass = props.filled
+    ? "bg-muted/40"
+    : "bg-[var(--sg-input-bg,hsl(var(--background)))]";
   const finalClass = [
     baseClass,
     borderClass,
@@ -318,7 +322,7 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
           <label
             htmlFor={props.id}
             className={[
-              "absolute left-3 bg-white px-1 transition-all",
+              "absolute left-3 bg-[var(--sg-input-bg,hsl(var(--background)))] px-1 transition-all",
               isFilled ? "-top-2 text-xs" : "top-3 text-sm",
               hasError ? "text-[hsl(var(--destructive))]" : isFilled ? "text-[hsl(var(--primary))]" : "text-foreground/60",
               hasError

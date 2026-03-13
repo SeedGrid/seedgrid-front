@@ -38,8 +38,8 @@ export default function App() {
   return (
     <div className="space-y-3 p-2">
       <div className="flex gap-2">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setDirection((prev) => (prev === "row" ? "column" : "row"))}>direction: {direction}</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setGap((prev) => (prev === 10 ? 16 : 10))}>gap: {gap}</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setDirection((prev) => (prev === "row" ? "column" : "row"))}>direction: {direction}</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setGap((prev) => (prev === 10 ? 16 : 10))}>gap: {gap}</button>
       </div>
       <SgPanel className="rounded-lg p-3">
         <SgStack direction={direction} gap={gap} wrap justify="between" align="center">

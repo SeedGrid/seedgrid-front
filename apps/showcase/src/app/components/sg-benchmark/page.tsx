@@ -291,7 +291,7 @@ function UncontrolledNativeBenchmark() {
                   ref={(node) => {
                     inputsRef.current[idx] = node;
                   }}
-                  className="h-11 w-full rounded-md border border-border bg-white px-3 text-sm"
+                  className="h-11 w-full rounded-md border border-border bg-background px-3 text-sm"
                 />
               </div>
             ))}

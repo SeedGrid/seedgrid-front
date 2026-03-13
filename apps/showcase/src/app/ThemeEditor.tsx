@@ -9,6 +9,7 @@ import {
   SgCard,
   SgButton,
   SgBadge,
+  SgToggleSwitch,
 } from "@seedgrid/fe-components";
 import { t, useShowcaseI18n } from "../i18n";
 
@@ -175,10 +176,6 @@ export function ThemeEditor() {
     }
   };
 
-  const toggleMode = () => {
-    setMode(currentMode === "light" ? "dark" : "light");
-  };
-
   return (
     <>
       <SgFloatActionButton
@@ -229,15 +226,16 @@ export function ThemeEditor() {
             <label className="block text-sm font-medium text-[rgb(var(--sg-text))] mb-2">
               {t(i18n, "showcase.themeEditor.mode")}
             </label>
-            <SgButton
-              severity="primary"
-              className="w-full"
-              onClick={toggleMode}
-            >
-              {currentMode === "light"
-                ? t(i18n, "showcase.themeEditor.modeToDark")
-                : t(i18n, "showcase.themeEditor.modeToLight")}
-            </SgButton>
+            <SgToggleSwitch
+              id="theme-editor-mode-switch"
+              checked={currentMode === "dark"}
+              onChange={(checked) => setMode(checked ? "dark" : "light")}
+              label={
+                currentMode === "light"
+                  ? t(i18n, "showcase.themeEditor.modeToDark")
+                  : t(i18n, "showcase.themeEditor.modeToLight")
+              }
+            />
           </div>
 
           {/* Custom color */}

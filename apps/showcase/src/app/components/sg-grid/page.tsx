@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <div className="space-y-3 p-2">
-      <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setDense((prev) => !prev)}>
+      <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setDense((prev) => !prev)}>
         dense: {String(dense)}
       </button>
       <SgGrid minItemWidth="14rem" gap={10} rowHeight={100} dense={dense}>

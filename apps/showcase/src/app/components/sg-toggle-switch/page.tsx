@@ -91,21 +91,21 @@ export default function App() {
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setChecked(true)}
         >
           Set true
         </button>
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setChecked(false)}
         >
           Set false
         </button>
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setChecked((prev) => !prev)}
         >
           Toggle

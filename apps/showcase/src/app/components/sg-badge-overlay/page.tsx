@@ -36,15 +36,15 @@ export default function App() {
   return (
     <div className="space-y-4 p-2">
       <div className="grid gap-2 sm:grid-cols-4">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPlacement("top-left")}>top-left</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPlacement("top-right")}>top-right</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPlacement("bottom-left")}>bottom-left</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPlacement("bottom-right")}>bottom-right</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setPlacement("top-left")}>top-left</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setPlacement("top-right")}>top-right</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setPlacement("bottom-left")}>bottom-left</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setPlacement("bottom-right")}>bottom-right</button>
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setValue((prev) => prev + 1)}>+1</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setValue(0)}>reset</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setValue((prev) => prev + 1)}>+1</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setValue(0)}>reset</button>
       </div>
 
       <SgBadgeOverlay placement={placement} badge={<SgBadge value={value} severity="danger" size="xs" />}>

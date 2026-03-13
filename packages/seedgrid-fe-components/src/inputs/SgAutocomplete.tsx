@@ -355,7 +355,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
               >
                 {renderItem ? renderItem(item, isActive) : item.label}
                 {itemTooltip ? (
-                  <div className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 -translate-y-1/2 rounded border border-border bg-white px-2 py-1 text-xs shadow-md opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 -translate-y-1/2 rounded border border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-2 py-1 text-xs text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-md opacity-0 transition-opacity group-hover:opacity-100">
                     {itemTooltip(item)}
                   </div>
                 ) : null}
@@ -380,7 +380,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
         >
           {renderItem ? renderItem(item, isActive) : item.label}
           {itemTooltip ? (
-            <div className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 -translate-y-1/2 rounded border border-border bg-white px-2 py-1 text-xs shadow-md opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute left-full top-1/2 z-20 ml-2 -translate-y-1/2 rounded border border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-2 py-1 text-xs text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-md opacity-0 transition-opacity group-hover:opacity-100">
               {itemTooltip(item)}
             </div>
           ) : null}
@@ -421,14 +421,14 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
       />
       {open && !(enabled === false || readOnly) ? (
         <div
-          className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-white shadow-lg"
+          className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-md border border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-lg"
           style={resolvedBorderRadius ? { borderRadius: resolvedBorderRadius } : undefined}
         >
           <div className="max-h-64 overflow-auto">
             {listContent()}
           </div>
           {renderFooter ? (
-            <div className="border-t border-border bg-white px-3 py-2">
+            <div className="border-t border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-3 py-2">
               {renderFooter(inputValue, items.length > 0)}
             </div>
           ) : null}

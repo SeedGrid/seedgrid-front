@@ -8,13 +8,43 @@ export function useDarkFlag() {
   React.useEffect(() => {
     const root = document.documentElement;
 
-    const compute = () => setDark(root.classList.contains("dark"));
+    const compute = () => {
+      const mode = getComputedStyle(root).getPropertyValue("--sg-mode").trim().toLowerCase();
+      if (mode === "dark") {
+        setDark(true);
+        return;
+      }
+      if (mode === "light") {
+        setDark(false);
+        return;
+      }
+      if (root.classList.contains("dark")) {
+        setDark(true);
+        return;
+      }
+      setDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    };
     compute();
 
     const obs = new MutationObserver(() => compute());
-    obs.observe(root, { attributes: true, attributeFilter: ["class"] });
+    obs.observe(root, { attributes: true, attributeFilter: ["class", "style"] });
 
-    return () => obs.disconnect();
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const onMediaChange = () => compute();
+    if (media.addEventListener) {
+      media.addEventListener("change", onMediaChange);
+    } else {
+      media.addListener(onMediaChange);
+    }
+
+    return () => {
+      obs.disconnect();
+      if (media.removeEventListener) {
+        media.removeEventListener("change", onMediaChange);
+      } else {
+        media.removeListener(onMediaChange);
+      }
+    };
   }, []);
 
   return dark;

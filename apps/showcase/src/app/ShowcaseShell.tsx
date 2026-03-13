@@ -26,6 +26,7 @@ import {
   showcaseMessagesPtPt,
   type ShowcaseLocale
 } from "../i18n";
+import { useSgTheme } from "@seedgrid/fe-theme";
 import { ThemeEditor } from "./ThemeEditor";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -722,6 +723,7 @@ export default function ShowcaseShell(props: {
   initialLocale?: ShowcaseLocale;
   initialMessages?: Record<string, string>;
 }) {
+  const { currentMode } = useSgTheme();
   const router = useRouter();
   const pathname = usePathname();
   const initialLocale = props.initialLocale ?? "pt-BR";
@@ -729,6 +731,7 @@ export default function ShowcaseShell(props: {
   const [messages, setMessages] = React.useState<Record<string, string>>(
     props.initialMessages ?? MESSAGES_BY_LOCALE[initialLocale] ?? showcaseMessagesEnUs
   );
+  const isDarkMode = currentMode === "dark";
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(true);
   const [isMobileViewport, setIsMobileViewport] = React.useState(false);
 
@@ -825,7 +828,14 @@ export default function ShowcaseShell(props: {
           className="h-screen w-full"
           layoutClassName="!grid-cols-[auto_minmax(0,1fr)] lg:!grid-cols-[auto_minmax(0,1fr)_auto] !grid-rows-[auto_minmax(0,1fr)]"
         >
-          <SgDockZone zone="top" className="col-span-2 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee] lg:col-span-3">
+          <SgDockZone
+            zone="top"
+            className={
+              isDarkMode
+                ? "col-span-2 row-start-1 !p-0 border-b border-border bg-background lg:col-span-3"
+                : "col-span-2 row-start-1 !p-0 border-b border-[#e2cebc] bg-[#f7f3ee] lg:col-span-3"
+            }
+          >
             <div className="px-2 py-1">
               <SgToolBar
                 id="showcase-locale-toolbar"
@@ -848,7 +858,14 @@ export default function ShowcaseShell(props: {
             </div>
           </SgDockZone>
 
-          <SgDockZone zone="left" className="col-start-1 row-start-2 !p-0 border-r border-[#e2cebc] bg-[#f7f3ee]">
+          <SgDockZone
+            zone="left"
+            className={
+              isDarkMode
+                ? "col-start-1 row-start-2 !p-0 border-r border-border bg-background"
+                : "col-start-1 row-start-2 !p-0 border-r border-[#e2cebc] bg-[#f7f3ee]"
+            }
+          >
             <SgMenu
               id="showcase-shell-menu-dockable"
               menu={shellMenu}
@@ -856,10 +873,12 @@ export default function ShowcaseShell(props: {
               brand={{
                 image: (
                   <div className="flex flex-col items-center gap-0.5 py-1">
-                    <img src="/logo-seedgrid-icon.svg" className="h-10 w-auto" alt="" />
+                    <div className={isDarkMode ? "rounded-md bg-white/90 px-1.5 py-1 shadow-sm ring-1 ring-white/25" : ""}>
+                      <img src="/logo-seedgrid-icon.svg" className="h-10 w-auto" alt="" />
+                    </div>
                     <span className="text-xl font-black leading-none tracking-tight">
-                      <span style={{ color: "#2b1f14" }}>Seed</span>
-                      <span style={{ color: "#C56A2D" }}>Grid</span>
+                      <span className={isDarkMode ? "text-[#F3F6FA]" : "text-[#2b1f14]"}>Seed</span>
+                      <span className={isDarkMode ? "text-[#6EE7B7]" : "text-[#C56A2D]"}>Grid</span>
                     </span>
                   </div>
                 ),
@@ -880,8 +899,8 @@ export default function ShowcaseShell(props: {
               expandedWidth={isMobileViewport ? 260 : 288}
               collapsedWidth={isMobileViewport ? 56 : 76}
               border
-              className="h-full bg-[#f7f3ee] text-[#2b1f14]"
-              style={SIDEBAR_THEME_VARS}
+              className={isDarkMode ? "h-full" : "h-full bg-[#f7f3ee] text-[#2b1f14]"}
+              style={isDarkMode ? undefined : SIDEBAR_THEME_VARS}
               ariaLabel="Menu do showcase"
               onNavigate={(node) => {
                 if (node.url) router.push(node.url);
@@ -889,7 +908,14 @@ export default function ShowcaseShell(props: {
             />
           </SgDockZone>
 
-          <SgDockZone zone="right" className="col-start-3 row-start-2 hidden !p-0 border-l border-[#e2cebc] bg-[#f7f3ee] lg:flex">
+          <SgDockZone
+            zone="right"
+            className={
+              isDarkMode
+                ? "col-start-3 row-start-2 hidden !p-0 border-l border-border bg-background lg:flex"
+                : "col-start-3 row-start-2 hidden !p-0 border-l border-[#e2cebc] bg-[#f7f3ee] lg:flex"
+            }
+          >
             <div className="h-full w-14" />
           </SgDockZone>
 

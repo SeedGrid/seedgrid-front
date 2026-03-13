@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgDockLayout, SgDockZone, SgGrid, SgPlayground, SgToolBar, SgToolbarIconButton, toast } from "@seedgrid/fe-components";
@@ -288,7 +288,7 @@ export default function App() {
     <div className="space-y-4 p-2">
       <div className="flex flex-wrap gap-2">
         <select
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs"
+          className="rounded border border-border bg-background px-2 py-1 text-xs"
           value={orientationDirection}
           onChange={(e) => setOrientationDirection(e.target.value as Direction)}
         >
@@ -303,7 +303,7 @@ export default function App() {
         </label>
 
         <select
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs"
+          className="rounded border border-border bg-background px-2 py-1 text-xs"
           value={buttonsPerDirection ?? ""}
           onChange={(e) => setButtonsPerDirection(e.target.value ? Number(e.target.value) : undefined)}
         >

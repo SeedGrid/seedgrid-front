@@ -130,6 +130,209 @@ function resolveDialogShadow(
   }
 }
 
+type RgbColor = { r: number; g: number; b: number };
+
+type CustomSurfacePalette = {
+  foreground: string;
+  mutedForeground: string;
+  border: string;
+  hoverBg: string;
+  activeBg: string;
+};
+
+function clampByte(value: number) {
+  return Math.min(255, Math.max(0, Math.round(value)));
+}
+
+function parseHexColor(input: string): RgbColor | null {
+  const hex = input.replace("#", "").trim();
+  if (!hex) return null;
+
+  if (hex.length === 3 || hex.length === 4) {
+    const r = Number.parseInt((hex.slice(0, 1) || "0").repeat(2), 16);
+    const g = Number.parseInt((hex.slice(1, 2) || "0").repeat(2), 16);
+    const b = Number.parseInt((hex.slice(2, 3) || "0").repeat(2), 16);
+    if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) return null;
+    return { r, g, b };
+  }
+
+  if (hex.length === 6 || hex.length === 8) {
+    const r = Number.parseInt(hex.slice(0, 2), 16);
+    const g = Number.parseInt(hex.slice(2, 4), 16);
+    const b = Number.parseInt(hex.slice(4, 6), 16);
+    if (!Number.isFinite(r) || !Number.isFinite(g) || !Number.isFinite(b)) return null;
+    return { r, g, b };
+  }
+
+  return null;
+}
+
+function parseRgbChannel(token: string): number | null {
+  const value = token.trim();
+  if (!value) return null;
+  if (value.endsWith("%")) {
+    const numeric = Number.parseFloat(value.slice(0, -1));
+    if (!Number.isFinite(numeric)) return null;
+    return clampByte((numeric / 100) * 255);
+  }
+  const numeric = Number.parseFloat(value);
+  if (!Number.isFinite(numeric)) return null;
+  return clampByte(numeric);
+}
+
+function parseRgbColor(input: string): RgbColor | null {
+  const match = input.match(/^rgba?\((.+)\)$/i);
+  if (!match) return null;
+
+  const raw = match[1]?.trim() ?? "";
+  const withoutAlpha = raw.replace(/\s*\/\s*[\d.]+%?\s*$/, "");
+  const tokens = withoutAlpha.includes(",")
+    ? withoutAlpha.split(",")
+    : withoutAlpha.split(/\s+/);
+
+  if (tokens.length < 3) return null;
+  const r = parseRgbChannel(tokens[0] ?? "");
+  const g = parseRgbChannel(tokens[1] ?? "");
+  const b = parseRgbChannel(tokens[2] ?? "");
+  if (r === null || g === null || b === null) return null;
+  return { r, g, b };
+}
+
+function parseHue(token: string): number | null {
+  const value = token.trim().toLowerCase();
+  if (!value) return null;
+
+  if (value.endsWith("turn")) {
+    const numeric = Number.parseFloat(value.slice(0, -4));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric * 360;
+  }
+  if (value.endsWith("rad")) {
+    const numeric = Number.parseFloat(value.slice(0, -3));
+    if (!Number.isFinite(numeric)) return null;
+    return (numeric * 180) / Math.PI;
+  }
+  if (value.endsWith("deg")) {
+    const numeric = Number.parseFloat(value.slice(0, -3));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric;
+  }
+
+  const numeric = Number.parseFloat(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function parsePercent(token: string): number | null {
+  const value = token.trim();
+  if (!value.endsWith("%")) return null;
+  const numeric = Number.parseFloat(value.slice(0, -1));
+  if (!Number.isFinite(numeric)) return null;
+  return Math.min(100, Math.max(0, numeric));
+}
+
+function hslToRgb(h: number, s: number, l: number): RgbColor {
+  const sat = Math.min(1, Math.max(0, s / 100));
+  const lig = Math.min(1, Math.max(0, l / 100));
+  const hue = ((h % 360) + 360) % 360;
+
+  const c = (1 - Math.abs(2 * lig - 1)) * sat;
+  const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
+  const m = lig - c / 2;
+
+  let r = 0;
+  let g = 0;
+  let b = 0;
+
+  if (hue < 60) {
+    r = c;
+    g = x;
+  } else if (hue < 120) {
+    r = x;
+    g = c;
+  } else if (hue < 180) {
+    g = c;
+    b = x;
+  } else if (hue < 240) {
+    g = x;
+    b = c;
+  } else if (hue < 300) {
+    r = x;
+    b = c;
+  } else {
+    r = c;
+    b = x;
+  }
+
+  return {
+    r: clampByte((r + m) * 255),
+    g: clampByte((g + m) * 255),
+    b: clampByte((b + m) * 255)
+  };
+}
+
+function parseHslColor(input: string): RgbColor | null {
+  const match = input.match(/^hsla?\((.+)\)$/i);
+  if (!match) return null;
+
+  const raw = match[1]?.trim() ?? "";
+  const withoutAlpha = raw.replace(/\s*\/\s*[\d.]+%?\s*$/, "");
+  const tokens = withoutAlpha.includes(",")
+    ? withoutAlpha.split(",")
+    : withoutAlpha.split(/\s+/);
+
+  if (tokens.length < 3) return null;
+  const h = parseHue(tokens[0] ?? "");
+  const s = parsePercent(tokens[1] ?? "");
+  const l = parsePercent(tokens[2] ?? "");
+  if (h === null || s === null || l === null) return null;
+  return hslToRgb(h, s, l);
+}
+
+function parseCssColorToRgb(color: string): RgbColor | null {
+  const input = color.trim();
+  if (!input) return null;
+
+  if (input.startsWith("#")) return parseHexColor(input);
+  if (/^rgba?\(/i.test(input)) return parseRgbColor(input);
+  if (/^hsla?\(/i.test(input)) return parseHslColor(input);
+  return null;
+}
+
+function relativeLuminance({ r, g, b }: RgbColor): number {
+  const normalize = (channel: number) => {
+    const n = channel / 255;
+    return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * normalize(r) + 0.7152 * normalize(g) + 0.0722 * normalize(b);
+}
+
+function resolveCustomSurfacePalette(
+  backgroundColor: SgDialogProps["customColor"]
+): CustomSurfacePalette | null {
+  if (typeof backgroundColor !== "string") return null;
+  const parsed = parseCssColorToRgb(backgroundColor);
+  if (!parsed) return null;
+
+  const lightSurface = relativeLuminance(parsed) >= 0.56;
+  if (lightSurface) {
+    return {
+      foreground: "rgb(17 24 39)",
+      mutedForeground: "rgb(71 85 105)",
+      border: "rgba(15, 23, 42, 0.16)",
+      hoverBg: "rgba(15, 23, 42, 0.08)",
+      activeBg: "rgba(15, 23, 42, 0.14)"
+    };
+  }
+
+  return {
+    foreground: "rgb(243 244 246)",
+    mutedForeground: "rgb(203 213 225)",
+    border: "rgba(248, 250, 252, 0.18)",
+    hoverBg: "rgba(248, 250, 252, 0.08)",
+    activeBg: "rgba(248, 250, 252, 0.14)"
+  };
+}
+
 export function SgDialog(props: Readonly<SgDialogProps>) {
   const {
     open: openProp,
@@ -301,11 +504,20 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
     (showTopAccent ? " border-t-4" : "");
 
   const resolvedShadow = resolveDialogShadow(elevation, shadow);
+  const customPalette = resolveCustomSurfacePalette(customColor);
+  const dialogVars: Record<string, string> = {
+    "--sg-dialog-muted-foreground": customPalette?.mutedForeground ?? "hsl(var(--muted-foreground))",
+    "--sg-dialog-divider": customPalette?.border ?? "hsl(var(--border))",
+    "--sg-dialog-hover-bg": customPalette?.hoverBg ?? "hsl(var(--muted) / 0.6)",
+    "--sg-dialog-active-bg": customPalette?.activeBg ?? "hsl(var(--muted))"
+  };
 
   const transitionStyle: React.CSSProperties = { transitionDuration: `${transitionMs}ms` };
   const contentStyle: React.CSSProperties = {
+    ...(dialogVars as unknown as React.CSSProperties),
     ...transitionStyle,
     ...(customColor !== undefined ? { backgroundColor: customColor } : {}),
+    ...(customPalette ? { color: customPalette.foreground, borderColor: customPalette.border } : {}),
     ...(resolvedShadow !== undefined ? { boxShadow: resolvedShadow } : {})
   };
 
@@ -339,7 +551,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
           {(title || subtitle || closeable || leading || trailing) && (
             <div
               className={cn(
-                "px-5 py-4 border-b border-border flex items-start gap-3",
+                "px-5 py-4 border-b border-[var(--sg-dialog-divider)] flex items-start gap-3",
                 headerClassName
               )}
             >
@@ -347,7 +559,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
 
               <div className="min-w-0 flex-1">
                 {title ? <div className="text-base font-semibold leading-6">{title}</div> : null}
-                {subtitle ? <div className="text-sm text-muted-foreground mt-1">{subtitle}</div> : null}
+                {subtitle ? <div className="mt-1 text-sm text-[var(--sg-dialog-muted-foreground)]">{subtitle}</div> : null}
               </div>
 
               <div className="flex shrink-0 items-center gap-2">
@@ -358,7 +570,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
                     onClick={close}
                     className={cn(
                       "inline-flex items-center justify-center h-9 w-9 rounded-lg",
-                      "hover:bg-muted/60 active:bg-muted",
+                      "hover:bg-[var(--sg-dialog-hover-bg)] active:bg-[var(--sg-dialog-active-bg)]",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring,var(--primary)))]"
                     )}
                     aria-label="Close"
@@ -377,7 +589,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
           {footer ? (
             <div
               className={cn(
-                "px-5 py-4 border-t border-border flex items-center justify-end gap-2",
+                "px-5 py-4 border-t border-[var(--sg-dialog-divider)] flex items-center justify-end gap-2",
                 footerClassName
               )}
             >

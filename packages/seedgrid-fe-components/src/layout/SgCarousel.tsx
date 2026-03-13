@@ -233,8 +233,8 @@ export function SgCarousel(props: SgCarouselProps) {
         disabled={disabled}
         className={`
           absolute z-10 flex h-10 w-10 items-center justify-center rounded-full
-          bg-white/90 shadow-lg opacity-70 transition-all
-          ${disabled ? "opacity-30 cursor-not-allowed" : "hover:opacity-100 hover:bg-white cursor-pointer"}
+          bg-background/90 shadow-lg opacity-70 transition-all
+          ${disabled ? "opacity-30 cursor-not-allowed" : "hover:opacity-100 hover:bg-background cursor-pointer"}
           ${isHorizontal
             ? `top-1/2 -translate-y-1/2 ${isPrev ? "left-2" : "right-2"}`
             : `left-1/2 -translate-x-1/2 ${isPrev ? "-top-5" : "-bottom-5"}`
@@ -319,7 +319,7 @@ export function SgCarousel(props: SgCarouselProps) {
                   ${isHorizontal ? "h-2" : "w-2"}
                   ${isActive
                     ? `${isHorizontal ? "w-8" : "h-8"} bg-primary`
-                    : `${isHorizontal ? "w-2" : "h-2"} bg-white/60 hover:bg-white/80`
+                    : `${isHorizontal ? "w-2" : "h-2"} bg-foreground/20 hover:bg-foreground/35`
                   }
                   rounded-full
                 `}

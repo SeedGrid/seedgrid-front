@@ -165,7 +165,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
     zIndex = 50,
     itemSize = 48,
     gap = 16,
-    backgroundColor = "rgba(255, 255, 255, 0.95)",
+    backgroundColor = "rgb(var(--sg-surface, 248 250 252) / 0.9)",
     showLabels = true,
     magnify = true,
     magnifyScale = 1.5,
@@ -192,6 +192,11 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
   const storageKey = dragId
     ? `sg-dockmenu-pos:${dragId}:${isAbsolutePosition ? "parent" : "viewport"}`
     : null;
+  const itemSurfaceColor = "rgb(var(--sg-muted-surface, 241 245 249) / 0.92)";
+  const itemSurfaceHoverColor = "rgb(var(--sg-primary-500, 34 197 94) / 0.18)";
+  const itemIconColor = "rgb(var(--sg-text, 15 23 42))";
+  const tooltipBgColor = "rgb(var(--sg-surface, 15 23 42) / 0.96)";
+  const tooltipTextColor = "rgb(var(--sg-text, 255 255 255))";
 
   const loadStoredPosition = React.useCallback(async (): Promise<{ x: number; y: number } | null> => {
     if (!storageKey) return null;
@@ -471,6 +476,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                   paddingRight: crossPadding
                 }),
             backgroundColor,
+            border: "1px solid rgb(var(--sg-border, 226 232 240) / 0.85)",
             borderRadius: `${borderRadius}px`,
             backdropFilter: "blur(10px)",
             transition: "all 0.3s ease",
@@ -539,14 +545,15 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: `${borderRadius * 0.5}px`,
-                    backgroundColor: "rgba(0, 0, 0, 0.05)",
+                    backgroundColor: itemSurfaceColor,
+                    color: itemIconColor,
                     transition: "background-color 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+                    e.currentTarget.style.backgroundColor = itemSurfaceHoverColor;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.05)";
+                    e.currentTarget.style.backgroundColor = itemSurfaceColor;
                   }}
                 >
                   {item.icon}
@@ -561,7 +568,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                       top: -4,
                       right: -4,
                       backgroundColor: "hsl(var(--destructive))",
-                      color: "white",
+                      color: "hsl(var(--destructive-foreground))",
                       borderRadius: "50%",
                       minWidth: 20,
                       height: 20,
@@ -590,8 +597,8 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                           ? { left: "100%", top: "50%", transform: "translateY(-50%)", marginLeft: 8 }
                           : { right: "100%", top: "50%", transform: "translateY(-50%)", marginRight: 8 }
                       ),
-                      backgroundColor: "rgba(0, 0, 0, 0.8)",
-                      color: "white",
+                      backgroundColor: tooltipBgColor,
+                      color: tooltipTextColor,
                       padding: "4px 8px",
                       borderRadius: 6,
                       fontSize: 12,
@@ -629,7 +636,9 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              backgroundColor: "white",
+              backgroundColor: "rgb(var(--sg-surface, 248 250 252))",
+              color: "rgb(var(--sg-text, 15 23 42))",
+              border: "1px solid rgb(var(--sg-border, 226 232 240))",
               borderRadius: 12,
               padding: 24,
               boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
@@ -650,7 +659,8 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                   padding: "8px 16px",
                   borderRadius: 6,
                   border: "1px solid hsl(var(--border))",
-                  backgroundColor: "transparent",
+                  backgroundColor: "rgb(var(--sg-muted-surface, 241 245 249))",
+                  color: "rgb(var(--sg-text, 15 23 42))",
                   cursor: "pointer",
                   fontSize: 14,
                 }}
@@ -664,7 +674,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                   borderRadius: 6,
                   border: "none",
                   backgroundColor: "hsl(var(--primary))",
-                  color: "white",
+                  color: "hsl(var(--primary-foreground))",
                   cursor: "pointer",
                   fontSize: 14,
                   fontWeight: 500,

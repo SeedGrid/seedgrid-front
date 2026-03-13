@@ -76,7 +76,7 @@ export default function App() {
         <SgButton size="sm" appearance="outline" onClick={() => setBadgeStyle("ghost")}>ghost</SgButton>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <input value={value} onChange={(e) => setValue(e.target.value)} className="rounded border border-slate-300 px-2 py-1 text-sm" />
+        <input value={value} onChange={(e) => setValue(e.target.value)} className="rounded border border-border px-2 py-1 text-sm" />
         <label className="inline-flex items-center gap-2 text-xs">
           <input type="checkbox" checked={dot} onChange={(e) => setDot(e.target.checked)} />
           dot

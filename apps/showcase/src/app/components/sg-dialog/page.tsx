@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgButton, SgDialog, SgPlayground } from "@seedgrid/fe-components";
+import { useSgTheme } from "@seedgrid/fe-theme";
 import CodeBlockBase from "../CodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
@@ -84,6 +85,7 @@ const DIALOG_PROPS: ShowcasePropRow[] = [
 
 export default function SgDialogPage() {
   const i18n = useShowcaseI18n();
+  const { currentMode } = useSgTheme();
   const { pageRef, stickyHeaderRef, anchorOffset, exampleLinks, handleAnchorClick } = useShowcaseAnchors({
     deps: [i18n.locale]
   });
@@ -92,6 +94,14 @@ export default function SgDialogPage() {
   const [openNoClose, setOpenNoClose] = React.useState(false);
   const [openStrict, setOpenStrict] = React.useState(false);
   const [openAutoClose, setOpenAutoClose] = React.useState(false);
+  const isDarkMode = currentMode === "dark";
+  const basicCustomColor = isDarkMode ? "rgb(17 24 21)" : "#fff7ed";
+  const basicCustomShadow = isDarkMode
+    ? "0 0 0 1px rgba(74, 222, 128, 0.24), 0 24px 56px rgba(2, 8, 23, 0.58)"
+    : "0 0 0 1px rgba(234, 88, 12, 0.22), 0 24px 56px rgba(234, 88, 12, 0.28)";
+  const basicCustomBorder = isDarkMode
+    ? "1px solid rgba(74, 222, 128, 0.2)"
+    : "1px solid rgba(59, 130, 246, 0.25)";
 
   return (
     <I18NReady>
@@ -120,11 +130,11 @@ export default function SgDialogPage() {
           onOpenChange={setOpenBasic}
           title={t(i18n, "showcase.component.dialog.labels.title")}
           subtitle={t(i18n, "showcase.component.dialog.labels.subtitle")}
-          customColor="#fff7ed"
-          elevation="0 0 0 1px rgba(234, 88, 12, 0.22), 0 24px 56px rgba(234, 88, 12, 0.28)"
-          style={{ border: "1px solid rgba(59, 130, 246, 0.25)" }}
+          customColor={basicCustomColor}
+          elevation={basicCustomShadow}
+          style={{ border: basicCustomBorder }}
           leading={<span className="text-primary">O</span>}
-          trailing={<span className="text-xs text-muted-foreground">ID: 428</span>}
+          trailing={<span className="text-xs opacity-70">ID: 428</span>}
           footer={
             <>
               <SgButton appearance="ghost" onClick={() => setOpenBasic(false)}>

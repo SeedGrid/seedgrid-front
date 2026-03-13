@@ -444,7 +444,7 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
       id={id ? `${id}-${list}` : undefined}
       role="listbox"
       aria-multiselectable={selectionMode === "multiple" || undefined}
-      className={cn("max-h-[22rem] min-w-0 w-full overflow-y-auto rounded-lg border border-[rgb(var(--sg-border))] bg-white p-1", listClassName)}
+      className={cn("max-h-[22rem] min-w-0 w-full overflow-y-auto rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] p-1", listClassName)}
       onDragOver={(event) => {
         if (!dragEnabled) return;
         event.preventDefault();
@@ -500,7 +500,7 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
                   "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm",
                   selectedItem
                     ? "bg-[rgb(var(--sg-primary-100))] ring-1 ring-[rgb(var(--sg-primary-300))]"
-                    : "bg-white hover:bg-[rgb(var(--sg-primary-50))]",
+                    : "bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] hover:bg-[rgb(var(--sg-primary-50))]",
                   itemDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
                   itemClassName
                 )}
@@ -557,7 +557,7 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
                 value={sourceFilter}
                 onChange={(event) => setSourceFilter(event.target.value)}
                 placeholder={sourceFilterLabel}
-                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-white px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
+                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-2 py-1 text-sm text-[rgb(var(--sg-input-fg,var(--sg-text)))] placeholder:text-[rgb(var(--sg-input-placeholder,var(--sg-muted)))] outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
               />
             ) : null}
             <div className="flex items-start gap-2">
@@ -575,7 +575,7 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
                 value={targetFilter}
                 onChange={(event) => setTargetFilter(event.target.value)}
                 placeholder={targetFilterLabel}
-                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-white px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
+                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-2 py-1 text-sm text-[rgb(var(--sg-input-fg,var(--sg-text)))] placeholder:text-[rgb(var(--sg-input-placeholder,var(--sg-muted)))] outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
               />
             ) : null}
             <div className="flex items-start gap-2">

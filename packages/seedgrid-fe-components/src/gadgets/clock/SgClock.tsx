@@ -160,7 +160,13 @@ function AnalogClock({
 
   return (
     <div className={className} style={style}>
-      <svg width={size} height={size} viewBox="0 0 100 100" className="block" aria-label="Analog clock">
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 100 100"
+        className={cn("block", dark ? "dark" : undefined)}
+        aria-label="Analog clock"
+      >
         <g id="theme">{themeObj ? <ThemeLayer theme={themeObj} args={{ size, dark }} /> : null}</g>
 
         <g id="hands">
@@ -275,21 +281,28 @@ function DigitalClock({
 
     const Colon = () => (
       <div className="flex flex-col items-center justify-center gap-2" style={{ height: cardH }}>
-        <div className="h-2 w-2 rounded-full bg-[#edebeb]/80" />
-        <div className="h-2 w-2 rounded-full bg-[#edebeb]/80" />
+        <div className="h-2 w-2 rounded-full bg-[rgb(var(--sg-muted,var(--sg-fg)))]/80" />
+        <div className="h-2 w-2 rounded-full bg-[rgb(var(--sg-muted,var(--sg-fg)))]/80" />
       </div>
     );
 
     const PeriodCell = ({ value }: { value: string }) => (
       <div
-        className="flex items-center justify-center rounded bg-[#333232]"
+        className="flex items-center justify-center rounded border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface,var(--sg-bg)))]"
         style={{
           height: cardH,
           padding: `0 ${Math.round(sizePx * 0.4)}px`,
           boxShadow: "0 .125em .3125em rgba(0,0,0,.25)",
         }}
       >
-        <span style={{ fontSize: Math.round(sizePx * 0.9), color: "#edebeb", fontWeight: 700, lineHeight: 1 }}>
+        <span
+          style={{
+            fontSize: Math.round(sizePx * 0.9),
+            color: "rgb(var(--sg-text,var(--sg-fg)))",
+            fontWeight: 700,
+            lineHeight: 1
+          }}
+        >
           {value}
         </span>
       </div>
@@ -676,8 +689,8 @@ export function SgClock(props: SgClockProps) {
       collapseToggleAlign="right"
       collapseIconSize={20}
       draggable
-      bgColor="#ffffff"
-      bgColorTitle="#f3f4f6"
+      bgColor="rgb(var(--sg-surface,var(--sg-bg)))"
+      bgColorTitle="rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))"
       cardStyle="outlined"
       {...cardProps}
       className={mergedCardClassName}

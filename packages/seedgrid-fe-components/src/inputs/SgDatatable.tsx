@@ -635,7 +635,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
                   value={currentGlobalFilter}
                   onChange={(event) => commitFilters(currentFilters, event.target.value)}
                   placeholder={globalFilterLabel}
-                  className="min-w-[220px] flex-1 rounded-md border border-[rgb(var(--sg-border))] bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
+                  className="min-w-[220px] flex-1 rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-3 py-2 text-sm text-[rgb(var(--sg-input-fg,var(--sg-text)))] placeholder:text-[rgb(var(--sg-input-placeholder,var(--sg-muted)))] outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
                 />
               ) : null}
 
@@ -648,7 +648,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
           ) : null}
 
           <div className="relative">
-            <div className="overflow-x-auto rounded-lg border border-[rgb(var(--sg-border))] bg-white">
+            <div className="overflow-x-auto rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))]">
               <table id={id} className={cn("min-w-full border-collapse text-sm", tableClassName)}>
                 <thead>
                   <tr className="bg-[rgb(var(--sg-primary-50))]">
@@ -724,7 +724,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
                                   commitFilters(normalized, currentGlobalFilter);
                                 }}
                                 placeholder={column.filterPlaceholder ?? `Filter ${String(column.header ?? "")}`}
-                                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-white px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
+                                className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-2 py-1 text-xs text-[rgb(var(--sg-input-fg,var(--sg-text)))] placeholder:text-[rgb(var(--sg-input-placeholder,var(--sg-muted)))] outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
                               />
                             ) : null}
                           </th>
@@ -893,7 +893,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
                       const nextRows = Number(event.target.value) || currentRows;
                       commitPage(0, nextRows);
                     }}
-                    className="rounded-md border border-[rgb(var(--sg-border))] bg-white px-2 py-1 text-xs"
+                    className="rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-2 py-1 text-xs text-[rgb(var(--sg-input-fg,var(--sg-text)))]"
                   >
                     {rowsPerPageOptions.map((option) => (
                       <option key={option} value={option}>{option}</option>

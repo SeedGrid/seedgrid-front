@@ -13,6 +13,19 @@ import Highlight from "@tiptap/extension-highlight";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import FontFamily from "@tiptap/extension-font-family";
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  FileImage,
+  Highlighter,
+  IndentDecrease,
+  IndentIncrease,
+  List,
+  ListOrdered,
+  Palette
+} from "lucide-react";
 
 export type SgTextEditorSaveMeta = {
   htmlDocument: string;
@@ -286,28 +299,28 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
         <ToolbarButton
           label="Bold"
-          text="B"
+          icon={<span className="font-bold leading-none" aria-hidden="true">B</span>}
           active={active("bold")}
           disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleBold().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleBold().run())}
         />
         <ToolbarButton
           label="Italic"
-          text="I"
+          icon={<span className="italic leading-none" aria-hidden="true">I</span>}
           active={active("italic")}
           disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleItalic().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleItalic().run())}
         />
         <ToolbarButton
           label="Underline"
-          text="U"
+          icon={<span className="underline leading-none" aria-hidden="true">U</span>}
           active={active("underline")}
           disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleUnderline().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleUnderline().run())}
         />
         <ToolbarButton
           label="Strike"
-          text="S"
+          icon={<span className="line-through leading-none" aria-hidden="true">S</span>}
           active={active("strike")}
           disabled={!canRun(editor, (ed) => ed.can().chain().focus().toggleStrike().run()) || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleStrike().run())}
@@ -315,27 +328,21 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
         <div className="mx-1 h-6 w-px bg-border" />
 
-        <label className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">A</span>
-          <input
-            type="color"
-            disabled={!editor || disabled}
-            onChange={(e) => editor?.chain().focus().setColor(e.target.value).run()}
-            className="h-8 w-10 cursor-pointer"
-            aria-label="Text color"
-          />
-        </label>
+        <ColorPickerButton
+          label="Text color"
+          hint="Text color"
+          icon={<Palette size={14} aria-hidden="true" />}
+          disabled={!editor || !!disabled}
+          onChange={(color) => editor?.chain().focus().setColor(color).run()}
+        />
 
-        <label className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">H</span>
-          <input
-            type="color"
-            disabled={!editor || disabled}
-            onChange={(e) => editor?.chain().focus().toggleHighlight({ color: e.target.value }).run()}
-            className="h-8 w-10 cursor-pointer"
-            aria-label="Highlight color"
-          />
-        </label>
+        <ColorPickerButton
+          label="Highlight color"
+          hint="Highlight color"
+          icon={<Highlighter size={14} aria-hidden="true" />}
+          disabled={!editor || !!disabled}
+          onChange={(color) => editor?.chain().focus().toggleHighlight({ color }).run()}
+        />
 
         <div className="mx-1 h-6 w-px bg-border" />
 
@@ -358,28 +365,28 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
         <ToolbarButton
           label="Bullets"
-          text="•"
+          icon={<List size={14} aria-hidden="true" />}
           active={active("bulletList")}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleBulletList().run())}
         />
         <ToolbarButton
           label="Numbered"
-          text="1."
+          icon={<ListOrdered size={14} aria-hidden="true" />}
           active={active("orderedList")}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().toggleOrderedList().run())}
         />
         <ToolbarButton
           label="Outdent"
-          text="<"
+          icon={<IndentDecrease size={14} aria-hidden="true" />}
           active={false}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().liftListItem("listItem").run())}
         />
         <ToolbarButton
           label="Indent"
-          text=">"
+          icon={<IndentIncrease size={14} aria-hidden="true" />}
           active={false}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().sinkListItem("listItem").run())}
@@ -389,28 +396,28 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
         <ToolbarButton
           label="Align left"
-          text="L"
+          icon={<AlignLeft size={14} aria-hidden="true" />}
           active={active("paragraph", { textAlign: "left" }) || active("heading", { textAlign: "left" })}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().setTextAlign("left").run())}
         />
         <ToolbarButton
           label="Align center"
-          text="C"
+          icon={<AlignCenter size={14} aria-hidden="true" />}
           active={active("paragraph", { textAlign: "center" }) || active("heading", { textAlign: "center" })}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().setTextAlign("center").run())}
         />
         <ToolbarButton
           label="Align right"
-          text="R"
+          icon={<AlignRight size={14} aria-hidden="true" />}
           active={active("paragraph", { textAlign: "right" }) || active("heading", { textAlign: "right" })}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().setTextAlign("right").run())}
         />
         <ToolbarButton
           label="Justify"
-          text="J"
+          icon={<AlignJustify size={14} aria-hidden="true" />}
           active={active("paragraph", { textAlign: "justify" }) || active("heading", { textAlign: "justify" })}
           disabled={!editor || !!disabled}
           onClick={() => exec(() => editor!.chain().setTextAlign("justify").run())}
@@ -436,7 +443,7 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
         />
         <ToolbarButton
           label="Image"
-          text="Img"
+          icon={<FileImage size={14} aria-hidden="true" />}
           active={false}
           disabled={!editor || !!disabled}
           onClick={() => {
@@ -512,12 +519,13 @@ export function SgTextEditor(props: Readonly<SgTextEditorProps>) {
 
 function ToolbarButton(props: {
   label: string;
-  text: string;
+  text?: string;
+  icon?: React.ReactNode;
   active?: boolean;
   disabled?: boolean;
   onClick: () => void;
 }) {
-  const { label, text, active, disabled, onClick } = props;
+  const { label, text, icon, active, disabled, onClick } = props;
   return (
     <button
       type="button"
@@ -526,13 +534,46 @@ function ToolbarButton(props: {
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "h-9 min-w-9 rounded-md border px-2 text-sm",
+        "inline-flex h-9 min-w-9 items-center justify-center rounded-md border px-2 text-sm",
         "hover:bg-muted/80 disabled:opacity-50",
         active ? "bg-muted" : "bg-background"
       )}
     >
-      {text}
+      {icon ?? text}
     </button>
+  );
+}
+
+function ColorPickerButton(props: {
+  label: string;
+  hint?: string;
+  icon: React.ReactNode;
+  disabled?: boolean;
+  onChange: (color: string) => void;
+}) {
+  const { label, hint, icon, disabled, onChange } = props;
+  return (
+    <label
+      title={hint ?? label}
+      aria-label={label}
+      className={cn(
+        "relative inline-flex h-9 min-w-9 items-center justify-center rounded-md border px-2 text-sm",
+        "bg-background hover:bg-muted/80",
+        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+      )}
+    >
+      {icon}
+      <input
+        type="color"
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value)}
+        className={cn(
+          "absolute inset-0 h-full w-full opacity-0",
+          disabled ? "cursor-not-allowed" : "cursor-pointer"
+        )}
+        aria-label={label}
+      />
+    </label>
   );
 }
 

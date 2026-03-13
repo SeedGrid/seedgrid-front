@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import {
@@ -64,10 +64,10 @@ export default function App() {
   return (
     <div className="space-y-3 p-2">
       <div className="flex gap-2">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setGap((prev) => (prev === 10 ? 16 : 10))}>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setGap((prev) => (prev === 10 ? 16 : 10))}>
           gap: {gap}
         </button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setPadding((prev) => (prev === 10 ? 14 : 10))}>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setPadding((prev) => (prev === 10 ? 14 : 10))}>
           padding: {padding}
         </button>
       </div>

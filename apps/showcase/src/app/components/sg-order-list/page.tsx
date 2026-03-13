@@ -319,7 +319,7 @@ export default function App() {
           <select
             value={selectionMode}
             onChange={(event) => setSelectionMode(event.target.value as "single" | "multiple")}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
           >
             <option value="single">single</option>
             <option value="multiple">multiple</option>

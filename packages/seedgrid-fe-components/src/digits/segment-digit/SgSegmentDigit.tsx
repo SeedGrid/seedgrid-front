@@ -126,7 +126,7 @@ export function SgSegmentDigit({
       width={width}
       height={height}
       viewBox={`0 0 ${viewWidth} ${viewHeight}`}
-      className={cn("inline-block align-middle text-neutral-800 dark:text-neutral-200", className)}
+      className={cn("inline-block align-middle text-[rgb(var(--sg-text,var(--sg-fg)))]", className)}
       style={{ color, ...style }}
     >
       {glyph.map((segment, idx) => (
@@ -143,4 +143,3 @@ export function SgSegmentDigit({
     </svg>
   );
 }
-

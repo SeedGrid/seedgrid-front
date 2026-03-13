@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { MapPin, Tag, Send } from "lucide-react";
@@ -89,7 +89,7 @@ export default function App() {
           />
         </SgWizardPage>
         <SgWizardPage title="Resumo">
-          <div className="rounded border border-border bg-white p-3 text-sm">
+          <div className="rounded border border-border bg-background p-3 text-sm">
             <div>Nome: {formValues.name || "-"}</div>
             <div>Email: {formValues.email || "-"}</div>
             <div>Telefone: {formValues.phone || "-"}</div>
@@ -204,7 +204,7 @@ export default function SgWizardPageDemo() {
                     onChange: (e) => setFormValues((prev) => ({ ...prev, phone: e.target.value }))
                   }}
                 />
-                <div className="rounded border border-border bg-white p-3 text-xs text-foreground/70">
+                <div className="rounded border border-border bg-background p-3 text-xs text-foreground/70">
                   <div className="font-semibold">{t(i18n, "showcase.component.wizard.labels.summary")}</div>
                   <div>{t(i18n, "showcase.component.wizard.labels.name")}: {formValues.name || "-"}</div>
                   <div>{t(i18n, "showcase.component.wizard.labels.email")}: {formValues.email || "-"}</div>
@@ -217,7 +217,7 @@ export default function SgWizardPageDemo() {
             <div className="rounded border border-border bg-foreground/5 p-4">
               <div className="text-sm font-semibold">{t(i18n, "showcase.component.wizard.labels.step3Title")}</div>
               <p className="mt-1 text-sm text-muted-foreground">{t(i18n, "showcase.component.wizard.labels.step3Desc")}</p>
-              <div className="mt-3 rounded border border-border bg-white p-3 text-sm text-foreground/80">
+              <div className="mt-3 rounded border border-border bg-background p-3 text-sm text-foreground/80">
                 <div>{t(i18n, "showcase.component.wizard.labels.name")}: {formValues.name || "-"}</div>
                 <div>{t(i18n, "showcase.component.wizard.labels.email")}: {formValues.email || "-"}</div>
                 <div>{t(i18n, "showcase.component.wizard.labels.phone")}: {formValues.phone || "-"}</div>
@@ -229,7 +229,7 @@ export default function SgWizardPageDemo() {
           {t(i18n, "showcase.component.wizard.labels.currentStep", { step: step + 1 })}
         </div>
         {submitted ? (
-          <div className="mt-3 rounded-lg border border-border bg-white p-4 text-xs text-foreground/80">
+          <div className="mt-3 rounded-lg border border-border bg-background p-4 text-xs text-foreground/80">
             <div className="mb-2 text-sm font-semibold text-foreground">{t(i18n, "showcase.component.wizard.labels.payloadTitle")}</div>
             <pre className="whitespace-pre-wrap">{JSON.stringify(submitted, null, 2)}</pre>
           </div>

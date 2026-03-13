@@ -282,7 +282,7 @@ export default function App() {
           <input
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
           />
         </label>
         <label className="text-xs">
@@ -290,7 +290,7 @@ export default function App() {
           <select
             value={orientation}
             onChange={(event) => setOrientation(event.target.value as "vertical" | "horizontal")}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
           >
             <option value="vertical">vertical</option>
             <option value="horizontal">horizontal</option>

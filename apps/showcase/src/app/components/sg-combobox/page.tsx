@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { SgButton, SgCombobox, SgPlayground } from "@seedgrid/fe-components";
@@ -86,7 +86,7 @@ function LocalSelectFallback(props: {
     <div className="w-full max-w-md space-y-1">
       <label className="text-sm font-medium">{props.label}</label>
       <select
-        className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none"
+        className="h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none"
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
       >
@@ -199,21 +199,21 @@ export default function App() {
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setSelectedId("5")}
         >
           Set Germany (id 5)
         </button>
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setSelectedId("9")}
         >
           Set Japan (id 9)
         </button>
         <button
           type="button"
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-xs hover:bg-slate-50"
+          className="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
           onClick={() => setSelectedId("")}
         >
           Clear

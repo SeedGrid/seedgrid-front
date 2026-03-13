@@ -305,7 +305,7 @@ export default function App() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="text-xs">
           <span className="mb-1 block font-medium">position</span>
-          <select value={position} onChange={(e) => setPosition(e.target.value as SgDockMenuPosition)} className="w-full rounded border border-slate-300 px-2 py-1">
+          <select value={position} onChange={(e) => setPosition(e.target.value as SgDockMenuPosition)} className="w-full rounded border border-border px-2 py-1">
             <option value="left-top">left-top</option>
             <option value="center-top">center-top</option>
             <option value="right-top">right-top</option>

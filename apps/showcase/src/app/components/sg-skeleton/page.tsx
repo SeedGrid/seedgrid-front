@@ -177,7 +177,7 @@ export default function App() {
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-xs">
           <span className="mb-1 block font-medium">Shape</span>
-          <select value={shape} onChange={(e) => setShape(e.target.value as any)} className="w-full rounded border border-slate-300 px-2 py-1">
+          <select value={shape} onChange={(e) => setShape(e.target.value as any)} className="w-full rounded border border-border px-2 py-1">
             <option value="text">text</option>
             <option value="rectangle">rectangle</option>
             <option value="rounded">rounded</option>
@@ -188,7 +188,7 @@ export default function App() {
 
         <label className="text-xs">
           <span className="mb-1 block font-medium">Animation</span>
-          <select value={animation} onChange={(e) => setAnimation(e.target.value as any)} className="w-full rounded border border-slate-300 px-2 py-1">
+          <select value={animation} onChange={(e) => setAnimation(e.target.value as any)} className="w-full rounded border border-border px-2 py-1">
             <option value="wave">wave</option>
             <option value="pulse">pulse</option>
             <option value="none">none</option>
@@ -197,22 +197,22 @@ export default function App() {
 
         <label className="text-xs">
           <span className="mb-1 block font-medium">Width</span>
-          <input value={width} onChange={(e) => setWidth(e.target.value)} className="w-full rounded border border-slate-300 px-2 py-1" />
+          <input value={width} onChange={(e) => setWidth(e.target.value)} className="w-full rounded border border-border px-2 py-1" />
         </label>
 
         <label className="text-xs">
           <span className="mb-1 block font-medium">Height (px)</span>
-          <input value={height} onChange={(e) => setHeight(e.target.value)} className="w-full rounded border border-slate-300 px-2 py-1" />
+          <input value={height} onChange={(e) => setHeight(e.target.value)} className="w-full rounded border border-border px-2 py-1" />
         </label>
 
         <label className="text-xs">
           <span className="mb-1 block font-medium">Size (px)</span>
-          <input value={size} onChange={(e) => setSize(e.target.value)} className="w-full rounded border border-slate-300 px-2 py-1" />
+          <input value={size} onChange={(e) => setSize(e.target.value)} className="w-full rounded border border-border px-2 py-1" />
         </label>
 
         <label className="text-xs">
           <span className="mb-1 block font-medium">Border radius (optional)</span>
-          <input value={customRadius} onChange={(e) => setCustomRadius(e.target.value)} placeholder="ex: 18px" className="w-full rounded border border-slate-300 px-2 py-1" />
+          <input value={customRadius} onChange={(e) => setCustomRadius(e.target.value)} placeholder="ex: 18px" className="w-full rounded border border-border px-2 py-1" />
         </label>
       </div>
 

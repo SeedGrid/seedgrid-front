@@ -18,6 +18,8 @@ export function ThemeLayer({
 }) {
   const [inner, setInner] = React.useState<string | null>(null);
   const url = theme.url;
+  const darkClassName = args.dark ? "dark" : undefined;
+  const renderedTheme = theme.render?.(args) ?? null;
 
   React.useEffect(() => {
     let alive = true;
@@ -42,8 +44,8 @@ export function ThemeLayer({
 
   return (
     <>
-      {theme.render?.(args)}
-      {url && inner && <g dangerouslySetInnerHTML={{ __html: inner }} />}
+      {renderedTheme ? <g className={darkClassName}>{renderedTheme}</g> : null}
+      {url && inner ? <g className={darkClassName} dangerouslySetInnerHTML={{ __html: inner }} /> : null}
     </>
   );
 }

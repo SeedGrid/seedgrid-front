@@ -71,10 +71,10 @@ function StepperBar({
                 <div
                   className={`flex items-center justify-center rounded-full border-2 transition-colors duration-200 ${
                     isCompleted
-                      ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-white"
+                      ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"
                       : isCurrent
-                        ? "border-[hsl(var(--primary))] bg-white text-[hsl(var(--primary))]"
-                        : "border-gray-300 bg-white text-gray-400"
+                        ? "border-[hsl(var(--primary))] bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-[hsl(var(--primary))]"
+                        : "border-border bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-muted-foreground"
                   }`}
                   style={{ width: 40, height: 40 }}
                 >
@@ -89,7 +89,7 @@ function StepperBar({
                 {/* Label */}
                 <span
                   className={`mt-2 text-xs font-medium text-center max-w-[80px] leading-tight ${
-                    isCompleted || isCurrent ? "text-[hsl(var(--primary))]" : "text-gray-400"
+                    isCompleted || isCurrent ? "text-[hsl(var(--primary))]" : "text-muted-foreground"
                   }`}
                 >
                   {title}
@@ -101,7 +101,7 @@ function StepperBar({
                 <div className="flex-1 mx-2 self-start" style={{ marginTop: 19 }}>
                   <div
                     className={`h-0.5 w-full transition-colors duration-200 ${
-                      isCompleted ? "bg-[hsl(var(--primary))]" : "bg-gray-200"
+                      isCompleted ? "bg-[hsl(var(--primary))]" : "bg-border"
                     }`}
                   />
                 </div>
@@ -220,7 +220,7 @@ export function SgWizard(props: SgWizardProps) {
             <button
               type="button"
               onClick={goPrevious}
-              className="inline-flex h-10 items-center justify-center rounded-full border border-border px-5 text-sm font-semibold text-foreground/80 transition hover:bg-black/5"
+              className="inline-flex h-10 items-center justify-center rounded-full border border-border px-5 text-sm font-semibold text-foreground/80 transition hover:bg-muted/60"
             >
               {labels.previous}
             </button>

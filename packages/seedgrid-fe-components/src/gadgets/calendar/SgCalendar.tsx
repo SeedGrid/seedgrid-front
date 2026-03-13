@@ -331,8 +331,8 @@ export function SgCalendar(props: Readonly<SgCalendarProps>) {
       collapseToggleAlign="right"
       collapseIconSize={20}
       draggable
-      bgColor="#ffffff"
-      bgColorTitle="#f3f4f6"
+      bgColor="rgb(var(--sg-surface,var(--sg-bg)))"
+      bgColorTitle="rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))"
       cardStyle="outlined"
       {...cardProps}
       className={mergedCardClassName}

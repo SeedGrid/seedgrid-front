@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
@@ -491,21 +491,21 @@ export default function App() {
       <div className="grid gap-2 sm:grid-cols-3">
         <label className="text-xs">
           <span className="mb-1 block font-medium">Orientation</span>
-          <select value={orientation} onChange={(e) => setOrientation(e.target.value as "vertical" | "horizontal")} className="w-full rounded border border-slate-300 px-2 py-1">
+          <select value={orientation} onChange={(e) => setOrientation(e.target.value as "vertical" | "horizontal")} className="w-full rounded border border-border px-2 py-1">
             <option value="vertical">vertical</option>
             <option value="horizontal">horizontal</option>
           </select>
         </label>
         <label className="text-xs">
           <span className="mb-1 block font-medium">Active indexes</span>
-          <div className="rounded border border-slate-300 bg-slate-50 px-2 py-1 text-[11px]">{active.length > 0 ? active.join(", ") : "(vazio)"}</div>
+          <div className="rounded border border-border bg-slate-50 px-2 py-1 text-[11px]">{active.length > 0 ? active.join(", ") : "(vazio)"}</div>
         </label>
         <label className="text-xs">
           <span className="mb-1 block font-medium">Header background</span>
           <input
             value={headerBackgroundColor}
             onChange={(e) => setHeaderBackgroundColor(e.target.value)}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
             placeholder="Ex: #e0f2fe ou rgb(var(--sg-primary-50, 239 246 255))"
           />
         </label>
@@ -518,11 +518,11 @@ export default function App() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([0])}>Abrir 1</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([1])}>Abrir 2</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([2])}>Abrir 3</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([0, 1, 2])}>Abrir todos</button>
-        <button className="rounded border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => setActive([])}>Fechar todos</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setActive([0])}>Abrir 1</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setActive([1])}>Abrir 2</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setActive([2])}>Abrir 3</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setActive([0, 1, 2])}>Abrir todos</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setActive([])}>Fechar todos</button>
       </div>
 
       <SgAccordion

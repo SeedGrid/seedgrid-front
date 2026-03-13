@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import {
@@ -285,7 +285,7 @@ export default function App() {
         <label className="text-xs">
           <span className="mb-1 block">severity</span>
           <select
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
             value={severity}
             onChange={(event) => setSeverity(event.target.value as "primary" | "success" | "info" | "warning" | "danger" | "plain")}
           >
@@ -300,7 +300,7 @@ export default function App() {
         <label className="text-xs">
           <span className="mb-1 block">iconPlacement</span>
           <select
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            className="w-full rounded border border-border px-2 py-1"
             value={iconPlacement}
             onChange={(event) => setIconPlacement(event.target.value as "left" | "top")}
           >

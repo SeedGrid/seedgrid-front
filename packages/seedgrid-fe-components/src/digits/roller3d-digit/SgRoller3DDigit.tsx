@@ -66,8 +66,8 @@ export function SgRoller3DDigit({
     <div
       className={cn(
         "relative overflow-hidden rounded-2xl",
-        "bg-white dark:bg-neutral-800",
-        "ring-1 ring-black/5 dark:ring-white/10",
+        "bg-[rgb(var(--sg-surface,var(--sg-bg)))]",
+        "ring-1 ring-[rgb(var(--sg-border))]/70",
         "shadow-[inset_0_0_28px_rgba(0,0,0,0.08),0_8px_28px_rgba(0,0,0,0.12)]",
         // top fade
         "before:absolute before:inset-0 before:z-10 before:bg-gradient-to-b before:from-black/[0.06] before:to-transparent before:content-['']",
@@ -93,7 +93,9 @@ export function SgRoller3DDigit({
               height: itemH,
               fontSize,
               lineHeight: 1,
-              color: i === idx ? "rgb(30 30 34)" : "rgb(163 163 170)",
+              color: i === idx
+                ? "rgb(var(--sg-text,var(--sg-fg)))"
+                : "rgb(var(--sg-muted,var(--sg-fg)))",
             }}
           >
             {item}

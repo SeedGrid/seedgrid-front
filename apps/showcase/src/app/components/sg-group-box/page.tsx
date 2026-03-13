@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -257,7 +257,7 @@ export default function Example() {
       >
         <div className="w-full">
           <SgGroupBox title={t(i18n, "showcase.component.groupBox.labels.classNameTitle")} className="bg-foreground/5 p-2 rounded-xl">
-            <div className="rounded border border-border bg-white p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
+            <div className="rounded border border-border bg-background p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
         </div>
         <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.classNameTitle")}" className="bg-foreground/5 p-2 rounded-xl">

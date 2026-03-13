@@ -321,9 +321,11 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
   const hasSuffix = canShowClear || (props.iconButtons?.length ?? 0) > 0;
   const paddingLeft = props.prefixIcon ? "pl-10" : "px-3";
   const paddingRight = hasSuffix ? "pr-10" : "pr-3";
-  const placeholderClass = isFloatLabel ? "placeholder-transparent" : "placeholder:text-foreground/50";
+  const placeholderClass = isFloatLabel
+    ? "placeholder-transparent"
+    : "placeholder:text-[var(--sg-input-placeholder,hsl(var(--muted-foreground)))]";
   const baseClass =
-    `peer h-11 w-full rounded-md text-sm focus:outline-none ${placeholderClass}`;
+    `peer h-11 w-full rounded-md text-sm text-[var(--sg-input-fg,hsl(var(--foreground)))] caret-[var(--sg-input-fg,hsl(var(--foreground)))] disabled:text-[var(--sg-input-disabled-fg,hsl(var(--muted-foreground)))] disabled:bg-[var(--sg-input-disabled-bg,hsl(var(--muted)))] focus:outline-none ${placeholderClass}`;
   const hasError = Boolean(props.error ?? internalError);
   const elevationClass = props.elevation === "none"
     ? ""
@@ -337,7 +339,9 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
       ? "border border-[hsl(var(--destructive))] focus:border-[hsl(var(--destructive))] focus:ring-2 focus:ring-[hsl(var(--destructive)/0.25)]"
       : "border border-border focus:border-[hsl(var(--primary))] focus:ring-2 focus:ring-[hsl(var(--primary)/0.25)]"
     : "border border-transparent";
-  const bgClass = props.filled ? "bg-muted/40" : "bg-white";
+  const bgClass = props.filled
+    ? "bg-muted/40"
+    : "bg-[var(--sg-input-bg,hsl(var(--background)))]";
   const finalClass = [
     baseClass,
     borderClass,
@@ -435,7 +439,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
           <label
             htmlFor={props.id}
             className={[
-              "absolute bg-white px-1 transition-all",
+              "absolute bg-[var(--sg-input-bg,hsl(var(--background)))] px-1 transition-all",
               isFilled
                 ? "-top-2 left-3 text-xs"
                 : `top-3 text-sm ${props.prefixIcon ? "left-10" : "left-3"}`,

@@ -113,7 +113,7 @@ export default function CodeBlockBase(props: { code: string }) {
         <button
           type="button"
           onClick={onCopy}
-          className="absolute right-2 top-2 rounded border border-border bg-white/90 px-2 py-1 text-[11px] text-foreground/70 hover:text-foreground"
+          className="absolute right-2 top-2 rounded border border-border bg-background/90 px-2 py-1 text-[11px] text-foreground/70 hover:text-foreground"
         >
           {copied ? t(i18n, "showcase.common.code.copied") : t(i18n, "showcase.common.code.copy")}
         </button>
