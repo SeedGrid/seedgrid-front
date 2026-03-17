@@ -309,6 +309,8 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
   const toggleIcon = (
     <button
       type="button"
+      tabIndex={-1}
+      onMouseDown={(event) => event.preventDefault()}
       onClick={() => setIsHidden((prev) => !prev)}
       className="rounded p-1 text-foreground/60 hover:text-foreground"
       aria-label={isHidden ? t(i18n, "components.password.show") : t(i18n, "components.password.hide")}
@@ -354,6 +356,8 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
   const generateIcon = createNewPasswordButton ? (
     <button
       type="button"
+      tabIndex={-1}
+      onMouseDown={(event) => event.preventDefault()}
       onClick={() => {
         const next = generatePassword();
         applyValue(next);
