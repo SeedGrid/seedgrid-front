@@ -95,9 +95,11 @@ fi
 WORKSPACE_PATCH_FILE="${ABS_PKG_DIR}/.workspace-deps-patch.json"
 rm -f "${WORKSPACE_PATCH_FILE}"
 
+MANIFEST_FILE="${ABS_PKG_DIR}/package.json"
+
 apply_workspace_dependency_resolution() {
   echo "==> Preparing workspace dependency metadata for ${PKG_NAME}"
-  node - "${WORKSPACE_PATCH_FILE}" "${ABS_PKG_DIR}" "${REPO_ROOT}" <<'NODE'
+  node - "${WORKSPACE_PATCH_FILE}" "${MANIFEST_FILE}" "${REPO_ROOT}" <<'NODE'
 const fs = require('fs');
 const path = require('path');
 const [,, patchFile, manifestPath, rootDir] = process.argv;
@@ -211,7 +213,7 @@ revert_workspace_dependency_resolution() {
     return
   fi
 
-  node - "${WORKSPACE_PATCH_FILE}" "${ABS_PKG_DIR}" <<'NODE'
+  node - "${WORKSPACE_PATCH_FILE}" "${MANIFEST_FILE}" <<'NODE'
 const fs = require('fs');
 const [,, patchFile, manifestPath] = process.argv;
 const patchContent = JSON.parse(fs.readFileSync(patchFile, 'utf8'));
