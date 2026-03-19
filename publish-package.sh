@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="${REPO_ROOT:-${SCRIPT_DIR}}"
+
 usage() {
   cat <<'USAGE'
 Usage:
@@ -89,6 +92,157 @@ if [[ -z "${PKG_NAME}" ]]; then
   exit 1
 fi
 
+WORKSPACE_PATCH_FILE="${ABS_PKG_DIR}/.workspace-deps-patch.json"
+rm -f "${WORKSPACE_PATCH_FILE}"
+
+apply_workspace_dependency_resolution() {
+  echo "==> Preparing workspace dependency metadata for ${PKG_NAME}"
+  node - "${WORKSPACE_PATCH_FILE}" "${ABS_PKG_DIR}" "${REPO_ROOT}" <<'NODE'
+const fs = require('fs');
+const path = require('path');
+const [,, patchFile, manifestPath, rootDir] = process.argv;
+
+const manifestData = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const sections = ['dependencies', 'peerDependencies', 'devDependencies', 'optionalDependencies'];
+const workspacePackages = collectWorkspacePackages(rootDir);
+const patch = { replacements: [] };
+
+for (const section of sections) {
+  const deps = manifestData[section];
+  if (!deps) continue;
+  for (const [depName, depSpec] of Object.entries(deps)) {
+    if (typeof depSpec !== 'string') continue;
+    if (!depSpec.startsWith('workspace:')) continue;
+
+    const workspacePkg = workspacePackages[depName];
+    if (!workspacePkg) {
+      throw new Error(`Cannot resolve workspace dependency ${depName}; ensure the package exists under workspace directories`);
+    }
+    if (!workspacePkg.version) {
+      throw new Error(`Workspace package ${depName} at ${workspacePkg.path} is missing a version`);
+    }
+
+    const resolvedRange = `^${workspacePkg.version}`;
+    patch.replacements.push({
+      section,
+      key: depName,
+      original: depSpec,
+      resolved: resolvedRange
+    });
+    deps[depName] = resolvedRange;
+  }
+}
+
+fs.writeFileSync(patchFile, JSON.stringify(patch, null, 2));
+
+if (patch.replacements.length === 0) {
+  console.log('==> No workspace dependencies required rewriting.');
+  process.exit(0);
+}
+
+fs.writeFileSync(manifestPath, JSON.stringify(manifestData, null, 2) + '\n');
+console.log('==> Updated workspace dependencies:');
+for (const replacement of patch.replacements) {
+  console.log(`    ${replacement.section}.${replacement.key}: ${replacement.original} -> ${replacement.resolved}`);
+}
+
+function collectWorkspacePackages(root) {
+  const packages = {};
+  const candidates = ['packages', 'apps'];
+
+  for (const candidate of candidates) {
+    const candidatePath = path.join(root, candidate);
+    if (!fs.existsSync(candidatePath)) continue;
+    visit(candidatePath);
+  }
+
+  return packages;
+
+  function visit(dir) {
+    let entries;
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch (error) {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (
+        entry.name === 'node_modules' ||
+        entry.name === '.git' ||
+        entry.name === '.turbo' ||
+        entry.name === 'dist'
+      ) {
+        continue;
+      }
+
+      const candidatePath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        visit(candidatePath);
+        continue;
+      }
+
+      if (!entry.isFile() || entry.name !== 'package.json') {
+        continue;
+      }
+
+      let pkg;
+      try {
+        pkg = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+      } catch (error) {
+        continue;
+      }
+      if (!pkg || !pkg.name) {
+        continue;
+      }
+
+      packages[pkg.name] = {
+        version: pkg.version || '',
+        path: candidatePath
+      };
+    }
+  }
+}
+NODE
+}
+
+revert_workspace_dependency_resolution() {
+  if [[ ! -f "${WORKSPACE_PATCH_FILE}" ]]; then
+    return
+  fi
+
+  node - "${WORKSPACE_PATCH_FILE}" "${ABS_PKG_DIR}" <<'NODE'
+const fs = require('fs');
+const [,, patchFile, manifestPath] = process.argv;
+const patchContent = JSON.parse(fs.readFileSync(patchFile, 'utf8'));
+
+if (!Array.isArray(patchContent.replacements) || patchContent.replacements.length === 0) {
+  process.exit(0);
+}
+
+const manifestData = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+for (const { section, key, original } of patchContent.replacements) {
+  if (!manifestData[section]) {
+    manifestData[section] = {};
+  }
+  manifestData[section][key] = original;
+}
+
+fs.writeFileSync(manifestPath, JSON.stringify(manifestData, null, 2) + '\n');
+console.log('==> Restored workspace dependency markers.');
+NODE
+}
+
+cleanup_workspace_dependencies() {
+  if [[ -f "${WORKSPACE_PATCH_FILE}" ]]; then
+    revert_workspace_dependency_resolution
+    rm -f "${WORKSPACE_PATCH_FILE}"
+  fi
+}
+
+trap cleanup_workspace_dependencies EXIT
+
 if ! "${NPM_BIN}" whoami >/dev/null 2>&1; then
   if [[ -n "${NODE_AUTH_TOKEN:-}" || -n "${NPM_TOKEN:-}" ]]; then
     echo "npm whoami failed, but a token is present; continuing."
@@ -138,6 +292,8 @@ echo "==> npm sees these values:"
   node -p "require('./package.json').name"
   node -p "require('./package.json').version"
 )
+
+apply_workspace_dependency_resolution
 
 echo "==> npm pack --dry-run ${PKG_NAME_RESOLVED}@${PKG_VERSION}"
 (
