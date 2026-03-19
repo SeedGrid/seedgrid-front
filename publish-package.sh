@@ -76,7 +76,13 @@ if [[ ! -f "${ABS_PKG_DIR}/package.json" ]]; then
   exit 1
 fi
 
-PKG_NAME=$(node -p "require('${ABS_PKG_DIR}/package.json').name")
+PKG_NAME="$(node -p "require('${ABS_PKG_DIR}/package.json').name")"
+PKG_VERSION_BEFORE="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
+
+if [[ -z "${PKG_NAME}" ]]; then
+  echo "Invalid package.json: missing 'name' in ${ABS_PKG_DIR}/package.json"
+  exit 1
+fi
 
 if ! "${NPM_BIN}" whoami >/dev/null 2>&1; then
   if [[ -n "${NODE_AUTH_TOKEN:-}" || -n "${NPM_TOKEN:-}" ]]; then
@@ -103,14 +109,22 @@ else
   echo "==> Skipping version bump"
 fi
 
-PKG_VERSION=$(node -p "require('${ABS_PKG_DIR}/package.json').version")
+PKG_VERSION="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
+
+if [[ -z "${PKG_VERSION}" ]]; then
+  echo "Invalid package.json: missing 'version' after version step in ${ABS_PKG_DIR}/package.json"
+  exit 1
+fi
+
+echo "==> Package version before: ${PKG_VERSION_BEFORE:-<empty>}"
 echo "==> Package version resolved: ${PKG_VERSION}"
 
-echo "==> npm publish --dry-run ${PKG_NAME}@${PKG_VERSION}"
-"${NPM_BIN}" --prefix "${ABS_PKG_DIR}" publish --dry-run --access public
+echo "==> npm pack --dry-run ${PKG_NAME}@${PKG_VERSION}"
+"${NPM_BIN}" --prefix "${ABS_PKG_DIR}" pack --dry-run
 
 echo "==> Publishing ${PKG_NAME}@${PKG_VERSION}"
 PUBLISH_ARGS=(--access public)
+
 if [[ -n "${NPM_OTP:-}" ]]; then
   PUBLISH_ARGS+=(--otp "${NPM_OTP}")
 fi
