@@ -79,8 +79,12 @@ fi
 PKG_NAME=$(node -p "require('${ABS_PKG_DIR}/package.json').name")
 
 if ! "${NPM_BIN}" whoami >/dev/null 2>&1; then
-  echo "You are not logged in to npm. Run: npm login"
-  exit 1
+  if [[ -n "${NODE_AUTH_TOKEN:-}" || -n "${NPM_TOKEN:-}" ]]; then
+    echo "npm whoami failed, but a token is present; continuing."
+  else
+    echo "You are not logged in to npm. Run: npm login"
+    exit 1
+  fi
 fi
 
 echo "==> Typecheck ${PKG_NAME}"
