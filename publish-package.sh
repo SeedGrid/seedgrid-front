@@ -76,7 +76,12 @@ if [[ ! -f "${ABS_PKG_DIR}/package.json" ]]; then
   exit 1
 fi
 
-PKG_NAME="$(node -p "require('${ABS_PKG_DIR}/package.json').name")"
+echo "==> Package directory: ${ABS_PKG_DIR}"
+echo "==> Current working dir before anything: $(pwd)"
+echo "==> package.json contents:"
+cat "${ABS_PKG_DIR}/package.json"
+
+PKG_NAME="$(node -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
 PKG_VERSION_BEFORE="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
 
 if [[ -z "${PKG_NAME}" ]]; then
@@ -101,34 +106,55 @@ echo "==> Build ${PKG_NAME}"
 
 if [[ -n "${PUBLISH_VERSION:-}" ]]; then
   echo "==> Setting version: ${PUBLISH_VERSION}"
-  "${NPM_BIN}" --prefix "${ABS_PKG_DIR}" version "${PUBLISH_VERSION}" --no-git-tag-version
+  (
+    cd "${ABS_PKG_DIR}"
+    "${NPM_BIN}" version "${PUBLISH_VERSION}" --no-git-tag-version
+  )
 elif [[ "${BUMP_TYPE}" != "none" ]]; then
   echo "==> Bumping version: ${BUMP_TYPE}"
-  "${NPM_BIN}" --prefix "${ABS_PKG_DIR}" version "${BUMP_TYPE}" --no-git-tag-version
+  (
+    cd "${ABS_PKG_DIR}"
+    "${NPM_BIN}" version "${BUMP_TYPE}" --no-git-tag-version
+  )
 else
   echo "==> Skipping version bump"
 fi
 
+PKG_NAME_RESOLVED="$(node -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
 PKG_VERSION="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
-
-if [[ -z "${PKG_VERSION}" ]]; then
-  echo "Invalid package.json: missing 'version' after version step in ${ABS_PKG_DIR}/package.json"
-  exit 1
-fi
 
 echo "==> Package version before: ${PKG_VERSION_BEFORE:-<empty>}"
 echo "==> Package version resolved: ${PKG_VERSION}"
 
-echo "==> npm pack --dry-run ${PKG_NAME}@${PKG_VERSION}"
-"${NPM_BIN}" --prefix "${ABS_PKG_DIR}" pack --dry-run
+if [[ -z "${PKG_NAME_RESOLVED}" || -z "${PKG_VERSION}" ]]; then
+  echo "Invalid package.json after version step: missing name or version"
+  exit 1
+fi
 
-echo "==> Publishing ${PKG_NAME}@${PKG_VERSION}"
+echo "==> npm sees these values:"
+(
+  cd "${ABS_PKG_DIR}"
+  pwd
+  node -p "require('./package.json').name"
+  node -p "require('./package.json').version"
+)
+
+echo "==> npm pack --dry-run ${PKG_NAME_RESOLVED}@${PKG_VERSION}"
+(
+  cd "${ABS_PKG_DIR}"
+  "${NPM_BIN}" pack --dry-run --loglevel verbose
+)
+
+echo "==> Publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}"
 PUBLISH_ARGS=(--access public)
 
 if [[ -n "${NPM_OTP:-}" ]]; then
   PUBLISH_ARGS+=(--otp "${NPM_OTP}")
 fi
 
-"${NPM_BIN}" --prefix "${ABS_PKG_DIR}" publish "${PUBLISH_ARGS[@]}"
+(
+  cd "${ABS_PKG_DIR}"
+  "${NPM_BIN}" publish "${PUBLISH_ARGS[@]}"
+)
 
-echo "Done publishing ${PKG_NAME}@${PKG_VERSION}."
+echo "Done publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}."
