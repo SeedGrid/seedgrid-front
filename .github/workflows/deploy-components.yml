@@ -47,11 +47,6 @@ jobs:
       - name: Build components package
         run: pnpm -C packages/seedgrid-fe-components build
 
-      - name: Print workflow ref
-        run: |
-          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
-          echo "GITHUB_WORKFLOW_REF=$GITHUB_WORKFLOW_REF"
-
       - name: Resolve CalVer version
         id: calver
         shell: bash
@@ -90,21 +85,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    strategy:
-      matrix:
-        pkg:
-          - id: commons
-            dir: packages/seedgrid-fe-commons
-            script: publish-commons.sh
-          - id: core
-            dir: packages/seedgrid-fe-core
-            script: publish-core.sh
-          - id: playground
-            dir: packages/seedgrid-fe-playground
-            script: publish-playground.sh
-          - id: theme
-            dir: packages/seedgrid-fe-theme
-            script: publish-theme.sh
 
     steps:
       - name: Checkout source
@@ -128,18 +108,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Resolve CalVer version for ${{ matrix.pkg.id }}
+      - name: Resolve shared CalVer version
         id: calver
         shell: bash
         run: |
-          PKG_DIR="${{ matrix.pkg.dir }}"
-          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
-
           YEAR=$(date +%Y)
           MONTH=$((10#$(date +%m)))
           DAY=$((10#$(date +%d)))
           BASE="${YEAR}.${MONTH}.${DAY}"
 
+          echo "base=${BASE}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve version for fe-core
+        id: core_version
+        shell: bash
+        run: |
+          PKG_DIR="packages/seedgrid-fe-core"
+          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
+          BASE="${{ steps.calver.outputs.base }}"
           VERSION="$BASE"
           N=1
 
@@ -151,12 +137,99 @@ jobs:
           echo "Resolved ${NAME}@${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Publish ${{ matrix.pkg.id }} package (OIDC)
+      - name: Build fe-core
+        run: pnpm -C packages/seedgrid-fe-core build
+
+      - name: Publish fe-core
         env:
-          PUBLISH_VERSION: ${{ steps.calver.outputs.version }}
+          PUBLISH_VERSION: ${{ steps.core_version.outputs.version }}
         run: |
           npm config set registry https://registry.npmjs.org/
-          ./${{ matrix.pkg.script }} none
+          ./publish-core.sh none
+
+      - name: Resolve version for fe-commons
+        id: commons_version
+        shell: bash
+        run: |
+          PKG_DIR="packages/seedgrid-fe-commons"
+          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
+          BASE="${{ steps.calver.outputs.base }}"
+          VERSION="$BASE"
+          N=1
+
+          while npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; do
+            VERSION="${BASE}-${N}"
+            N=$((N + 1))
+          done
+
+          echo "Resolved ${NAME}@${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build fe-commons
+        run: pnpm -C packages/seedgrid-fe-commons build
+
+      - name: Publish fe-commons
+        env:
+          PUBLISH_VERSION: ${{ steps.commons_version.outputs.version }}
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          ./publish-commons.sh none
+
+      - name: Resolve version for fe-theme
+        id: theme_version
+        shell: bash
+        run: |
+          PKG_DIR="packages/seedgrid-fe-theme"
+          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
+          BASE="${{ steps.calver.outputs.base }}"
+          VERSION="$BASE"
+          N=1
+
+          while npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; do
+            VERSION="${BASE}-${N}"
+            N=$((N + 1))
+          done
+
+          echo "Resolved ${NAME}@${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build fe-theme
+        run: pnpm -C packages/seedgrid-fe-theme build
+
+      - name: Publish fe-theme
+        env:
+          PUBLISH_VERSION: ${{ steps.theme_version.outputs.version }}
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          ./publish-theme.sh none
+
+      - name: Resolve version for fe-playground
+        id: playground_version
+        shell: bash
+        run: |
+          PKG_DIR="packages/seedgrid-fe-playground"
+          NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
+          BASE="${{ steps.calver.outputs.base }}"
+          VERSION="$BASE"
+          N=1
+
+          while npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; do
+            VERSION="${BASE}-${N}"
+            N=$((N + 1))
+          done
+
+          echo "Resolved ${NAME}@${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build fe-playground
+        run: pnpm -C packages/seedgrid-fe-playground build
+
+      - name: Publish fe-playground
+        env:
+          PUBLISH_VERSION: ${{ steps.playground_version.outputs.version }}
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          ./publish-playground.sh none
 
   build-and-deploy-showcase:
     name: Build & Push Showcase Docker Image + Deploy EasyPanel
