@@ -136,9 +136,12 @@ fi
 # pnpm pack resolves workspace:* → real version natively (based on local package.json versions).
 # This guarantees no workspace protocol leaks into the published artifact.
 # npm publish <tarball> is used to upload so OIDC/NODE_AUTH_TOKEN auth is preserved.
-PACK_DIR="${TMPDIR:-/tmp}"
+#
+# Use a dedicated temp dir so we can find the .tgz unambiguously regardless of pnpm output format.
+PACK_DIR="$(mktemp -d)"
 echo "==> Packing ${PKG_NAME_RESOLVED}@${PKG_VERSION} (pnpm resolves workspace:* dependencies)"
-TARBALL_PATH="$(cd "${ABS_PKG_DIR}" && "${PNPM_BIN}" pack --pack-destination "${PACK_DIR}" 2>/dev/null | tail -n 1)"
+(cd "${ABS_PKG_DIR}" && "${PNPM_BIN}" pack --pack-destination "${PACK_DIR}")
+TARBALL_PATH="$(ls "${PACK_DIR}"/*.tgz)"
 echo "==> Tarball: ${TARBALL_PATH}"
 
 PUBLISH_ARGS=(--access public)
@@ -155,6 +158,6 @@ fi
 echo "==> Publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}"
 "${NPM_BIN}" publish "${TARBALL_PATH}" "${PUBLISH_ARGS[@]}"
 
-rm -f "${TARBALL_PATH}"
+rm -rf "${PACK_DIR}"
 
 echo "Done publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}."
