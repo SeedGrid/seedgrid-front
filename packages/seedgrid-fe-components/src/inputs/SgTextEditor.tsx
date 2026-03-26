@@ -92,10 +92,10 @@ function parseHtmlDocument(html: string) {
   return { cssText, bodyHtml };
 }
 
-function buildFullHtmlDocument(bodyHtml: string, cssText: string) {
+function buildFullHtmlDocument(bodyHtml: string, cssText: string, lang: string) {
   const safeCss = (cssText ?? "").trim();
   return `<!doctype html>
-<html lang="pt-BR">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -144,6 +144,7 @@ function SgTextEditorBase(props: Readonly<SgTextEditorProps>) {
   const i18n = useComponentsI18n();
   const placeholder = placeholderProp ?? t(i18n, "components.textEditor.placeholder");
   const cssEditorLabel = cssEditorLabelProp ?? t(i18n, "components.textEditor.cssEditorLabel");
+  const editorAriaLabel = t(i18n, "components.textEditor.editorAriaLabel");
 
   const resolvedBorderRadius = React.useMemo(() => {
     if (borderRadius === undefined) return undefined;
@@ -171,7 +172,7 @@ function SgTextEditorBase(props: Readonly<SgTextEditorProps>) {
     editorProps: {
       attributes: {
         id,
-        "aria-label": id,
+        "aria-label": editorAriaLabel,
         class: cn("prose max-w-none focus:outline-none min-h-[120px]", disabled ? "opacity-60" : ""),
         "data-placeholder": placeholder
       }
@@ -191,10 +192,10 @@ function SgTextEditorBase(props: Readonly<SgTextEditorProps>) {
   const doSave = React.useCallback(() => {
     if (!editor) return;
     const contentHtml = editor.getHTML();
-    const htmlDocument = buildFullHtmlDocument(contentHtml, cssText);
+    const htmlDocument = buildFullHtmlDocument(contentHtml, cssText, i18n.locale);
     const f = toFile(htmlDocument, fileName ?? `${id}.html`);
     onSave?.(f, { htmlDocument, contentHtml, cssText });
-  }, [editor, cssText, fileName, id, onSave]);
+  }, [editor, cssText, fileName, i18n.locale, id, onSave]);
 
   const loadFromHtmlString = React.useCallback(
     (htmlDoc: string) => {

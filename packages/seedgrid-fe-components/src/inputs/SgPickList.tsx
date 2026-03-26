@@ -423,19 +423,19 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
     setDragState(null);
   };
 
-  const moveTopLabel = resolveMessage(t(i18n, "components.orderlist.moveTop"), "components.orderlist.moveTop", "Move to top");
-  const moveUpLabel = resolveMessage(t(i18n, "components.orderlist.moveUp"), "components.orderlist.moveUp", "Move up");
-  const moveDownLabel = resolveMessage(t(i18n, "components.orderlist.moveDown"), "components.orderlist.moveDown", "Move down");
-  const moveBottomLabel = resolveMessage(t(i18n, "components.orderlist.moveBottom"), "components.orderlist.moveBottom", "Move to bottom");
-  const moveToTargetLabel = resolveMessage(t(i18n, "components.picklist.moveToTarget"), "components.picklist.moveToTarget", "Move selected to target");
-  const moveAllToTargetLabel = resolveMessage(t(i18n, "components.picklist.moveAllToTarget"), "components.picklist.moveAllToTarget", "Move all to target");
-  const moveToSourceLabel = resolveMessage(t(i18n, "components.picklist.moveToSource"), "components.picklist.moveToSource", "Move selected to source");
-  const moveAllToSourceLabel = resolveMessage(t(i18n, "components.picklist.moveAllToSource"), "components.picklist.moveAllToSource", "Move all to source");
-  const sourceHeaderLabel = sourceHeader ?? resolveMessage(t(i18n, "components.picklist.sourceHeader"), "components.picklist.sourceHeader", "Source");
-  const targetHeaderLabel = targetHeader ?? resolveMessage(t(i18n, "components.picklist.targetHeader"), "components.picklist.targetHeader", "Target");
-  const sourceFilterLabel = sourceFilterPlaceholder ?? resolveMessage(t(i18n, "components.picklist.sourceFilterPlaceholder"), "components.picklist.sourceFilterPlaceholder", "Search source");
-  const targetFilterLabel = targetFilterPlaceholder ?? resolveMessage(t(i18n, "components.picklist.targetFilterPlaceholder"), "components.picklist.targetFilterPlaceholder", "Search target");
-  const emptyLabel = emptyMessage ?? resolveMessage(t(i18n, "components.picklist.empty"), "components.picklist.empty", "No items available.");
+  const moveTopLabel = t(i18n, "components.orderlist.moveTop");
+  const moveUpLabel = t(i18n, "components.orderlist.moveUp");
+  const moveDownLabel = t(i18n, "components.orderlist.moveDown");
+  const moveBottomLabel = t(i18n, "components.orderlist.moveBottom");
+  const moveToTargetLabel = t(i18n, "components.picklist.moveToTarget");
+  const moveAllToTargetLabel = t(i18n, "components.picklist.moveAllToTarget");
+  const moveToSourceLabel = t(i18n, "components.picklist.moveToSource");
+  const moveAllToSourceLabel = t(i18n, "components.picklist.moveAllToSource");
+  const sourceHeaderLabel = sourceHeader ?? t(i18n, "components.picklist.sourceHeader");
+  const targetHeaderLabel = targetHeader ?? t(i18n, "components.picklist.targetHeader");
+  const sourceFilterLabel = sourceFilterPlaceholder ?? t(i18n, "components.picklist.sourceFilterPlaceholder");
+  const targetFilterLabel = targetFilterPlaceholder ?? t(i18n, "components.picklist.targetFilterPlaceholder");
+  const emptyLabel = emptyMessage ?? t(i18n, "components.picklist.empty");
 
   const filteredSource = sourceItems
     .map((item, index) => ({ item, index }))

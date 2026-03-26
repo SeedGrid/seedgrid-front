@@ -24,7 +24,7 @@ Module._load = function patchedLoad(request, parent, isMain) {
   return originalLoad.call(this, request, parent, isMain);
 };
 
-const { SgDockMenu, SgToolBar, SgMenu, SgWizard, SgWizardPage, SgSplitButton, SgFloatActionButton, SgExpandablePanel, SgTreeView } = require("../dist/sandbox.cjs");
+const { SgDockMenu, SgToolBar, SgMenu, SgWizard, SgWizardPage, SgSplitButton, SgFloatActionButton, SgExpandablePanel, SgTreeView, SgPopup } = require("../dist/sandbox.cjs");
 
 Module._load = originalLoad;
 
@@ -225,6 +225,28 @@ function buildTreeView(props = {}) {
   });
 }
 
+function PopupHarness(props) {
+  const anchorRef = React.useRef(null);
+
+  return React.createElement(
+    React.Fragment,
+    null,
+    React.createElement("button", { ref: anchorRef, type: "button" }, "Anchor"),
+    React.createElement(SgPopup, {
+      anchorRef,
+      defaultOpen: true,
+      title: "Quick popup",
+      actions: [{ label: "Confirm" }],
+      ...props
+    })
+  );
+}
+
+function buildPopup(props = {}) {
+  return React.createElement(PopupHarness, props);
+}
+
+
 test("SgDockMenu opens and confirms reset through the rendered context menu", async () => {
   const harness = setupDomHarness();
   try {
@@ -355,6 +377,37 @@ test("SgMenu supports rendered keyboard navigation and activation", async () => 
     await flushDom();
 
     assert.deepEqual(navigated, ["security"]);
+  } finally {
+    harness.restore();
+  }
+});
+
+
+test("SgMenu collapses nested rendered keyboard branches with ArrowLeft", async () => {
+  const harness = setupDomHarness();
+  try {
+    await harness.render(buildKeyboardMenu());
+
+    const navigation = harness.document.querySelector('[role="navigation"]');
+    assert.ok(navigation);
+
+    await dispatchKeyboard(navigation, "keydown", { key: "ArrowDown" });
+    await flushDom();
+    await dispatchKeyboard(navigation, "keydown", { key: "ArrowRight" });
+    await flushDom();
+    await dispatchKeyboard(navigation, "keydown", { key: "ArrowDown" });
+    await flushDom();
+    assert.equal(harness.document.activeElement?.getAttribute("data-sg-menu-node"), "security");
+
+    await dispatchKeyboard(navigation, "keydown", { key: "ArrowLeft" });
+    await flushDom();
+    assert.equal(harness.document.activeElement?.getAttribute("data-sg-menu-node"), "settings");
+
+    await dispatchKeyboard(navigation, "keydown", { key: "ArrowLeft" });
+    await flushDom();
+
+    assert.equal(harness.document.querySelector('[data-sg-menu-node="security"]'), null);
+    assert.equal(harness.document.querySelector('[data-sg-menu-node="billing"]'), null);
   } finally {
     harness.restore();
   }
@@ -690,6 +743,53 @@ test("SgExpandablePanel closes the rendered overlay on Escape and focuses the fi
   }
 });
 
+test("SgPopup closes the rendered overlay on outside click and Escape", async () => {
+  const harness = setupDomHarness();
+  try {
+    const openChanges = [];
+    await harness.render(buildPopup({ onOpenChange: (open) => openChanges.push(open) }));
+    await flushDom();
+    await flushDom();
+
+    const anchor = Array.from(harness.document.querySelectorAll("button")).find(
+      (button) => button.textContent?.trim() === "Anchor"
+    );
+    const popup = harness.document.querySelector('[role="dialog"][aria-label="Quick popup"]');
+    assert.ok(anchor);
+    assert.ok(popup);
+
+    setElementRect(anchor, { left: 40, top: 60, width: 80, height: 32 });
+    setElementRect(popup, { left: 128, top: 60, width: 180, height: 96 });
+
+    await dispatchMouse(harness.document.body, "mousedown", { clientX: 10, clientY: 10 });
+    await flushDom();
+
+    assert.equal(harness.document.querySelector('[role="dialog"][aria-label="Quick popup"]'), null);
+    assert.deepEqual(openChanges, [false]);
+
+    await harness.render(buildPopup({ onOpenChange: (open) => openChanges.push(open) }));
+    await flushDom();
+    await flushDom();
+
+    await dispatchKeyboard(harness.document, "keydown", { key: "Escape" });
+    await flushDom();
+
+    assert.equal(
+      harness.document.querySelectorAll('[role="dialog"][aria-label="Quick popup"]').length,
+      0
+    );
+    assert.deepEqual(openChanges, [false, false]);
+  } finally {
+    harness.restore();
+  }
+});
+
+
+
+
+
+
+
 
 test("SgTreeView filters the rendered nodes from the search field", async () => {
   const harness = setupDomHarness();
@@ -762,3 +862,8 @@ test("SgTreeView expands, collapses and clears rendered checked nodes", async ()
     harness.restore();
   }
 });
+
+
+
+
+

@@ -501,57 +501,25 @@ function SgDatatableBase<T extends SgDatatableRow>(
     [sortedRows, pagedRows, clearFilters, clearSelection, resetSort, commitPage, currentRows, goToPage]
   );
 
-  const emptyLabel = emptyMessage ?? resolveMessage(
-    t(i18n, "components.datatable.empty"),
-    "components.datatable.empty",
-    "No records found."
-  );
+  const emptyLabel = emptyMessage ?? t(i18n, "components.datatable.empty");
 
-  const loadingLabel = resolveMessage(
-    t(i18n, "components.datatable.loading"),
-    "components.datatable.loading",
-    "Loading data..."
-  );
+  const loadingLabel = t(i18n, "components.datatable.loading");
 
-  const globalFilterLabel = globalFilterPlaceholder ?? resolveMessage(
-    t(i18n, "components.datatable.globalFilterPlaceholder"),
-    "components.datatable.globalFilterPlaceholder",
-    "Search in all columns"
-  );
+  const globalFilterLabel = globalFilterPlaceholder ?? t(i18n, "components.datatable.globalFilterPlaceholder");
 
-  const clearFiltersLabel = resolveMessage(
-    t(i18n, "components.datatable.clearFilters"),
-    "components.datatable.clearFilters",
-    "Clear filters"
-  );
+  const clearFiltersLabel = t(i18n, "components.datatable.clearFilters");
 
-  const prevLabel = resolveMessage(
-    t(i18n, "components.datatable.prev"),
-    "components.datatable.prev",
-    "Prev"
-  );
+  const prevLabel = t(i18n, "components.datatable.prev");
 
-  const nextLabel = resolveMessage(
-    t(i18n, "components.datatable.next"),
-    "components.datatable.next",
-    "Next"
-  );
+  const nextLabel = t(i18n, "components.datatable.next");
 
-  const rowsPerPageLabel = resolveMessage(
-    t(i18n, "components.datatable.rowsPerPage"),
-    "components.datatable.rowsPerPage",
-    "Rows per page"
-  );
+  const rowsPerPageLabel = t(i18n, "components.datatable.rowsPerPage");
 
-  const pageReport = resolveMessage(
-    t(i18n, "components.datatable.pageReport", {
-      first: resolvedTotalRecords === 0 ? 0 : safeFirst + 1,
-      last: Math.min(safeFirst + currentRows, resolvedTotalRecords),
-      total: resolvedTotalRecords
-    }),
-    "components.datatable.pageReport",
-    `${resolvedTotalRecords === 0 ? 0 : safeFirst + 1} - ${Math.min(safeFirst + currentRows, resolvedTotalRecords)} of ${resolvedTotalRecords}`
-  );
+  const pageReport = t(i18n, "components.datatable.pageReport", {
+    first: resolvedTotalRecords === 0 ? 0 : safeFirst + 1,
+    last: Math.min(safeFirst + currentRows, resolvedTotalRecords),
+    total: resolvedTotalRecords
+  });
 
   const shouldShowToolbar = showGlobalFilter || showClearFiltersButton;
   const shouldShowFiltersRow = showColumnFilters && visibleColumns.some((column) => column.filter);
@@ -723,7 +691,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
                                   const normalized = normalizeFilters(nextFilters);
                                   commitFilters(normalized, currentGlobalFilter);
                                 }}
-                                placeholder={column.filterPlaceholder ?? `Filter ${String(column.header ?? "")}`}
+                                placeholder={column.filterPlaceholder ?? t(i18n, "components.datatable.columnFilterPlaceholder", { column: String(column.header ?? "") })}
                                 className="w-full rounded-md border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-input-bg,var(--sg-surface)))] px-2 py-1 text-xs text-[rgb(var(--sg-input-fg,var(--sg-text)))] placeholder:text-[rgb(var(--sg-input-placeholder,var(--sg-muted)))] outline-none focus:ring-2 focus:ring-[rgb(var(--sg-ring))]"
                               />
                             ) : null}

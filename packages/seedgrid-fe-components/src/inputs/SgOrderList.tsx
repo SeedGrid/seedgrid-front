@@ -404,31 +404,11 @@ function SgOrderListBase(
     }
   }, [applyMove, handleItemSelection]);
 
-  const moveTopLabel = resolveMessage(
-    t(i18n, "components.orderlist.moveTop"),
-    "components.orderlist.moveTop",
-    "Move to top"
-  );
-  const moveUpLabel = resolveMessage(
-    t(i18n, "components.orderlist.moveUp"),
-    "components.orderlist.moveUp",
-    "Move up"
-  );
-  const moveDownLabel = resolveMessage(
-    t(i18n, "components.orderlist.moveDown"),
-    "components.orderlist.moveDown",
-    "Move down"
-  );
-  const moveBottomLabel = resolveMessage(
-    t(i18n, "components.orderlist.moveBottom"),
-    "components.orderlist.moveBottom",
-    "Move to bottom"
-  );
-  const emptyLabel = emptyMessage ?? resolveMessage(
-    t(i18n, "components.orderlist.empty"),
-    "components.orderlist.empty",
-    "No items available."
-  );
+  const moveTopLabel = t(i18n, "components.orderlist.moveTop");
+  const moveUpLabel = t(i18n, "components.orderlist.moveUp");
+  const moveDownLabel = t(i18n, "components.orderlist.moveDown");
+  const moveBottomLabel = t(i18n, "components.orderlist.moveBottom");
+  const emptyLabel = emptyMessage ?? t(i18n, "components.orderlist.empty");
 
   const canMoveTop = canInteract && moveSelectionTop(currentItems, movableSelection) !== currentItems;
   const canMoveUp = canInteract && moveSelectionUp(currentItems, movableSelection) !== currentItems;
