@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { t, useComponentsI18n } from "../i18n";
 
@@ -48,19 +48,27 @@ export type SgAutocompleteProps<T = SgAutocompleteItem> = Omit<SgInputTextProps,
   itemTooltip?: (item: SgAutocompleteItem) => React.ReactNode;
 } & RhfFieldProps;
 
-type SgAutocompleteBaseProps<T> = Omit<SgAutocompleteProps<T>, keyof RhfFieldProps>;
+type SgAutocompleteBaseProps<T> = Omit<SgAutocompleteProps<T>, "control">;
 
 function isPromise<T>(value: Promise<T> | T): value is Promise<T> {
   return typeof (value as Promise<T>)?.then === "function";
 }
 
 export function SgAutocomplete<T = SgAutocompleteItem>(props: SgAutocompleteProps<T>) {
-  const { control, name, ...rest } = props;
+  const i18n = useComponentsI18n();
+  const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.required")
+  );
+
   if (control && name) {
     return (
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -70,7 +78,7 @@ export function SgAutocomplete<T = SgAutocompleteItem>(props: SgAutocompleteProp
         }) => (
           <SgAutocompleteBase
             {...rest}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             value={field.value ?? ""}
             onChange={(value) => field.onChange(value)}
           />
@@ -78,7 +86,15 @@ export function SgAutocomplete<T = SgAutocompleteItem>(props: SgAutocompleteProp
       />
     );
   }
-  return <SgAutocompleteBase {...rest} />;
+
+  return (
+    <SgAutocompleteBase
+      {...rest}
+      name={name}
+      register={register}
+      rules={resolvedRules}
+    />
+  );
 }
 
 function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
@@ -307,7 +323,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
         onOpenChange?.(true);
         runSearch(inputValue, true);
       }}
-      aria-label="Abrir lista"
+      aria-label={t(i18n, "components.actions.openList")}
     >
       <ChevronDown size={16} />
     </button>
@@ -437,3 +453,4 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
     </div>
   );
 }
+

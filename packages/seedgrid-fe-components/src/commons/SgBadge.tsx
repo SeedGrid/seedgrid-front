@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgBadgeSeverity =
   | "primary"
@@ -196,7 +197,7 @@ export function SgBadge(props: Readonly<SgBadgeProps>) {
     rightIcon,
     removable = false,
     onRemove,
-    removeAriaLabel = "Remover",
+    removeAriaLabel,
     autoRemove = false,
     onClick,
     disabled,
@@ -209,6 +210,8 @@ export function SgBadge(props: Readonly<SgBadgeProps>) {
     ...aria
   } = props;
 
+  const i18n = useComponentsI18n();
+  const resolvedRemoveAriaLabel = removeAriaLabel ?? t(i18n, "components.badge.remove");
   const displayValue = getDisplayValue(value, max, showZero);
   const [autoRemoved, setAutoRemoved] = React.useState(false);
   const cssVars = buildVars(severity, customColors);
@@ -283,7 +286,7 @@ export function SgBadge(props: Readonly<SgBadgeProps>) {
             if (autoRemove) setAutoRemoved(true);
             onRemove?.();
           }}
-          aria-label={removeAriaLabel}
+          aria-label={resolvedRemoveAriaLabel}
           className={cn(
             "ml-0.5 inline-flex items-center justify-center rounded-full",
             "opacity-70 hover:opacity-100",

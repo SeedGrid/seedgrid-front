@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgAvatarSeverity =
   | "primary"
@@ -165,7 +166,7 @@ export const SgAvatar = React.forwardRef<HTMLSpanElement, SgAvatarProps>(
   (
     {
       src,
-      alt = "Avatar",
+      alt,
       label,
       icon,
       fallback,
@@ -189,6 +190,7 @@ export const SgAvatar = React.forwardRef<HTMLSpanElement, SgAvatarProps>(
     },
     ref
   ) => {
+    const i18n = useComponentsI18n();
     const [imageFailed, setImageFailed] = React.useState(false);
     const s = SIZE[size];
 
@@ -202,7 +204,8 @@ export const SgAvatar = React.forwardRef<HTMLSpanElement, SgAvatarProps>(
     const showLabel = !hasChildren && !showImage && !showIcon && hasRenderable(label);
 
     const interactive = typeof onClick === "function" || role === "button" || typeof tabIndex === "number";
-    const resolvedAriaLabel = ariaLabel ?? (typeof label === "string" ? label : alt);
+    const resolvedAlt = alt ?? t(i18n, "components.avatar.defaultAlt");
+    const resolvedAriaLabel = ariaLabel ?? (typeof label === "string" ? label : resolvedAlt);
     const squareRadius = size === "xs" || size === "sm" ? "rounded-md" : "rounded-xl";
 
     return (
@@ -235,7 +238,7 @@ export const SgAvatar = React.forwardRef<HTMLSpanElement, SgAvatarProps>(
         ) : showImage ? (
           <img
             src={src}
-            alt={alt}
+            alt={resolvedAlt}
             loading="lazy"
             draggable={false}
             className={cn("size-full object-cover", imageClassName)}

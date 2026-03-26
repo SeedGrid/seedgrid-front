@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -192,6 +193,7 @@ function computePosition(opts: {
 }
 
 export function SgPopup(props: Readonly<SgPopupProps>) {
+  const i18n = useComponentsI18n();
   const {
     title,
     subtitle,
@@ -307,6 +309,8 @@ export function SgPopup(props: Readonly<SgPopupProps>) {
 
   if (!isOpen) return null;
 
+  const resolvedAriaLabel = title ?? t(i18n, "components.popup.ariaLabel");
+
   const body = (
     <div
       ref={panelRef}
@@ -324,6 +328,7 @@ export function SgPopup(props: Readonly<SgPopupProps>) {
       }}
       role="dialog"
       aria-modal="false"
+      aria-label={resolvedAriaLabel}
     >
       {title ? (
         <div className="bg-primary px-3 py-2 text-xs font-medium text-primary-foreground">

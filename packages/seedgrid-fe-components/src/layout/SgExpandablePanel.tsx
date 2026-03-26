@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgExpandablePanelDirection = "left" | "right" | "top" | "bottom";
 export type SgExpandablePanelPlacement = "start" | "center" | "end";
@@ -358,7 +359,8 @@ export const SgExpandablePanel = React.forwardRef<HTMLDivElement, SgExpandablePa
     );
 
     const panelRole = role ?? (mode === "overlay" ? "dialog" : "region");
-    const panelAriaLabel = ariaLabel ?? "Expandable panel";
+    const i18n = useComponentsI18n();
+    const panelAriaLabel = ariaLabel ?? t(i18n, "components.expandablePanel.ariaLabel");
     const transitionStyle: React.CSSProperties =
       animationType === "none" ? { transitionDuration: "0ms" } : { transitionDuration: `${durationMs}ms` };
 

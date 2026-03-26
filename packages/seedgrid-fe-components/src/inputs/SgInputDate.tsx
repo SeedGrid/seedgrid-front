@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { resolveFieldError } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputDateProps = Omit<SgInputTextProps, "type"> & {
@@ -161,10 +162,15 @@ export function SgInputDate(props: SgInputDateProps) {
       <SgInputText
         {...rest}
         type="date"
-        error={error ?? internalError ?? undefined}
+        error={resolveFieldError(error, internalError ?? undefined)}
         inputProps={mergedInputProps}
         className={inputClassName}
         labelClassName={showStaticLabel ? "sr-only" : undefined}
+        onClear={() => {
+          setInternalError(null);
+          onValidation?.(null);
+          rest.onClear?.();
+        }}
       />
     </div>
   );

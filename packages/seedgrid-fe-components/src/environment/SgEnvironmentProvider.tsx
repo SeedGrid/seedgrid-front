@@ -5,6 +5,12 @@ import {
   createLocalStorageStrategy,
   buildSgPersistenceKey,
 } from "./persistence";
+import {
+  clearLocalPersistentState,
+  readLocalPersistentState,
+  resolvePersistedStateValue,
+  writeLocalPersistentState
+} from "./persistent-state";
 import type {
   NamespaceProvider,
   PersistenceStrategy,
@@ -163,19 +169,15 @@ export function useSgPersistentState<T>(args: {
         if (hasProvider) {
           loaded = await persistence.load(baseKey);
         } else {
-          try {
-            const raw = localStorage.getItem(baseKey);
-            loaded = raw !== null ? JSON.parse(raw) : null;
-          } catch {
-            loaded = null;
-          }
+          loaded = readLocalPersistentState({
+            storage: localStorage,
+            baseKey,
+            defaultValue: null,
+            deserialize: (value) => value
+          });
         }
         if (!alive) return;
-        if (loaded !== null && loaded !== undefined) {
-          setValue(deserialize(loaded));
-        } else {
-          setValue(defaultValue);
-        }
+        setValue(resolvePersistedStateValue({ loaded, defaultValue, deserialize }));
         setHydrated(true);
       } catch {
         if (!alive) return;
@@ -195,7 +197,7 @@ export function useSgPersistentState<T>(args: {
       void persistence.save(baseKey, serialize(value));
     } else {
       try {
-        localStorage.setItem(baseKey, JSON.stringify(value));
+        writeLocalPersistentState({ storage: localStorage, baseKey, value });
       } catch {
         // ignore
       }
@@ -214,7 +216,7 @@ export function useSgPersistentState<T>(args: {
       await persistence.clear(baseKey);
     } else {
       try {
-        localStorage.removeItem(baseKey);
+        clearLocalPersistentState({ storage: localStorage, baseKey, defaultValue });
       } catch {
         // ignore
       }

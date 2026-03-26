@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { useSgTimeContext } from "./SgTimeProvider";
@@ -138,6 +138,7 @@ function AnalogClock({
   style,
   centerOverlay
 }: Omit<SgClockProps, "clockStyle" | "format" | "size"> & { size: number }) {
+  const i18n = useComponentsI18n();
   const { nowMs, hasProvider, providerTick } = useClockNowMs(initialServerTime);
   void providerTick;
   useSecondTick(!hasProvider);
@@ -165,7 +166,7 @@ function AnalogClock({
         height={size}
         viewBox="0 0 100 100"
         className={cn("block", dark ? "dark" : undefined)}
-        aria-label="Analog clock"
+        aria-label={t(i18n, "components.gadgets.clock.analogAria")}
       >
         <g id="theme">{themeObj ? <ThemeLayer theme={themeObj} args={{ size, dark }} /> : null}</g>
 
@@ -232,6 +233,7 @@ function DigitalClock({
   className,
   style
 }: Omit<SgClockProps, "clockStyle" | "secondHandMode" | "themeId" | "theme" | "centerOverlay">) {
+  const i18n = useComponentsI18n();
   const { nowMs, hasProvider, providerTick } = useClockNowMs(initialServerTime);
   void providerTick;
   useSecondTick(!hasProvider);
@@ -309,7 +311,7 @@ function DigitalClock({
     );
 
     return (
-      <div className={cn("flex items-center gap-2", className)} style={style} aria-label="Digital clock">
+      <div className={cn("flex items-center gap-2", className)} style={style} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgFlipDigit value={hh.charAt(0)} fontSize={digitFont} />
         <SgFlipDigit value={hh.charAt(1)} fontSize={digitFont} />
         <Colon />
@@ -346,7 +348,7 @@ function DigitalClock({
     const ss = String(sNum).padStart(2, "0");
 
     return (
-      <div className={cn("flex items-center gap-4", className)} style={{ ...fontSize, ...style }} aria-label="Digital clock">
+      <div className={cn("flex items-center gap-4", className)} style={{ ...fontSize, ...style }} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgRoller3DDigit value={hh} items={hourItems} fontSize={digitFont} />
         <SgRoller3DDigit value={mm} items={minuteItems} fontSize={digitFont} />
         {showSeconds ? <SgRoller3DDigit value={ss} items={secondItems} fontSize={digitFont} /> : null}
@@ -376,7 +378,7 @@ function DigitalClock({
     );
 
     return (
-      <div className={cn("flex items-center gap-2", className)} style={style} aria-label="Digital clock">
+      <div className={cn("flex items-center gap-2", className)} style={style} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgFadeDigit value={hh.charAt(0)} fontSize={digitFont} />
         <SgFadeDigit value={hh.charAt(1)} fontSize={digitFont} />
         <Colon />
@@ -440,7 +442,7 @@ function DigitalClock({
     );
 
     return (
-      <div className={cn("relative z-10 flex items-end gap-2", className)} style={style} aria-label="Digital clock">
+      <div className={cn("relative z-10 flex items-end gap-2", className)} style={style} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgDiscardDigit value={hh.charAt(0)} fontSize={digitFont} totalNumberPages={pagesForDigit(hh.charAt(0))} transitionMs={560} changeAnimationMode="incoming" />
         <SgDiscardDigit value={hh.charAt(1)} fontSize={digitFont} totalNumberPages={pagesForDigit(hh.charAt(1))} transitionMs={560} changeAnimationMode="incoming" />
         <Colon />
@@ -461,7 +463,7 @@ function DigitalClock({
   if (digitalStyle === "matrix") {
     const dotSize = Math.max(3, Math.round(sizePx * 0.32));
     return (
-      <div className={cn("flex items-center", className)} style={style} aria-label="Digital clock">
+      <div className={cn("flex items-center", className)} style={style} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgMatrixDigit
           value={withPeriod}
           dotSize={dotSize}
@@ -477,7 +479,7 @@ function DigitalClock({
   if (digitalStyle === "neon") {
     const neonFont = Math.max(18, Math.round(sizePx * 1.35));
     return (
-      <div className={cn("flex items-center", className)} style={style} aria-label="Digital clock">
+      <div className={cn("flex items-center", className)} style={style} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgNeonDigit
           value={withPeriod}
           fontSize={neonFont}
@@ -526,7 +528,7 @@ function DigitalClock({
     );
 
     return (
-      <div className={cn("flex items-center", className)} style={{ gap: digitGap, ...style }} aria-label="Digital clock">
+      <div className={cn("flex items-center", className)} style={{ gap: digitGap, ...style }} aria-label={t(i18n, "components.gadgets.clock.digitalAria")}>
         <SgSevenSegmentDigit value={hh.charAt(0)} size={digitSize} thickness={thickness} />
         <SgSevenSegmentDigit value={hh.charAt(1)} size={digitSize} thickness={thickness} />
         <Colon />
@@ -568,7 +570,7 @@ function DigitalClock({
       <div
         className={cn("flex items-end", className)}
         style={{ gap, ...style }}
-        aria-label="Digital clock"
+        aria-label={t(i18n, "components.gadgets.clock.digitalAria")}
       >
         <SgSegmentDigit value={hh.charAt(0)} size={digitSize} />
         <SgSegmentDigit value={hh.charAt(1)} size={digitSize} />
@@ -590,7 +592,11 @@ function DigitalClock({
   }
 
   return (
-    <div className={cn("font-mono tabular-nums", classSize, className)} style={{ ...fontSize, ...style }}>
+    <div
+      className={cn("font-mono tabular-nums", classSize, className)}
+      style={{ ...fontSize, ...style }}
+      aria-label={t(i18n, "components.gadgets.clock.digitalAria")}
+    >
       {text}
       {format === "12h" && dayPeriod ? (
         <span className="ml-2 align-top text-xs font-semibold text-muted-foreground">{dayPeriod}</span>
@@ -702,3 +708,7 @@ export function SgClock(props: SgClockProps) {
     </SgCard>
   );
 }
+
+
+
+

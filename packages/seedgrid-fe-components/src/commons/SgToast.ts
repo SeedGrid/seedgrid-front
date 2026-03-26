@@ -1,4 +1,5 @@
 import React from "react";
+import { getComponentsI18n, t } from "../i18n";
 
 export type SgToastId = string;
 export type SgToastType = "default" | "success" | "info" | "warning" | "error" | "loading";
@@ -158,7 +159,8 @@ baseToast.promise = async <T>(
 ) => {
   const runPromise = typeof promiseOrFactory === "function" ? promiseOrFactory() : promiseOrFactory;
 
-  const loadingId = baseToast.loading(messages.loading ?? "Loading...", options);
+  const i18n = getComponentsI18n();
+  const loadingId = baseToast.loading(messages.loading ?? t(i18n, "components.toast.loading"), options);
 
   try {
     const value = await runPromise;

@@ -105,6 +105,8 @@ export function SgInputEmail(props: Readonly<SgInputEmailProps>) {
       {...rest}
       type="email"
       textInputType={props.textInputType ?? "email"}
+      required={required}
+      requiredMessage={requiredMessage}
       error={error ?? internalError ?? undefined}
       onClear={() => {
         setInternalError(null);

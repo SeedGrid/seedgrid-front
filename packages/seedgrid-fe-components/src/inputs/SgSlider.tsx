@@ -1,6 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { resolveFieldError, type RhfFieldProps } from "../rhf";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -17,6 +20,21 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
+type SliderInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  | "type"
+  | "id"
+  | "min"
+  | "max"
+  | "step"
+  | "value"
+  | "defaultValue"
+  | "disabled"
+  | "aria-label"
+> & {
+  ref?: React.Ref<HTMLInputElement>;
+};
+
 export type SgSliderProps = {
   id: string;
   minValue: number;
@@ -29,22 +47,32 @@ export type SgSliderProps = {
   ariaLabel?: string;
   className?: string;
   width?: number | string;
-  inputProps?: Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    | "type"
-    | "id"
-    | "min"
-    | "max"
-    | "step"
-    | "value"
-    | "defaultValue"
-    | "onChange"
-    | "disabled"
-    | "aria-label"
-  >;
-};
+  error?: string;
+  inputProps?: SliderInputProps;
+} & RhfFieldProps;
 
-export function SgSlider(props: Readonly<SgSliderProps>) {
+type SgSliderBaseProps = Omit<SgSliderProps, "name" | "control" | "register" | "rules">;
+
+function mergeInputRefs(
+  primary: React.Ref<HTMLInputElement> | undefined,
+  secondary: React.Ref<HTMLInputElement> | undefined
+) {
+  return (node: HTMLInputElement | null) => {
+    if (typeof primary === "function") {
+      primary(node);
+    } else if (primary && typeof primary === "object" && "current" in primary) {
+      primary.current = node;
+    }
+
+    if (typeof secondary === "function") {
+      secondary(node);
+    } else if (secondary && typeof secondary === "object" && "current" in secondary) {
+      secondary.current = node;
+    }
+  };
+}
+
+function SgSliderBase(props: Readonly<SgSliderBaseProps>) {
   const {
     id,
     minValue,
@@ -57,6 +85,7 @@ export function SgSlider(props: Readonly<SgSliderProps>) {
     ariaLabel,
     className,
     width,
+    error,
     inputProps
   } = props;
 
@@ -82,27 +111,88 @@ export function SgSlider(props: Readonly<SgSliderProps>) {
   );
 
   return (
-    <input
-      id={id}
-      type="range"
-      min={safeMin}
-      max={safeMax}
-      step={safeStep}
-      value={currentValue}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      onChange={(event) => {
-        const nextRaw = Number(event.currentTarget.value);
-        const next = clamp(Number.isFinite(nextRaw) ? nextRaw : safeMin, safeMin, safeMax);
-        if (!isControlled) setInternalValue(next);
-        onChange?.(next);
-      }}
-      className={cn("h-5 w-full cursor-pointer", disabled ? "cursor-not-allowed opacity-60" : "", className)}
-      style={{ width: toCssSize(width) }}
-      {...inputProps}
-    />
+    <div style={{ width: toCssSize(width) }}>
+      <input
+        id={id}
+        type="range"
+        min={safeMin}
+        max={safeMax}
+        step={safeStep}
+        value={currentValue}
+        disabled={disabled}
+        aria-label={ariaLabel}
+        aria-invalid={error ? true : undefined}
+        onChange={(event) => {
+          const nextRaw = Number(event.currentTarget.value);
+          const next = clamp(Number.isFinite(nextRaw) ? nextRaw : safeMin, safeMin, safeMax);
+          if (!isControlled) setInternalValue(next);
+          onChange?.(next);
+          inputProps?.onChange?.(event);
+        }}
+        onBlur={(event) => {
+          inputProps?.onBlur?.(event);
+        }}
+        className={cn("h-5 w-full cursor-pointer", disabled ? "cursor-not-allowed opacity-60" : "", className)}
+        {...inputProps}
+      />
+      {error ? <p className="mt-1 text-xs text-red-600">{error}</p> : null}
+    </div>
   );
 }
 
-SgSlider.displayName = "SgSlider";
+export function SgSlider(props: Readonly<SgSliderProps>) {
+  const { control, name, register, rules, ...rest } = props;
 
+  if (name && register) {
+    const reg = register(name, rules);
+    return (
+      <SgSliderBase
+        {...rest}
+        inputProps={{
+          ...rest.inputProps,
+          name,
+          ref: mergeInputRefs(reg.ref, rest.inputProps?.ref),
+          onBlur: (event) => {
+            reg.onBlur(event);
+            rest.inputProps?.onBlur?.(event);
+          },
+          onChange: (event) => {
+            reg.onChange(event);
+            rest.inputProps?.onChange?.(event);
+          }
+        }}
+      />
+    );
+  }
+
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field, fieldState }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState }) => (
+          <SgSliderBase
+            {...rest}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
+            value={typeof field.value === "number" ? field.value : Number(field.value ?? rest.minValue)}
+            onChange={(next) => field.onChange(next)}
+            inputProps={{
+              ...rest.inputProps,
+              name,
+              ref: mergeInputRefs(field.ref, rest.inputProps?.ref),
+              onBlur: (event) => {
+                field.onBlur();
+                rest.inputProps?.onBlur?.(event);
+              }
+            }}
+          />
+        )}
+      />
+    );
+  }
+
+  return <SgSliderBase {...rest} />;
+}
+
+SgSlider.displayName = "SgSlider";

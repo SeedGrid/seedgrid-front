@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { t, useComponentsI18n } from "../i18n";
+import { buildFabStorageKey, parseStoredFabDragPosition } from "./fab-helpers";
 import { SgPopup } from "../overlay/SgPopup";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
@@ -9,32 +10,6 @@ import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/Sg
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
-}
-
-function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null {
-  const value = typeof raw === "string" ? (() => {
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  })() : raw;
-
-  if (
-    !value ||
-    typeof value !== "object" ||
-    typeof (value as { x?: unknown }).x !== "number" ||
-    typeof (value as { y?: unknown }).y !== "number" ||
-    !Number.isFinite((value as { x: number }).x) ||
-    !Number.isFinite((value as { y: number }).y)
-  ) {
-    return null;
-  }
-
-  return {
-    x: (value as { x: number }).x,
-    y: (value as { y: number }).y
-  };
 }
 
 /* ── types ── */
@@ -362,7 +337,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
   const hintTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragCleanupRef = React.useRef<(() => void) | null>(null);
   const isAbsolute = absolute === true;
-  const storageKey = dragId ? `sg-fab-pos:${dragId}` : null;
+  const storageKey = buildFabStorageKey(dragId);
 
   const loadStoredPosition = React.useCallback(async (): Promise<{ x: number; y: number } | null> => {
     if (!storageKey) return null;
@@ -371,7 +346,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
       try {
         const loaded = await loadPersistedState(storageKey);
         if (loaded === null || loaded === undefined) return null;
-        const parsed = parseStoredDragPosition(loaded);
+        const parsed = parseStoredFabDragPosition(loaded);
         if (!parsed) {
           await clearPersistedState(storageKey);
           return null;
@@ -385,7 +360,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return null;
-      const parsed = parseStoredDragPosition(raw);
+      const parsed = parseStoredFabDragPosition(raw);
       if (!parsed) {
         localStorage.removeItem(storageKey);
         return null;
@@ -807,7 +782,7 @@ export function SgFloatActionButton(props: Readonly<SgFloatActionButtonProps>) {
         onContextMenu={handleContextMenu}
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
-        aria-label={hint ?? (open ? "Close" : "Open")}
+        aria-label={hint ?? (open ? t(i18n, "components.actions.close") : t(i18n, "components.actions.open"))}
         aria-expanded={actions ? open : undefined}
       >
         {loading ? (

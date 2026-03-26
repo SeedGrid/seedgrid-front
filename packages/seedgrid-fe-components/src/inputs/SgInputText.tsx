@@ -3,17 +3,11 @@
 import React from "react";
 import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
-import type {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  RegisterOptions,
-  UseFormRegister
-} from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
-export type SgInputTextProps = {
+export type SgInputTextProps = RhfFieldProps & {
   id: string;
   label?: string;
   labelText?: string;
@@ -24,7 +18,6 @@ export type SgInputTextProps = {
   hintText?: string;
   prefixText?: string;
   suffixText?: string;
-  error?: string;
   type?: React.HTMLInputTypeAttribute;
   placeholder?: string;
   className?: string;
@@ -58,11 +51,9 @@ export type SgInputTextProps = {
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;
-  register?: UseFormRegister<FieldValues>;
-  rules?: RegisterOptions<FieldValues>;
-} & RhfFieldProps;
+};
 
-type SgInputTextBaseProps = Omit<SgInputTextProps, keyof RhfFieldProps>;
+type SgInputTextBaseProps = Omit<SgInputTextProps, "name" | "control" | "register" | "rules">;
 
 function ErrorText(props: { message?: string }) {
   if (!props.message) return null;
@@ -550,9 +541,16 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
 }
 
 export function SgInputText(props: SgInputTextProps) {
+  const i18n = useComponentsI18n();
   const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.required")
+  );
+
   if (name && register) {
-    const reg = register(name, rules);
+    const reg = register(name, resolvedRules);
     return (
       <SgInputTextBase
         {...rest}
@@ -594,6 +592,7 @@ export function SgInputText(props: SgInputTextProps) {
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -603,7 +602,7 @@ export function SgInputText(props: SgInputTextProps) {
         }) => (
           <SgInputTextBase
             {...rest}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             inputProps={mergeInputPropsWithField(rest.inputProps, field, { normalizeValue, toFieldValue })}
           />
         )}

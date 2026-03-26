@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputDate, type SgInputDateProps } from "./SgInputDate";
+import { resolveFieldError } from "../rhf";
 import { validateBirthDate, type BirthDatePolicy } from "../validators";
 import { t, useComponentsI18n } from "../i18n";
 
@@ -74,13 +75,18 @@ export function SgInputBirthDate(props: SgInputBirthDateProps) {
   return (
     <SgInputDate
       {...rest}
-      error={error ?? internalError ?? undefined}
+      error={resolveFieldError(error, internalError ?? undefined)}
       inputProps={{
         ...inputProps,
         onBlur: (event) => {
           if (validateOnBlur ?? true) handleBlur(event);
           else inputProps?.onBlur?.(event);
         }
+      }}
+      onClear={() => {
+        setInternalError(null);
+        onValidation?.(null);
+        rest.onClear?.();
       }}
       alwaysFloat={alwaysFloat ?? true}
       maxDate={maxDate ?? derivedMinDate ?? todayStr}

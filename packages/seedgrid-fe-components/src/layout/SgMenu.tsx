@@ -9,6 +9,8 @@ import { SgAutocomplete, type SgAutocompleteItem } from "../inputs/SgAutocomplet
 import { SgCard } from "./SgCard";
 import { useSgDockLayout, type SgDockZoneId } from "./SgDockLayout";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
+import { t, useComponentsI18n } from "../i18n";
+import { buildMenuMaps, collectMenuSearchEntries, collectParentChain, computeActiveSets, filterMenuNodes, flattenVisibleNodes, mergeExpandedIdsForActivePath, resolveEffectiveActiveId, resolveExpandedIdsToggle, resolveHorizontalDockAlign, resolveMegaMenuActiveNode, resolveMegaMenuHoverActiveId, resolveMegaMenuInteraction, resolveMenuAutocompleteItems, resolveMenuHintPosition as resolveMenuHintPositionHelper, resolveMenuKeyboardAction, resolveMenuLayoutState, resolveMenuNodeActionIntent, resolveMenuSearchSelectionState, resolveTieredActiveState, resolveTieredClickState, resolveTieredHoverIntent, resolveTieredHoverPath, resolveTieredNodeClickIntent, type MenuMaps } from "./menu-logic";
 
 export type SgMenuNode = {
   id: string;
@@ -128,13 +130,6 @@ type VisibleNode = {
   parentId: string;
 };
 
-type MenuMaps = {
-  parentById: Map<string, string>;
-  nodeById: Map<string, SgMenuNode>;
-  childrenByParent: Map<string, string[]>;
-  firstByUrl: Map<string, string>;
-};
-
 type DockDragStart = {
   x: number;
   y: number;
@@ -222,115 +217,6 @@ function useControllableState<T>(
   return [current, setValue] as const;
 }
 
-function buildMenuMaps(menu: SgMenuNode[]): MenuMaps {
-  const parentById = new Map<string, string>();
-  const nodeById = new Map<string, SgMenuNode>();
-  const childrenByParent = new Map<string, string[]>();
-  const firstByUrl = new Map<string, string>();
-
-  const walk = (nodes: SgMenuNode[], parentId: string) => {
-    childrenByParent.set(
-      parentId,
-      nodes.map((node) => node.id)
-    );
-    for (const node of nodes) {
-      parentById.set(node.id, parentId);
-      nodeById.set(node.id, node);
-      if (node.url && !firstByUrl.has(node.url)) firstByUrl.set(node.url, node.id);
-      if (node.children?.length) walk(node.children, node.id);
-    }
-  };
-
-  walk(menu, ROOT_PARENT_ID);
-  return { parentById, nodeById, childrenByParent, firstByUrl };
-}
-
-function filterMenuNodes(nodes: SgMenuNode[], query: string): SgMenuNode[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return nodes;
-
-  const walk = (list: SgMenuNode[]): SgMenuNode[] => {
-    const out: SgMenuNode[] = [];
-    for (const node of list) {
-      const selfMatch = node.label.toLowerCase().includes(q);
-      const children = node.children?.length ? walk(node.children) : [];
-      if (selfMatch || children.length > 0) {
-        out.push({
-          ...node,
-          children: children.length > 0 ? children : undefined
-        });
-      }
-    }
-    return out;
-  };
-
-  return walk(nodes);
-}
-
-type MenuSearchEntry = {
-  id: string;
-  label: string;
-  path: string;
-  group: string;
-};
-
-function collectMenuSearchEntries(
-  nodes: SgMenuNode[],
-  trail: string[] = [],
-  out: MenuSearchEntry[] = []
-) {
-  for (const node of nodes) {
-    const nextTrail = [...trail, node.label];
-    out.push({
-      id: node.id,
-      label: node.label,
-      path: nextTrail.join(" > "),
-      group: trail[0] ?? node.label
-    });
-    if (node.children?.length) collectMenuSearchEntries(node.children, nextTrail, out);
-  }
-  return out;
-}
-
-function flattenVisibleNodes(
-  nodes: SgMenuNode[],
-  expandedSet: Set<string>,
-  collapsed: boolean,
-  forceExpand: boolean,
-  depth = 0,
-  parentId = ROOT_PARENT_ID,
-  out: VisibleNode[] = []
-) {
-  for (const node of nodes) {
-    out.push({ node, depth, parentId });
-    if (collapsed) continue;
-    const hasChildren = !!node.children?.length;
-    const isOpen = forceExpand || expandedSet.has(node.id);
-    if (hasChildren && isOpen) {
-      flattenVisibleNodes(
-        node.children as SgMenuNode[],
-        expandedSet,
-        collapsed,
-        forceExpand,
-        depth + 1,
-        node.id,
-        out
-      );
-    }
-  }
-  return out;
-}
-
-function collectParentChain(parentById: Map<string, string>, id: string) {
-  const out: string[] = [];
-  let current = parentById.get(id);
-  while (current && current !== ROOT_PARENT_ID) {
-    out.push(current);
-    current = parentById.get(current);
-  }
-  return out;
-}
-
 function firstChars(value: string, amount = 2) {
   const normalized = value.trim().replace(/\s+/g, " ");
   if (!normalized) return "?";
@@ -350,43 +236,17 @@ function sameStringArray(a: string[], b: string[]) {
   return true;
 }
 
-function computeActiveSets(
-  nodes: SgMenuNode[],
-  activeId: string | undefined,
-  activeUrl: string | undefined
-) {
-  const exact = new Set<string>();
-  const branch = new Set<string>();
-
-  const walk = (list: SgMenuNode[]): boolean => {
-    let found = false;
-    for (const node of list) {
-      const childFound = node.children?.length ? walk(node.children) : false;
-      const selfActive =
-        (activeId ? node.id === activeId : false) ||
-        (activeUrl ? node.url === activeUrl : false);
-      if (selfActive) exact.add(node.id);
-      if (childFound) branch.add(node.id);
-      if (selfActive || childFound) found = true;
-    }
-    return found;
-  };
-
-  walk(nodes);
-  return { exact, branch };
-}
-
 function elevationClass(elevation: "none" | "sm" | "md") {
   if (elevation === "sm") return "shadow-sm";
   if (elevation === "md") return "shadow-md";
   return "";
 }
-
 function resolveIcon(node: SgMenuNode) {
   return node.icon ?? null;
 }
 
 export function SgMenu(props: Readonly<SgMenuProps>) {
+  const i18n = useComponentsI18n();
   const {
     id,
     menu,
@@ -426,7 +286,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     onNavigate,
     onAction,
     onItemClick,
-    ariaLabel = "Menu",
+    ariaLabel,
     keyboardNavigation = true,
     openSubmenuOnHover = false,
     search,
@@ -438,6 +298,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     userSectionStyle,
     footer
   } = props;
+
+  const resolvedAriaLabel = ariaLabel ?? t(i18n, "components.menu.ariaLabel");
 
   const densityCfg =
     density === "compact"
@@ -556,23 +418,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const dockHoverZoneRef = React.useRef<SgDockZoneId | null>(null);
   const searchEntries = React.useMemo(() => collectMenuSearchEntries(menu), [menu]);
   const autocompleteSource = React.useCallback(
-    (query: string): SgAutocompleteItem[] => {
-      const q = query.trim().toLowerCase();
-      const matches = !q
-        ? searchEntries
-        : searchEntries.filter(
-            (entry) =>
-              entry.label.toLowerCase().includes(q) ||
-              entry.path.toLowerCase().includes(q)
-          );
-      return matches.slice(0, 120).map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        value: entry.path,
-        group: entry.group,
-        data: { nodeId: entry.id, path: entry.path }
-      }));
-    },
+    (query: string): SgAutocompleteItem[] => resolveMenuAutocompleteItems(searchEntries, query),
     [searchEntries]
   );
   const filteredMenu = React.useMemo(
@@ -581,21 +427,44 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   );
   const hasSearch = searchEnabled && searchValue.trim().length > 0;
   const effectiveMenuStyle = isCollapsed || hasSearch ? "panel" : resolvedMenuStyle;
-  const resolvedPosition: "left" | "right" =
-    dockMode && effectiveDockZone
-      ? effectiveDockZone === "right"
-        ? "right"
-        : effectiveDockZone === "left"
-        ? "left"
-        : orientationDirection === "horizontal-right"
-        ? "right"
-        : "left"
-      : position;
-  const isHorizontalDockZone = effectiveDockZone === "top" || effectiveDockZone === "bottom";
-  const isVerticalDockZone = effectiveDockZone === "left" || effectiveDockZone === "right";
-  const tieredOpenToLeft =
-    resolvedPosition === "right" ||
-    (isHorizontalDockZone && horizontalDockAlign === "right");
+  const layoutState = React.useMemo(
+    () =>
+      resolveMenuLayoutState({
+        dockMode,
+        effectiveDockZone,
+        orientationDirection,
+        position,
+        horizontalDockAlign,
+        isCollapsed,
+        menuStyle,
+        effectiveMenuStyle,
+        pinnedState,
+        expandedWidthCss,
+        collapsedWidthCss
+      }),
+    [
+      collapsedWidthCss,
+      dockMode,
+      effectiveDockZone,
+      effectiveMenuStyle,
+      expandedWidthCss,
+      horizontalDockAlign,
+      isCollapsed,
+      menuStyle,
+      orientationDirection,
+      pinnedState,
+      position
+    ]
+  );
+  const {
+    resolvedPosition,
+    isHorizontalDockZone,
+    isVerticalDockZone,
+    tieredOpenToLeft,
+    isMegaMenuStyle,
+    dockAlign,
+    sidebarWidthCss
+  } = layoutState;
 
   const hideMenuHint = React.useCallback(() => {
     menuHintAnchorRef.current = null;
@@ -603,20 +472,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   }, []);
 
   const resolveMenuHintPosition = React.useCallback((anchor: MenuHintAnchor) => {
-    if (!anchor.target.isConnected) return null;
-
     const rect = anchor.target.getBoundingClientRect();
-    if (anchor.placement === "right") {
-      return {
-        x: rect.right + 8,
-        y: rect.top + (rect.height / 2)
-      };
-    }
-
-    return {
-      x: rect.left + (rect.width / 2),
-      y: rect.top - 8
-    };
+    return resolveMenuHintPositionHelper({
+      isConnected: anchor.target.isConnected,
+      rect,
+      placement: anchor.placement
+    });
   }, []);
 
   const showMenuHint = React.useCallback(
@@ -709,10 +570,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     [clearDockDragVisual]
   );
 
-  const effectiveActiveId =
-    selection?.activeId ??
-    (selection?.activeUrl ? maps.firstByUrl.get(selection.activeUrl) : undefined) ??
-    localActiveId;
+  const effectiveActiveId = resolveEffectiveActiveId({
+    activeId: selection?.activeId,
+    activeUrl: selection?.activeUrl,
+    localActiveId,
+    firstByUrl: maps.firstByUrl
+  });
   const effectiveActiveUrl = selection?.activeUrl;
 
   const activeSets = React.useMemo(
@@ -725,20 +588,21 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     const chain = collectParentChain(maps.parentById, effectiveActiveId);
     if (chain.length === 0) return;
     setExpandedIds((prev) => {
-      const next = Array.from(new Set([...prev, ...chain]));
+      const next = mergeExpandedIdsForActivePath(prev, chain);
       return sameStringArray(prev, next) ? prev : next;
     });
   }, [effectiveActiveId, maps.parentById, setExpandedIds]);
 
   React.useEffect(() => {
-    if (!effectiveActiveId) return;
-    const parentChain = collectParentChain(maps.parentById, effectiveActiveId).reverse();
-    const activeNode = maps.nodeById.get(effectiveActiveId);
-    const nextTieredPath = [...parentChain];
-    if (activeNode?.children?.length) nextTieredPath.push(activeNode.id);
-    setTieredPath(nextTieredPath);
-    setMegaActiveId(parentChain[0] ?? activeNode?.id ?? menu[0]?.id);
-  }, [effectiveActiveId, maps.nodeById, maps.parentById, menu]);
+    const nextState = resolveTieredActiveState({
+      effectiveActiveId,
+      maps,
+      menu,
+      rootParentId: ROOT_PARENT_ID
+    });
+    setTieredPath(nextState.tieredPath);
+    setMegaActiveId(nextState.megaActiveId);
+  }, [effectiveActiveId, maps, menu]);
 
   React.useEffect(() => {
     if (effectiveMenuStyle !== "tiered") return;
@@ -791,23 +655,16 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
   const toggleExpanded = React.useCallback(
     (nodeId: string) => {
-      setExpandedIds((prev) => {
-        const next = new Set(prev);
-        const isOpen = next.has(nodeId);
-        if (isOpen) {
-          next.delete(nodeId);
-          return Array.from(next);
-        }
-        if (mode === "accordion") {
-          const parentId = maps.parentById.get(nodeId) ?? ROOT_PARENT_ID;
-          const siblings = maps.childrenByParent.get(parentId) ?? [];
-          for (const siblingId of siblings) {
-            if (siblingId !== nodeId) next.delete(siblingId);
-          }
-        }
-        next.add(nodeId);
-        return Array.from(next);
-      });
+      setExpandedIds((prev) =>
+        resolveExpandedIdsToggle({
+          currentIds: prev,
+          nodeId,
+          mode,
+          parentById: maps.parentById,
+          childrenByParent: maps.childrenByParent,
+          rootParentId: ROOT_PARENT_ID
+        })
+      );
     },
     [maps.childrenByParent, maps.parentById, mode, setExpandedIds]
   );
@@ -910,7 +767,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             const zoneEl = dock.getZoneElement(zone);
             if (zoneEl) {
               const zoneRect = zoneEl.getBoundingClientRect();
-              setHorizontalDockAlign(upEvent.clientX < zoneRect.left + zoneRect.width / 2 ? "left" : "right");
+              setHorizontalDockAlign(resolveHorizontalDockAlign(upEvent.clientX, zoneRect));
             }
           } else {
             setHorizontalDockAlign(null);
@@ -955,60 +812,28 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const onListKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (!keyboardNavigation) return;
-      if (visibleNodes.length === 0) return;
-
-      const currentIndex = visibleNodes.findIndex((item) => item.node.id === focusedId);
-      const activeIndex = currentIndex >= 0 ? currentIndex : 0;
-      const current = visibleNodes[activeIndex];
-      if (!current) return;
-      const node = current.node;
-      const hasChildren = !!node.children?.length;
-      const isOpen = hasSearch || expandedSet.has(node.id);
-
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        const next = visibleNodes[Math.min(activeIndex + 1, visibleNodes.length - 1)];
-        focusById(next?.node.id);
+      const action = resolveMenuKeyboardAction({
+        key: event.key,
+        visibleNodes,
+        focusedId,
+        expandedIds: expandedSet,
+        hasSearch,
+        isCollapsed,
+        parentById: maps.parentById,
+        rootParentId: ROOT_PARENT_ID
+      });
+      if (action.type === "noop") return;
+      event.preventDefault();
+      if (action.type === "focus") {
+        focusById(action.id);
         return;
       }
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        const next = visibleNodes[Math.max(activeIndex - 1, 0)];
-        focusById(next?.node.id);
+      if (action.type === "toggle") {
+        toggleExpanded(action.id);
         return;
       }
-      if (event.key === "ArrowRight") {
-        if (hasChildren && !isCollapsed && !isOpen && !hasSearch) {
-          event.preventDefault();
-          toggleExpanded(node.id);
-          return;
-        }
-        if (hasChildren && !isCollapsed) {
-          event.preventDefault();
-          const next = visibleNodes[activeIndex + 1];
-          if (next && next.depth > current.depth) focusById(next.node.id);
-        }
-        return;
-      }
-      if (event.key === "ArrowLeft") {
-        if (hasChildren && !isCollapsed && isOpen && !hasSearch) {
-          event.preventDefault();
-          toggleExpanded(node.id);
-          return;
-        }
-        event.preventDefault();
-        const parentId = maps.parentById.get(node.id);
-        if (parentId && parentId !== ROOT_PARENT_ID) focusById(parentId);
-        return;
-      }
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        if (hasChildren && !node.url && !node.onClick && !isCollapsed) {
-          toggleExpanded(node.id);
-          return;
-        }
-        activateNode(node);
-      }
+      const node = maps.nodeById.get(action.id);
+      if (node) activateNode(node);
     },
     [
       activateNode,
@@ -1018,6 +843,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       hasSearch,
       isCollapsed,
       keyboardNavigation,
+      maps.nodeById,
       maps.parentById,
       toggleExpanded,
       visibleNodes
@@ -1069,7 +895,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
               onFocus={() => setFocusedId(node.id)}
               onClick={() => {
                 if (disabled) return;
-                if (hasChildren && !node.url && !node.onClick && !isCollapsed) {
+                const intent = resolveMenuNodeActionIntent({
+                  variant: "panel",
+                  hasChildren,
+                  hasActionTarget: Boolean(node.url || node.onClick),
+                  isCollapsed
+                });
+                if (intent === "toggle") {
                   toggleExpanded(node.id);
                   return;
                 }
@@ -1107,7 +939,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             {!isCollapsed && hasChildren ? (
               <button
                 type="button"
-                aria-label={openNow ? "Collapse group" : "Expand group"}
+                aria-label={openNow ? t(i18n, "components.actions.collapse") : t(i18n, "components.actions.expand")}
                 onClick={() => !disabled && toggleExpanded(node.id)}
                 className={cn(
                   "inline-flex size-7 shrink-0 items-center justify-center rounded",
@@ -1162,7 +994,12 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           onMouseLeave={node.hint ? hideMenuHint : undefined}
           onClick={() => {
             if (node.disabled) return;
-            if (hasChildren && !node.url && !node.onClick) return;
+            const intent = resolveMenuNodeActionIntent({
+              variant: "flat",
+              hasChildren,
+              hasActionTarget: Boolean(node.url || node.onClick)
+            });
+            if (intent === "noop") return;
             activateNode(node);
           }}
           className={cn(
@@ -1225,25 +1062,30 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   aria-current={isExactActive ? "page" : undefined}
                   onMouseEnter={(event) => {
                     if (node.hint) showMenuHint(event.currentTarget, node.hint);
-                    if (!openSubmenuOnHover) return;
-                    if (!hasChildren) {
-                      setTieredPath((prev) => prev.slice(0, depth));
-                      return;
-                    }
-                    setTieredPath((prev) => [...prev.slice(0, depth), node.id]);
+                    setTieredPath((prev) =>
+                      resolveTieredHoverIntent({
+                        currentPath: prev,
+                        depth,
+                        nodeId: node.id,
+                        hasChildren,
+                        openSubmenuOnHover
+                      }) ?? prev
+                    );
                   }}
                   onMouseLeave={node.hint ? hideMenuHint : undefined}
                   onClick={() => {
                     if (node.disabled) return;
+                    const nextState = resolveTieredNodeClickIntent({
+                      currentPath: tieredPath,
+                      depth,
+                      nodeId: node.id,
+                      hasChildren,
+                      hasActionTarget: Boolean(node.url || node.onClick)
+                    });
                     if (hasChildren) {
-                      const isOpenAtDepth = tieredPath[depth] === node.id;
-                      setTieredPath((prev) => {
-                        const base = prev.slice(0, depth);
-                        return isOpenAtDepth ? base : [...base, node.id];
-                      });
-                      if (isOpenAtDepth) return;
-                      if (!node.url && !node.onClick) return;
+                      setTieredPath(nextState.nextPath);
                     }
+                    if (!nextState.shouldActivateNode) return;
                     activateNode(node);
                   }}
                   className={cn(
@@ -1295,7 +1137,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
   const renderMegaColumns = React.useCallback(
     (nodes: SgMenuNode[]) => {
       if (!nodes.length) {
-        return <div className="text-sm text-muted-foreground">No items found.</div>;
+        return <div className="text-sm text-muted-foreground">{t(i18n, "components.menu.empty")}</div>;
       }
 
       return (
@@ -1333,7 +1175,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
   const renderMenuTree = (items: SgMenuNode[]) => {
     if (items.length === 0) {
-      return <div className="px-3 py-2 text-xs text-muted-foreground">No items found.</div>;
+      return <div className="px-3 py-2 text-xs text-muted-foreground">{t(i18n, "components.menu.empty")}</div>;
     }
 
     if (effectiveMenuStyle === "panel") {
@@ -1344,9 +1186,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
       return <div className="relative min-h-[120px]">{renderTieredLevels(items, 0)}</div>;
     }
 
-    const activeMegaNode =
-      items.find((node) => node.id === megaActiveId) ??
-      items[0];
+    const activeMegaNode = resolveMegaMenuActiveNode(items, megaActiveId);
 
     if (effectiveMenuStyle === "mega-horizontal") {
       return (
@@ -1363,15 +1203,23 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                   disabled={node.disabled}
                   onMouseEnter={(event) => {
                     if (node.hint) showMenuHint(event.currentTarget, node.hint);
-                    if (hasChildren) setMegaActiveId(node.id);
+                    const nextMegaActiveId = resolveMegaMenuHoverActiveId({
+                      nodeId: node.id,
+                      hasChildren
+                    });
+                    if (nextMegaActiveId) setMegaActiveId(nextMegaActiveId);
                   }}
                   onMouseLeave={node.hint ? hideMenuHint : undefined}
                   onClick={() => {
                     if (node.disabled) return;
-                    if (hasChildren) {
-                      setMegaActiveId(node.id);
-                      return;
+                    const nextState = resolveMegaMenuInteraction({
+                      nodeId: node.id,
+                      hasChildren
+                    });
+                    if (nextState.nextMegaActiveId) {
+                      setMegaActiveId(nextState.nextMegaActiveId);
                     }
+                    if (!nextState.shouldActivateNode) return;
                     activateNode(node);
                   }}
                   className={cn(
@@ -1410,15 +1258,23 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                 disabled={node.disabled}
                 onMouseEnter={(event) => {
                   if (node.hint) showMenuHint(event.currentTarget, node.hint);
-                  if (hasChildren) setMegaActiveId(node.id);
+                  const nextMegaActiveId = resolveMegaMenuHoverActiveId({
+                    nodeId: node.id,
+                    hasChildren
+                  });
+                  if (nextMegaActiveId) setMegaActiveId(nextMegaActiveId);
                 }}
                 onMouseLeave={node.hint ? hideMenuHint : undefined}
                 onClick={() => {
                   if (node.disabled) return;
-                  if (hasChildren) {
-                    setMegaActiveId(node.id);
-                    return;
+                  const nextState = resolveMegaMenuInteraction({
+                    nodeId: node.id,
+                    hasChildren
+                  });
+                  if (nextState.nextMegaActiveId) {
+                    setMegaActiveId(nextState.nextMegaActiveId);
                   }
+                  if (!nextState.shouldActivateNode) return;
                   activateNode(node);
                 }}
                 className={cn(
@@ -1465,13 +1321,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         aria-label={
           menuStyle === "hybrid"
             ? pinnedState
-              ? "Unpin and collapse menu"
+              ? t(i18n, "components.menu.unpinAndCollapse")
               : drawerOpen
-              ? "Close menu"
-              : "Open menu"
+              ? t(i18n, "components.menu.close")
+              : t(i18n, "components.menu.open")
             : collapsedState
-            ? "Expand menu"
-            : "Collapse menu"
+            ? t(i18n, "components.menu.expand")
+            : t(i18n, "components.menu.collapse")
         }
         className={cn(
           "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
@@ -1511,7 +1367,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           {brand.image ? (
             <span className="inline-flex shrink-0 items-center justify-center">{brand.image}</span>
           ) : brand.imageSrc ? (
-            <img src={brand.imageSrc} alt={brand.title ?? "brand"} className={cn("w-auto", isHorizontalDockZone ? "h-7 max-w-[120px]" : "h-12 max-w-[160px]")} />
+            <img src={brand.imageSrc} alt={brand.title ?? t(i18n, "components.menu.brandAlt")} className={cn("w-auto", isHorizontalDockZone ? "h-7 max-w-[120px]" : "h-12 max-w-[160px]")} />
           ) : null}
           {brand.title ? (
             <span className="truncate text-sm font-semibold">{brand.title}</span>
@@ -1525,7 +1381,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         <button
           type="button"
           onPointerDown={handleDockDragPointerDown}
-          aria-label="Drag menu"
+          aria-label={t(i18n, "components.menu.drag")}
           className={cn(
             "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
             "bg-background hover:bg-muted/60",
@@ -1552,7 +1408,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             setPinnedState(next);
             if (menuStyle === "hybrid" && next) setDrawerOpen(false);
           }}
-          aria-label={pinnedState ? "Unpin menu" : "Pin menu"}
+          aria-label={pinnedState ? t(i18n, "components.menu.unpin") : t(i18n, "components.menu.pin")}
           className={cn(
             "inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-border",
             "bg-background hover:bg-muted/60",
@@ -1573,8 +1429,8 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
         <div className={cn("border-b border-border", densityCfg.section)}>
           <SgAutocomplete
             id={`${searchInputId}-menu-search`}
-            label={search?.placeholder ?? "Search"}
-            placeholder={search?.placeholder ?? "Search"}
+            label={search?.placeholder ?? t(i18n, "components.actions.search")}
+            placeholder={search?.placeholder ?? t(i18n, "components.actions.search")}
             value={searchValue}
             onChange={setSearchValue}
             source={autocompleteSource}
@@ -1591,27 +1447,24 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
 
               const parentChain = collectParentChain(maps.parentById, node.id);
               const rootToParent = [...parentChain].reverse();
-              if (parentChain.length > 0) {
-                setExpandedIds((prev) => {
-                  const next = Array.from(new Set([...prev, ...parentChain]));
-                  return sameStringArray(prev, next) ? prev : next;
-                });
-              }
+              const nextState = resolveMenuSearchSelectionState({
+                currentExpandedIds: expandedIds,
+                parentChain,
+                rootToParent,
+                nodeId: node.id,
+                hasChildren: Boolean(node.children?.length),
+                hasActionTarget: Boolean(node.url || node.onClick)
+              });
 
-              setTieredPath([
-                ...rootToParent,
-                ...(node.children?.length ? [node.id] : [])
-              ]);
-              setMegaActiveId(rootToParent[0] ?? node.id);
+              setExpandedIds((prev) => {
+                const next = nextState.expandedIds;
+                return sameStringArray(prev, next) ? prev : next;
+              });
+              setTieredPath(nextState.tieredPath);
+              setMegaActiveId(nextState.megaActiveId);
 
-              if (node.children?.length && !node.url && !node.onClick) {
-                setExpandedIds((prev) => {
-                  const nextSet = new Set(prev);
-                  nextSet.add(node.id);
-                  const next = Array.from(nextSet);
-                  return sameStringArray(prev, next) ? prev : next;
-                });
-                setLocalActiveId(node.id);
+              if (!nextState.shouldActivateNode) {
+                setLocalActiveId(nextState.localActiveId);
                 return;
               }
 
@@ -1651,7 +1504,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           densityCfg.section
         )}
         role="navigation"
-        aria-label={ariaLabel}
+        aria-label={resolvedAriaLabel}
         onKeyDown={effectiveMenuStyle === "panel" ? onListKeyDown : undefined}
       >
         {renderMenuTree(filteredMenu)}
@@ -1738,27 +1591,13 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
     </div>
   );
 
-  const isMegaMenuStyle =
-    effectiveMenuStyle === "mega-horizontal" || effectiveMenuStyle === "mega-vertical";
   const dockAlignStyle: React.CSSProperties | undefined =
-    dockMode && effectiveDockZone === "right" && !isCollapsed
+    dockAlign === "end"
       ? { alignSelf: "flex-end" }
-      : dockMode && effectiveDockZone === "left"
+      : dockAlign === "start"
       ? { alignSelf: "flex-start" }
       : undefined;
 
-  const sidebarWidthCss =
-    dockMode && isHorizontalDockZone && menuStyle !== "sidebar"
-      ? "100%"
-      : menuStyle === "inline" && isMegaMenuStyle
-      ? "100%"
-      : menuStyle === "hybrid"
-      ? pinnedState
-        ? expandedWidthCss
-        : collapsedWidthCss
-      : isCollapsed
-      ? collapsedWidthCss
-      : expandedWidthCss;
   const sidebarWidthStyle = sidebarWidthCss;
 
   const sidebarShell = (
@@ -1869,7 +1708,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
           closeOnEsc={!pinnedState}
           trapFocus
           showBackdrop={overlayBackdropResolved}
-          ariaLabel={ariaLabel}
+          ariaLabel={resolvedAriaLabel}
           role="dialog"
           className={className}
           style={style}
@@ -1901,7 +1740,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
             closeOnEsc
             trapFocus
             showBackdrop={overlayBackdropResolved}
-            ariaLabel={ariaLabel}
+            ariaLabel={resolvedAriaLabel}
             role="dialog"
           >
             <SgMenu
@@ -1940,7 +1779,7 @@ export function SgMenu(props: Readonly<SgMenuProps>) {
                 setLocalActiveId(node.id);
                 onItemClick?.(node);
               }}
-              ariaLabel={ariaLabel}
+              ariaLabel={resolvedAriaLabel}
               keyboardNavigation={keyboardNavigation}
               openSubmenuOnHover={openSubmenuOnHover}
               search={search}
@@ -2007,3 +1846,15 @@ function PinIcon(props: { pinned: boolean }) {
     </svg>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

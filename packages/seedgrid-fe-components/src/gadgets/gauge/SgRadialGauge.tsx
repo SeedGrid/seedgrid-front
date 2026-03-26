@@ -1,18 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../../i18n";
+import { angleToRadialGaugeValue, clampGaugeValue, clientPointToRadialGaugeValue, normalizeAngle, normalizeGaugeRange, ratioToGaugeValue, valueToGaugeRatio } from "./math";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function normalizeAngle(angle: number) {
-  const normalized = angle % 360;
-  return normalized < 0 ? normalized + 360 : normalized;
 }
 
 function toSweep(startAngle: number, endAngle: number) {
@@ -134,6 +127,8 @@ type PointerMeta = {
 };
 
 export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
+  const i18n = useComponentsI18n();
+
   const {
     min = 0,
     max = 100,
@@ -171,21 +166,24 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
     animationDuration = 350,
     className,
     style,
-    ariaLabel = "Radial gauge"
+    ariaLabel
   } = props;
 
-  const safeMin = Number.isFinite(min) ? min : 0;
-  const safeMax = Number.isFinite(max) && max > safeMin ? max : safeMin + 100;
-  const span = safeMax - safeMin;
+  const resolvedAriaLabel = ariaLabel ?? t(i18n, "components.gadgets.gauge.radialAria");
+
+  const range = React.useMemo(() => normalizeGaugeRange(min, max), [min, max]);
+  const safeMin = range.min;
+  const safeMax = range.max;
+  const span = range.span;
 
   const [innerValue, setInnerValue] = React.useState(defaultValue);
   const isControlled = value !== undefined;
   const currentValueRaw = isControlled ? (value as number) : innerValue;
-  const currentValue = clamp(currentValueRaw, safeMin, safeMax);
+  const currentValue = clampGaugeValue(currentValueRaw, safeMin, safeMax);
 
   const setMainValue = React.useCallback(
     (next: number) => {
-      const clamped = clamp(next, safeMin, safeMax);
+      const clamped = clampGaugeValue(next, safeMin, safeMax);
       if (!isControlled) setInnerValue(clamped);
       onValueChange?.(clamped);
     },
@@ -194,7 +192,7 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
 
   React.useEffect(() => {
     if (isControlled) return;
-    setInnerValue((prev) => clamp(prev, safeMin, safeMax));
+    setInnerValue((prev) => clampGaugeValue(prev, safeMin, safeMax));
   }, [isControlled, safeMin, safeMax]);
 
   const pointerIds = React.useMemo(
@@ -213,7 +211,7 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
         const pointer = pointers[i];
         if (!pointer) continue;
         const pointerId = pointerIds[i] ?? `sg-radial-pointer-${i}`;
-        const clamped = clamp(pointer.value, safeMin, safeMax);
+        const clamped = clampGaugeValue(pointer.value, safeMin, safeMax);
         if (next[pointerId] !== clamped) {
           next[pointerId] = clamped;
           changed = true;
@@ -241,23 +239,20 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
     8,
     Math.min(totalWidth, totalHeight) / 2 - safeAxisWidth / 2 - 6
   );
-  const baseRadius = clamp(availableRadius * safeRadiusFactor, 8, availableRadius);
+  const baseRadius = clampGaugeValue(availableRadius * safeRadiusFactor, 8, availableRadius);
 
   const sweep = React.useMemo(() => toSweep(startAngle, endAngle), [endAngle, startAngle]);
 
   const valueToRatio = React.useCallback(
     (raw: number) => {
-      const normalized = clamp((raw - safeMin) / span, 0, 1);
-      return isAxisInversed ? 1 - normalized : normalized;
+      return valueToGaugeRatio(raw, safeMin, safeMax, isAxisInversed);
     },
     [isAxisInversed, safeMin, span]
   );
 
   const ratioToValue = React.useCallback(
     (ratioRaw: number) => {
-      const ratio = clamp(ratioRaw, 0, 1);
-      const normalized = isAxisInversed ? 1 - ratio : ratio;
-      return safeMin + normalized * span;
+      return ratioToGaugeValue(ratioRaw, safeMin, safeMax, isAxisInversed);
     },
     [isAxisInversed, safeMin, span]
   );
@@ -272,11 +267,14 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
 
   const angleToValue = React.useCallback(
     (rawAngle: number) => {
-      const start = normalizeAngle(startAngle);
-      const target = normalizeAngle(rawAngle);
-      const distance = (target - start + 360) % 360;
-      const ratio = clamp(distance / sweep, 0, 1);
-      return ratioToValue(ratio);
+      return angleToRadialGaugeValue({
+        rawAngle,
+        startAngle,
+        sweep,
+        min: safeMin,
+        max: safeMax,
+        isAxisInversed
+      });
     },
     [ratioToValue, startAngle, sweep]
   );
@@ -313,7 +311,7 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
         id,
         isPrimary: false,
         pointer,
-        value: clamp(dragValue ?? pointer.value, safeMin, safeMax)
+        value: clampGaugeValue(dragValue ?? pointer.value, safeMin, safeMax)
       });
     }
     return list;
@@ -350,11 +348,21 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
       const pointerMeta = pointerMap.get(draggingPointerId);
       if (!svg || !pointerMeta) return;
       const rect = svg.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-      const localX = ((event.clientX - rect.left) / rect.width) * totalWidth;
-      const localY = ((event.clientY - rect.top) / rect.height) * totalHeight;
-      const angle = normalizeAngle((Math.atan2(localY - cy, localX - cx) * 180) / Math.PI);
-      const next = clamp(angleToValue(angle), safeMin, safeMax);
+      const next = clientPointToRadialGaugeValue({
+        clientX: event.clientX,
+        clientY: event.clientY,
+        rect,
+        totalWidth,
+        totalHeight,
+        cx,
+        cy,
+        startAngle,
+        sweep,
+        min: safeMin,
+        max: safeMax,
+        isAxisInversed
+      });
+      if (next === null) return;
 
       if (pointerMeta.isPrimary) {
         setMainValue(next);
@@ -381,7 +389,6 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
       window.removeEventListener("pointercancel", onEnd);
     };
   }, [
-    angleToValue,
     cx,
     cy,
     draggingPointerId,
@@ -408,7 +415,7 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
 
   const centerNode = centerContent ?? (
     <div className="pointer-events-none select-none text-center">
-      <div className="text-xs uppercase text-muted-foreground">Value</div>
+      <div className="text-xs uppercase text-muted-foreground">{t(i18n, "components.gadgets.gauge.value")}</div>
       <div className="text-xl font-semibold text-foreground">{Math.round(currentValue)}</div>
     </div>
   );
@@ -417,7 +424,7 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
     <div
       className={cn("relative inline-flex select-none", className)}
       role="meter"
-      aria-label={ariaLabel}
+      aria-label={resolvedAriaLabel}
       aria-valuemin={safeMin}
       aria-valuemax={safeMax}
       aria-valuenow={currentValue}
@@ -438,8 +445,8 @@ export function SgRadialGauge(props: Readonly<SgRadialGaugeProps>) {
         />
 
         {ranges.map((range, index) => {
-          const start = clamp(Math.min(range.start, range.end), safeMin, safeMax);
-          const end = clamp(Math.max(range.start, range.end), safeMin, safeMax);
+          const start = clampGaugeValue(Math.min(range.start, range.end), safeMin, safeMax);
+          const end = clampGaugeValue(Math.max(range.start, range.end), safeMin, safeMax);
           const startA = valueToAngle(start);
           const endA = valueToAngle(end);
           return (

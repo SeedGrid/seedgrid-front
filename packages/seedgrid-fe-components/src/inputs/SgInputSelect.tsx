@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import { resolveFieldError, type RhfFieldProps } from "../rhf";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputSelectProps = {
   id: string;
@@ -11,15 +12,36 @@ export type SgInputSelectProps = {
   error?: string;
   className?: string;
   options: Array<{ value: string; label: string }>;
-  selectProps: React.SelectHTMLAttributes<HTMLSelectElement>;
+  selectProps: React.SelectHTMLAttributes<HTMLSelectElement> & {
+    ref?: React.Ref<HTMLSelectElement>;
+  };
   alwaysFloat?: boolean;
 } & RhfFieldProps;
 
-type SgInputSelectBaseProps = Omit<SgInputSelectProps, keyof RhfFieldProps>;
+type SgInputSelectBaseProps = Omit<SgInputSelectProps, "name" | "control" | "register" | "rules">;
 
 function ErrorText(props: { message?: string }) {
   if (!props.message) return null;
   return <p data-sg-error className="text-xs text-red-600">{props.message}</p>;
+}
+
+function mergeSelectRefs(
+  primary: React.Ref<HTMLSelectElement> | undefined,
+  secondary: React.Ref<HTMLSelectElement> | undefined
+) {
+  return (node: HTMLSelectElement | null) => {
+    if (typeof primary === "function") {
+      primary(node);
+    } else if (primary && typeof primary === "object" && "current" in primary) {
+      primary.current = node;
+    }
+
+    if (typeof secondary === "function") {
+      secondary(node);
+    } else if (secondary && typeof secondary === "object" && "current" in secondary) {
+      secondary.current = node;
+    }
+  };
 }
 
 function mergeSelectPropsWithField(
@@ -58,6 +80,7 @@ function mergeSelectPropsWithField(
 }
 
 function SgInputSelectBase(props: SgInputSelectBaseProps) {
+  const i18n = useComponentsI18n();
   const selectRef = React.useRef<HTMLSelectElement | null>(null);
   const [isFilled, setIsFilled] = React.useState<boolean>(() => {
     const value = props.selectProps.value ?? props.selectProps.defaultValue ?? "";
@@ -131,7 +154,7 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
           onChange={handleChange}
           onBlur={handleBlur}
             >
-              <option value="">Selecione</option>
+              <option value="">{t(i18n, "components.inputs.select.placeholder")}</option>
               {props.options.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -166,12 +189,39 @@ function SgInputSelectBase(props: SgInputSelectBaseProps) {
 }
 
 export function SgInputSelect(props: SgInputSelectProps) {
-  const { control, name, ...rest } = props;
+  const { control, name, register, rules, ...rest } = props;
+
+  if (name && register) {
+    const reg = register(name, rules);
+    return (
+      <SgInputSelectBase
+        {...rest}
+        selectProps={{
+          ...rest.selectProps,
+          name,
+          onChange: (event) => {
+            reg.onChange(event);
+            rest.selectProps?.onChange?.(event);
+          },
+          onBlur: (event) => {
+            reg.onBlur(event);
+            rest.selectProps?.onBlur?.(event);
+          },
+          ref: mergeSelectRefs(
+            reg.ref,
+            (rest.selectProps as { ref?: React.Ref<HTMLSelectElement> })?.ref
+          )
+        }}
+      />
+    );
+  }
+
   if (control && name) {
     return (
       <Controller
         name={name}
         control={control}
+        rules={rules}
         render={({
           field,
           fieldState
@@ -181,7 +231,7 @@ export function SgInputSelect(props: SgInputSelectProps) {
         }) => (
           <SgInputSelectBase
             {...rest}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             selectProps={mergeSelectPropsWithField(rest.selectProps, field)}
           />
         )}
@@ -190,3 +240,4 @@ export function SgInputSelect(props: SgInputSelectProps) {
   }
   return <SgInputSelectBase {...rest} />;
 }
+

@@ -1,7 +1,10 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { resolveFieldError } from "../rhf";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
 import { type SgAutocompleteItem, type SgAutocompleteSource } from "./SgAutocomplete";
 import { t, useComponentsI18n } from "../i18n";
@@ -91,7 +94,7 @@ function findTypeAheadMatchIndex<T>(
   return -1;
 }
 
-export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxProps<T>>) {
+function SgComboboxBase<T = SgAutocompleteItem>(props: Readonly<SgComboboxProps<T>>) {
   const {
     source,
     mapItem: mapItemProp,
@@ -362,7 +365,7 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
         }
         openDropdown();
       }}
-      aria-label="Abrir lista"
+      aria-label={t(i18n, "components.actions.openList")}
     >
       <ChevronDown size={16} />
     </button>
@@ -537,3 +540,29 @@ export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxPro
     </div>
   );
 }
+
+
+export function SgCombobox<T = SgAutocompleteItem>(props: Readonly<SgComboboxProps<T>>) {
+  const { control, name, rules, ...rest } = props;
+
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field, fieldState }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState }) => (
+          <SgComboboxBase
+            {...rest}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
+            value={(field.value as string | number | null | undefined) ?? null}
+            onValueChange={(value) => field.onChange(value)}
+          />
+        )}
+      />
+    );
+  }
+
+  return <SgComboboxBase {...rest} />;
+}
+

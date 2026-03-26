@@ -397,6 +397,8 @@ export function SgInputPassword(props: Readonly<SgInputPasswordProps>) {
           {...rest}
           type={isHidden ? "password" : "text"}
           maxLength={maxLength ?? 15}
+          required={required}
+          requiredMessage={requiredMessage}
           error={error ?? internalError ?? undefined}
           onClear={() => {
             setInternalError(null);

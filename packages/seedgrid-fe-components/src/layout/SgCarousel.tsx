@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgCarouselOrientation = "horizontal" | "vertical";
 
@@ -48,6 +49,8 @@ export interface SgCarouselProps {
 }
 
 export function SgCarousel(props: SgCarouselProps) {
+  const i18n = useComponentsI18n();
+
   const {
     id,
     items,
@@ -323,7 +326,7 @@ export function SgCarousel(props: SgCarouselProps) {
                   }
                   rounded-full
                 `}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={t(i18n, "components.carousel.goToSlide", { slide: index + 1 })}
               />
             );
           })}

@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { UseFormRegister, FieldValues, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
 import { t, useComponentsI18n } from "../i18n";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 
 export type SgRadioGroupOrientation = "horizontal" | "vertical";
 export type SgRadioGroupSelectionStyle = "radio" | "highlight";
@@ -15,7 +16,7 @@ export interface SgRadioGroupOption {
   disabled?: boolean;
 }
 
-export interface SgRadioGroupProps {
+export interface SgRadioGroupProps extends RhfFieldProps {
   id?: string;
   title?: string;
   source: SgRadioGroupOption[];
@@ -27,12 +28,6 @@ export interface SgRadioGroupProps {
   readOnly?: boolean;
   required?: boolean;
   onChange?: (value: string | number | null) => void;
-
-  // React Hook Form props
-  name?: string;
-  control?: any;
-  register?: UseFormRegister<FieldValues>;
-  error?: string;
 
   // Styling
   className?: string;
@@ -59,6 +54,7 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
     name,
     control,
     register,
+    rules,
     error,
     className = "",
     style,
@@ -93,7 +89,7 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
   const renderRadioOption = (
     option: SgRadioGroupOption,
     index: number,
-    registration?: ReturnType<UseFormRegister<FieldValues>>
+    registration?: { name?: string; onChange: (event: React.ChangeEvent<HTMLInputElement>) => void }
   ) => {
     const isSelected = currentValue === option.value;
     const isDisabled = disabled || option.disabled;
@@ -224,13 +220,19 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
     </div>
   );
 
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    required,
+    t(i18n, "components.inputs.required")
+  );
+
   // React Hook Form integration
   if (control && name) {
     return (
       <Controller
         name={name}
         control={control}
-        rules={{ required: required ? t(i18n, "components.inputs.required") : false }}
+        rules={resolvedRules}
         render={({ field, fieldState }) => (
           <SgRadioGroup
             {...props}
@@ -239,7 +241,7 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
               field.onChange(val);
               onChange?.(val);
             }}
-            error={fieldState.error?.message}
+            error={resolveFieldError(error, fieldState.error?.message)}
             control={undefined}
           />
         )}
@@ -248,9 +250,7 @@ export function SgRadioGroup(props: SgRadioGroupProps) {
   }
 
   if (register && name) {
-    const registration = register(name, {
-      required: required ? t(i18n, "components.inputs.required") : false
-    });
+    const registration = register(name, resolvedRules);
 
     return (
       <div className={className} style={style}>

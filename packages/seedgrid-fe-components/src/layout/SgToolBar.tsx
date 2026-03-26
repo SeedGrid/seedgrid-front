@@ -8,6 +8,9 @@ import {
   type SgDockZoneId
 } from "./SgDockLayout";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
+import { t, useComponentsI18n } from "../i18n";
+import { buildToolbarStorageKey, parseStoredPanelDragPosition } from "./drag-position";
+import { buildToolbarLayoutState } from "./toolbar-logic";
 
 export type SgToolBarOrientation = "horizontal" | "vertical";
 export type SgToolBarOrientationDirection =
@@ -118,62 +121,6 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
-function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null {
-  const value = typeof raw === "string" ? (() => {
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  })() : raw;
-
-  if (
-    !value ||
-    typeof value !== "object" ||
-    typeof (value as { x?: unknown }).x !== "number" ||
-    typeof (value as { y?: unknown }).y !== "number" ||
-    !Number.isFinite((value as { x: number }).x) ||
-    !Number.isFinite((value as { y: number }).y)
-  ) {
-    return null;
-  }
-
-  return {
-    x: (value as { x: number }).x,
-    y: (value as { y: number }).y
-  };
-}
-
-function resolveOrientationDirection(
-  orientationDirection: SgToolBarOrientationDirection
-): { orientation: SgToolBarOrientation; direction: "left" | "right" | "up" | "down" } {
-  switch (orientationDirection) {
-    case "horizontal-right":
-      return { orientation: "horizontal", direction: "left" };
-    case "horizontal-left":
-      return { orientation: "horizontal", direction: "right" };
-    case "vertical-up":
-      return { orientation: "vertical", direction: "up" };
-    case "vertical-down":
-    default:
-      return { orientation: "vertical", direction: "down" };
-  }
-}
-
-function resolveDockOrientationDirection(
-  orientationDirection: SgToolBarOrientationDirection,
-  inDock: boolean,
-  zone: "top" | "bottom" | "left" | "right" | "free"
-): SgToolBarOrientationDirection {
-  if (!inDock || zone === "free") return orientationDirection;
-
-  if (zone === "top" || zone === "bottom") {
-    return orientationDirection.startsWith("horizontal") ? orientationDirection : "horizontal-left";
-  }
-
-  return orientationDirection.startsWith("vertical") ? orientationDirection : "vertical-down";
-}
-
 type SgToolBarDragMode = "fixed" | "absolute";
 
 type SgToolBarDragPos = {
@@ -203,6 +150,7 @@ function useControlledState<T>(args: { value?: T; defaultValue: T; onChange?: (n
 
 export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const hasEnvironmentProvider = useHasSgEnvironmentProvider();
+  const i18n = useComponentsI18n();
   const { load: loadPersistedState, save: savePersistedState, clear: clearPersistedState } = useSgPersistence();
   const {
     id,
@@ -234,13 +182,6 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   const [dragHoverZone, setDragHoverZone] = React.useState<SgDockZoneId | null>(null);
   const dragHoverZoneRef = React.useRef<SgDockZoneId | null>(null);
   const dragPlacementRef = React.useRef<SgDockDropIndicator | null>(null);
-  const zoneForOrientation = inDock && !freeDrag && dragHoverZone ? dragHoverZone : effectiveZone;
-  const resolvedOrientationDirection = resolveDockOrientationDirection(
-    orientationDirection ?? "vertical-down",
-    inDock,
-    zoneForOrientation
-  );
-  const { orientation, direction } = resolveOrientationDirection(resolvedOrientationDirection);
   const portalTarget = inDock ? dock.getZoneElement(effectiveZone) : null;
 
   const [isCollapsed, setIsCollapsed] = useControlledState<boolean>({
@@ -251,6 +192,26 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       if (inDock) dock.setToolbarCollapsed(id, next);
     }
   });
+  const showContent = !isCollapsed;
+  const toolbarLayoutState = buildToolbarLayoutState({
+    orientationDirection: orientationDirection ?? "vertical-down",
+    inDock,
+    zone: effectiveZone,
+    freeDrag,
+    dragHoverZone,
+    effectiveZone,
+    showContent
+  });
+  const {
+    zoneForOrientation,
+    resolvedOrientationDirection,
+    orientation,
+    direction,
+    openUp,
+    openLeft,
+    showLeadingCollapseButton,
+    collapseIconDirection
+  } = toolbarLayoutState;
 
   const [dragPos, setDragPos] = React.useState<SgToolBarDragPos | null>(null);
   const dragPosRef = React.useRef<SgToolBarDragPos | null>(null);
@@ -266,7 +227,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
   } | null>(null);
   const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const storageKey = React.useMemo(() => `sg-toolbar-pos:${id}`, [id]);
+  const storageKey = React.useMemo(() => buildToolbarStorageKey(id), [id]);
   const setDragHoverZoneSafe = React.useCallback((next: SgDockZoneId | null) => {
     if (dragHoverZoneRef.current === next) return;
     dragHoverZoneRef.current = next;
@@ -280,7 +241,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
       try {
         const loaded = await loadPersistedState(storageKey);
         if (loaded === null || loaded === undefined) return null;
-        const parsed = parseStoredDragPosition(loaded);
+        const parsed = parseStoredPanelDragPosition(loaded);
         if (!parsed) {
           await clearPersistedState(storageKey);
           return null;
@@ -294,7 +255,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return null;
-      const parsed = parseStoredDragPosition(raw);
+      const parsed = parseStoredPanelDragPosition(raw);
       if (!parsed) {
         localStorage.removeItem(storageKey);
         return null;
@@ -633,17 +594,11 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
     ]
   );
 
-  const showContent = !isCollapsed;
-  const openUp = orientation === "vertical" && direction === "up";
-  const openLeft = orientation === "horizontal" && direction === "left";
   const detachFromDockFlow = dragActive && inDock && !freeDrag;
   const normalizedButtonsPerDirection =
     Number.isFinite(buttonsPerDirection) && typeof buttonsPerDirection === "number" && buttonsPerDirection > 0
       ? Math.floor(buttonsPerDirection)
       : undefined;
-  const showLeadingCollapseButton = orientation === "horizontal" && openLeft && showContent;
-  const collapseIconDirection: "left" | "right" | "up" | "down" =
-    resolvedOrientationDirection === "horizontal-right" ? "right" : direction;
 
   const content = showContent ? (
     <div
@@ -718,7 +673,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
                 className="inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 onPointerDown={(e) => e.stopPropagation()}
-                aria-label="Toggle toolbar"
+                aria-label={t(i18n, "components.toolbar.toggle")}
               >
                 <CollapseIcon direction={collapseIconDirection} collapsed={isCollapsed} />
               </button>
@@ -734,7 +689,7 @@ export function SgToolBar(props: Readonly<SgToolBarProps>) {
                 className="ml-auto inline-flex size-6 items-center justify-center rounded-md hover:bg-muted"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 onPointerDown={(e) => e.stopPropagation()}
-                aria-label="Toggle toolbar"
+                aria-label={t(i18n, "components.toolbar.toggle")}
               >
                 <CollapseIcon direction={collapseIconDirection} collapsed={isCollapsed} />
               </button>

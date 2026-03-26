@@ -2,6 +2,7 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { resolveFieldError } from "../rhf";
 import {
   maskPostalCodeBR,
   maskPostalCodePT,
@@ -267,7 +268,7 @@ export function SgInputPostalCode(props: Readonly<SgInputPostalCodeProps>) {
     <SgInputText
       {...rest}
       maxLength={rest.maxLength ?? config.maxLength}
-      error={error ?? internalError ?? undefined}
+      error={resolveFieldError(error, internalError ?? undefined)}
       textInputType={props.textInputType ?? (config.inputMode === "numeric" ? "numeric" : undefined)}
       onClear={() => {
         setInternalError(null);

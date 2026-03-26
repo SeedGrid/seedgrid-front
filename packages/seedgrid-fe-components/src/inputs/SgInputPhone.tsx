@@ -2,11 +2,14 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { resolveFieldError } from "../rhf";
 import { maskPhone } from "../masks";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputPhoneProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
+    ref?: React.Ref<HTMLInputElement>;
+  };
   error?: string;
   required?: boolean;
   requiredMessage?: string;
@@ -92,7 +95,7 @@ export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
   return (
     <SgInputText
       {...rest}
-      error={error ?? internalError ?? undefined}
+      error={resolveFieldError(error, internalError ?? undefined)}
       textInputType={props.textInputType ?? "numeric"}
       onClear={() => {
         setInternalError(null);

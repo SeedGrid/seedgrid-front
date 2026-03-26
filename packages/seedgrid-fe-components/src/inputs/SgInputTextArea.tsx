@@ -4,7 +4,7 @@ import React from "react";
 import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
 import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputTextAreaProps = {
@@ -19,7 +19,9 @@ export type SgInputTextAreaProps = {
   error?: string;
   className?: string;
   labelClassName?: string;
-  textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+  textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    ref?: React.Ref<HTMLTextAreaElement>;
+  };
   maxLength?: number;
   maxLengthMessage?: string;
   maxLines?: number;
@@ -49,11 +51,30 @@ export type SgInputTextAreaProps = {
   onValidation?: (message: string | null) => void;
 } & RhfFieldProps;
 
-type SgInputTextAreaBaseProps = Omit<SgInputTextAreaProps, keyof RhfFieldProps>;
+type SgInputTextAreaBaseProps = Omit<SgInputTextAreaProps, "name" | "control" | "register" | "rules">;
 
 function ErrorText(props: Readonly<{ message?: string }>) {
   if (!props.message) return null;
   return <p className="text-xs text-red-600">{props.message}</p>;
+}
+
+function mergeTextareaRefs(
+  primary: React.Ref<HTMLTextAreaElement> | undefined,
+  secondary: React.Ref<HTMLTextAreaElement> | undefined
+) {
+  return (node: HTMLTextAreaElement | null) => {
+    if (typeof primary === "function") {
+      primary(node);
+    } else if (primary && typeof primary === "object" && "current" in primary) {
+      primary.current = node;
+    }
+
+    if (typeof secondary === "function") {
+      secondary(node);
+    } else if (secondary && typeof secondary === "object" && "current" in secondary) {
+      secondary.current = node;
+    }
+  };
 }
 
 function mergeTextareaPropsWithField(
@@ -391,12 +412,45 @@ function SgInputTextAreaBase(props: SgInputTextAreaBaseProps) {
 }
 
 export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
-  const { control, name, ...rest } = props;
+  const i18n = useComponentsI18n();
+  const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.textarea.required")
+  );
+
+  if (name && register) {
+    const reg = register(name, resolvedRules);
+    return (
+      <SgInputTextAreaBase
+        {...rest}
+        textareaProps={{
+          ...rest.textareaProps,
+          name,
+          onChange: (event) => {
+            reg.onChange(event);
+            rest.textareaProps?.onChange?.(event);
+          },
+          onBlur: (event) => {
+            reg.onBlur(event);
+            rest.textareaProps?.onBlur?.(event);
+          },
+          ref: mergeTextareaRefs(
+            reg.ref,
+            (rest.textareaProps as { ref?: React.Ref<HTMLTextAreaElement> })?.ref
+          )
+        }}
+      />
+    );
+  }
+
   if (control && name) {
     return (
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -406,7 +460,7 @@ export function SgInputTextArea(props: Readonly<SgInputTextAreaProps>) {
         }) => (
           <SgInputTextAreaBase
             {...rest}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             textareaProps={mergeTextareaPropsWithField(rest.textareaProps, field)}
           />
         )}

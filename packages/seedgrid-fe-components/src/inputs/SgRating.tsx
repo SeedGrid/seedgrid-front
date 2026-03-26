@@ -2,18 +2,13 @@
 
 import React from "react";
 import { Controller } from "react-hook-form";
-import type {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  UseFormRegister
-} from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgRatingSize = "sm" | "md" | "lg" | "xl";
 
-export interface SgRatingProps {
+export interface SgRatingProps extends RhfFieldProps {
   /** Unique identifier */
   id?: string;
   /** Label text */
@@ -52,21 +47,13 @@ export interface SgRatingProps {
   onChange?: (value: number) => void;
   /** Callback when hovering over stars */
   onHover?: (value: number | null) => void;
-  /** React Hook Form integration */
-  register?: UseFormRegister<FieldValues>;
-  /** React Hook Form field name */
-  name?: string;
-  /** React Hook Form control */
-  control?: any;
-  /** Error message */
-  error?: string;
   /** Required field */
   required?: boolean;
   /** Required message */
   requiredMessage?: string;
 }
 
-type SgRatingBaseProps = Omit<SgRatingProps, keyof RhfFieldProps>;
+type SgRatingBaseProps = Omit<SgRatingProps, "name" | "control" | "register" | "rules">;
 
 const STAR_SIZES: Record<SgRatingSize, number> = {
   sm: 16,
@@ -336,7 +323,13 @@ function SgRatingBase(props: SgRatingBaseProps) {
 }
 
 export function SgRating(props: SgRatingProps) {
-  const { control, name, register, ...rest } = props;
+  const i18n = useComponentsI18n();
+  const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.rating.required")
+  );
 
   if (name && register) {
     return <SgRatingBase {...rest} />;
@@ -347,6 +340,7 @@ export function SgRating(props: SgRatingProps) {
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -361,7 +355,7 @@ export function SgRating(props: SgRatingProps) {
               field.onChange(value);
               rest.onChange?.(value);
             }}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
           />
         )}
       />

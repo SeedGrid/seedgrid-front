@@ -1,10 +1,12 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import type { SgClockTheme } from "./types";
 import { useSgClockThemeResolver } from "./provider";
 import { SgClockThemePreview } from "./SgClockThemePreview";
+import { filterClockThemes, resolveClockThemeSelection } from "./search";
 import { SgAutocomplete, type SgAutocompleteItem } from "../../../inputs/SgAutocomplete";
+import { t, useComponentsI18n } from "../../../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -20,19 +22,24 @@ export type SgClockThemePickerProps = {
   previewSize?: number;
   searchable?: boolean;
   fallbackThemeId?: string;
+  defaultOpen?: boolean;
 };
 
 export function SgClockThemePicker({
   value,
   onChange,
-  label = "Theme",
-  placeholder = "Select a theme...",
+  label: labelProp,
+  placeholder: placeholderProp,
   className,
   filter,
   previewSize = 56,
   searchable = true,
-  fallbackThemeId = "classic"
+  fallbackThemeId = "classic",
+  defaultOpen = false
 }: SgClockThemePickerProps) {
+  const i18n = useComponentsI18n();
+  const label = labelProp ?? t(i18n, "components.gadgets.clock.theme");
+  const placeholder = placeholderProp ?? t(i18n, "components.gadgets.clock.selectTheme");
   const resolver = useSgClockThemeResolver();
 
   const all = React.useMemo(() => {
@@ -40,23 +47,22 @@ export function SgClockThemePicker({
     return filter ? list.filter(filter) : list;
   }, [resolver, filter]);
 
-  const [open, setOpen] = React.useState(false);
+  const popupId = React.useId();
+  const [open, setOpen] = React.useState(defaultOpen);
   const [q, setQ] = React.useState("");
 
-  const currentTheme = React.useMemo(() => {
-    const found = resolver?.resolve(value) ?? all.find((t) => t.id === value) ?? null;
-    if (found) return found;
-    return resolver?.resolve(fallbackThemeId) ?? all.find((t) => t.id === fallbackThemeId) ?? null;
-  }, [resolver, value, all, fallbackThemeId]);
+  const currentTheme = React.useMemo(
+    () =>
+      resolveClockThemeSelection({
+        resolver,
+        allThemes: all,
+        value,
+        fallbackThemeId
+      }),
+    [resolver, value, all, fallbackThemeId]
+  );
 
-  const filtered = React.useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s) return all;
-    return all.filter((t) => {
-      const hay = `${t.id} ${t.label ?? ""} ${(t.tags ?? []).join(" ")}`.toLowerCase();
-      return hay.includes(s);
-    });
-  }, [all, q]);
+  const filtered = React.useMemo(() => filterClockThemes(all, q), [all, q]);
 
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
@@ -77,6 +83,9 @@ export function SgClockThemePicker({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={popupId}
         className={cn(
           "w-full rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface,var(--sg-bg)))] px-3 py-2 text-left text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-sm",
           "hover:bg-[rgb(var(--sg-surface-2,var(--sg-surface,var(--sg-bg))))]"
@@ -104,6 +113,8 @@ export function SgClockThemePicker({
 
       {open && (
         <div
+          id={popupId}
+          role="listbox"
           className={cn(
             "absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface,var(--sg-bg)))] text-[rgb(var(--sg-text,var(--sg-fg)))] shadow-lg"
           )}
@@ -111,23 +122,23 @@ export function SgClockThemePicker({
           {searchable && (
             <div className="p-2">
               <SgAutocomplete<SgAutocompleteItem>
+                value={q}
+                onChange={setQ}
                 id="sg-clock-theme-search"
-                label="Search theme"
-                placeholder="Search theme..."
+                label={t(i18n, "components.gadgets.clock.searchTheme")}
+                placeholder={t(i18n, "components.gadgets.clock.searchThemePlaceholder")}
                 openOnFocus
                 showDropDownButton
                 clearOnSelect
                 minLengthForSearch={0}
                 source={(query: string | null | undefined) => {
-                  const s = (query ?? "").trim().toLowerCase();
-                  const items: SgAutocompleteItem[] = all.map((t) => ({
+                  const items: SgAutocompleteItem[] = filterClockThemes(all, query ?? "").map((t) => ({
                     id: t.id,
                     label: t.label ?? t.id,
                     value: t.id,
                     data: t
                   }));
-                  if (!s) return items;
-                  return items.filter((item) => item.label?.toLowerCase().includes(s));
+                  return items;
                 }}
                 onSelect={(item: SgAutocompleteItem) => {
                   const id = item.value ?? item.id;
@@ -140,17 +151,19 @@ export function SgClockThemePicker({
 
           <div className="max-h-80 overflow-auto p-2">
             {filtered.length === 0 ? (
-              <div className="p-3 text-sm opacity-60">No themes found.</div>
+              <div className="p-3 text-sm opacity-60">{t(i18n, "components.gadgets.clock.noThemesFound")}</div>
             ) : (
               <div className="space-y-1">
-                {filtered.map((t) => {
-                  const active = t.id === value;
+                {filtered.map((themeOption) => {
+                  const active = themeOption.id === value;
                   return (
                     <button
-                      key={t.id}
+                      key={themeOption.id}
                       type="button"
+                      role="option"
+                      aria-selected={active}
                       onClick={() => {
-                        onChange(t.id);
+                        onChange(themeOption.id);
                         setOpen(false);
                       }}
                       className={cn(
@@ -162,13 +175,13 @@ export function SgClockThemePicker({
                     >
                       <div className="flex items-center gap-3">
                         <div className={cn(active ? "text-[rgb(var(--sg-primary-contrast,var(--sg-bg)))]" : "text-[rgb(var(--sg-text,var(--sg-fg)))]")}>
-                          <SgClockThemePreview theme={t} size={44} />
+                          <SgClockThemePreview theme={themeOption} size={44} />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="truncate text-sm font-medium">{t.label ?? t.id}</div>
-                          <div className={cn("truncate text-xs", active ? "opacity-80" : "opacity-60")}>{t.id}</div>
+                          <div className="truncate text-sm font-medium">{themeOption.label ?? themeOption.id}</div>
+                          <div className={cn("truncate text-xs", active ? "opacity-80" : "opacity-60")}>{themeOption.id}</div>
                         </div>
-                        {active ? <div className="text-xs opacity-80">OK</div> : null}
+                        {active ? <div className="text-xs opacity-80">{t(i18n, "components.gadgets.clock.activeTheme")}</div> : null}
                       </div>
                     </button>
                   );
@@ -181,3 +194,9 @@ export function SgClockThemePicker({
     </div>
   );
 }
+
+
+
+
+
+

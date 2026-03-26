@@ -1,13 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../../i18n";
+import { clampGaugeValue, clientPointToLinearGaugeValue, pointToLinearGaugeValue, ratioToGaugeValue, valueToGaugeRatio } from "./math";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
 }
 
 function toNumber(value: number, fallback: number) {
@@ -94,6 +92,8 @@ type PointerMeta = {
 const MAIN_POINTER_ID = "__sg-linear-main-pointer__";
 
 export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
+  const i18n = useComponentsI18n();
+
   const {
     min = 0,
     max = 100,
@@ -126,8 +126,10 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
     animationDuration = 350,
     className,
     style,
-    ariaLabel = "Linear gauge"
+    ariaLabel
   } = props;
+
+  const resolvedAriaLabel = ariaLabel ?? t(i18n, "components.gadgets.gauge.linearAria");
 
   const safeMin = toNumber(min, 0);
   const safeMax = toNumber(max, 100);
@@ -137,11 +139,11 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
   const [innerValue, setInnerValue] = React.useState(defaultValue);
   const isControlled = value !== undefined;
   const currentValueRaw = isControlled ? (value as number) : innerValue;
-  const currentValue = clamp(currentValueRaw, safeMin, safeMax);
+  const currentValue = clampGaugeValue(currentValueRaw, safeMin, safeMax);
 
   const setMainValue = React.useCallback(
     (next: number) => {
-      const clamped = clamp(next, safeMin, safeMax);
+      const clamped = clampGaugeValue(next, safeMin, safeMax);
       if (!isControlled) setInnerValue(clamped);
       onValueChange?.(clamped);
     },
@@ -150,7 +152,7 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
 
   React.useEffect(() => {
     if (isControlled) return;
-    setInnerValue((prev) => clamp(prev, safeMin, safeMax));
+    setInnerValue((prev) => clampGaugeValue(prev, safeMin, safeMax));
   }, [isControlled, safeMin, safeMax]);
 
   const pointerIds = React.useMemo(
@@ -169,7 +171,7 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
         const pointer = pointers[i];
         if (!pointer) continue;
         const pointerId = pointerIds[i] ?? `sg-linear-pointer-${i}`;
-        const clamped = clamp(pointer.value, safeMin, safeMax);
+        const clamped = clampGaugeValue(pointer.value, safeMin, safeMax);
         if (next[pointerId] !== clamped) {
           next[pointerId] = clamped;
           changed = true;
@@ -204,17 +206,14 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
 
   const valueToRatio = React.useCallback(
     (raw: number) => {
-      const normalized = clamp((raw - safeMin) / span, 0, 1);
-      return isAxisInversed ? 1 - normalized : normalized;
+      return valueToGaugeRatio(raw, safeMin, safeMax, isAxisInversed);
     },
     [isAxisInversed, safeMin, span]
   );
 
   const ratioToValue = React.useCallback(
     (ratioRaw: number) => {
-      const ratio = clamp(ratioRaw, 0, 1);
-      const normalized = isAxisInversed ? 1 - ratio : ratio;
-      return safeMin + normalized * span;
+      return ratioToGaugeValue(ratioRaw, safeMin, safeMax, isAxisInversed);
     },
     [isAxisInversed, safeMin, span]
   );
@@ -231,12 +230,16 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
 
   const pointToValue = React.useCallback(
     (x: number, y: number) => {
-      if (orientation === "horizontal") {
-        const ratio = (x - axisStart.x) / (axisEnd.x - axisStart.x || 1);
-        return ratioToValue(ratio);
-      }
-      const ratio = (y - axisStart.y) / (axisEnd.y - axisStart.y || 1);
-      return ratioToValue(ratio);
+      return pointToLinearGaugeValue({
+        x,
+        y,
+        axisStart,
+        axisEnd,
+        orientation,
+        min: safeMin,
+        max: safeMax,
+        isAxisInversed
+      });
     },
     [axisEnd.x, axisEnd.y, axisStart.x, axisStart.y, orientation, ratioToValue]
   );
@@ -268,7 +271,7 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
         id: pointerId,
         isPrimary: false,
         pointer,
-        value: clamp(dragValue ?? pointer.value, safeMin, safeMax)
+        value: clampGaugeValue(dragValue ?? pointer.value, safeMin, safeMax)
       });
     }
     return list;
@@ -302,10 +305,20 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
       const pointerMeta = pointerMap.get(draggingPointerId);
       if (!svg || !pointerMeta) return;
       const rect = svg.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-      const localX = ((event.clientX - rect.left) / rect.width) * totalWidth;
-      const localY = ((event.clientY - rect.top) / rect.height) * totalHeight;
-      const next = clamp(pointToValue(localX, localY), safeMin, safeMax);
+      const next = clientPointToLinearGaugeValue({
+        clientX: event.clientX,
+        clientY: event.clientY,
+        rect,
+        totalWidth,
+        totalHeight,
+        axisStart,
+        axisEnd,
+        orientation,
+        min: safeMin,
+        max: safeMax,
+        isAxisInversed
+      });
+      if (next === null) return;
 
       if (pointerMeta.isPrimary) {
         setMainValue(next);
@@ -334,7 +347,6 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
   }, [
     draggingPointerId,
     onPointerValueChange,
-    pointToValue,
     pointerMap,
     safeMax,
     safeMin,
@@ -362,7 +374,7 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
     <div
       className={cn("inline-flex select-none", className)}
       role="meter"
-      aria-label={ariaLabel}
+      aria-label={resolvedAriaLabel}
       aria-valuemin={safeMin}
       aria-valuemax={safeMax}
       aria-valuenow={currentValue}
@@ -386,8 +398,8 @@ export function SgLinearGauge(props: Readonly<SgLinearGaugeProps>) {
         />
 
         {ranges.map((range, index) => {
-          const start = clamp(Math.min(range.start, range.end), safeMin, safeMax);
-          const end = clamp(Math.max(range.start, range.end), safeMin, safeMax);
+          const start = clampGaugeValue(Math.min(range.start, range.end), safeMin, safeMax);
+          const end = clampGaugeValue(Math.max(range.start, range.end), safeMin, safeMax);
           const p1 = valueToPoint(start);
           const p2 = valueToPoint(end);
           return (

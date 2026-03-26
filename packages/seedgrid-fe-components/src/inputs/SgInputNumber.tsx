@@ -3,17 +3,11 @@
 import React from "react";
 import { X } from "lucide-react";
 import { Controller } from "react-hook-form";
-import type {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  RegisterOptions,
-  UseFormRegister
-} from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
-export type SgInputNumberProps = {
+export type SgInputNumberProps = RhfFieldProps & {
   id: string;
   label?: string;
   labelText?: string;
@@ -27,7 +21,6 @@ export type SgInputNumberProps = {
   decimals?: number; // default 2
   allowNegative?: boolean; // default true
   emptyValue?: "null" | "zero"; // default "zero"
-  error?: string;
   type?: React.HTMLInputTypeAttribute;
   placeholder?: string;
   className?: string;
@@ -58,11 +51,9 @@ export type SgInputNumberProps = {
   validation?: (value: string) => string | null;
   validateOnBlur?: boolean;
   onValidation?: (message: string | null) => void;
-  register?: UseFormRegister<FieldValues>;
-  rules?: RegisterOptions<FieldValues>;
-} & RhfFieldProps;
+};
 
-type SgInputNumberBaseProps = Omit<SgInputNumberProps, keyof RhfFieldProps> & {
+type SgInputNumberBaseProps = Omit<SgInputNumberProps, "name" | "control" | "register" | "rules"> & {
   externalValue?: string | number;
   onExternalChange?: (value: string) => void;
 };
@@ -667,10 +658,16 @@ function SgInputNumberBase(props: SgInputNumberBaseProps) {
 }
 
 export function SgInputNumber(props: SgInputNumberProps) {
+  const i18n = useComponentsI18n();
   const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.required")
+  );
 
   if (name && register) {
-    const reg = register(name, rules);
+    const reg = register(name, resolvedRules);
     return (
       <SgInputNumberBase
         {...rest}
@@ -695,6 +692,7 @@ export function SgInputNumber(props: SgInputNumberProps) {
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -706,7 +704,7 @@ export function SgInputNumber(props: SgInputNumberProps) {
             {...rest}
             externalValue={field.value}
             onExternalChange={(value) => field.onChange(value)}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             inputProps={{
               ...rest.inputProps,
               onBlur: (event) => {

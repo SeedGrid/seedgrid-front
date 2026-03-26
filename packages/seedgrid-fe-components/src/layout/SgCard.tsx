@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../i18n";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 export type SgCardVariant = "default" | "outlined" | "flat" | "elevated";
@@ -113,6 +114,8 @@ function DefaultCaret({ open, size }: { open: boolean; size: number }) {
 }
 
 export function SgCard(props: Readonly<SgCardProps>) {
+  const i18n = useComponentsI18n();
+
   const {
     id,
     className,
@@ -439,7 +442,7 @@ export function SgCard(props: Readonly<SgCardProps>) {
         "text-muted-foreground hover:text-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--primary)/0.35)]"
       )}
-      aria-label={isOpen ? "Recolher" : "Expandir"}
+      aria-label={isOpen ? t(i18n, "components.actions.collapse") : t(i18n, "components.actions.expand")}
       aria-expanded={isOpen}
       disabled={disabled}
     >

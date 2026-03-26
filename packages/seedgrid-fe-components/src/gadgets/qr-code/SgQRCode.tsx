@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { t, useComponentsI18n } from "../../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -63,6 +64,8 @@ export type SgQRCodeProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children
 };
 
 export function SgQRCode(props: Readonly<SgQRCodeProps>) {
+  const i18n = useComponentsI18n();
+
   const {
     value,
     size = 220,
@@ -128,7 +131,7 @@ export function SgQRCode(props: Readonly<SgQRCodeProps>) {
           fgColor={fgColor}
           bgColor={bgColor}
           level={errorCorrectionLevel}
-          title="QR Code"
+          title={t(i18n, "components.gadgets.qrcode.title")}
           className={cn("block h-full w-full", imageClassName)}
         />
       </QrErrorBoundary>

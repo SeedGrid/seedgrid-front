@@ -2,12 +2,15 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { resolveFieldError } from "../rhf";
 import { maskCpfCnpj } from "../masks";
 import { isValidCnpj, isValidCpf } from "../validators";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputCPFCNPJProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
-  inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
+    ref?: React.Ref<HTMLInputElement>;
+  };
   error?: string;
   required?: boolean;
   requiredMessage?: string;
@@ -92,11 +95,11 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
 
   const inputProps = {
     ...rest.inputProps,
-    inputMode: rest.inputProps.inputMode ?? "text",
+    inputMode: rest.inputProps?.inputMode ?? "text",
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
       event.target.value = maskCpfCnpj(event.target.value);
       runValidation(event.currentTarget.value);
-      rest.inputProps.onChange?.(event);
+      rest.inputProps?.onChange?.(event);
     }
   };
 
@@ -107,7 +110,12 @@ export function SgInputCPFCNPJ(props: SgInputCPFCNPJProps) {
     <SgInputText
       {...rest}
       maxLength={rest.maxLength ?? 18}
-      error={error ?? internalError ?? undefined}
+      error={resolveFieldError(error, internalError ?? undefined)}
+      onClear={() => {
+        setInternalError(null);
+        props.onValidation?.(null);
+        rest.onClear?.();
+      }}
       inputProps={{
         ...inputProps,
         onBlur: (event) => {

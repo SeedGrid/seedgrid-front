@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { UseFormRegister, FieldValues, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
 import { t, useComponentsI18n } from "../i18n";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 
 export type SgCheckboxGroupOrientation = "horizontal" | "vertical";
 export type SgCheckboxGroupSelectionStyle = "checkbox" | "highlight";
@@ -23,7 +24,7 @@ export type SgCheckboxGroupRef = {
   clearAll: () => void;
 };
 
-export interface SgCheckboxGroupProps {
+export interface SgCheckboxGroupProps extends RhfFieldProps {
   id?: string;
   title?: string;
   source: SgCheckboxGroupOption[];
@@ -40,12 +41,6 @@ export interface SgCheckboxGroupProps {
   showCheckAll?: boolean;
   checkAllLabel?: string;
   checkAllIcon?: React.ReactNode;
-
-  // React Hook Form props
-  name?: string;
-  control?: any;
-  register?: UseFormRegister<FieldValues>;
-  error?: string;
 
   // Styling
   className?: string;
@@ -83,6 +78,7 @@ function SgCheckboxGroupBase(
     name,
     control,
     register,
+    rules,
     error,
     className = "",
     style,
@@ -275,6 +271,12 @@ function SgCheckboxGroupBase(
     </div>
   ) : null;
 
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    required,
+    t(i18n, "components.inputs.required")
+  );
+
   const groupContent = (
     <>
       {checkAllNode}
@@ -299,7 +301,7 @@ function SgCheckboxGroupBase(
       <Controller
         name={name}
         control={control}
-        rules={{ required: required ? t(i18n, "components.inputs.required") : false }}
+        rules={resolvedRules}
         render={({ field, fieldState }) =>
           SgCheckboxGroupBase(
             {
@@ -309,7 +311,7 @@ function SgCheckboxGroupBase(
                 field.onChange(val);
                 onChange?.(val);
               },
-              error: fieldState.error?.message,
+              error: resolveFieldError(error, fieldState.error?.message),
               control: undefined
             },
             undefined
@@ -321,9 +323,7 @@ function SgCheckboxGroupBase(
 
   // React Hook Form — register
   if (register && name) {
-    const registration = register(name, {
-      required: required ? t(i18n, "components.inputs.required") : false
-    });
+    const registration = register(name, resolvedRules);
 
     return (
       <div className={className} style={style}>

@@ -2,12 +2,15 @@
 
 import React from "react";
 import { SgInputText, type SgInputTextProps } from "./SgInputText";
+import { resolveFieldError } from "../rhf";
 import { maskCpf } from "../masks";
 import { isValidCpf } from "../validators";
 import { t, useComponentsI18n } from "../i18n";
 
 export type SgInputCPFProps = Omit<SgInputTextProps, "inputProps" | "error"> & {
-  inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
+    ref?: React.Ref<HTMLInputElement>;
+  };
   error?: string;
   required?: boolean;
   requiredMessage?: string;
@@ -69,11 +72,11 @@ export function SgInputCPF(props: SgInputCPFProps) {
 
   const inputProps = {
     ...rest.inputProps,
-    inputMode: rest.inputProps.inputMode ?? "numeric",
+    inputMode: rest.inputProps?.inputMode ?? "numeric",
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
       event.target.value = maskCpf(event.target.value);
       runValidation(event.currentTarget.value);
-      rest.inputProps.onChange?.(event);
+      rest.inputProps?.onChange?.(event);
     }
   };
 
@@ -84,7 +87,12 @@ export function SgInputCPF(props: SgInputCPFProps) {
     <SgInputText
       {...rest}
       maxLength={rest.maxLength ?? 18}
-      error={error ?? internalError ?? undefined}
+      error={resolveFieldError(error, internalError ?? undefined)}
+      onClear={() => {
+        setInternalError(null);
+        props.onValidation?.(null);
+        rest.onClear?.();
+      }}
       inputProps={{
         ...inputProps,
         onBlur: (event) => {

@@ -2,14 +2,8 @@
 
 import React from "react";
 import { Controller } from "react-hook-form";
-import type {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  RegisterOptions,
-  UseFormRegister
-} from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
 type SlotKind = "alphanumeric" | "digit";
@@ -38,14 +32,13 @@ export type SgInputOTPRef = {
   getMaskedValue: () => string;
 };
 
-export type SgInputOTPProps = {
+export type SgInputOTPProps = RhfFieldProps & {
   id: string;
   label?: string;
   hintText?: string;
   mask?: string;
   value?: string;
   defaultValue?: string;
-  error?: string;
   className?: string;
   groupClassName?: string;
   slotClassName?: string;
@@ -70,11 +63,9 @@ export type SgInputOTPProps = {
   onEnter?: () => void;
   onExit?: () => void;
   onClear?: () => void;
-  register?: UseFormRegister<FieldValues>;
-  rules?: RegisterOptions<FieldValues>;
-} & RhfFieldProps;
+};
 
-type SgInputOTPBaseProps = Omit<SgInputOTPProps, keyof RhfFieldProps | "register" | "rules"> & {
+type SgInputOTPBaseProps = Omit<SgInputOTPProps, "name" | "control" | "register" | "rules"> & {
   name?: string;
   onFieldChange?: (rawValue: string) => void;
   onFieldBlur?: (rawValue: string) => void;
@@ -654,7 +645,7 @@ const SgInputOTPBase = React.forwardRef<SgInputOTPRef, SgInputOTPBaseProps>(func
         onFocusCapture={handleGroupFocusCapture}
         onBlurCapture={handleGroupBlurCapture}
         role="group"
-        aria-label={labelText || id}
+        aria-label={labelText || t(i18n, "components.inputs.otp.group")}
         aria-invalid={hasError || undefined}
       >
         {tokens.map((token, tokenIndex) => {
@@ -706,7 +697,7 @@ const SgInputOTPBase = React.forwardRef<SgInputOTPRef, SgInputOTPBaseProps>(func
               className={`${mergedSlotClass} ${slotShapeClass}`}
               disabled={isDisabled}
               readOnly={isReadOnly}
-              aria-label={labelText ? `${labelText} ${slotIndex + 1}` : `OTP ${slotIndex + 1}`}
+              aria-label={labelText ? `${labelText} ${slotIndex + 1}` : t(i18n, "components.inputs.otp.slot", { slot: slotIndex + 1 })}
               ref={(node) => setSlotRef(slotIndex, node)}
               onFocus={(event) => {
                 event.currentTarget.select();
@@ -766,10 +757,16 @@ export const SgInputOTP = React.forwardRef<SgInputOTPRef, SgInputOTPProps>(funct
   props,
   ref
 ) {
+  const i18n = useComponentsI18n();
   const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.required")
+  );
 
   if (name && register) {
-    const registration = register(name, rules);
+    const registration = register(name, resolvedRules);
     return (
       <SgInputOTPBase
         {...rest}
@@ -791,6 +788,7 @@ export const SgInputOTP = React.forwardRef<SgInputOTPRef, SgInputOTPProps>(funct
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -803,7 +801,7 @@ export const SgInputOTP = React.forwardRef<SgInputOTPRef, SgInputOTPProps>(funct
             ref={ref}
             name={name}
             value={normalizeExternalValue(field.value)}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             hiddenFieldRef={field.ref}
             onFieldChange={(rawValue) => {
               field.onChange(rawValue);

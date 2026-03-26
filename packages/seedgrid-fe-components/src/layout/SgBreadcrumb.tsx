@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ChevronRight, Home, MoreHorizontal } from "lucide-react";
+import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -148,13 +149,17 @@ export function SgBreadcrumb(props: Readonly<SgBreadcrumbProps>) {
     homeLabel = "Home",
     size = "md",
     variant = "default",
-    ariaLabel = "Breadcrumb",
-    overflowLabel = "Mais caminhos",
+    ariaLabel,
+    overflowLabel,
     onNavigate,
     className,
     itemClassName,
     style
   } = props;
+
+  const i18n = useComponentsI18n();
+  const resolvedAriaLabel = ariaLabel ?? t(i18n, "components.breadcrumb.ariaLabel");
+  const resolvedOverflowLabel = overflowLabel ?? t(i18n, "components.breadcrumb.overflow");
 
   const visibleItems = React.useMemo(
     () => items.filter((item) => !item.hidden),
@@ -223,7 +228,7 @@ export function SgBreadcrumb(props: Readonly<SgBreadcrumbProps>) {
   const separatorEl = separatorNode(separator, cn("text-muted-foreground", sizeClasses.sep));
 
   return (
-    <nav aria-label={ariaLabel} className={cn("min-w-0", className)} style={style}>
+    <nav aria-label={resolvedAriaLabel} className={cn("min-w-0", className)} style={style}>
       <div className={cn(overflowBehavior === "scroll" ? "overflow-x-auto" : "")}>
         <ol className={cn("flex min-w-0 items-center whitespace-nowrap", sizeClasses.root)}>
           {tokens.map((token, tokenIndex) => {
@@ -274,7 +279,7 @@ export function SgBreadcrumb(props: Readonly<SgBreadcrumbProps>) {
                   <li className="relative inline-flex items-center">
                     <details className="group">
                       <summary
-                        aria-label={overflowLabel}
+                        aria-label={resolvedOverflowLabel}
                         className={cn(
                           "list-none cursor-pointer rounded-md text-muted-foreground transition-colors",
                           "inline-flex items-center justify-center",

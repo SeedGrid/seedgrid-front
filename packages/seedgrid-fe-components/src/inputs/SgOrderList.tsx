@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { resolveFieldError, type RhfFieldProps } from "../rhf";
 import { SgButton } from "../buttons/SgButton";
 import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
 import { t, useComponentsI18n } from "../i18n";
@@ -28,7 +31,8 @@ export type SgOrderListRef = {
   clearSelection: () => void;
 };
 
-export interface SgOrderListProps {
+export interface SgOrderListProps extends RhfFieldProps {
+  error?: string;
   id?: string;
   title?: string;
   source: SgOrderListItem[];
@@ -186,7 +190,8 @@ function SgOrderListBase(
     style,
     listClassName = "",
     itemClassName = "",
-    groupBoxProps = {}
+    groupBoxProps = {},
+    error
   } = props;
 
   const [internalItems, setInternalItems] = React.useState<SgOrderListItem[]>(
@@ -573,6 +578,7 @@ function SgOrderListBase(
   return (
     <div className={className} style={style}>
       <SgGroupBox {...groupBoxProps} title={resolvedTitle}>
+        {error ? <p className="mb-2 text-xs text-red-600">{error}</p> : null}
         <div className={cn("flex items-start gap-3", containerDirection)}>
           {controls}
           <div className="min-w-0 flex-1">{renderedList}</div>
@@ -582,6 +588,32 @@ function SgOrderListBase(
   );
 }
 
-export const SgOrderList = React.forwardRef<SgOrderListRef, SgOrderListProps>(
-  (props, ref) => SgOrderListBase(props, ref)
-);
+export const SgOrderList = React.forwardRef<SgOrderListRef, SgOrderListProps>((props, ref) => {
+  const { control, name, rules, ...rest } = props;
+
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field, fieldState }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState }) =>
+          SgOrderListBase(
+            {
+              ...rest,
+              error: resolveFieldError(rest.error, fieldState.error?.message),
+              value: Array.isArray(field.value) ? field.value : rest.value,
+              onChange: (items) => {
+                rest.onChange?.(items);
+                field.onChange(items);
+              }
+            } as SgOrderListProps,
+            ref
+          )
+        }
+      />
+    );
+  }
+
+  return SgOrderListBase(rest as SgOrderListProps, ref);
+});

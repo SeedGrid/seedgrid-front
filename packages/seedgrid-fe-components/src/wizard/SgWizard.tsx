@@ -2,6 +2,7 @@
 
 import React from "react";
 import { t, useComponentsI18n } from "../i18n";
+import { canProceedWizardAction, clampWizardStep } from "./logic";
 
 export type SgWizardPageProps = {
   title?: string;
@@ -46,6 +47,7 @@ function CheckIcon({ className }: { className?: string }) {
 }
 
 function StepperBar({
+  i18n,
   pages,
   currentStep,
   mode
@@ -53,14 +55,15 @@ function StepperBar({
   pages: Array<React.ReactElement<SgWizardPageProps>>;
   currentStep: number;
   mode: "numbered" | "icons";
+  i18n: ReturnType<typeof useComponentsI18n>;
 }) {
   return (
-    <nav aria-label="Progress" className="mb-8">
+    <nav aria-label={t(i18n, "components.wizard.progress")} className="mb-8">
       <ol className="flex items-center">
         {pages.map((page, i) => {
           const isCompleted = i < currentStep;
           const isCurrent = i === currentStep;
-          const title = page.props.title ?? `Step ${i + 1}`;
+          const title = page.props.title ?? t(i18n, "components.wizard.step", { step: i + 1 });
           const icon = page.props.icon;
           const isLast = i === pages.length - 1;
 
@@ -122,10 +125,7 @@ export function SgWizard(props: SgWizardProps) {
 
   const stepper = props.stepper ?? "none";
 
-  const [step, setStep] = React.useState(() => {
-    const idx = props.initialStep ?? 0;
-    return Math.min(Math.max(idx, 0), Math.max(pages.length - 1, 0));
-  });
+  const [step, setStep] = React.useState(() => clampWizardStep(props.initialStep, pages.length));
   const [isFinishing, setIsFinishing] = React.useState(false);
   const [isValidating, setIsValidating] = React.useState(false);
   const pageRef = React.useRef<HTMLDivElement>(null);
@@ -161,16 +161,13 @@ export function SgWizard(props: SgWizardProps) {
     if (isValidating) return;
     setIsValidating(true);
     try {
-      const pageValid = await validateCurrentPage();
-      if (!pageValid) return;
-      if (props.validateStep) {
-        const ok = await props.validateStep(step);
-        if (!ok) return;
-      }
-      if (props.onBeforeNext) {
-        const ok = await props.onBeforeNext(step);
-        if (!ok) return;
-      }
+      const ok = await canProceedWizardAction({
+        validateCurrentPage,
+        validateStep: props.validateStep,
+        beforeAction: props.onBeforeNext,
+        step
+      });
+      if (!ok) return;
       setStep((prev) => Math.min(prev + 1, pages.length - 1));
     } finally {
       setIsValidating(false);
@@ -187,16 +184,13 @@ export function SgWizard(props: SgWizardProps) {
     if (isValidating) return;
     setIsValidating(true);
     try {
-      const pageValid = await validateCurrentPage();
-      if (!pageValid) return;
-      if (props.validateStep) {
-        const ok = await props.validateStep(step);
-        if (!ok) return;
-      }
-      if (props.onBeforeFinish) {
-        const ok = await props.onBeforeFinish(step);
-        if (!ok) return;
-      }
+      const ok = await canProceedWizardAction({
+        validateCurrentPage,
+        validateStep: props.validateStep,
+        beforeAction: props.onBeforeFinish,
+        step
+      });
+      if (!ok) return;
     } finally {
       setIsValidating(false);
     }
@@ -211,7 +205,7 @@ export function SgWizard(props: SgWizardProps) {
   return (
     <div className={props.className} style={props.style}>
       {stepper !== "none" ? (
-        <StepperBar pages={pages} currentStep={step} mode={stepper} />
+        <StepperBar pages={pages} currentStep={step} mode={stepper} i18n={i18n} />
       ) : null}
       <div ref={pageRef}>{pages[step]}</div>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">

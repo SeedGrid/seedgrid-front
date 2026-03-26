@@ -1,6 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
+import { Controller } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { resolveFieldError, type RhfFieldProps } from "../rhf";
 import { SgButton } from "../buttons/SgButton";
 import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
 import { t, useComponentsI18n } from "../i18n";
@@ -44,7 +47,8 @@ export type SgPickListRef = {
   clearSelection: () => void;
 };
 
-export interface SgPickListProps {
+export interface SgPickListProps extends RhfFieldProps {
+  error?: string;
   id?: string;
   title?: string;
   source: SgPickListItem[];
@@ -201,7 +205,8 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
     style,
     listClassName = "",
     itemClassName = "",
-    groupBoxProps = {}
+    groupBoxProps = {},
+    error
   } = props;
 
   const [internalValue, setInternalValue] = React.useState<SgPickListValue>(() => ({ source, target }));
@@ -528,10 +533,10 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
 
   const renderReorderControls = (list: SgPickListListName) => (
     <div className="flex shrink-0 flex-col gap-2">
-      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveTopLabel} title={moveTopLabel} onClick={() => applyReorder(list, "top")}>Top</SgButton>
-      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveUpLabel} title={moveUpLabel} onClick={() => applyReorder(list, "up")}>Up</SgButton>
-      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveDownLabel} title={moveDownLabel} onClick={() => applyReorder(list, "down")}>Down</SgButton>
-      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveBottomLabel} title={moveBottomLabel} onClick={() => applyReorder(list, "bottom")}>Bottom</SgButton>
+      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveTopLabel} title={moveTopLabel} onClick={() => applyReorder(list, "top")}>{t(i18n, "components.actions.top")}</SgButton>
+      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveUpLabel} title={moveUpLabel} onClick={() => applyReorder(list, "up")}>{t(i18n, "components.actions.up")}</SgButton>
+      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveDownLabel} title={moveDownLabel} onClick={() => applyReorder(list, "down")}>{t(i18n, "components.actions.down")}</SgButton>
+      <SgButton size="sm" appearance="outline" disabled={!canInteract} aria-label={moveBottomLabel} title={moveBottomLabel} onClick={() => applyReorder(list, "bottom")}>{t(i18n, "components.actions.bottom")}</SgButton>
     </div>
   );
 
@@ -549,6 +554,7 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
   return (
     <div className={className} style={style}>
       <SgGroupBox {...groupBoxProps} title={resolvedTitle}>
+        {error ? <p className="mb-2 text-xs text-red-600">{error}</p> : null}
         <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-start">
           <div className="min-w-0 space-y-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--sg-muted))]">{sourceHeaderLabel}</p>
@@ -589,6 +595,33 @@ function SgPickListBase(props: SgPickListProps, imperativeRef?: React.ForwardedR
   );
 }
 
-export const SgPickList = React.forwardRef<SgPickListRef, SgPickListProps>((props, ref) =>
-  SgPickListBase(props, ref)
-);
+export const SgPickList = React.forwardRef<SgPickListRef, SgPickListProps>((props, ref) => {
+  const { control, name, rules, ...rest } = props;
+
+  if (control && name) {
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field, fieldState }: { field: ControllerRenderProps<FieldValues, string>; fieldState: ControllerFieldState }) =>
+          SgPickListBase(
+            {
+              ...rest,
+              error: resolveFieldError(rest.error, fieldState.error?.message),
+              value: (field.value as SgPickListValue | undefined) ?? rest.value,
+              onChange: (event) => {
+                rest.onChange?.(event);
+                field.onChange({ source: event.source, target: event.target });
+              }
+            } as SgPickListProps,
+            ref
+          )
+        }
+      />
+    );
+  }
+
+  return SgPickListBase(rest as SgPickListProps, ref);
+});
+

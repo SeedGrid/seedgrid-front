@@ -104,29 +104,6 @@ function capitalizeFirst(value: string, locale: string): string {
   return value.charAt(0).toLocaleUpperCase(locale) + value.slice(1);
 }
 
-function resolveCalendarUiLabels(locale: string) {
-  const lower = locale.toLowerCase();
-  if (lower.startsWith("pt")) {
-    return {
-      previousMonth: "Mes anterior",
-      nextMonth: "Proximo mes",
-      goToday: "Ir para hoje"
-    };
-  }
-  if (lower.startsWith("es")) {
-    return {
-      previousMonth: "Mes anterior",
-      nextMonth: "Mes siguiente",
-      goToday: "Ir a hoy"
-    };
-  }
-  return {
-    previousMonth: "Previous month",
-    nextMonth: "Next month",
-    goToday: "Go to today"
-  };
-}
-
 export type SgCalendarWeekdayFormat = "narrow" | "short" | "long";
 
 export type SgCalendarProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onChange"> & {
@@ -222,7 +199,14 @@ export function SgCalendar(props: Readonly<SgCalendarProps>) {
     safeNumberOfMonths,
     clampInt(monthsPerLine, 3, 1, 12)
   );
-  const uiLabels = resolveCalendarUiLabels(locale);
+  const uiLabels = React.useMemo(
+    () => ({
+      previousMonth: t(i18n, "components.gadgets.calendar.previousMonth"),
+      nextMonth: t(i18n, "components.gadgets.calendar.nextMonth"),
+      goToday: t(i18n, "components.gadgets.calendar.goToday")
+    }),
+    [i18n]
+  );
 
   const formatSelectedDate = React.useMemo(
     () =>

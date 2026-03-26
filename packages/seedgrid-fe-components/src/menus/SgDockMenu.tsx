@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { t, useComponentsI18n } from "../i18n";
+import { buildDockMenuStorageKey, parseStoredPanelDragPosition } from "../layout/drag-position";
+import { buildDockMenuContainerStyle, buildDockMenuContextMenuState, buildDockMenuItemMotion, buildDockMenuLabelStyle, buildDockMenuLayout } from "./dock-menu-logic";
 import { useHasSgEnvironmentProvider, useSgPersistence } from "../environment/SgEnvironmentProvider";
 
 /* ── types ── */
@@ -71,26 +73,6 @@ export interface SgDockMenuProps {
 
 /* ── constants ── */
 
-const EDGE = 24;
-
-const POS_CSS: Record<SgDockMenuPosition, React.CSSProperties> = {
-  "left-top": { top: EDGE, left: EDGE },
-  "left-center": { left: EDGE, top: "50%" },
-  "left-bottom": { bottom: EDGE, left: EDGE },
-  "center-top": { top: EDGE, left: "50%" },
-  "center-bottom": { bottom: EDGE, left: "50%" },
-  "right-top": { top: EDGE, right: EDGE },
-  "right-center": { right: EDGE, top: "50%" },
-  "right-bottom": { bottom: EDGE, right: EDGE },
-};
-
-const CENTER_TX: Partial<Record<SgDockMenuPosition, string>> = {
-  "left-center": "translateY(-50%)",
-  "right-center": "translateY(-50%)",
-  "center-top": "translateX(-50%)",
-  "center-bottom": "translateX(-50%)",
-};
-
 const ELEV_CLS: Record<string, string> = {
   none: "",
   sm: "shadow-sm",
@@ -98,44 +80,8 @@ const ELEV_CLS: Record<string, string> = {
   lg: "shadow-lg shadow-black/20",
 };
 
-function getLiftDirection(
-  position: SgDockMenuPosition,
-  orientation: SgDockMenuOrientation
-): number {
-  if (orientation === "horizontal") {
-    return position.includes("bottom") ? -1 : 1;
-  }
-  return position.startsWith("left") ? 1 : -1;
-}
-
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
-}
-
-function parseStoredDragPosition(raw: unknown): { x: number; y: number } | null {
-  const value = typeof raw === "string" ? (() => {
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  })() : raw;
-
-  if (
-    !value ||
-    typeof value !== "object" ||
-    typeof (value as { x?: unknown }).x !== "number" ||
-    typeof (value as { y?: unknown }).y !== "number" ||
-    !Number.isFinite((value as { x: number }).x) ||
-    !Number.isFinite((value as { y: number }).y)
-  ) {
-    return null;
-  }
-
-  return {
-    x: (value as { x: number }).x,
-    y: (value as { y: number }).y
-  };
 }
 
 /* ── orientation helper ── */
@@ -184,14 +130,11 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
   const dragMoved = React.useRef(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const orientation = getOrientation(position);
-  const liftDirection = getLiftDirection(position, orientation);
+  const { orientation, liftDirection } = buildDockMenuLayout(position);
   const crossPadding = Math.max(8, Math.round(gap * 0.6));
   const edgePadding = Math.max(Math.round(gap * 2.2), Math.round(itemSize * 0.45));
   const isAbsolutePosition = style?.position === "absolute";
-  const storageKey = dragId
-    ? `sg-dockmenu-pos:${dragId}:${isAbsolutePosition ? "parent" : "viewport"}`
-    : null;
+  const storageKey = buildDockMenuStorageKey(dragId, isAbsolutePosition);
   const itemSurfaceColor = "rgb(var(--sg-muted-surface, 241 245 249) / 0.92)";
   const itemSurfaceHoverColor = "rgb(var(--sg-primary-500, 34 197 94) / 0.18)";
   const itemIconColor = "rgb(var(--sg-text, 15 23 42))";
@@ -205,7 +148,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
       try {
         const loaded = await loadPersistedState(storageKey);
         if (loaded === null || loaded === undefined) return null;
-        const parsed = parseStoredDragPosition(loaded);
+        const parsed = parseStoredPanelDragPosition(loaded);
         if (!parsed) {
           await clearPersistedState(storageKey);
           return null;
@@ -219,7 +162,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return null;
-      const parsed = parseStoredDragPosition(raw);
+      const parsed = parseStoredPanelDragPosition(raw);
       if (!parsed) {
         localStorage.removeItem(storageKey);
         return null;
@@ -387,21 +330,30 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
   }, [enableDragDrop, getDragBounds, saveStoredPosition, storageKey]);
 
   const handleContextMenu = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    if (!enableDragDrop || !dragId) return;
-    if (!hasStoredPosRef.current) return;
+    const contextState = buildDockMenuContextMenuState({
+      enableDragDrop,
+      dragId,
+      hasStoredPosition: hasStoredPosRef.current
+    });
+    if (!contextState.canOpenContextMenu) return;
     event.preventDefault();
     setMenuOpen(true);
   }, [enableDragDrop, dragId]);
 
   const handleResetPosition = React.useCallback(() => {
-    if (!storageKey) return;
+    const contextState = buildDockMenuContextMenuState({
+      enableDragDrop,
+      dragId,
+      hasStoredPosition: hasStoredPosRef.current
+    });
+    if (!contextState.canResetPosition || !storageKey) return;
     void clearStoredPosition();
     dragPosRef.current = null;
     setDragPos(null);
     setMenuOpen(false);
     hasStoredPosRef.current = false;
     dragMoved.current = false;
-  }, [clearStoredPosition, storageKey]);
+  }, [clearStoredPosition, dragId, enableDragDrop, storageKey]);
 
   const handleItemClick = React.useCallback((item: SgDockMenuItem) => {
     if (item.disabled) return;
@@ -412,32 +364,13 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
     item.onClick?.();
   }, []);
 
-  // Container position
-  const posStyle: React.CSSProperties = {
-    position: "fixed",
-    ...POS_CSS[position],
-    zIndex
-  };
-
-  if (enableDragDrop && dragPos) {
-    posStyle.left = dragPos.x;
-    posStyle.top = dragPos.y;
-    delete posStyle.right;
-    delete posStyle.bottom;
-  }
-
-  if (offset?.x) {
-    if (posStyle.right !== undefined) posStyle.right = (typeof posStyle.right === "number" ? posStyle.right : 0) - offset.x;
-    else if (posStyle.left !== undefined) posStyle.left = (typeof posStyle.left === "number" ? posStyle.left : 0) + offset.x;
-  }
-  if (offset?.y) {
-    if (posStyle.bottom !== undefined) posStyle.bottom = (typeof posStyle.bottom === "number" ? posStyle.bottom : 0) - offset.y;
-    else if (posStyle.top !== undefined) posStyle.top = (typeof posStyle.top === "number" ? posStyle.top : 0) + offset.y;
-  }
-
-  const txParts: string[] = [];
-  const ctx = !(enableDragDrop && dragPos) ? CENTER_TX[position] : undefined;
-  if (ctx) txParts.push(ctx);
+  const containerStyleState = buildDockMenuContainerStyle({
+    position,
+    zIndex,
+    enableDragDrop,
+    dragPos,
+    offset
+  });
 
   return (
     <>
@@ -446,9 +379,9 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
         id={id}
         className={`sg-dock ${className} ${ELEV_CLS[elevation]}`}
         style={{
-          ...posStyle,
+          ...containerStyleState.style,
           ...style,
-          transform: txParts.join(" "),
+          transform: containerStyleState.transform,
           cursor: enableDragDrop ? (isDragging ? "grabbing" : "grab") : "default",
           ...(enableDragDrop ? { touchAction: "none" } : {}),
         }}
@@ -484,36 +417,16 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
         >
           {items.map((item, index) => {
             const isHovered = hoveredIndex === index;
-            const hasMagnifyCurve = magnify && hoveredIndex !== null;
-            const distance = hasMagnifyCurve ? Math.abs(index - hoveredIndex) : Number.POSITIVE_INFINITY;
-            const influence = hasMagnifyCurve ? Math.max(0, 1 - distance / 3) : 0;
-            const curve = influence * influence;
-
-            const scale = 1 + (magnifyScale - 1) * curve;
-            const liftPx = curve * Math.min(itemSize * 0.4, 18);
-            const spreadBase = Math.max(0, itemSize * (magnifyScale - 1) * 0.68 + gap * 0.12);
-            const spreadCurve =
-              hasMagnifyCurve && distance > 0
-                ? Math.max(0, 1 - (distance - 1) * 0.1)
-                : 0;
-            const spreadSign = hasMagnifyCurve && hoveredIndex !== null ? Math.sign(index - hoveredIndex) : 0;
-            const spreadPx = spreadSign === 0 ? 0 : spreadSign * spreadBase * spreadCurve;
-
-            const translateX =
-              (orientation === "vertical" ? liftDirection * liftPx : 0) +
-              (orientation === "horizontal" ? spreadPx : 0);
-            const translateY =
-              (orientation === "horizontal" ? liftDirection * liftPx : 0) +
-              (orientation === "vertical" ? spreadPx : 0);
-
-            const transformOrigin =
-              orientation === "horizontal"
-                ? liftDirection < 0
-                  ? "50% 100%"
-                  : "50% 0%"
-                : liftDirection > 0
-                  ? "0% 50%"
-                  : "100% 50%";
+            const motion = buildDockMenuItemMotion({
+              index,
+              hoveredIndex,
+              magnify,
+              magnifyScale,
+              itemSize,
+              gap,
+              orientation,
+              liftDirection
+            });
 
             return (
               <div
@@ -524,20 +437,20 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                   position: "relative",
                   width: itemSize,
                   height: itemSize,
-                  transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
-                  transformOrigin,
+                  transform: `translate3d(${motion.translateX}px, ${motion.translateY}px, 0) scale(${motion.scale})`,
+                  transformOrigin: motion.transformOrigin,
                   transition: "transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1)",
                   willChange: "transform",
                   cursor: item.disabled ? "not-allowed" : "pointer",
                   opacity: item.disabled ? 0.5 : 1,
-                  zIndex: isHovered ? 3 : curve > 0 ? 2 : 1,
+                  zIndex: motion.zIndex,
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                onClick={() => handleItemClick(item)}
               >
-                <div
-                  className="sg-dock-item-icon"
+                <button
+                  type="button"
+                  className="sg-dock-item-icon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                   style={{
                     width: "100%",
                     height: "100%",
@@ -555,9 +468,13 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = itemSurfaceColor;
                   }}
+                  onClick={() => handleItemClick(item)}
+                  aria-label={item.label}
+                  title={item.label}
+                  disabled={item.disabled}
                 >
                   {item.icon}
-                </div>
+                </button>
 
                 {/* Badge */}
                 {item.badge && (
@@ -591,12 +508,7 @@ export function SgDockMenu(props: Readonly<SgDockMenuProps>) {
                     className="sg-dock-item-label"
                     style={{
                       position: "absolute",
-                      ...(orientation === "horizontal"
-                        ? { bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: 8 }
-                        : position.startsWith("left")
-                          ? { left: "100%", top: "50%", transform: "translateY(-50%)", marginLeft: 8 }
-                          : { right: "100%", top: "50%", transform: "translateY(-50%)", marginRight: 8 }
-                      ),
+                      ...buildDockMenuLabelStyle(orientation, position),
                       backgroundColor: tooltipBgColor,
                       color: tooltipTextColor,
                       padding: "4px 8px",

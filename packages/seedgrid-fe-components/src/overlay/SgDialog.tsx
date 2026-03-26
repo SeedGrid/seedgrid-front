@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import { t, useComponentsI18n } from "../i18n";
 
 export type SgDialogSize = "sm" | "md" | "lg" | "xl" | "full";
 export type SgDialogSeverity =
@@ -334,6 +335,7 @@ function resolveCustomSurfacePalette(
 }
 
 export function SgDialog(props: Readonly<SgDialogProps>) {
+  const i18n = useComponentsI18n();
   const {
     open: openProp,
     onOpenChange,
@@ -493,7 +495,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
   if (!present) return null;
 
   const a11yLabel =
-    ariaLabel ?? (typeof title === "string" ? title : undefined) ?? "Dialog";
+    ariaLabel ?? (typeof title === "string" ? title : undefined) ?? t(i18n, "components.dialog.ariaLabel");
 
   const overlayBase = "fixed inset-0 bg-black/60 backdrop-blur-[1px] transition-opacity";
   const overlayState = entered ? "opacity-100" : "opacity-0";
@@ -573,7 +575,7 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
                       "hover:bg-[var(--sg-dialog-hover-bg)] active:bg-[var(--sg-dialog-active-bg)]",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring,var(--primary)))]"
                     )}
-                    aria-label="Close"
+                    aria-label={t(i18n, "components.dialog.close")}
                   >
                     <CloseIcon />
                   </button>
@@ -617,3 +619,6 @@ function CloseIcon() {
 }
 
 SgDialog.displayName = "SgDialog";
+
+
+

@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { SgInputText } from "../inputs/SgInputText";
 import { SgButton } from "../buttons/SgButton";
+import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -309,6 +310,7 @@ export type SgTreeViewProps = {
 };
 
 export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(function SgTreeView(props, ref) {
+  const i18n = useComponentsI18n();
   const {
     nodes,
     className,
@@ -321,13 +323,15 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
     checkMode = "live",
     confirmSelection = "leafOnly",
     searchable = false,
-    searchPlaceholder = "Search...",
+    searchPlaceholder: searchPlaceholderProp,
     expandMatchesOnSearch = true,
     branchLabelBehavior = "toggle",
-    emptyText = "No items.",
+    emptyText: emptyTextProp,
     maxHeightClassName = "max-h-[60vh]"
   } = props;
 
+  const searchPlaceholder = searchPlaceholderProp ?? `${t(i18n, "components.actions.search")}...`;
+  const emptyText = emptyTextProp ?? t(i18n, "components.tree.empty");
   const SZ = sizeMap[size];
   const DY = densityMap[density];
   const T = toneClasses(tone);
@@ -511,7 +515,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
               !hasChildren && "opacity-0 pointer-events-none"
             )}
             onClick={() => hasChildren && !isDisabled && toggleExpand(node)}
-            aria-label={isOpen ? "Collapse" : "Expand"}
+            aria-label={isOpen ? t(i18n, "components.actions.collapse") : t(i18n, "components.actions.expand")}
             disabled={isDisabled}
           >
             <span className={cn("transition-transform", isOpen && "rotate-90")}>{">"}</span>
@@ -601,7 +605,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
           onClick={expandAll}
           leftIcon={<ChevronDown className="size-4" />}
         >
-          Expand all
+          {t(i18n, "components.actions.expandAll")}
         </SgButton>
 
         <SgButton
@@ -612,7 +616,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
           onClick={collapseAll}
           leftIcon={<ChevronUp className="size-4" />}
         >
-          Collapse all
+          {t(i18n, "components.actions.collapseAll")}
         </SgButton>
 
         {checkable && (
@@ -622,9 +626,9 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
             size="sm"
             shape="rounded"
             onClick={clearChecked}
-            title="Clear selection"
+            title={t(i18n, "components.actions.clearSelection")}
           >
-            Clear
+            {t(i18n, "components.actions.clear")}
           </SgButton>
         )}
       </div>
@@ -651,8 +655,8 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
               <div className={cn("text-xs", T.subtle)}>
                 {confirmCfg.hint ?? (
                   <>
-                    Selected: <span className="font-medium text-sg-text">{confirmSelectedIds.length}</span>
-                    {confirmSelection === "leafOnly" ? " (leafs)" : ""}
+                    {t(i18n, "components.tree.selected", { count: confirmSelectedIds.length })}
+                    {confirmSelection === "leafOnly" ? t(i18n, "components.tree.selectedLeafs") : ""}
                   </>
                 )}
               </div>
@@ -670,7 +674,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
                       SZ.btn
                     )}
                   >
-                    {confirmCfg.cancelLabel ?? "Cancel"}
+                    {confirmCfg.cancelLabel ?? t(i18n, "components.actions.cancel")}
                   </button>
                 )}
 
@@ -682,7 +686,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
                   onClick={clearChecked}
                   disabled={!!confirmDisabled}
                 >
-                  Clear
+                  {t(i18n, "components.actions.clear")}
                 </SgButton>
 
                 <SgButton
@@ -694,7 +698,7 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
                   disabled={!!confirmDisabled}
                   onClick={onConfirm}
                 >
-                  {confirmCfg.label ?? "Confirm"}
+                  {confirmCfg.label ?? t(i18n, "components.actions.confirm")}
                 </SgButton>
               </div>
             </div>
@@ -706,3 +710,8 @@ export const SgTreeView = React.forwardRef<SgTreeViewRef, SgTreeViewProps>(funct
 });
 
 SgTreeView.displayName = "SgTreeView";
+
+
+
+
+

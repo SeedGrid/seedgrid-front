@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -100,14 +101,18 @@ export function SgPageControl(props: Readonly<SgPageControlProps>) {
     size = "md",
     fullWidthTabs = false,
     keyboardNavigation = true,
-    ariaLabel = "Page control",
-    emptyMessage = "No visible pages.",
+    ariaLabel,
+    emptyMessage,
     className,
     tabListClassName,
     tabClassName,
     panelClassName,
     style
   } = props;
+
+  const i18n = useComponentsI18n();
+  const resolvedAriaLabel = ariaLabel ?? t(i18n, "components.pageControl.ariaLabel");
+  const resolvedEmptyMessage = emptyMessage ?? t(i18n, "components.pageControl.empty");
 
   const records = React.useMemo(
     () => resolveRecords(children, hiddenPageIds),
@@ -222,7 +227,7 @@ export function SgPageControl(props: Readonly<SgPageControlProps>) {
     <div className={cn("w-full", className)} style={style}>
       <div
         role="tablist"
-        aria-label={ariaLabel}
+        aria-label={resolvedAriaLabel}
         className={cn(
           "flex min-h-0 items-end gap-1 overflow-x-auto border-b border-border pb-0.5",
           fullWidthTabs ? "grid auto-cols-fr grid-flow-col" : "",
@@ -306,7 +311,7 @@ export function SgPageControl(props: Readonly<SgPageControlProps>) {
 
       <div className={cn("rounded-b-md border border-t-0 border-border bg-background", panelClassName)}>
         {visiblePages.length === 0 ? (
-          <div className={cn(sizeClasses.panel, "text-sm text-muted-foreground")}>{emptyMessage}</div>
+          <div className={cn(sizeClasses.panel, "text-sm text-muted-foreground")}>{resolvedEmptyMessage}</div>
         ) : keepMounted ? (
           visiblePages.map((record) => {
             const isActive = record.id === resolvedActiveId;

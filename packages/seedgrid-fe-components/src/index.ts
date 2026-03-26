@@ -98,6 +98,11 @@ export type {
 } from "./commons/SgToaster";
 export { SgToastHost } from "./commons/SgToastHost";
 export type { SgToastHostProps } from "./commons/SgToastHost";
+export { buildFabStorageKey, parseStoredFabDragPosition } from "./buttons/fab-helpers";
+export { buildDockMenuStorageKey, buildToolbarStorageKey, parseStoredPanelDragPosition } from "./layout/drag-position";
+export { buildToolbarLayoutState, resolveToolbarDockOrientationDirection, resolveToolbarOrientationDirection } from "./layout/toolbar-logic";
+export { buildDockMenuContainerStyle, buildDockMenuContextMenuState, buildDockMenuItemMotion, buildDockMenuLabelStyle, buildDockMenuLayout, resolveDockMenuLiftDirection, resolveDockMenuOrientation } from "./menus/dock-menu-logic";
+export { getActiveHostId, hasAnyHost, nextHostId, registerHost, subscribeHostRegistry, unregisterHost } from "./commons/sgToastHostRegistry";
 export { SgPopup } from "./overlay/SgPopup";
 export type {
   SgPopupProps,
@@ -142,7 +147,7 @@ export type {
   SgAvatarCustomColors,
   SgAvatarGroupOverlap
 } from "./commons/SgAvatar";
-export { toast } from "./commons/SgToast";
+export { toast, dismissSgToast, subscribeSgToasts } from "./commons/SgToast";
 export type {
   SgToastFn,
   SgToastId,
@@ -225,6 +230,7 @@ export type {
 export { SgPageControl, SgPageControlPage } from "./layout/SgPageControl";
 export type { SgPageControlProps, SgPageControlPageProps } from "./layout/SgPageControl";
 export { SgMenu } from "./layout/SgMenu";
+export { buildMenuMaps, collectMenuSearchEntries, collectParentChain, computeActiveSets, filterMenuNodes, flattenVisibleNodes, mergeExpandedIdsForActivePath, resolveEffectiveActiveId, resolveExpandedIdsToggle, resolveHorizontalDockAlign, resolveMegaMenuActiveNode, resolveMegaMenuHoverActiveId, resolveMegaMenuInteraction, resolveMenuAutocompleteItems, resolveMenuHintPosition, resolveMenuKeyboardAction, resolveMenuLayoutState, resolveMenuNodeActionIntent, resolveMenuSearchSelectionState, resolveTieredActiveState, resolveTieredClickState, resolveTieredHoverIntent, resolveTieredHoverPath, resolveTieredNodeClickIntent } from "./layout/menu-logic";
 export type {
   SgMenuProps,
   SgMenuStyle,
@@ -233,6 +239,7 @@ export type {
   SgMenuBrand,
   SgMenuUser
 } from "./layout/SgMenu";
+export type { MenuKeyboardAction, MenuVisibleNode, MenuLogicNode } from "./layout/menu-logic";
 export { SgToolBar, SgToolbarIconButton } from "./layout/SgToolBar";
 export type {
   SgToolBarProps,
@@ -330,6 +337,9 @@ export type {
 } from "./gadgets/clock/themes";
 export { SgWizard, SgWizardPage } from "./wizard/SgWizard";
 export type { SgWizardProps, SgWizardPageProps, SgWizardLabels, SgWizardStepper } from "./wizard/SgWizard";
+export { canProceedWizardAction, clampWizardStep } from "./wizard/logic";
+export type { WizardGuardRunner } from "./wizard/logic";
+export { clearLocalPersistentState, readLocalPersistentState, resolvePersistedStateValue, writeLocalPersistentState } from "./environment/persistent-state";
 export {
   SgEnvironmentProvider,
   useSgEnvironment,
@@ -371,7 +381,11 @@ export {
   componentsMessagesPtBr,
   componentsMessagesPtPt,
   componentsMessagesEnUs,
-  componentsMessagesEs
+  componentsMessagesEn,
+  componentsMessagesEs,
+  componentsMessagesFr,
+  normalizeComponentsLocale,
+  getBuiltInComponentsMessages
 } from "./i18n";
 export type {
   SgComponentsI18n,
@@ -380,4 +394,10 @@ export type {
   SgComponentsMessages,
   SgComponentsMessagesByNamespace
 } from "./i18n";
+
+
+
+
+
+
 

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { SgButton } from "./SgButton";
 import type { SgButtonCustomColors } from "./SgButton";
+import { t, useComponentsI18n } from "../i18n";
 
 type Severity =
   | "primary"
@@ -83,6 +84,7 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
     },
     ref
   ) => {
+    const i18n = useComponentsI18n();
     const [open, setOpen] = React.useState(false);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const menuRef = React.useRef<HTMLDivElement>(null);
@@ -161,8 +163,9 @@ export const SgSplitButton = React.forwardRef<HTMLDivElement, SgSplitButtonProps
           onClick={toggle}
           customColors={customColors}
           className={`rounded-l-none ${dividerBorderClass}`}
-          aria-haspopup="true"
+          aria-haspopup="menu"
           aria-expanded={open}
+          aria-label={open ? t(i18n, "components.actions.close") : t(i18n, "components.actions.openList")}
         />
 
         {open && (

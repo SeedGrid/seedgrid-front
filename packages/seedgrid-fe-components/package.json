@@ -1,78 +1,81 @@
 {
-    "name":  "@seedgrid/fe-components",
-    "version":  "0.2.10",
-    "license":  "MIT",
-    "type":  "module",
-    "repository":  {
-                       "type":  "git",
-                       "url":  "git+https://github.com/SeedGrid/seedgrid-fe-components.git",
-                       "directory":  "packages/seedgrid-fe-components"
-                   },
-    "homepage":  "https://github.com/SeedGrid/seedgrid-fe-components/tree/main/packages/seedgrid-fe-components",
-    "bugs":  {
-                 "url":  "https://github.com/SeedGrid/seedgrid-fe-components/issues"
-             },
-    "main":  "dist/index.js",
-    "types":  "dist/index.d.ts",
-    "exports":  {
-                    ".":  {
-                              "types":  "./dist/index.d.ts",
-                              "default":  "./dist/index.js"
-                          }
-                },
-    "sideEffects":  false,
-    "files":  [
-                  "dist"
-              ],
-    "scripts":  {
-                    "clean":  "node -e \"require(\u0027node:fs\u0027).rmSync(\u0027dist\u0027, { recursive: true, force: true })\"",
-                    "build":  "pnpm run clean \u0026\u0026 tsc -p tsconfig.json \u0026\u0026 pnpm run build:sandbox",
-                    "build:sandbox":  "tsup --config tsup.sandbox.config.ts",
-                    "dev":  "tsc -p tsconfig.json --watch --preserveWatchOutput",
-                    "typecheck":  "tsc -p tsconfig.json --noEmit"
-                },
-    "peerDependencies":  {
-                             "@tiptap/core":  "^2.9.1",
-                             "@tiptap/extension-color":  "^2.9.1",
-                             "@tiptap/extension-font-family":  "^2.9.1",
-                             "@tiptap/extension-highlight":  "^2.9.1",
-                             "@tiptap/extension-image":  "^2.9.1",
-                             "@tiptap/extension-link":  "^2.9.1",
-                             "@tiptap/pm":  "^2.9.1",
-                             "@tiptap/extension-subscript":  "^2.9.1",
-                             "@tiptap/extension-superscript":  "^2.9.1",
-                             "@tiptap/extension-text-align":  "^2.9.1",
-                             "@tiptap/extension-text-style":  "^2.9.1",
-                             "@tiptap/extension-underline":  "^2.9.1",
-                             "@tiptap/react":  "^2.9.1",
-                             "@tiptap/starter-kit":  "^2.9.1",
-                             "lucide-react":  "^0.468.0",
-                             "react":  "^18.2.0 || ^19.0.0",
-                             "react-hook-form":  "^7.0.0"
-                         },
-    "devDependencies":  {
-                            "tsup":  "^8.4.0",
-                            "@tiptap/core":  "^2.9.1",
-                            "@tiptap/extension-color":  "^2.9.1",
-                            "@tiptap/extension-font-family":  "^2.9.1",
-                            "@tiptap/extension-highlight":  "^2.9.1",
-                            "@tiptap/extension-image":  "^2.9.1",
-                            "@tiptap/extension-link":  "^2.9.1",
-                            "@tiptap/pm":  "^2.9.1",
-                            "@tiptap/extension-subscript":  "^2.9.1",
-                            "@tiptap/extension-superscript":  "^2.9.1",
-                            "@tiptap/extension-text-align":  "^2.9.1",
-                            "@tiptap/extension-text-style":  "^2.9.1",
-                            "@tiptap/extension-underline":  "^2.9.1",
-                            "@tiptap/react":  "^2.9.1",
-                            "@tiptap/starter-kit":  "^2.9.1",
-                            "lucide-react":  "^0.468.0",
-                            "react":  "19.0.0",
-                            "react-dom":  "19.0.0",
-                            "react-hook-form":  "^7.0.0"
-                        },
-    "dependencies":  {
-                         "@pqina/flip":  "^1.8.4",
-                         "qrcode.react":  "^4.2.0"
-                     }
+  "name": "@seedgrid/fe-components",
+  "version": "0.2.10",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeedGrid/seedgrid-fe-components.git",
+    "directory": "packages/seedgrid-fe-components"
+  },
+  "homepage": "https://github.com/SeedGrid/seedgrid-fe-components/tree/main/packages/seedgrid-fe-components",
+  "bugs": {
+    "url": "https://github.com/SeedGrid/seedgrid-fe-components/issues"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json && pnpm run build:sandbox",
+    "build:sandbox": "tsup --config tsup.sandbox.config.ts",
+    "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm run build && node --test tests/i18n.test.mjs tests/rhf.test.mjs tests/rhf-components-contract.test.mjs tests/i18n-components-contract.test.mjs tests/providers-hooks.test.mjs tests/providers-hooks-dom.test.mjs tests/commons.test.mjs tests/overlay.test.mjs tests/overlay-dom.test.mjs tests/buttons-menus.test.mjs tests/buttons-menus-dom.test.mjs tests/menu-logic.test.mjs tests/inputs-i18n.test.mjs tests/gadgets.test.mjs tests/gadgets-dom.test.mjs tests/gauge-math.test.mjs tests/clock-theme-picker.test.mjs tests/wizard.test.mjs tests/wizard-logic.test.mjs tests/utils.test.mjs"
+  },
+  "peerDependencies": {
+    "@tiptap/core": "^2.9.1",
+    "@tiptap/extension-color": "^2.9.1",
+    "@tiptap/extension-font-family": "^2.9.1",
+    "@tiptap/extension-highlight": "^2.9.1",
+    "@tiptap/extension-image": "^2.9.1",
+    "@tiptap/extension-link": "^2.9.1",
+    "@tiptap/extension-subscript": "^2.9.1",
+    "@tiptap/extension-superscript": "^2.9.1",
+    "@tiptap/extension-text-align": "^2.9.1",
+    "@tiptap/extension-text-style": "^2.9.1",
+    "@tiptap/extension-underline": "^2.9.1",
+    "@tiptap/pm": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
+    "lucide-react": "^0.468.0",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-hook-form": "^7.0.0"
+  },
+  "devDependencies": {
+    "@tiptap/core": "^2.9.1",
+    "@tiptap/extension-color": "^2.9.1",
+    "@tiptap/extension-font-family": "^2.9.1",
+    "@tiptap/extension-highlight": "^2.9.1",
+    "@tiptap/extension-image": "^2.9.1",
+    "@tiptap/extension-link": "^2.9.1",
+    "@tiptap/extension-subscript": "^2.9.1",
+    "@tiptap/extension-superscript": "^2.9.1",
+    "@tiptap/extension-text-align": "^2.9.1",
+    "@tiptap/extension-text-style": "^2.9.1",
+    "@tiptap/extension-underline": "^2.9.1",
+    "@tiptap/pm": "^2.9.1",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
+    "jsdom": "^29.0.1",
+    "lucide-react": "^0.468.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-hook-form": "^7.0.0",
+    "tsup": "^8.4.0"
+  },
+  "dependencies": {
+    "@pqina/flip": "^1.8.4",
+    "qrcode.react": "^4.2.0"
+  }
 }
+

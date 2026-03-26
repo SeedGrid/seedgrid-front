@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { dismissSgToast, subscribeSgToasts, type SgToastRecord } from "./SgToast";
 import { hasAnyHost, subscribeHostRegistry } from "./sgToastHostRegistry";
+import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
@@ -149,6 +150,7 @@ export function SgToaster(props: SgToasterProps) {
     ...rest
   } = props;
 
+  const i18n = useComponentsI18n();
   const [toasts, setToasts] = React.useState<SgToastRecord[]>([]);
   const timersRef = React.useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const [hostPresent, setHostPresent] = React.useState(() => !renderedByHost && hasAnyHost());
@@ -264,7 +266,7 @@ export function SgToaster(props: SgToasterProps) {
                 type="button"
                 className="rounded px-1.5 py-0.5 text-xs opacity-80 hover:opacity-100"
                 onClick={() => dismissSgToast(toast.id)}
-                aria-label="Close toast"
+                aria-label={t(i18n, "components.toaster.close")}
               >
                 x
               </button>
@@ -275,3 +277,4 @@ export function SgToaster(props: SgToasterProps) {
     </div>
   );
 }
+

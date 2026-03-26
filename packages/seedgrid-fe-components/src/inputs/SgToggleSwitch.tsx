@@ -2,14 +2,8 @@
 
 import React from "react";
 import { Controller } from "react-hook-form";
-import type {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldValues,
-  RegisterOptions,
-  UseFormRegister
-} from "react-hook-form";
-import type { RhfFieldProps } from "../rhf";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues } from "react-hook-form";
+import { mergeRequiredRule, resolveFieldError, type RhfFieldProps } from "../rhf";
 import { t, useComponentsI18n } from "../i18n";
 
 function cn(...parts: Array<string | undefined | false>) {
@@ -48,11 +42,10 @@ function ErrorText(props: { id?: string; message?: string }) {
   );
 }
 
-export type SgToggleSwitchProps = {
+export type SgToggleSwitchProps = RhfFieldProps & {
   id: string;
   label?: string;
   description?: string;
-  error?: string;
   className?: string;
   labelClassName?: string;
   switchClassName?: string;
@@ -74,11 +67,9 @@ export type SgToggleSwitchProps = {
   inputProps?: React.InputHTMLAttributes<HTMLInputElement> & {
     ref?: React.Ref<HTMLInputElement>;
   };
-  register?: UseFormRegister<FieldValues>;
-  rules?: RegisterOptions<FieldValues>;
-} & RhfFieldProps;
+};
 
-type SgToggleSwitchBaseProps = Omit<SgToggleSwitchProps, keyof RhfFieldProps>;
+type SgToggleSwitchBaseProps = Omit<SgToggleSwitchProps, "name" | "control" | "register" | "rules">;
 
 function mergeInputPropsWithField(
   inputProps: React.InputHTMLAttributes<HTMLInputElement> | undefined,
@@ -233,7 +224,7 @@ function SgToggleSwitchBase(props: Readonly<SgToggleSwitchBaseProps>) {
           role="switch"
           aria-invalid={hasError}
           aria-describedby={hasError ? errorId : undefined}
-          aria-label={props.label ? undefined : props.id}
+          aria-label={props.label ? undefined : t(i18n, "components.inputs.toggle.ariaLabel")}
           checked={isControlled ? checked : undefined}
           defaultChecked={isControlled ? undefined : toBoolean(props.defaultChecked ?? inputDefaultChecked, false)}
           disabled={isDisabled}
@@ -291,10 +282,16 @@ function SgToggleSwitchBase(props: Readonly<SgToggleSwitchBaseProps>) {
 }
 
 export function SgToggleSwitch(props: Readonly<SgToggleSwitchProps>) {
+  const i18n = useComponentsI18n();
   const { control, name, register, rules, ...rest } = props;
+  const resolvedRules = mergeRequiredRule(
+    rules,
+    rest.required,
+    rest.requiredMessage ?? t(i18n, "components.inputs.required")
+  );
 
   if (name && register) {
-    const reg = register(name, rules);
+    const reg = register(name, resolvedRules);
     return (
       <SgToggleSwitchBase
         {...rest}
@@ -323,6 +320,7 @@ export function SgToggleSwitch(props: Readonly<SgToggleSwitchProps>) {
       <Controller
         name={name}
         control={control}
+        rules={resolvedRules}
         render={({
           field,
           fieldState
@@ -332,7 +330,7 @@ export function SgToggleSwitch(props: Readonly<SgToggleSwitchProps>) {
         }) => (
           <SgToggleSwitchBase
             {...rest}
-            error={rest.error ?? fieldState.error?.message}
+            error={resolveFieldError(rest.error, fieldState.error?.message)}
             inputProps={mergeInputPropsWithField(rest.inputProps, field)}
           />
         )}
