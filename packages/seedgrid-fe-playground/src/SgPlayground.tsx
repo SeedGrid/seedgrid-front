@@ -14,8 +14,11 @@ function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
-export type SgPlaygroundProps = {
-  code: string;
+type SgPlaygroundCodeSource =
+  | { code: string; playgroundFile?: never }
+  | { playgroundFile: string; code?: never };
+
+export type SgPlaygroundProps = SgPlaygroundCodeSource & {
   interactive?: boolean;
   codeContract?: "renderBody" | "appFile";
   preset?: SgPlaygroundPreset;
@@ -41,6 +44,10 @@ export type SgPlaygroundProps = {
   defaultOpen?: boolean;
   cardId?: string;
 };
+
+function getInlinePlaygroundCode(props: SgPlaygroundProps) {
+  return "code" in props ? (props.code ?? "") : "";
+}
 
 export type SgPlaygroundPreset = "auto" | "basic" | "seedgrid" | "editor" | "full";
 export type SgPlaygroundNpmRegistry = {
@@ -1200,7 +1207,6 @@ function shouldSuppressCoreJsProviderWarning(args: unknown[]) {
 
 export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   const {
-    code,
     interactive = false,
     codeContract = "renderBody",
     preset = "auto",
@@ -1226,6 +1232,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
     defaultOpen = true,
     cardId
   } = props;
+  const [resolvedCode, setResolvedCode] = React.useState<string>(() => getInlinePlaygroundCode(props));
   const effectivePreviewPadding = normalizeCssSize(
     previewPadding ?? (codeContract === "appFile" ? 12 : 0)
   );
@@ -1238,6 +1245,40 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   );
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [activePanel, setActivePanel] = React.useState<"code" | "preview">("code");
+
+  React.useEffect(() => {
+    if ("code" in props) {
+      setResolvedCode(props.code ?? "");
+      return;
+    }
+
+    let active = true;
+
+    const loadPlaygroundFile = async () => {
+      try {
+        const response = await fetch(`/api/showcase-code?path=${encodeURIComponent(props.playgroundFile)}`, {
+          cache: "no-store"
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to load playground file: ${props.playgroundFile}`);
+        }
+        const payload = await response.json() as { code?: string };
+        if (active) {
+          setResolvedCode(payload.code ?? "");
+        }
+      } catch {
+        if (active) {
+          setResolvedCode(`// Failed to load playground file: ${props.playgroundFile}`);
+        }
+      }
+    };
+
+    void loadPlaygroundFile();
+
+    return () => {
+      active = false;
+    };
+  }, [props.code, props.playgroundFile]);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1288,9 +1329,9 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
   const appTsx = React.useMemo(
     () =>
       codeContract === "appFile"
-        ? code
-        : buildAppTsxFromRenderBody(code, seedgridDefaultImports, previewWrapperClassName),
-    [code, codeContract, previewWrapperClassName, seedgridDefaultImports]
+        ? resolvedCode
+        : buildAppTsxFromRenderBody(resolvedCode, seedgridDefaultImports, previewWrapperClassName),
+    [codeContract, previewWrapperClassName, resolvedCode, seedgridDefaultImports]
   );
 
   const resolvedSeedgridDependency =
@@ -1788,7 +1829,7 @@ export default function SgPlayground(props: Readonly<SgPlaygroundProps>) {
       style={withCard ? undefined : style}
     >
       {withCard ? null : title ? <div className="text-sm font-medium">{title}</div> : null}
-      <ReadonlyBlock code={code} />
+      <ReadonlyBlock code={resolvedCode} />
     </div>
   );
 
