@@ -1,0 +1,28 @@
+import * as React from "react";
+import { SgInputOTP } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [masked, setMasked] = React.useState("");
+  const [raw, setRaw] = React.useState("");
+  const [completeValue, setCompleteValue] = React.useState("");
+
+  return (
+    <div className="space-y-3">
+      <SgInputOTP
+        id="otp-paste"
+        label="Cole o codigo"
+        hintText='Teste colando: "AB1-CD2-34"'
+        mask="###-###-99"
+        onChange={setMasked}
+        onRawChange={setRaw}
+        onComplete={(value) => setCompleteValue(value)}
+      />
+
+      <div className="rounded border border-border bg-muted/40 p-3 text-xs">
+        <div><strong>masked:</strong> {masked || "(vazio)"}</div>
+        <div><strong>raw:</strong> {raw || "(vazio)"}</div>
+        <div><strong>onComplete:</strong> {completeValue || "(aguardando)"}</div>
+      </div>
+    </div>
+  );
+}

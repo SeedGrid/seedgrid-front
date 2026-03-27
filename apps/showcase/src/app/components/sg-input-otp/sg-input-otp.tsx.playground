@@ -1,0 +1,43 @@
+import * as React from "react";
+import { SgButton, SgGrid, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";
+
+export default function App() {
+  const otpRef = React.useRef<SgInputOTPRef | null>(null);
+  const [mask, setMask] = React.useState("###-###-99");
+  const [masked, setMasked] = React.useState("");
+  const [raw, setRaw] = React.useState("");
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance={mask === "###-###-99" ? "solid" : "outline"} onClick={() => setMask("###-###-99")}>
+          mask ###-###-99
+        </SgButton>
+        <SgButton size="sm" appearance={mask === "999999" ? "solid" : "outline"} onClick={() => setMask("999999")}>
+          mask 999999
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>
+          Focar
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>
+          Limpar
+        </SgButton>
+      </SgGrid>
+
+      <SgInputOTP
+        id="playground-otp"
+        ref={otpRef}
+        label="SgInputOTP Playground"
+        hintText="Digite ou cole o codigo"
+        mask={mask}
+        onChange={setMasked}
+        onRawChange={setRaw}
+      />
+
+      <div className="rounded border border-border bg-muted/40 p-3 text-xs">
+        <div><strong>masked:</strong> {masked || "(vazio)"}</div>
+        <div><strong>raw:</strong> {raw || "(vazio)"}</div>
+      </div>
+    </div>
+  );
+}

@@ -61,12 +61,12 @@ o que vai ser a tarefa:
     [ ] 5) Eventos
     [ ] 6) Posição do rótulo
     [ ] 7) Playground
-[ ] SgInputOTP: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Máscara customizada
-    [ ] 3) Colagem + onComplete
-    [ ] 4) Acesso por ref
-    [ ] 5) Playground
+[x] SgInputOTP: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Máscara customizada
+    [x] 3) Colagem + onComplete
+    [x] 4) Acesso por ref
+    [x] 5) Playground
 [ ] SgInputSelect: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
     [ ] Página do showcase não encontrada ou mapeamento pendente
 [ ] SgInputDate: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild

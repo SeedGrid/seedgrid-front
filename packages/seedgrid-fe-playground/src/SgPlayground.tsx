@@ -14,11 +14,7 @@ function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
-type SgPlaygroundCodeSource =
-  | { code: string; playgroundFile?: never }
-  | { playgroundFile: string; code?: never };
-
-export type SgPlaygroundProps = SgPlaygroundCodeSource & {
+type SgPlaygroundSharedProps = {
   interactive?: boolean;
   codeContract?: "renderBody" | "appFile";
   preset?: SgPlaygroundPreset;
@@ -44,6 +40,10 @@ export type SgPlaygroundProps = SgPlaygroundCodeSource & {
   defaultOpen?: boolean;
   cardId?: string;
 };
+
+export type SgPlaygroundProps =
+  | ({ code: string; playgroundFile?: never } & SgPlaygroundSharedProps)
+  | ({ playgroundFile: string; code?: never } & SgPlaygroundSharedProps);
 
 function getInlinePlaygroundCode(props: SgPlaygroundProps) {
   return "code" in props ? (props.code ?? "") : "";

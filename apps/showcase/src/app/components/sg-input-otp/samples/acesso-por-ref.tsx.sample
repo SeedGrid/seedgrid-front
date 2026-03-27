@@ -1,0 +1,43 @@
+import * as React from "react";
+import { SgButton, SgGrid, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";
+
+export default function App() {
+  const otpRef = React.useRef<SgInputOTPRef | null>(null);
+  const [readout, setReadout] = React.useState('Clique em "Ler conteudo".');
+
+  return (
+    <div className="space-y-3">
+      <SgInputOTP
+        id="otp-ref"
+        ref={otpRef}
+        label="OTP por ref"
+        hintText="Use os botoes abaixo"
+        mask="###-###-99"
+      />
+
+      <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>
+          Focar
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>
+          Limpar
+        </SgButton>
+        <SgButton
+          size="sm"
+          appearance="outline"
+          onClick={() => {
+            const masked = otpRef.current?.getMaskedValue() ?? "";
+            const raw = otpRef.current?.getRawValue() ?? "";
+            setReadout(`masked="${masked || "(vazio)"}" | raw="${raw || "(vazio)"}"`);
+          }}
+        >
+          Ler conteudo
+        </SgButton>
+      </SgGrid>
+
+      <div className="rounded border border-border bg-muted/40 p-3 text-xs">
+        <strong>saida:</strong> {readout}
+      </div>
+    </div>
+  );
+}

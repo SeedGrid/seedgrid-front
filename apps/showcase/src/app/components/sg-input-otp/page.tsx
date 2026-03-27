@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { SgButton, SgGrid, SgInputOTP, type SgInputOTPRef } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../sgCodeBlockBase";
+import SgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import { t, useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
@@ -22,8 +22,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <sgCodeBlockBase code={props.code.trimStart()} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function ValuePanel(props: { masked: string; raw: string; expectedLength: number; completeValue?: string }) {
@@ -161,56 +161,6 @@ const OTP_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", OtpTexts> = {
 function isSupportedOtpLocale(locale: ShowcaseLocale): locale is keyof typeof OTP_TEXTS {
   return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
 }
-const OTP_PLAYGROUND_CODE = `import * as React from "react";
-import {
-  SgButton,
-  SgGrid,
-  SgInputOTP,
-  type SgInputOTPRef,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function App() {
-  const otpRef = React.useRef<SgInputOTPRef | null>(null);
-  const [mask, setMask] = React.useState("###-###-99");
-  const [masked, setMasked] = React.useState("");
-  const [raw, setRaw] = React.useState("");
-
-  return (
-    <div className="space-y-4 p-2">
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton size="sm" appearance={mask === "###-###-99" ? "solid" : "outline"} onClick={() => setMask("###-###-99")}>
-          mask ###-###-99
-        </SgButton>
-        <SgButton size="sm" appearance={mask === "999999" ? "solid" : "outline"} onClick={() => setMask("999999")}>
-          mask 999999
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.focus()}>
-          Focar
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => otpRef.current?.clear()}>
-          Limpar
-        </SgButton>
-      </SgGrid>
-
-      <SgInputOTP
-        id="playground-otp"
-        ref={otpRef}
-        label="SgInputOTP Playground"
-        hintText="Digite ou cole o codigo"
-        mask={mask}
-        onChange={setMasked}
-        onRawChange={setRaw}
-      />
-
-      <div className="rounded border border-border bg-muted/40 p-3 text-xs">
-        <div><strong>masked:</strong> {masked || "(vazio)"}</div>
-        <div><strong>raw:</strong> {raw || "(vazio)"}</div>
-      </div>
-    </div>
-  );
-}`;
-
 export default function SgInputOTPPage() {
   const i18n = useShowcaseI18n();
   const locale: keyof typeof OTP_TEXTS = isSupportedOtpLocale(i18n.locale) ? i18n.locale : "en-US";
@@ -387,7 +337,7 @@ export default function SgInputOTPPage() {
             />
             <ValuePanel masked={basicMasked} raw={basicRaw} expectedLength={6} />
           </div>
-          <CodeBlock code={`const [masked, setMasked] = React.useState("");\nconst [raw, setRaw] = React.useState("");\n\nreturn (\n  <SgInputOTP\n    id="otp-basic"\n    label="Codigo OTP"\n    hintText="Digite os 6 digitos"\n    onChange={setMasked}\n    onRawChange={setRaw}\n  />\n);`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-otp/samples/basico.tsx.sample" />
         </Section>
 
         <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
@@ -402,7 +352,7 @@ export default function SgInputOTPPage() {
             />
             <ValuePanel masked={maskMasked} raw={maskRaw} expectedLength={8} />
           </div>
-          <CodeBlock code={`<SgInputOTP\n  id="otp-mask"\n  label="Token de acesso"\n  hintText="Formato: ###-###-99"\n  mask="###-###-99"\n  onChange={setMaskMasked}\n  onRawChange={setMaskRaw}\n/>`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-otp/samples/mascara-customizada.tsx.sample" />
         </Section>
 
         <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
@@ -418,7 +368,7 @@ export default function SgInputOTPPage() {
             />
             <ValuePanel masked={pasteMasked} raw={pasteRaw} expectedLength={8} completeValue={completeValue} />
           </div>
-          <CodeBlock code={`<SgInputOTP\n  id="otp-paste"\n  label="Cole o codigo"\n  hintText='Teste colando: "AB1-CD2-34"'\n  mask="###-###-99"\n  onChange={setPasteMasked}\n  onRawChange={setPasteRaw}\n  onComplete={(value) => setCompleteValue(value)}\n/>`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-otp/samples/colagem-on-complete.tsx.sample" />
         </Section>
 
         <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
@@ -443,7 +393,7 @@ export default function SgInputOTPPage() {
               <strong>saida:</strong> {refReadout}
             </div>
           </div>
-          <CodeBlock code={`const otpRef = React.useRef<SgInputOTPRef | null>(null);\n\nreturn (\n  <>\n    <SgInputOTP id="otp-ref" ref={otpRef} mask="###-###-99" />\n    <SgButton onClick={() => otpRef.current?.focus()}>Focar</SgButton>\n    <SgButton onClick={() => otpRef.current?.clear()}>Limpar</SgButton>\n    <SgButton onClick={() => console.log(otpRef.current?.getMaskedValue())}>Ler conteudo</SgButton>\n  </>\n);`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-otp/samples/acesso-por-ref.tsx.sample" />
         </Section>
 
         <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
@@ -451,7 +401,7 @@ export default function SgInputOTPPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={OTP_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-input-otp/sg-input-otp.tsx.playground"
             height={620}
             defaultOpen
           />
