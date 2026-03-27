@@ -10,7 +10,7 @@ import {
   type SgToastOptions,
 } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";

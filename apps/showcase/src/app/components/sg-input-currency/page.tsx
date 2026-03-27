@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { SgButton, SgInputCurrency, SgGrid } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n } from "../../../i18n";
 

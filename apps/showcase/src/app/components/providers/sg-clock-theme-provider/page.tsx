@@ -9,7 +9,7 @@ import {
   registerTheme,
   type SgClockTheme
 } from "@seedgrid/fe-components";
-import sgCodeBlockBase from "../../CodeBlockBase";
+import sgCodeBlockBase from "../../sgCodeBlockBase";
 import I18NReady from "../../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../../ShowcaseStickyHeader";

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { t, useShowcaseI18n } from "../i18n";
-import SgCodeBlockBase from "./components/CodeBlockBase";
+import SgCodeBlockBase from "./components/sgCodeBlockBase";
 
 const COMPONENTS = [
   {

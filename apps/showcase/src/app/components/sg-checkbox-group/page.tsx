@@ -28,7 +28,7 @@ import {
   Bell,
   RefreshCw
 } from "lucide-react";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {

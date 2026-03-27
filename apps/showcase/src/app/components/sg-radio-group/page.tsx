@@ -22,7 +22,7 @@ import {
   Bell,
   RefreshCw
 } from "lucide-react";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSgTheme } from "@seedgrid/fe-theme";
-import sgCodeBlockBase from "../components/CodeBlockBase";
+import sgCodeBlockBase from "../components/sgCodeBlockBase";
 import I18NReady from "../components/I18NReady";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../i18n";
 

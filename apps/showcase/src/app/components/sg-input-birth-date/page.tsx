@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { SgGrid, SgInputBirthDate } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import { t, useShowcaseI18n } from "../../../i18n";
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { SgGrid, SgInputCNPJ } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
 import { t, useShowcaseI18n } from "../../../i18n";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 
 function Section(props: { id?: string; title: string; description?: string; children: React.ReactNode }) {

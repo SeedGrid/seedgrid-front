@@ -4,7 +4,7 @@ import * as React from "react";
 import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
 import { SgAccordion, SgButton, type SgAccordionItem } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference, { type ShowcasePropRow } from "../ShowcasePropsReference";
 import ShowcaseStickyHeader from "../ShowcaseStickyHeader";

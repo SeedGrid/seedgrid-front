@@ -6,7 +6,7 @@ import { useForm, type FieldValues } from "react-hook-form";
 import { Flame, Heart, ThumbsUp } from "lucide-react";
 import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
 import { SgPlayground } from "@seedgrid/fe-playground";
-import sgCodeBlockBase from "../CodeBlockBase";
+import sgCodeBlockBase from "../sgCodeBlockBase";
 import I18NReady from "../I18NReady";
 import ShowcasePropsReference from "../ShowcasePropsReference";
 import { useShowcaseI18n, type ShowcaseLocale } from "../../../i18n";
