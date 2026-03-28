@@ -1,0 +1,49 @@
+"use client";
+
+import { SgButton, SgToastHost, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToastHost />
+      <div className="flex flex-wrap gap-2">
+        <SgButton
+          severity="warning"
+          onClick={() =>
+            toast.warning("Item arquivado", {
+              description: "Você pode desfazer esta ação.",
+              action: {
+                label: "Undo",
+                onClick: () => toast.success("Ação desfeita")
+              }
+            })
+          }
+        >
+          Toast with action
+        </SgButton>
+
+        <SgButton
+          appearance="outline"
+          onClick={() =>
+            toast.custom(
+              (id) => (
+                <div className="w-full max-w-[280px] rounded-md border border-[#c56a2d]/50 bg-[#fff7f1] p-3">
+                  <div className="text-sm font-semibold text-[#8f4b1f]">Custom toast</div>
+                  <p className="mt-1 text-xs text-[#6b4b33]">Conteúdo livre renderizado via toast.custom(...)</p>
+                  <div className="mt-2 flex gap-2">
+                    <SgButton size="sm" onClick={() => toast.dismiss(id)}>
+                      Close
+                    </SgButton>
+                  </div>
+                </div>
+              ),
+              { duration: 8000, closeButton: false }
+            )
+          }
+        >
+          Custom toast
+        </SgButton>
+      </div>
+    </div>
+  );
+}

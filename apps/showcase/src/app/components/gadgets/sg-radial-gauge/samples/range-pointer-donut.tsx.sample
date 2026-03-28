@@ -1,0 +1,21 @@
+"use client";
+
+import { SgRadialGauge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgRadialGauge
+      min={0}
+      max={100}
+      showPrimaryPointer={false}
+      pointers={[{ id: "donut-progress", type: "range", value: 50, color: "#8b5cf6", width: 14 }]}
+      startAngle={135}
+      endAngle={45}
+      axisColor="#d4d4d8"
+      axisWidth={14}
+      showTicks={false}
+      showLabels={false}
+      centerContent={<div className="text-lg font-semibold text-slate-700">50 / 100</div>}
+    />
+  );
+}

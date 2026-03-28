@@ -1,0 +1,22 @@
+import React from "react";
+import { Users } from "lucide-react";
+import { SgAvatar, SgAvatarGroup } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <SgAvatarGroup>
+        <SgAvatar src="https://i.pravatar.cc/150?img=32" />
+        <SgAvatar src="https://i.pravatar.cc/150?img=47" />
+        <SgAvatar src="https://i.pravatar.cc/150?img=12" />
+        <SgAvatar src="https://i.pravatar.cc/150?img=56" />
+      </SgAvatarGroup>
+      <SgAvatarGroup max={3} total={6} size="sm" moreSeverity="secondary">
+        <SgAvatar icon={<Users />} severity="info" size="sm" />
+        <SgAvatar label="AL" severity="success" size="sm" />
+        <SgAvatar label="BK" severity="warning" size="sm" />
+        <SgAvatar label="CM" severity="danger" size="sm" />
+      </SgAvatarGroup>
+    </div>
+  );
+}

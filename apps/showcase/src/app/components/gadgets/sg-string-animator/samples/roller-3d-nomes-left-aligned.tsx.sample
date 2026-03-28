@@ -1,0 +1,15 @@
+"use client";
+
+import React from "react";
+import { SgStringAnimator, type SgStringAnimatorRef, SgButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const animRef = React.useRef<SgStringAnimatorRef>(null);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <SgStringAnimator ref={animRef} sourceString="LUCIANO" targetString="MARTA" stringAnimatorStyle="roller3d" alignTo="left" fontSize={28} />
+      <SgButton size="sm" onClick={() => animRef.current?.startAnimation()}>Animar</SgButton>
+    </div>
+  );
+}

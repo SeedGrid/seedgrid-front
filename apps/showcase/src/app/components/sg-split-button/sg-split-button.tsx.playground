@@ -1,0 +1,46 @@
+import * as React from "react";
+import { Home, RefreshCw, Save, Trash2 } from "lucide-react";
+import { SgGrid, SgSplitButton, SgButton } from "@seedgrid/fe-components";
+
+const items = [
+  { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+  { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+];
+
+export default function App() {
+  const [severity, setSeverity] = React.useState<"primary" | "success" | "danger">("primary");
+  const [appearance, setAppearance] = React.useState<"solid" | "outline" | "ghost">("solid");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [loading, setLoading] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 1, sm: 2, md: 3 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("solid")}>solid</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("outline")}>outline</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("ghost")}>ghost</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("sm")}>sm</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("md")}>md</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("lg")}>lg</SgButton>
+        <SgButton size="sm" appearance={loading ? "solid" : "outline"} onClick={() => setLoading((prev) => !prev)}>loading: {String(loading)}</SgButton>
+        <SgButton size="sm" appearance={disabled ? "solid" : "outline"} onClick={() => setDisabled((prev) => !prev)}>disabled: {String(disabled)}</SgButton>
+      </SgGrid>
+
+      <SgSplitButton
+        label="Preview"
+        leftIcon={<Save className="size-4" />}
+        severity={severity}
+        appearance={appearance}
+        size={size}
+        loading={loading}
+        disabled={disabled}
+        onClick={() => {}}
+        items={items}
+      />
+    </div>
+  );
+}

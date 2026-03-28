@@ -30,8 +30,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const DATA: SgTreeNode[] = [
@@ -229,79 +229,7 @@ export default function SgTreeViewPage() {
             {readLeafs.length ? readLeafs.join(", ") : "-"}
           </div>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import {
-  SgCard,
-  SgTreeView,
-  sgTreeFromJsonWithChecked,
-  type SgTreeNode,
-  type SgTreeViewRef,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { Shield, Users, FileText, BarChart3 } from "lucide-react";
-
-const nodes = [
-  {
-    id: "root",
-    label: "Admin",
-    icon: <Shield className="h-4 w-4" />,
-    children: [
-      {
-        id: "users",
-        label: "Users",
-        icon: <Users className="h-4 w-4" />,
-        children: [
-          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
-          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
-        ]
-      },
-      {
-        id: "reports",
-        label: "Reports",
-        icon: <BarChart3 className="h-4 w-4" />,
-        children: [
-          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
-          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
-        ]
-      }
-    ]
-  }
-];
-
-export default function Example() {
-  const [checkedIds, setCheckedIds] = React.useState([]);
-  const [readAll, setReadAll] = React.useState([]);
-  const [readLeafs, setReadLeafs] = React.useState([]);
-  const treeRef = React.useRef(null);
-
-  return (
-    <>
-      <SgTreeView
-        ref={treeRef}
-        nodes={nodes}
-        searchable
-        searchPlaceholder="Search..."
-        checkable
-        checkedIds={checkedIds}
-        onCheckedChange={setCheckedIds}
-        onLeafClick={(id) => console.log(id)}
-        style={{ border: "1px solid rgba(59, 130, 246, 0.2)", borderRadius: 12, padding: 8 }}
-      />
-
-      <button onClick={() => setReadAll(treeRef.current?.getCheckedIds() ?? [])}>
-        Ler todos os checkeds
-      </button>
-      <button onClick={() => setReadLeafs(treeRef.current?.getCheckedLeafIds() ?? [])}>
-        Ler apenas leafs
-      </button>
-
-      <div>checkedIds: {readAll.join(", ") || "-"}</div>
-      <div>leafIds: {readLeafs.join(", ") || "-"}</div>
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/basico.tsx.sample" />
       </Section>
 
       <Section title="2) Icon Tone" description="Altere a cor dos icones para primary.">
@@ -313,14 +241,7 @@ export default function Example() {
             searchPlaceholder={t(i18n, "showcase.component.treeView.labels.search")}
           />
         </SgCard>
-        <CodeBlock
-          code={`import { SgTreeView } from "@seedgrid/fe-components";
-
-<SgTreeView
-  nodes={nodes}
-  iconTone="primary"
-/>`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/icon-tone.tsx.sample" />
       </Section>
 
       <Section
@@ -349,74 +270,7 @@ export default function Example() {
           <span className="font-medium text-foreground">confirmIds:</span>{" "}
           {confirmed.length ? confirmed.join(", ") : "-"}
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import {
-  SgCard,
-  SgTreeView,
-  sgTreeFromJsonWithChecked,
-  type SgTreeNode,
-  type SgTreeViewRef,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { Shield, Users, FileText, BarChart3 } from "lucide-react";
-
-const nodes = [
-  {
-    id: "root",
-    label: "Admin",
-    icon: <Shield className="h-4 w-4" />,
-    children: [
-      {
-        id: "users",
-        label: "Users",
-        icon: <Users className="h-4 w-4" />,
-        children: [
-          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
-          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
-        ]
-      },
-      {
-        id: "reports",
-        label: "Reports",
-        icon: <BarChart3 className="h-4 w-4" />,
-        children: [
-          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
-          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
-        ]
-      }
-    ]
-  }
-];
-
-export default function Example() {
-  const [confirmed, setConfirmed] = React.useState([]);
-  const treeRef = React.useRef(null);
-
-  return (
-    <>
-      <SgTreeView
-        ref={treeRef}
-        nodes={nodes}
-        searchable
-        searchPlaceholder="Search..."
-        checkable
-        checkMode="confirm"
-        confirmSelection="leafOnly"
-        confirmBar={{
-          label: "Confirmar",
-          showCancel: true,
-          cancelLabel: "Limpar",
-          onConfirm: (ids) => setConfirmed(ids),
-          onCancel: () => treeRef.current?.clearChecked()
-        }}
-      />
-
-      <div>confirmIds: {confirmed.join(", ") || "-"}</div>
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/confirm.tsx.sample" />
       </Section>
 
       <Section
@@ -428,6 +282,7 @@ export default function Example() {
           <SgTreeView nodes={DATA} size="md" density="normal" />
           <SgTreeView nodes={DATA} size="lg" density="comfortable" />
         </div>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/size.tsx.sample" />
       </Section>
 
       <Section
@@ -442,53 +297,7 @@ export default function Example() {
             defaultExpandedIds={["root", "users"]}
           />
         </SgCard>
-        <CodeBlock
-          code={`import React from "react";
-import {
-  SgCard,
-  SgTreeView,
-  sgTreeFromJsonWithChecked,
-  type SgTreeNode,
-  type SgTreeViewRef,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const nodes = [
-  {
-    id: "root",
-    label: "Admin",
-    children: [
-      {
-        id: "users",
-        label: "Users",
-        children: [
-          { id: "users.list", label: "List users" },
-          { id: "users.create", label: "Create user" }
-        ]
-      },
-      {
-        id: "reports",
-        label: "Reports",
-        children: [
-          { id: "reports.sales", label: "Sales report" },
-          { id: "reports.financial", label: "Financial report" }
-        ]
-      }
-    ]
-  }
-];
-
-export default function Example() {
-  return (
-    <SgTreeView
-      nodes={nodes}
-      searchable
-      searchPlaceholder="Search..."
-      defaultExpandedIds={["root", "users"]}
-    />
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/expanded.tsx.sample" />
       </Section>
 
       <Section
@@ -508,55 +317,7 @@ export default function Example() {
             );
           })()}
         </SgCard>
-        <CodeBlock
-          code={`import React from "react";
-import {
-  SgCard,
-  SgTreeView,
-  sgTreeFromJsonWithChecked,
-  type SgTreeNode,
-  type SgTreeViewRef,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const json = [
-  {
-    id: "root",
-    label: "Admin",
-    children: [
-      {
-        id: "users",
-        label: "Users",
-        children: [
-          { id: "users.list", label: "List users", checked: true },
-          { id: "users.create", label: "Create user" }
-        ]
-      },
-      {
-        id: "reports",
-        label: "Reports",
-        children: [
-          { id: "reports.sales", label: "Sales report", checked: true },
-          { id: "reports.financial", label: "Financial report" }
-        ]
-      }
-    ]
-  }
-];
-
-export default function Example() {
-  const { nodes, checkedIds } = sgTreeFromJsonWithChecked(json);
-
-  return (
-    <SgTreeView
-      nodes={nodes}
-      checkable
-      defaultCheckedIds={checkedIds}
-      defaultExpandedIds={["root", "users"]}
-    />
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-tree-view/samples/json-checked.tsx.sample" />
       </Section>
 
       <Section title="7) Playground (SgPlayground)" description="Teste interativo das principais props do SgTreeView.">
@@ -564,7 +325,7 @@ export default function Example() {
           title="SgTreeView Playground"
           interactive
           codeContract="appFile"
-          code={TREE_VIEW_PLAYGROUND_CODE}
+          playgroundFile="apps/showcase/src/app/components/sg-tree-view/sg-tree-view.tsx.playground"
           height={560}
           defaultOpen
         />

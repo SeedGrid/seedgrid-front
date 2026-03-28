@@ -1,0 +1,70 @@
+import React from "react";
+import { BarChart3, FileText, Shield, Users } from "lucide-react";
+import { SgCard, SgTreeView, type SgTreeNode, type SgTreeViewRef } from "@seedgrid/fe-components";
+
+const nodes: SgTreeNode[] = [
+  {
+    id: "root",
+    label: "Admin",
+    icon: <Shield className="h-4 w-4" />,
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        icon: <Users className="h-4 w-4" />,
+        children: [
+          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
+          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+        children: [
+          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
+          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  const [checkedIds, setCheckedIds] = React.useState<string[]>([]);
+  const [readAll, setReadAll] = React.useState<string[]>([]);
+  const [readLeafs, setReadLeafs] = React.useState<string[]>([]);
+  const treeRef = React.useRef<SgTreeViewRef>(null);
+
+  return (
+    <>
+      <SgCard title="Permissions">
+        <SgTreeView
+          ref={treeRef}
+          nodes={nodes}
+          searchable
+          searchPlaceholder="Search..."
+          checkable
+          checkedIds={checkedIds}
+          onCheckedChange={setCheckedIds}
+          onLeafClick={(id) => console.log(id)}
+          style={{ border: "1px solid rgba(59, 130, 246, 0.2)", borderRadius: 12, padding: 8 }}
+        />
+      </SgCard>
+
+      <div className="mt-3 flex gap-2">
+        <button type="button" className="rounded-md border border-border px-3 py-2 text-sm" onClick={() => setReadAll(treeRef.current?.getCheckedIds() ?? [])}>
+          Ler todos os checkeds
+        </button>
+        <button type="button" className="rounded-md border border-border px-3 py-2 text-sm" onClick={() => setReadLeafs(treeRef.current?.getCheckedLeafIds() ?? [])}>
+          Ler apenas leafs
+        </button>
+      </div>
+
+      <div className="mt-3 grid gap-2 text-xs text-muted-foreground">
+        <div>checkedIds: {readAll.join(", ") || "-"}</div>
+        <div>leafIds: {readLeafs.join(", ") || "-"}</div>
+      </div>
+    </>
+  );
+}

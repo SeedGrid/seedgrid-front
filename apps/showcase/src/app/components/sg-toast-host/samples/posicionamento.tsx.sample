@@ -1,0 +1,27 @@
+"use client";
+
+import { SgButton, SgToastHost, SgStack, toast } from "@seedgrid/fe-components";
+
+const positions = [
+  "top-left",
+  "top-center",
+  "top-right",
+  "bottom-left",
+  "bottom-center",
+  "bottom-right"
+] as const;
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToastHost position="bottom-right" />
+      <SgStack direction="row" wrap gap={8}>
+        {positions.map((position) => (
+          <SgButton key={position} onClick={() => toast.info(`position: ${position}`)} className="text-xs">
+            {position}
+          </SgButton>
+        ))}
+      </SgStack>
+    </div>
+  );
+}

@@ -23,8 +23,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const BADGE_OVERLAY_PLAYGROUND_CODE = `import * as React from "react";
@@ -95,24 +95,7 @@ export default function SgBadgeOverlayPage() {
           <SgBadgeOverlay badge={<SgBadge dot severity="success" />}>
             <span className="inline-flex size-10 items-center justify-center rounded-lg border border-border bg-background text-sm">Check</span>
           </SgBadgeOverlay>
-          <CodeBlock
-            code={`import React from "react";
-import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadgeOverlay badge={<SgBadge value={7} severity="danger" size="xs" />} style={{ borderRadius: 12, padding: 2 }}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">Bell</span>
-      </SgBadgeOverlay>
-      <SgBadgeOverlay badge={<SgBadge dot severity="success" />}>
-        <span className="inline-flex size-10 items-center justify-center rounded-lg border">Check</span>
-      </SgBadgeOverlay>
-    </>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge-overlay/samples/basico.tsx.sample" />
         </Section>
 
         <Section
@@ -131,22 +114,7 @@ export default function Example() {
           <SgBadgeOverlay placement="bottom-right" badge={<SgBadge value="BR" size="xs" badgeStyle="soft" />}>
             <span className="inline-flex size-12 items-center justify-center rounded-lg border border-border bg-background text-xs">BR</span>
           </SgBadgeOverlay>
-          <CodeBlock
-            code={`import React from "react";
-import { SgBadge, SgBadgeOverlay } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadgeOverlay placement="top-left" badge={<SgBadge value="TL" size="xs" badgeStyle="soft" />}><span>TL</span></SgBadgeOverlay>
-      <SgBadgeOverlay placement="top-right" badge={<SgBadge value="TR" size="xs" badgeStyle="soft" />}><span>TR</span></SgBadgeOverlay>
-      <SgBadgeOverlay placement="bottom-left" badge={<SgBadge value="BL" size="xs" badgeStyle="soft" />}><span>BL</span></SgBadgeOverlay>
-      <SgBadgeOverlay placement="bottom-right" badge={<SgBadge value="BR" size="xs" badgeStyle="soft" />}><span>BR</span></SgBadgeOverlay>
-    </>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge-overlay/samples/placements.tsx.sample" />
         </Section>
 
         <Section title="3) Playground (SgPlayground)" description="Ajuste a posicao e o valor do badge sobreposto.">
@@ -154,7 +122,7 @@ export default function Example() {
             title="SgBadgeOverlay Playground"
             interactive
             codeContract="appFile"
-            code={BADGE_OVERLAY_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-badge-overlay/sg-badge-overlay.tsx.playground"
             height={480}
             defaultOpen
           />

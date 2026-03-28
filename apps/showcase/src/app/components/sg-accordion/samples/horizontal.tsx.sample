@@ -1,0 +1,12 @@
+import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "overview", title: "Visao geral", content: <p className="text-sm">Indicadores principais.</p> },
+  { id: "security", title: "Seguranca", content: <p className="text-sm">MFA e politicas.</p> },
+  { id: "integrations", title: "Integracoes", content: <p className="text-sm">APIs e webhooks.</p> }
+];
+
+export default function Example() {
+  return <SgAccordion items={items} orientation="horizontal" defaultActiveIndex={1} horizontalHeaderWidth={56} horizontalMinHeight={220} />;
+}

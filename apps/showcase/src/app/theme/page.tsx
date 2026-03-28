@@ -220,8 +220,8 @@ function Section({ title, description, children }: { title: string; description?
   );
 }
 
-function CodeBlock({ code }: { code: string }) {
-  return <SgCodeBlockBase code={code} />;
+function CodeBlock({ sampleFile }: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={sampleFile} />;
 }
 
 function ColorSwatch({ varName, label }: { varName: string; label: string }) {
@@ -274,75 +274,19 @@ export default function ThemeShowcase() {
         </div>
 
         <Section title={texts.installTitle} description={texts.installDescription}>
-          <CodeBlock code={`pnpm add @seedgrid/fe-theme`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/instalacao.sh.sample" />
         </Section>
 
         <Section title={texts.setupTitle} description={texts.setupDescription}>
-          <CodeBlock
-            code={`import { SeedThemeProvider } from "@seedgrid/fe-theme";
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="pt-BR">
-      <body>
-        <SeedThemeProvider
-          initialTheme={{
-            seed: "#16803D",
-            mode: "auto",
-            radius: 8,
-            persistMode: true,
-          }}
-          applyTo="html"
-        >
-          {children}
-        </SeedThemeProvider>
-      </body>
-    </html>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/setup-basico.tsx.sample" />
         </Section>
 
         <Section title={texts.hookTitle} description={texts.hookDescription}>
-          <CodeBlock
-            code={`import { useSgTheme } from "@seedgrid/fe-theme";
-
-function MyComponent() {
-  const { setTheme, setMode, currentMode } = useSgTheme();
-
-  return (
-    <div>
-      <button onClick={() => setTheme({ seed: "#7C3AED" })}>
-        Set Purple Seed
-      </button>
-
-      <button onClick={() => setMode(currentMode === "light" ? "dark" : "light")}>
-        Toggle Dark Mode
-      </button>
-    </div>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/use-sg-theme.tsx.sample" />
         </Section>
 
         <Section title={texts.cssVarsTitle} description={texts.cssVarsDescription}>
-          <CodeBlock
-            code={`// React component
-<div className="bg-[rgb(var(--sg-primary-600))] text-[rgb(var(--sg-on-primary))]">
-  Primary Button
-</div>
-
-// Tailwind classes
-<div className="bg-sg-primary-600 text-sg-on-primary">
-  Primary Button
-</div>
-
-// Plain CSS
-.my-button {
-  background-color: rgb(var(--sg-primary-600));
-  color: rgb(var(--sg-on-primary));
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/css-variables.tsx.sample" />
         </Section>
 
         <Section title={texts.paletteTitle} description={texts.paletteDescription}>
@@ -374,51 +318,11 @@ function MyComponent() {
         </Section>
 
         <Section title={texts.tokensTitle} description={texts.tokensDescription}>
-          <CodeBlock
-            code={`// Buttons
---sg-btn-primary-bg
---sg-btn-primary-fg
---sg-btn-primary-border
---sg-btn-primary-hover-bg
---sg-btn-primary-ring
-
-// Inputs
---sg-input-bg
---sg-input-fg
---sg-input-border
---sg-input-border-hover
---sg-input-border-focus
---sg-input-ring
-
-// Cards
---sg-card-bg
---sg-card-fg
---sg-card-border
---sg-card-header-bg
-
-// Alerts
---sg-alert-success-bg
---sg-alert-success-fg
---sg-alert-success-border`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/tokens-de-componentes.txt.sample" />
         </Section>
 
         <Section title={texts.tailwindTitle} description={texts.tailwindDescription}>
-          <CodeBlock
-            code={`// tailwind.config.ts
-const sgPalette = (name: string) => ({
-  50: \`rgb(var(--sg-\${name}-50) / <alpha-value>)\`,
-  100: \`rgb(var(--sg-\${name}-100) / <alpha-value>)\`,
-  200: \`rgb(var(--sg-\${name}-200) / <alpha-value>)\`,
-  300: \`rgb(var(--sg-\${name}-300) / <alpha-value>)\`,
-  400: \`rgb(var(--sg-\${name}-400) / <alpha-value>)\`,
-  500: \`rgb(var(--sg-\${name}-500) / <alpha-value>)\`,
-  600: \`rgb(var(--sg-\${name}-600) / <alpha-value>)\`,
-  700: \`rgb(var(--sg-\${name}-700) / <alpha-value>)\`,
-  800: \`rgb(var(--sg-\${name}-800) / <alpha-value>)\`,
-  900: \`rgb(var(--sg-\${name}-900) / <alpha-value>)\`,
-});`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/tailwind-config.ts.sample" />
         </Section>
 
         <Section title={texts.statusTitle}>

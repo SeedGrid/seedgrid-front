@@ -1,0 +1,92 @@
+"use client";
+
+import React from "react";
+import * as SeedGrid from "@seedgrid/fe-components";
+
+const SgQRCodeFromLib = (SeedGrid as Record<string, unknown>).SgQRCode as React.ComponentType<Record<string, unknown>> | undefined;
+
+function LocalFallback(props: { value: string; size: number }) {
+  return (
+    <div className="inline-flex items-center justify-center rounded border border-border bg-slate-50 text-xs text-slate-600" style={{ width: props.size, height: props.size }}>
+      {props.value ? "SgQRCode indisponivel na versao publicada" : "Informe um valor"}
+    </div>
+  );
+}
+
+export default function App() {
+  const hasQrCode = typeof SgQRCodeFromLib === "function";
+  const [value, setValue] = React.useState("https://seedgrid.com.br");
+  const [logoSrc, setLogoSrc] = React.useState("/logo-seedgrid.svg");
+  const [size, setSize] = React.useState(220);
+  const [margin, setMargin] = React.useState(2);
+  const [fgColor, setFgColor] = React.useState("#000000");
+  const [bgColor, setBgColor] = React.useState("#FFFFFF");
+  const [level, setLevel] = React.useState<"L" | "M" | "Q" | "H">("H");
+
+  return (
+    <div className="space-y-4 p-2">
+      {!hasQrCode ? <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">SgQRCode ainda nao esta na versao publicada usada pelo Sandpack. Exibindo fallback.</div> : null}
+
+      <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start">
+        <div className="space-y-3">
+          <label className="block text-xs">
+            <span className="mb-1 block font-medium">Valor</span>
+            <textarea rows={3} value={value} onChange={(event) => setValue(event.target.value)} className="w-full rounded border border-border px-2 py-1" />
+          </label>
+
+          <label className="block text-xs">
+            <span className="mb-1 block font-medium">Logo URL</span>
+            <input value={logoSrc} onChange={(event) => setLogoSrc(event.target.value)} className="w-full rounded border border-border px-2 py-1" />
+          </label>
+
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <label>
+              <span className="mb-1 block font-medium">Tamanho ({size}px)</span>
+              <input type="range" min={140} max={360} step={4} value={size} onChange={(event) => setSize(Number(event.target.value))} className="w-full" />
+            </label>
+            <label>
+              <span className="mb-1 block font-medium">Margem ({margin})</span>
+              <input type="range" min={0} max={8} step={1} value={margin} onChange={(event) => setMargin(Number(event.target.value))} className="w-full" />
+            </label>
+            <label>
+              <span className="mb-1 block font-medium">FG</span>
+              <input type="color" value={fgColor} onChange={(event) => setFgColor(event.target.value)} className="h-8 w-full rounded border border-border" />
+            </label>
+            <label>
+              <span className="mb-1 block font-medium">BG</span>
+              <input type="color" value={bgColor} onChange={(event) => setBgColor(event.target.value)} className="h-8 w-full rounded border border-border" />
+            </label>
+          </div>
+
+          <label className="block text-xs">
+            <span className="mb-1 block font-medium">Error correction</span>
+            <select value={level} onChange={(event) => setLevel(event.target.value as "L" | "M" | "Q" | "H")} className="w-full rounded border border-border px-2 py-1">
+              <option value="L">L</option>
+              <option value="M">M</option>
+              <option value="Q">Q</option>
+              <option value="H">H</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="inline-flex h-fit rounded-xl border border-border bg-background p-4 shadow-sm">
+          {hasQrCode ? (
+            <SgQRCodeFromLib
+              value={value}
+              size={size}
+              margin={margin}
+              fgColor={fgColor}
+              bgColor={bgColor}
+              errorCorrectionLevel={level}
+              logoSrc={logoSrc || undefined}
+              logoAlt="Logo"
+              emptyFallback={<span className="text-xs text-muted-foreground">Informe um valor</span>}
+            />
+          ) : (
+            <LocalFallback value={value} size={size} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

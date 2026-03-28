@@ -44,8 +44,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { children: string }) {
-  return <SgCodeBlockBase code={props.children} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const BASIC_OPTIONS: SgCheckboxGroupOption[] = [
@@ -425,24 +425,7 @@ export default function SgCheckboxGroupShowcase() {
           <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
             Valores selecionados: <strong>[{selectedBasic.join(", ")}]</strong>
           </p>
-          <CodeBlock>{`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-const [selected, setSelected] = React.useState<(string | number)[]>(["option1"]);
-
-<SgCheckboxGroup
-  id="basic"
-  title="Choose options"
-  source={BASIC_OPTIONS}
-  value={selected}
-  onChange={setSelected}
-  style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 12, padding: 12 }}
-/>
-
-<p>Valores selecionados: <strong>[{selected.join(", ")}]</strong></p>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/basico.tsx.sample" />
         </Section>
 
         {/* 2 - Orientation Horizontal */}
@@ -455,27 +438,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["option1"])
             value={selectedFruit}
             onChange={setSelectedFruit}
           />
-          <CodeBlock>{`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Grape", value: "grape" }
-];
-
-const [selected, setSelected] = React.useState<(string | number)[]>([]);
-
-<SgCheckboxGroup
-  id="horizontal"
-  title="Select fruits"
-  source={FRUIT_OPTIONS}
-  orientation="horizontal"
-  value={selected}
-  onChange={setSelected}
-/>
-
-<p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
-  Valores selecionados: <strong>[{selected.join(", ")}]</strong>
-</p>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/orientation-horizontal.tsx.sample" />
         </Section>
 
         {/* 3 - Com Icones */}
@@ -485,17 +448,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>([]);
             title="Choose actions"
             source={OPTIONS_WITH_ICONS}
           />
-          <CodeBlock>{`const OPTIONS_WITH_ICONS = [
-  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
-  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
-  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
-];
-
-<SgCheckboxGroup
-  id="with-icons"
-  title="Choose actions"
-  source={OPTIONS_WITH_ICONS}
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/com-icones.tsx.sample" />
         </Section>
 
         {/* 4 - Apenas Icones */}
@@ -506,18 +459,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>([]);
             source={SHAPE_OPTIONS}
             iconOnly
           />
-          <CodeBlock>{`const SHAPE_OPTIONS = [
-  { label: "Circle", value: "circle", icon: <Circle className="w-5 h-5" /> },
-  { label: "Square", value: "square", icon: <Square className="w-5 h-5" /> },
-  { label: "Triangle", value: "triangle", icon: <Triangle className="w-5 h-5" /> }
-];
-
-<SgCheckboxGroup
-  id="icon-only"
-  title="Choose shapes"
-  source={SHAPE_OPTIONS}
-  iconOnly
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/apenas-icones.tsx.sample" />
         </Section>
 
         {/* 5 - Selecao Controlada */}
@@ -532,23 +474,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>([]);
           <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
             Value: [{selectedControlled.join(", ")}]
           </p>
-          <CodeBlock>{`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-const [selected, setSelected] = React.useState<(string | number)[]>(["option2"]);
-
-<SgCheckboxGroup
-  id="controlled-selection"
-  title="Controlled selection"
-  source={BASIC_OPTIONS}
-  value={selected}
-  onChange={setSelected}
-/>
-
-<p>Value: [{selected.join(", ")}]</p>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/selecao-controlada.tsx.sample" />
         </Section>
 
         {/* 6 - Controle Externo */}
@@ -571,33 +497,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["option2"])
               Current value: <strong>[{externalValue.join(", ")}]</strong>
             </p>
           </div>
-          <CodeBlock>{`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Grape", value: "grape" }
-];
-
-const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
-
-<div className="space-y-4">
-  <SgCheckboxGroup
-    id="external-control"
-    title="Favorite fruits"
-    source={FRUIT_OPTIONS}
-    value={selected}
-    onChange={setSelected}
-  />
-  <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-    <SgButton onClick={() => setSelected(["apple"])}>Set Apple</SgButton>
-    <SgButton onClick={() => setSelected(["banana", "grape"])}>Banana + Grape</SgButton>
-    <SgButton onClick={() => setSelected(FRUIT_OPTIONS.map((o) => o.value))}>Select All</SgButton>
-    <SgButton onClick={() => setSelected([])}>Clear</SgButton>
-  </SgGrid>
-  <p className="text-sm text-[rgb(var(--sg-muted))]">
-    Current value: <strong>[{selected.join(", ")}]</strong>
-  </p>
-</div>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/controle-externo-setvalue-getvalue.tsx.sample" />
         </Section>
 
         {/* 7 - Com Opcao Desabilitada */}
@@ -607,18 +507,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
             title="Priority level"
             source={PRIORITY_OPTIONS}
           />
-          <CodeBlock>{`const PRIORITY_OPTIONS = [
-  { label: "Low", value: "low" },
-  { label: "Medium", value: "medium" },
-  { label: "High", value: "high" },
-  { label: "Urgent", value: "urgent", disabled: true }
-];
-
-<SgCheckboxGroup
-  id="with-disabled-option"
-  title="Priority level"
-  source={PRIORITY_OPTIONS}
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/com-opcao-desabilitada.tsx.sample" />
         </Section>
 
         {/* 8 - Grupo Disabled */}
@@ -630,19 +519,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
             value={["option2"]}
             disabled
           />
-          <CodeBlock>{`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-<SgCheckboxGroup
-  id="disabled-group"
-  title="Options desabilitadas"
-  source={BASIC_OPTIONS}
-  value={["option2"]}
-  disabled
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/grupo-disabled.tsx.sample" />
         </Section>
 
         {/* 9 - Read-only */}
@@ -654,20 +531,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
             value={["banana", "grape"]}
             readOnly
           />
-          <CodeBlock>{`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Grape", value: "grape" }
-];
-
-<SgCheckboxGroup
-  id="readonly"
-  title="Current configuration (read-only)"
-  source={FRUIT_OPTIONS}
-  value={["banana", "grape"]}
-  readOnly
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/read-only.tsx.sample" />
         </Section>
 
         {/* 10 - Obrigatorio com Validacao */}
@@ -682,28 +546,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
             />
             <SgButton type="submit">Submit</SgButton>
           </form>
-          <CodeBlock>{`const CONTACT_OPTIONS = [
-  { label: "Email", value: "email", icon: <Mail className="w-4 h-4" /> },
-  { label: "Phone", value: "phone", icon: <Phone className="w-4 h-4" /> },
-  { label: "In person", value: "in-person", icon: <Home className="w-4 h-4" /> }
-];
-
-const { control, handleSubmit } = useForm();
-
-const onSubmit = (data: any) => {
-  alert(\`Dados do formulario: \${JSON.stringify(data, null, 2)}\`);
-};
-
-<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-  <SgCheckboxGroup
-    name="preference"
-    title="Contact preference *"
-    source={CONTACT_OPTIONS}
-    control={control}
-    required
-  />
-  <SgButton type="submit">Submit</SgButton>
-</form>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/obrigatorio-com-validacao.tsx.sample" />
         </Section>
 
         {/* 11 - Horizontal com Icones Coloridos */}
@@ -714,18 +557,7 @@ const onSubmit = (data: any) => {
             source={WEATHER_OPTIONS}
             orientation="horizontal"
           />
-          <CodeBlock>{`const WEATHER_OPTIONS = [
-  { label: "Sun", value: "sun", icon: <Sun className="w-5 h-5 text-yellow-500" /> },
-  { label: "Moon", value: "moon", icon: <Moon className="w-5 h-5 text-blue-500" /> },
-  { label: "Cloud", value: "cloud", icon: <Cloud className="w-5 h-5 text-gray-500" /> }
-];
-
-<SgCheckboxGroup
-  id="horizontal-colored"
-  title="Weather conditions"
-  source={WEATHER_OPTIONS}
-  orientation="horizontal"
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/horizontal-com-icones-coloridos.tsx.sample" />
         </Section>
 
         {/* 12 - Selection Style Highlight */}
@@ -742,27 +574,7 @@ const onSubmit = (data: any) => {
           <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
             Value: <strong>[{selectedHighlightStyle.join(", ")}]</strong>
           </p>
-          <CodeBlock>{`const LIST_HIGHLIGHT_OPTIONS = [
-  { label: "Reserve", value: "reserve", icon: <Landmark className="w-4 h-4 text-indigo-600" /> },
-  { label: "Alert", value: "alert", icon: <Bell className="w-4 h-4 text-rose-600" /> },
-  { label: "Refresh", value: "refresh", icon: <RefreshCw className="w-4 h-4 text-emerald-600" /> }
-];
-
-const [selected, setSelected] = React.useState<(string | number)[]>(["reserve"]);
-
-<SgCheckboxGroup
-  id="highlight-list"
-  title="Options"
-  source={LIST_HIGHLIGHT_OPTIONS}
-  value={selected}
-  onChange={setSelected}
-  selectionStyle="highlight"
-  className="max-w-xs"
-/>
-
-<p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
-  Value: <strong>[{selected.join(", ")}]</strong>
-</p>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/selection-style-highlight-lista.tsx.sample" />
         </Section>
 
         {/* 13 - Com GroupBox Customizado */}
@@ -776,21 +588,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["reserve"])
               className: "border-2 border-[rgb(var(--sg-primary-500))]"
             }}
           />
-          <CodeBlock>{`const OPTIONS_WITH_ICONS = [
-  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
-  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
-  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
-];
-
-<SgCheckboxGroup
-  id="custom-groupbox"
-  title="Choose with custom style"
-  source={OPTIONS_WITH_ICONS}
-  groupBoxProps={{
-    title: "Preferences",
-    className: "border-2 border-[rgb(var(--sg-primary-500))]"
-  }}
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/com-groupbox-customizado.tsx.sample" />
         </Section>
 
         {/* 14 - React Hook Form - Register */}
@@ -804,28 +602,7 @@ const [selected, setSelected] = React.useState<(string | number)[]>(["reserve"])
             />
             <SgButton type="submit">Submit</SgButton>
           </form>
-          <CodeBlock>{`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Grape", value: "grape" }
-];
-
-const { register, handleSubmit } = useForm();
-
-const onSubmit = (data: any) => {
-  alert(\`Dados do formulario: \${JSON.stringify(data, null, 2)}\`);
-};
-
-<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-  <SgCheckboxGroup
-    name="fruits"
-    title="Choose your fruits"
-    source={FRUIT_OPTIONS}
-    register={register}
-  />
-  <SgButton type="submit">Submit</SgButton>
-</form>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/react-hook-form-register.tsx.sample" />
         </Section>
 
         {/* 15 - Playground */}
@@ -834,7 +611,7 @@ const onSubmit = (data: any) => {
             title="SgCheckboxGroup Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-checkbox-group/sg-checkbox-group.tsx.playground"
             height={650}
             defaultOpen
           />
@@ -864,29 +641,7 @@ const onSubmit = (data: any) => {
               />
             </div>
           </div>
-          <CodeBlock>{`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-// Label via i18n (pt-BR â†’ "Selecionar todos", en-US â†’ "Select all")
-<SgCheckboxGroup
-  id="check-all"
-  title="Select all example"
-  source={BASIC_OPTIONS}
-  showCheckAll
-/>
-
-// Com label e Ã­cone customizados
-<SgCheckboxGroup
-  id="check-all-custom"
-  title="With custom label + icon"
-  source={BASIC_OPTIONS}
-  showCheckAll
-  checkAllLabel="Marcar tudo"
-  checkAllIcon={<Star className="w-4 h-4 text-yellow-500" />}
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/check-all-showcheckall.tsx.sample" />
         </Section>
 
         {/* 17 - Checked inicial no source */}
@@ -901,17 +656,7 @@ const onSubmit = (data: any) => {
               { label: "Grape", value: "grape", checked: true }
             ]}
           />
-          <CodeBlock>{`// Sem value prop â€” estado inicial vem de option.checked
-<SgCheckboxGroup
-  id="source-checked"
-  title="Favorite fruits (initial from source)"
-  source={[
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana", checked: true },
-    { label: "Orange", value: "orange" },
-    { label: "Grape", value: "grape", checked: true }
-  ]}
-/>`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/checked-inicial-no-source.tsx.sample" />
         </Section>
 
         {/* 18 - Ref imperativo */}
@@ -942,49 +687,7 @@ const onSubmit = (data: any) => {
               Output: <strong>{refOutput}</strong>
             </p>
           )}
-          <CodeBlock>{`import React from "react";
-import {
-  SgCheckboxGroup,
-  type SgCheckboxGroupOption,
-  type SgCheckboxGroupRef,
-  SgButton,
-  SgGrid,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-const checkboxRef = React.useRef<SgCheckboxGroupRef>(null);
-const [output, setOutput] = React.useState("");
-
-<SgCheckboxGroup
-  ref={checkboxRef}
-  id="ref-example"
-  title="Select options"
-  source={BASIC_OPTIONS}
-  showCheckAll
-/>
-
-<SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-  <SgButton onClick={() => setOutput(JSON.stringify(checkboxRef.current?.getChecked()))}>
-    getChecked()
-  </SgButton>
-  <SgButton onClick={() => { checkboxRef.current?.checkAll(); setOutput("checkAll()"); }}>
-    checkAll()
-  </SgButton>
-  <SgButton onClick={() => { checkboxRef.current?.clearAll(); setOutput("clearAll()"); }}>
-    clearAll()
-  </SgButton>
-  <SgButton onClick={() => { checkboxRef.current?.setChecked(["option2"]); setOutput('setChecked(["option2"])'); }}>
-    setChecked
-  </SgButton>
-</SgGrid>
-
-{output && <p className="text-sm">Output: <strong>{output}</strong></p>}`}</CodeBlock>
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-checkbox-group/samples/ref-imperativo.tsx.sample" />
         </Section>
 
         {/* Props reference */}

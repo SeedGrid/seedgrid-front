@@ -1,0 +1,36 @@
+import * as React from "react";
+import { SgButton, SgPopup } from "@seedgrid/fe-components";
+
+export default function App() {
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const [placement, setPlacement] = React.useState<"auto" | "top" | "right" | "bottom" | "left">("auto");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-5">
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("auto")}>auto</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("top")}>top</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("right")}>right</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("bottom")}>bottom</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("left")}>left</SgButton>
+      </div>
+
+      <SgButton ref={anchorRef} onClick={() => setOpen(true)}>Abrir popup</SgButton>
+
+      <SgPopup
+        title="Configuracao"
+        subtitle="Exemplo interativo"
+        open={open}
+        onOpenChange={setOpen}
+        anchorRef={anchorRef as React.RefObject<HTMLElement>}
+        placement={placement}
+        align="start"
+        actions={[
+          { label: "Confirmar", onClick: () => setOpen(false) },
+          { label: "Cancelar", onClick: () => setOpen(false) }
+        ]}
+      />
+    </div>
+  );
+}

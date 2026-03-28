@@ -1,0 +1,23 @@
+import React from "react";
+import { SgButton, SgConfirmationDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  const [result, setResult] = React.useState("none");
+
+  return (
+    <>
+      <SgButton onClick={() => setOpen(true)}>delete permission</SgButton>
+      <SgConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Delete permission"
+        message="Confirm delete?"
+        severity="danger"
+        onCancel={() => setResult("cancel")}
+        onConfirm={() => setResult("confirm")}
+      />
+      <p className="text-xs text-muted-foreground">result: {result}</p>
+    </>
+  );
+}

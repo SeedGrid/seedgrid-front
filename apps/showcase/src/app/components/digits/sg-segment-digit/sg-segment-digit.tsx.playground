@@ -1,0 +1,23 @@
+"use client";
+
+import React from "react";
+import { SgInputText, SgSegmentDigit } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState("8");
+  const [size, setSize] = React.useState(42);
+  const [color, setColor] = React.useState("#111827");
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-3 md:grid-cols-2">
+        <SgInputText id="segment-value" label="Value" value={value} onChange={setValue} />
+        <SgInputText id="segment-color" label="Color" value={color} onChange={setColor} />
+      </div>
+      <label className="text-sm">size:<input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={size} onChange={(e) => setSize(Number(e.target.value))} /></label>
+      <div className="rounded border border-border p-4">
+        <SgSegmentDigit value={value} size={size} color={color} />
+      </div>
+    </div>
+  );
+}

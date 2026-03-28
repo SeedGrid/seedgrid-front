@@ -1,0 +1,24 @@
+import React from "react";
+import { Star } from "lucide-react";
+import { SgCheckboxGroup, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const BASIC_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" }
+];
+
+export default function Example() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="mb-2 text-xs text-muted-foreground">Sem label customizado (usa i18n)</p>
+        <SgCheckboxGroup id="check-all" title="Select all example" source={BASIC_OPTIONS} showCheckAll />
+      </div>
+      <div>
+        <p className="mb-2 text-xs text-muted-foreground">Com checkAllLabel e checkAllIcon</p>
+        <SgCheckboxGroup id="check-all-custom" title="With custom label + icon" source={BASIC_OPTIONS} showCheckAll checkAllLabel="Marcar tudo" checkAllIcon={<Star className="w-4 h-4 text-yellow-500" />} />
+      </div>
+    </div>
+  );
+}

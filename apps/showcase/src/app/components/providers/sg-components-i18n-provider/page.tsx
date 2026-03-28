@@ -31,8 +31,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const LOCALES = [
@@ -116,20 +116,7 @@ export default function SgComponentsI18nProviderPage() {
           title={t(i18n, "showcase.component.componentsI18nProvider.sections.basic.title")}
           description={t(i18n, "showcase.component.componentsI18nProvider.sections.basic.description")}
         >
-          <CodeBlock
-            code={`import {
-  SgComponentsI18nProvider,
-  componentsMessagesEnUs
-} from "@seedgrid/fe-components";
-
-export default function App() {
-  return (
-    <SgComponentsI18nProvider locale="en-US" messages={componentsMessagesEnUs}>
-      {/* todos os componentes dentro usarao en-US */}
-    </SgComponentsI18nProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-components-i18n-provider/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
@@ -137,81 +124,21 @@ export default function App() {
           description={t(i18n, "showcase.component.componentsI18nProvider.sections.dynamic.description")}
         >
           <DynamicLocaleDemo />
-          <CodeBlock
-            code={`import React from "react";
-import {
-  SgComponentsI18nProvider,
-  componentsMessagesPtBr,
-  componentsMessagesEnUs,
-  componentsMessagesEs,
-  componentsMessagesPtPt
-} from "@seedgrid/fe-components";
-
-const LOCALES = {
-  "pt-BR": componentsMessagesPtBr,
-  "pt-PT": componentsMessagesPtPt,
-  "en-US": componentsMessagesEnUs,
-  "es": componentsMessagesEs
-};
-
-export default function App() {
-  const [locale, setLocale] = React.useState("pt-BR");
-
-  return (
-    <>
-      {Object.keys(LOCALES).map((l) => (
-        <button key={l} onClick={() => setLocale(l)}>{l}</button>
-      ))}
-      <SgComponentsI18nProvider locale={locale} messages={LOCALES[locale]}>
-        {/* componentes refletem o locale escolhido */}
-      </SgComponentsI18nProvider>
-    </>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-components-i18n-provider/samples/troca-dinamica-de-locale.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.component.componentsI18nProvider.sections.global.title")}
           description={t(i18n, "showcase.component.componentsI18nProvider.sections.global.description")}
         >
-          <CodeBlock
-            code={`import { setComponentsI18n, componentsMessagesEnUs } from "@seedgrid/fe-components";
-
-// Alternativa imperativa â€” sem Provider, afeta o escopo global
-// Util para SSR ou configuracao inicial antes da montagem da arvore React
-setComponentsI18n({ locale: "en-US", messages: componentsMessagesEnUs });`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-components-i18n-provider/samples/api-imperativa-setcomponentsi18n.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.component.componentsI18nProvider.sections.custom.title")}
           description={t(i18n, "showcase.component.componentsI18nProvider.sections.custom.description")}
         >
-          <CodeBlock
-            code={`import {
-  SgComponentsI18nProvider,
-  componentsMessagesEnUs
-} from "@seedgrid/fe-components";
-
-// Sobrescreve apenas as chaves que voce quer customizar
-const myOverrides = {
-  "sg.input.clear": "Reset",
-  "sg.input.password.show": "Reveal",
-  "sg.input.password.hide": "Conceal"
-};
-
-export default function App() {
-  return (
-    <SgComponentsI18nProvider
-      locale="en-US"
-      messages={{ ...componentsMessagesEnUs, ...myOverrides }}
-    >
-      {/* ... */}
-    </SgComponentsI18nProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-components-i18n-provider/samples/sobrescrita-de-mensagens.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={I18N_PROVIDER_PROPS} />

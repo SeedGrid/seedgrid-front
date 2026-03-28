@@ -1,0 +1,43 @@
+import * as React from "react";
+import { Flame, Heart, ThumbsUp } from "lucide-react";
+import { SgGrid, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [heartValue, setHeartValue] = React.useState(4);
+  const [likeValue, setLikeValue] = React.useState(3);
+  const [fireValue, setFireValue] = React.useState(5);
+
+  return (
+    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
+      <SgRating
+        label="Heart"
+        value={heartValue}
+        color="#ec4899"
+        emptyColor="#f9a8d4"
+        onIcon={<Heart size={24} fill="currentColor" />}
+        offIcon={<Heart size={24} />}
+        onChange={setHeartValue}
+      />
+
+      <SgRating
+        label="Likes"
+        value={likeValue}
+        color="#2563eb"
+        emptyColor="#93c5fd"
+        onIcon={<ThumbsUp size={24} fill="currentColor" />}
+        offIcon={<ThumbsUp size={24} />}
+        onChange={setLikeValue}
+      />
+
+      <SgRating
+        label="Fire"
+        value={fireValue}
+        color="#f97316"
+        emptyColor="#fdba74"
+        onIcon={<Flame size={24} fill="currentColor" />}
+        offIcon={<Flame size={24} />}
+        onChange={setFireValue}
+      />
+    </SgGrid>
+  );
+}

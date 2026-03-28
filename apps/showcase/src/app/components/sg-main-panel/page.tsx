@@ -479,7 +479,7 @@ export default function SgMainPanelPage() {
         </SgPanel>
 
         <SgStack className="mt-6">
-          <SgCodeBlockBase code={MAIN_PANEL_FULL_EXAMPLE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-main-panel/samples/complete-example.tsx.sample" />
         </SgStack>
       </Section>
 
@@ -488,7 +488,7 @@ export default function SgMainPanelPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={MAIN_PANEL_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-main-panel/sg-main-panel.tsx.playground"
             height={560}
             defaultOpen
           />

@@ -190,7 +190,7 @@ function UncontrolledSgBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <SgCodeBlockBase code={code} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-benchmark/samples/sg-input-text-uncontrolled.tsx.sample" />
           </div>
         </div>
       </div>
@@ -312,71 +312,13 @@ function UncontrolledNativeBenchmark() {
         <div>
           <div className="text-sm font-medium text-foreground/80">Fonte</div>
           <div className="mt-2">
-            <SgCodeBlockBase code={code} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-benchmark/samples/native-input-uncontrolled.tsx.sample" />
           </div>
         </div>
       </div>
     </section>
   );
 }
-
-const BENCHMARK_PLAYGROUND_APP_FILE = `import * as React from "react";
-import { SgInputText, SgButton } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const FIELD_COUNT = 20;
-const UPDATES = 80;
-
-const nativeValueSetter =
-  typeof window !== "undefined"
-    ? Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set
-    : undefined;
-
-const setInputValue = (input: HTMLInputElement, next: string) => {
-  if (nativeValueSetter) nativeValueSetter.call(input, next);
-  else input.value = next;
-};
-
-export default function App() {
-  const [lastMs, setLastMs] = React.useState<number | null>(null);
-  const [running, setRunning] = React.useState(false);
-  const refs = React.useRef<Array<HTMLInputElement | null>>([]);
-
-  const run = () => {
-    if (running) return;
-    setRunning(true);
-    const start = performance.now();
-    for (let i = 0; i < UPDATES; i += 1) {
-      const idx = i % FIELD_COUNT;
-      const input = refs.current[idx];
-      if (input) {
-        setInputValue(input, input.value + "a");
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-    }
-    setLastMs(performance.now() - start);
-    setRunning(false);
-  };
-
-  return (
-    <div className="space-y-4 p-2">
-      <div className="grid gap-2 sm:grid-cols-2">
-        {Array.from({ length: FIELD_COUNT }).map((_, idx) => (
-          <SgInputText
-            key={idx}
-            id={\`play-\${idx}\`}
-            label={\`Campo \${idx + 1}\`}
-            inputProps={{ ref: (node) => (refs.current[idx] = node) }}
-          />
-        ))}
-      </div>
-      <div className="flex items-center gap-3">
-        <SgButton onClick={run} disabled={running}>{running ? "Rodando..." : "Rodar benchmark"}</SgButton>
-        <span className="text-xs">Tempo: {lastMs ? \`\${lastMs.toFixed(1)}ms\` : "-"}</span>
-      </div>
-    </div>
-  );
-}`;
 
 const BENCHMARK_PROPS: ShowcasePropRow[] = [
   { prop: "FIELD_COUNT", type: "number", defaultValue: "60", description: "Quantidade de campos renderizados em cada cenario." },
@@ -421,7 +363,7 @@ export default function BenchmarkPage() {
               title="SgBenchmark Playground"
               interactive
               codeContract="appFile"
-              code={BENCHMARK_PLAYGROUND_APP_FILE}
+              playgroundFile="apps/showcase/src/app/components/sg-benchmark/sg-benchmark.tsx.playground"
               height={620}
               defaultOpen
             />

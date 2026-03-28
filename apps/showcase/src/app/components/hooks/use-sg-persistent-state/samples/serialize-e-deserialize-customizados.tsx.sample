@@ -1,0 +1,18 @@
+import { useSgPersistentState } from "@seedgrid/fe-components";
+
+export default function DatePicker() {
+  const { value: selectedDate, setValue } = useSgPersistentState<Date | null>({
+    baseKey: "app:selected-date",
+    defaultValue: null,
+    serialize: (date) => date?.toISOString() ?? null,
+    deserialize: (raw) => (typeof raw === "string" ? new Date(raw) : null),
+  });
+
+  return (
+    <input
+      type="date"
+      value={selectedDate?.toISOString().slice(0, 10) ?? ""}
+      onChange={(e) => setValue(e.target.value ? new Date(e.target.value) : null)}
+    />
+  );
+}

@@ -1,0 +1,12 @@
+import React from "react";
+import { SgBadge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgBadge value="Admin" style={{ minWidth: 88, justifyContent: "center" }} />
+      <SgBadge value="Pending" severity="warning" badgeStyle="soft" />
+      <SgBadge value="Paid" severity="success" badgeStyle="solid" />
+    </>
+  );
+}

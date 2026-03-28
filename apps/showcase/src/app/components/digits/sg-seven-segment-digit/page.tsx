@@ -395,7 +395,7 @@ export default function SgSevenSegmentDigitShowcase() {
               </div>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/samples/basico-0-9.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -408,7 +408,7 @@ export default function SgSevenSegmentDigitShowcase() {
             />
             <SgButton size="sm" onClick={nextHex}>Next char</SgButton>
           </div>
-          <SgCodeBlockBase code={HEX_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/samples/hexadecimal-0-9-a-f.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -434,7 +434,7 @@ export default function SgSevenSegmentDigitShowcase() {
               <SgSevenSegmentDigit value="8" palette="white" />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={THEMES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/samples/temas-de-cor.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -452,7 +452,7 @@ export default function SgSevenSegmentDigitShowcase() {
               <SgSevenSegmentDigit value="5" size={148} thickness={18} />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={SIZE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/samples/tamanho-e-espessura.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -469,7 +469,7 @@ export default function SgSevenSegmentDigitShowcase() {
             </div>
             <SgButton size="sm" onClick={() => setSeconds((prev) => prev + 1)}>+1 second</SgButton>
           </div>
-          <SgCodeBlockBase code={CLOCK_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/samples/composicao-estilo-relogio.tsx.sample" />
         </Section>
 
         <Section title={texts.section6Title} description={texts.section6Description}>
@@ -477,7 +477,7 @@ export default function SgSevenSegmentDigitShowcase() {
             title="SgSevenSegmentDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-seven-segment-digit/sg-seven-segment-digit.tsx.playground"
             height={700}
             defaultOpen
           />

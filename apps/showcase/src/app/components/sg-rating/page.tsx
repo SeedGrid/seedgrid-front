@@ -219,388 +219,6 @@ const RATING_TEXTS: Record<"pt-BR" | "pt-PT" | "en-US" | "es", RatingTexts> = {
 function isSupportedLocale(locale: ShowcaseLocale): locale is keyof typeof RATING_TEXTS {
   return locale === "pt-BR" || locale === "pt-PT" || locale === "en-US" || locale === "es";
 }
-const BASIC_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [value, setValue] = React.useState(0);
-
-  return (
-    <div className="space-y-2">
-      <SgRating
-        value={value}
-        onChange={setValue}
-        style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 12, padding: 12 }}
-      />
-      <p className="text-sm text-muted-foreground">
-        Current value: <strong>{value}</strong>
-      </p>
-    </div>
-  );
-}`;
-
-const HALF_TOOLTIP_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [value, setValue] = React.useState(2.5);
-  const [hover, setHover] = React.useState<number | null>(null);
-
-  return (
-    <div className="space-y-2">
-      <SgRating
-        label="Hover and click half stars"
-        value={value}
-        allowHalf
-        showTooltip
-        onChange={setValue}
-        onHover={setHover}
-      />
-      <p className="text-sm text-muted-foreground">
-        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
-      </p>
-    </div>
-  );
-}`;
-
-const READONLY_DISABLED_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
-      <SgRating
-        label="Read-only"
-        value={3.5}
-        allowHalf
-        readOnly
-      />
-
-      <SgRating
-        label="Desabilitado"
-        value={2}
-        disabled
-      />
-    </SgGrid>
-  );
-}`;
-
-const SIZE_STARS_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [smValue, setSmValue] = React.useState(3);
-  const [lgValue, setLgValue] = React.useState(4);
-  const [manyValue, setManyValue] = React.useState(7);
-
-  return (
-    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
-      <SgRating
-        label="sm / 5 estrelas"
-        size="sm"
-        value={smValue}
-        onChange={setSmValue}
-      />
-
-      <SgRating
-        label="lg / 5 estrelas"
-        size="lg"
-        value={lgValue}
-        onChange={setLgValue}
-      />
-
-      <SgRating
-        label="10 estrelas"
-        stars={10}
-        size="sm"
-        value={manyValue}
-        onChange={setManyValue}
-      />
-    </SgGrid>
-  );
-}`;
-
-const COLORS_ICONS_CODE = `import * as React from "react";
-import { Flame, Heart, ThumbsUp } from "lucide-react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [heartValue, setHeartValue] = React.useState(4);
-  const [likeValue, setLikeValue] = React.useState(3);
-  const [fireValue, setFireValue] = React.useState(5);
-
-  return (
-    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
-      <SgRating
-        label="Heart"
-        value={heartValue}
-        color="#ec4899"
-        emptyColor="#f9a8d4"
-        onIcon={<Heart size={24} fill="currentColor" />}
-        offIcon={<Heart size={24} />}
-        onChange={setHeartValue}
-      />
-
-      <SgRating
-        label="Likes"
-        value={likeValue}
-        color="#2563eb"
-        emptyColor="#93c5fd"
-        onIcon={<ThumbsUp size={24} fill="currentColor" />}
-        offIcon={<ThumbsUp size={24} />}
-        onChange={setLikeValue}
-      />
-
-      <SgRating
-        label="Fire"
-        value={fireValue}
-        color="#f97316"
-        emptyColor="#fdba74"
-        onIcon={<Flame size={24} fill="currentColor" />}
-        offIcon={<Flame size={24} />}
-        onChange={setFireValue}
-      />
-    </SgGrid>
-  );
-}`;
-
-const CALLBACK_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [value, setValue] = React.useState(3);
-  const [hover, setHover] = React.useState<number | null>(null);
-  const [logs, setLogs] = React.useState<string[]>([]);
-
-  const pushLog = React.useCallback((msg: string) => {
-    setLogs((prev) => [msg, ...prev].slice(0, 8));
-  }, []);
-
-  return (
-    <div className="space-y-3">
-      <SgRating
-        label="Callbacks"
-        value={value}
-        allowHalf
-        onChange={(next) => {
-          setValue(next);
-          pushLog("onChange -> " + String(next));
-        }}
-        onHover={setHover}
-      />
-
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Reset
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Max
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setLogs([])}>
-          Clear log
-        </SgButton>
-      </SgGrid>
-
-      <p className="text-sm text-muted-foreground">
-        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
-      </p>
-
-      <div className="h-28 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
-        {logs.length === 0 ? "No events" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
-      </div>
-    </div>
-  );
-}`;
-
-const RHF_CODE = `import * as React from "react";
-import { useForm, type FieldValues } from "react-hook-form";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [submitResult, setSubmitResult] = React.useState("-");
-  const { control, handleSubmit, watch } = useForm<FieldValues>({
-    defaultValues: {
-      productRating: 4,
-      movieRating: 2.5
-    }
-  });
-
-  return (
-    <form onSubmit={handleSubmit((data) => setSubmitResult(JSON.stringify(data)))} className="space-y-4">
-      <SgRating
-        label="Rate the product"
-        name="productRating"
-        control={control}
-      />
-
-      <SgRating
-        label="Rate the movie"
-        name="movieRating"
-        control={control}
-        allowHalf
-      />
-
-      <SgButton type="submit" size="sm">
-        Submit rating
-      </SgButton>
-
-      <p className="text-xs text-muted-foreground">
-        watch.productRating: <strong>{String(watch("productRating"))}</strong>
-        {" | "}
-        watch.movieRating: <strong>{String(watch("movieRating"))}</strong>
-      </p>
-      <p className="text-xs text-muted-foreground">Last submit: {submitResult}</p>
-    </form>
-  );
-}`;
-
-const REQUIRED_CODE = `import * as React from "react";
-import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [value, setValue] = React.useState(0);
-
-  return (
-    <div className="space-y-3">
-      <SgRating
-        label="Required rating"
-        value={value}
-        required
-        requiredMessage="Provide a rating before continuing"
-        onChange={setValue}
-      />
-
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Clear
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(1)}>
-          Rate 1
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
-          Rate 5
-        </SgButton>
-      </SgGrid>
-
-      <p className="text-sm text-muted-foreground">
-        Current value: <strong>{value}</strong>
-      </p>
-    </div>
-  );
-}`;
-
-const PLAYGROUND_CODE = `import * as React from "react";
-import {
-  SgButton,
-  SgGrid,
-  SgRating,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const sizes = ["sm", "md", "lg", "xl"] as const;
-type Size = (typeof sizes)[number];
-
-export default function App() {
-  const [value, setValue] = React.useState(3);
-  const [stars, setStars] = React.useState(5);
-  const [size, setSize] = React.useState<Size>("md");
-  const [allowHalf, setAllowHalf] = React.useState(false);
-  const [cancel, setCancel] = React.useState(true);
-  const [disabled, setDisabled] = React.useState(false);
-  const [readOnly, setReadOnly] = React.useState(false);
-  const [showTooltip, setShowTooltip] = React.useState(false);
-  const [required, setRequired] = React.useState(false);
-
-  return (
-    <div className="space-y-4 p-2">
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton
-          size="sm"
-          appearance="outline"
-          onClick={() => setStars((prev) => Math.max(1, prev - 1))}
-        >
-          - stars
-        </SgButton>
-        <SgButton
-          size="sm"
-          appearance="outline"
-          onClick={() => setStars((prev) => Math.min(10, prev + 1))}
-        >
-          + stars
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
-          Clear
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setValue(stars)}>
-          Max
-        </SgButton>
-      </SgGrid>
-
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        {sizes.map((sizeOption) => (
-          <SgButton
-            key={sizeOption}
-            size="sm"
-            appearance={size === sizeOption ? "solid" : "outline"}
-            onClick={() => setSize(sizeOption)}
-          >
-            size {sizeOption}
-          </SgButton>
-        ))}
-      </SgGrid>
-
-      <SgGrid columns={{ base: 2, md: 3 }} gap={8}>
-        <SgButton size="sm" appearance={allowHalf ? "solid" : "outline"} onClick={() => setAllowHalf((v) => !v)}>
-          allowHalf
-        </SgButton>
-        <SgButton size="sm" appearance={cancel ? "solid" : "outline"} onClick={() => setCancel((v) => !v)}>
-          cancel
-        </SgButton>
-        <SgButton size="sm" appearance={disabled ? "solid" : "outline"} onClick={() => setDisabled((v) => !v)}>
-          disabled
-        </SgButton>
-        <SgButton size="sm" appearance={readOnly ? "solid" : "outline"} onClick={() => setReadOnly((v) => !v)}>
-          readOnly
-        </SgButton>
-        <SgButton size="sm" appearance={showTooltip ? "solid" : "outline"} onClick={() => setShowTooltip((v) => !v)}>
-          showTooltip
-        </SgButton>
-        <SgButton size="sm" appearance={required ? "solid" : "outline"} onClick={() => setRequired((v) => !v)}>
-          required
-        </SgButton>
-      </SgGrid>
-
-      <div className="rounded-md border border-border p-5">
-        <SgRating
-          label="Rating Playground"
-          value={value}
-          stars={stars}
-          size={size}
-          allowHalf={allowHalf}
-          cancel={cancel}
-          disabled={disabled}
-          readOnly={readOnly}
-          showTooltip={showTooltip}
-          required={required}
-          onChange={setValue}
-        />
-      </div>
-
-      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
-        value: <strong>{value}</strong> | stars: <strong>{stars}</strong> | size: <strong>{size}</strong>
-      </div>
-    </div>
-  );
-}`;
-
 function BasicExample() {
   const [value, setValue] = React.useState(0);
 
@@ -995,42 +613,42 @@ export default function SgRatingPage() {
 
         <Section id="exemplo-1" title={texts.sectionTitles[0] ?? ""} description={texts.sectionDescriptions[0] ?? ""}>
           <BasicExample />
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/basico.tsx.sample" />
         </Section>
 
         <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
           <HalfTooltipExample />
-          <SgCodeBlockBase code={HALF_TOOLTIP_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/meia-estrela-tooltip.tsx.sample" />
         </Section>
 
         <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
           <ReadonlyDisabledExample />
-          <SgCodeBlockBase code={READONLY_DISABLED_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/read-only-e-desabilitado.tsx.sample" />
         </Section>
 
         <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
           <SizeStarsExample />
-          <SgCodeBlockBase code={SIZE_STARS_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/tamanhos-e-quantidade-de-estrelas.tsx.sample" />
         </Section>
 
         <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
           <ColorsIconsExample />
-          <SgCodeBlockBase code={COLORS_ICONS_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/cores-e-icones-customizados.tsx.sample" />
         </Section>
 
         <Section id="exemplo-6" title={texts.sectionTitles[5] ?? ""} description={texts.sectionDescriptions[5] ?? ""}>
           <CallbackExample />
-          <SgCodeBlockBase code={CALLBACK_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/callbacks.tsx.sample" />
         </Section>
 
         <Section id="exemplo-7" title={texts.sectionTitles[6] ?? ""} description={texts.sectionDescriptions[6] ?? ""}>
           <RhfExample />
-          <SgCodeBlockBase code={RHF_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/react-hook-form.tsx.sample" />
         </Section>
 
         <Section id="exemplo-8" title={texts.sectionTitles[7] ?? ""} description={texts.sectionDescriptions[7] ?? ""}>
           <RequiredExample />
-          <SgCodeBlockBase code={REQUIRED_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-rating/samples/campo-obrigatorio.tsx.sample" />
         </Section>
 
         <Section id="exemplo-9" title={texts.sectionTitles[8] ?? ""} description={texts.sectionDescriptions[8] ?? ""}>
@@ -1038,7 +656,7 @@ export default function SgRatingPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-rating/sg-rating.tsx.playground"
             height={660}
             defaultOpen
           />

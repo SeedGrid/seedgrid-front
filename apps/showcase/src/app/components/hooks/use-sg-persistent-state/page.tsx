@@ -26,8 +26,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function BasicCounterDemo() {
@@ -141,25 +141,7 @@ export default function UseSgPersistentStatePage() {
           description={t(i18n, "showcase.hook.persistentState.sections.basic.description")}
         >
           <BasicCounterDemo />
-          <CodeBlock
-            code={`import { useSgPersistentState } from "@seedgrid/fe-components";
-
-export default function Counter() {
-  const { value, setValue, clear, hydrated } = useSgPersistentState({
-    baseKey: "app:counter",
-    defaultValue: 0
-  });
-
-  return (
-    <div>
-      <span>{hydrated ? value : "..."}</span>
-      <button onClick={() => setValue((v) => v + 1)}>+1</button>
-      <button onClick={() => setValue((v) => v - 1)}>-1</button>
-      <button onClick={() => clear()}>Reset</button>
-    </div>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistent-state/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
@@ -167,81 +149,21 @@ export default function Counter() {
           description={t(i18n, "showcase.hook.persistentState.sections.namespace.description")}
         >
           <NamespaceDemo />
-          <CodeBlock
-            code={`import { useSgPersistentState, SgEnvironmentProvider } from "@seedgrid/fe-components";
-
-function Counter() {
-  const { value, setValue } = useSgPersistentState({
-    baseKey: "app:counter",
-    defaultValue: 0
-  });
-  return <button onClick={() => setValue((v) => v + 1)}>{value}</button>;
-}
-
-// Cada usuario tem seu proprio contador isolado pelo namespace
-export default function App({ userId }: { userId: string }) {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => \`user:\${userId}\` },
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      <Counter />
-    </SgEnvironmentProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistent-state/samples/com-isolamento-por-namespace.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.hook.persistentState.sections.serialize.title")}
           description={t(i18n, "showcase.hook.persistentState.sections.serialize.description")}
         >
-          <CodeBlock
-            code={`import { useSgPersistentState } from "@seedgrid/fe-components";
-
-export default function DatePicker() {
-  const { value: selectedDate, setValue } = useSgPersistentState<Date | null>({
-    baseKey: "app:selected-date",
-    defaultValue: null,
-    serialize: (date) => date?.toISOString() ?? null,
-    deserialize: (raw) => (typeof raw === "string" ? new Date(raw) : null)
-  });
-
-  return (
-    <input
-      type="date"
-      value={selectedDate?.toISOString().slice(0, 10) ?? ""}
-      onChange={(e) => setValue(e.target.value ? new Date(e.target.value) : null)}
-    />
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistent-state/samples/serialize-e-deserialize-customizados.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.hook.persistentState.sections.versioning.title")}
           description={t(i18n, "showcase.hook.persistentState.sections.versioning.description")}
         >
-          <CodeBlock
-            code={`import { useSgPersistentState, SgEnvironmentProvider } from "@seedgrid/fe-components";
-
-// Quando stateVersion muda, chaves antigas sao ignoradas e o estado reseta
-export default function App() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:1" },
-        // Incrementar stateVersion descarta dados persistidos de versoes anteriores
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 2 }
-      }}
-    >
-      <MyComponent />
-    </SgEnvironmentProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistent-state/samples/versionamento-de-estado.tsx.sample" />
         </Section>
 
         <div className="rounded-lg border border-border p-6 space-y-4">

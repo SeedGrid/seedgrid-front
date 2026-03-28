@@ -1,0 +1,24 @@
+import React from "react";
+import { Heart } from "lucide-react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex gap-6 items-center flex-wrap">
+      {(["scale", "fade", "rotate", "slide", "pulse", "none"] as const).map((animation) => (
+        <div key={animation} className="flex flex-col items-center gap-2">
+          <SgFloatActionButton
+            animation={animation}
+            animationOn="hover"
+            icon={<Heart className="size-4" />}
+            severity="danger"
+            size="sm"
+            onClick={() => {}}
+            style={{ position: "relative" }}
+          />
+          <span className="text-xs text-muted-foreground">{animation}</span>
+        </div>
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,44 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgToaster, toast, type SgToastId } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [loadingId, setLoadingId] = React.useState<SgToastId | null>(null);
+
+  return (
+    <div className="space-y-3">
+      <SgToaster />
+      <div className="flex flex-wrap items-center gap-2">
+        <SgButton
+          onClick={() => {
+            const id = toast.loading("Exportando relatório...");
+            setLoadingId(id);
+          }}
+        >
+          Start loading
+        </SgButton>
+        <SgButton
+          severity="success"
+          onClick={() => {
+            if (!loadingId) return;
+            toast.success("Export concluído", { id: loadingId });
+            setLoadingId(null);
+          }}
+        >
+          Finish with success
+        </SgButton>
+        <SgButton
+          severity="danger"
+          onClick={() => {
+            if (!loadingId) return;
+            toast.error("Falha ao exportar", { id: loadingId });
+            setLoadingId(null);
+          }}
+        >
+          Finish with error
+        </SgButton>
+      </div>
+    </div>
+  );
+}

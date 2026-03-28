@@ -58,8 +58,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 type BreadcrumbTexts = {
@@ -297,7 +297,7 @@ export default function SgBreadcrumbPage() {
 
         <Section title={texts.section1Title} description={texts.section1Description}>
           <SgBreadcrumb items={BASIC_ITEMS} separator="chevron" showHomeIcon />
-          <CodeBlock code={EXAMPLE_BASIC_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-breadcrumb/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -318,7 +318,7 @@ export default function SgBreadcrumbPage() {
             {texts.section2ActiveRouteLabel}: <span className="font-semibold text-foreground">{routeKey}</span> | {texts.section2LastClickLabel}:{" "}
             <span className="font-semibold text-foreground">{lastNavigate}</span>
           </p>
-          <CodeBlock code={EXAMPLE_EXTERNAL_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-breadcrumb/samples/caminho-externo.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -334,7 +334,7 @@ export default function SgBreadcrumbPage() {
               </div>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_OVERFLOW_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-breadcrumb/samples/overflow.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -342,7 +342,7 @@ export default function SgBreadcrumbPage() {
             title="SgBreadcrumb Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-breadcrumb/sg-breadcrumb.tsx.playground"
             height={620}
             defaultOpen
           />

@@ -1,0 +1,23 @@
+import React from "react";
+import { Bookmark, Search, Users, Bell, Heart, X, Check } from "lucide-react";
+import { SgButton } from "@seedgrid/fe-components";
+
+const ICON_MAP = [
+  { severity: "primary", icon: <Bookmark className="size-4" /> },
+  { severity: "secondary", icon: <Search className="size-4" /> },
+  { severity: "success", icon: <Users className="size-4" /> },
+  { severity: "info", icon: <Bell className="size-4" /> },
+  { severity: "help", icon: <Heart className="size-4" /> },
+  { severity: "danger", icon: <X className="size-4" /> },
+  { severity: "warning", icon: <Check className="size-4" /> },
+] as const;
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {ICON_MAP.map(({ severity, icon }) => (
+        <SgButton key={severity} severity={severity} shape="rounded" appearance="outline" leftIcon={icon} />
+      ))}
+    </div>
+  );
+}

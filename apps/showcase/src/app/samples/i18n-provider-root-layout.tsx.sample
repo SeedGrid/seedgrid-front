@@ -1,0 +1,18 @@
+import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
+
+const messagesEn = {
+  "components.inputs.required": "Required field.",
+  "components.inputs.email.invalid": "Invalid email."
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en-US">
+      <body>
+        <SgComponentsI18nProvider locale="en-US" messages={messagesEn}>
+          {children}
+        </SgComponentsI18nProvider>
+      </body>
+    </html>
+  );
+}

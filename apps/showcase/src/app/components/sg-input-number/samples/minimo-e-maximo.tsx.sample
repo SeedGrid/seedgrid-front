@@ -1,0 +1,14 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-minmax"
+      label="Mínimo e máximo"
+      name="minmax"
+      minValue={10}
+      maxValue={100}
+      decimals={2}
+    />
+  );
+}

@@ -1,0 +1,24 @@
+"use client";
+
+import React from "react";
+import { SgStringAnimator } from "@seedgrid/fe-components";
+
+const NAMES = ["LUCIANO", "MARTA", "PEDRO", "ANA", "SEEDGRID"];
+
+export default function Example() {
+  const [index, setIndex] = React.useState(0);
+  const [target, setTarget] = React.useState(NAMES[0] ?? "");
+
+  React.useEffect(() => {
+    const id = window.setInterval(() => {
+      setIndex((prev) => {
+        const next = (prev + 1) % NAMES.length;
+        setTarget(NAMES[next] ?? "");
+        return next;
+      });
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return <SgStringAnimator sourceString={NAMES[index] ?? ""} targetString={target} stringAnimatorStyle="roller3d" alignTo="left" fontSize={28} autoStart />;
+}

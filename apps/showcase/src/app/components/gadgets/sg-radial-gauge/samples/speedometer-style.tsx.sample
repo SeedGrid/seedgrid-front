@@ -1,0 +1,32 @@
+"use client";
+
+import React from "react";
+import { SgRadialGauge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [rpm, setRpm] = React.useState(62);
+
+  return (
+    <SgRadialGauge
+      min={0}
+      max={100}
+      value={rpm}
+      onValueChange={setRpm}
+      startAngle={140}
+      endAngle={40}
+      ranges={[
+        { start: 0, end: 40, color: "#22c55e", width: 14 },
+        { start: 40, end: 75, color: "#f59e0b", width: 14 },
+        { start: 75, end: 100, color: "#ef4444", width: 14 }
+      ]}
+      showTicks
+      showLabels
+      majorTickCount={5}
+      minorTicksPerInterval={2}
+      primaryPointerDraggable
+      primaryPointerType="needle"
+      primaryPointerColor="#2563eb"
+      centerContent={<div className="text-center"><div className="text-xs uppercase text-muted-foreground">RPM</div><div className="text-xl font-semibold">{Math.round(rpm)}</div></div>}
+    />
+  );
+}

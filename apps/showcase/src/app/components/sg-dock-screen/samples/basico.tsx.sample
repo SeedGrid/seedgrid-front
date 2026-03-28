@@ -1,0 +1,46 @@
+import React from "react";
+import { SgDockScreen, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+export default function Example() {
+  return (
+    <SgDockScreen
+      id="showcase-dock-screen-basic-v1"
+      fullscreen={false}
+      height={420}
+      className="overflow-hidden rounded-xl border border-border bg-background"
+    >
+      <SgDockZone zone="top">
+        <SgToolBar id="tb-top-dock-screen-v1" dockZone="top" orientationDirection="horizontal-left" title="Topo" draggable>
+          <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+          <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar dados" />
+        </SgToolBar>
+      </SgDockZone>
+
+      <SgDockZone zone="bottom">
+        <SgToolBar id="tb-bottom-dock-screen-v1" dockZone="bottom" orientationDirection="horizontal-left" title="Base" draggable>
+          <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+          <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
+        </SgToolBar>
+      </SgDockZone>
+
+      <SgDockZone zone="left">
+        <SgToolBar id="tb-left-dock-screen-v1" dockZone="left" orientationDirection="vertical-down" title="Navegacao" collapsible draggable>
+          <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+        </SgToolBar>
+      </SgDockZone>
+
+      <SgDockZone zone="right">
+        <SgToolBar id="tb-right-dock-screen-v1" dockZone="right" orientationDirection="vertical-down" title="Equipe" collapsible draggable>
+          <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
+          <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
+        </SgToolBar>
+      </SgDockZone>
+
+      <SgDockZone zone="free">
+        <div className="pointer-events-none text-sm text-muted-foreground">Area central livre</div>
+      </SgDockZone>
+    </SgDockScreen>
+  );
+}

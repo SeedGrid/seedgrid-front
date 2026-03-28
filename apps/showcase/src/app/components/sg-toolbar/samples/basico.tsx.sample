@@ -1,0 +1,19 @@
+import React from "react";
+import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Home, Settings, Users } from "lucide-react";
+
+export default function Example() {
+  return (
+    <div className="w-full">
+      <SgDockLayout id="tb-layout-basic" className="grid grid-cols-1 grid-rows-1">
+        <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
+          <SgToolBar id="tb-basic" title="Navegacao" orientationDirection="vertical-down">
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para Home" severity="primary" className="ring-1 ring-primary/30" style={{ minWidth: 132 }} />
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Abrir lista de usuarios" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Configuracoes" hint="Abrir configuracoes" />
+          </SgToolBar>
+        </SgDockZone>
+      </SgDockLayout>
+    </div>
+  );
+}

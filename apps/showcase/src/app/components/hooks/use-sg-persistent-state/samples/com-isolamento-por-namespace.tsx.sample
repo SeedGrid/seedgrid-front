@@ -1,0 +1,22 @@
+import { SgEnvironmentProvider, useSgPersistentState } from "@seedgrid/fe-components";
+
+function Counter() {
+  const { value, setValue } = useSgPersistentState({
+    baseKey: "app:counter",
+    defaultValue: 0,
+  });
+  return <button onClick={() => setValue((v) => v + 1)}>{value}</button>;
+}
+
+export default function App({ userId }: { userId: string }) {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => `user:${userId}` },
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 },
+      }}
+    >
+      <Counter />
+    </SgEnvironmentProvider>
+  );
+}

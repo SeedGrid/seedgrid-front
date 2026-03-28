@@ -1,0 +1,26 @@
+import React from "react";
+import { SgCheckboxGroup, SgButton, SgGrid, type SgCheckboxGroupOption, type SgCheckboxGroupRef } from "@seedgrid/fe-components";
+
+const BASIC_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" }
+];
+
+export default function Example() {
+  const checkboxRef = React.useRef<SgCheckboxGroupRef>(null);
+  const [output, setOutput] = React.useState("");
+
+  return (
+    <>
+      <SgCheckboxGroup ref={checkboxRef} id="ref-example" title="Select options" source={BASIC_OPTIONS} showCheckAll />
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton onClick={() => setOutput(JSON.stringify(checkboxRef.current?.getChecked()))}>getChecked()</SgButton>
+        <SgButton onClick={() => { checkboxRef.current?.checkAll(); setOutput("checkAll()"); }}>checkAll()</SgButton>
+        <SgButton onClick={() => { checkboxRef.current?.clearAll(); setOutput("clearAll()"); }}>clearAll()</SgButton>
+        <SgButton onClick={() => { checkboxRef.current?.setChecked(["option2"]); setOutput('setChecked(["option2"])'); }}>setChecked</SgButton>
+      </SgGrid>
+      {output && <p className="text-sm">Output: <strong>{output}</strong></p>}
+    </>
+  );
+}

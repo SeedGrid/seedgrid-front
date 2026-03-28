@@ -1,0 +1,30 @@
+import * as React from "react";
+import { Receipt, ShieldCheck, UserRound } from "lucide-react";
+import { SgButton, SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [pageControlStyle, setPageControlStyle] = React.useState<"underline" | "pills">("underline");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [fullWidthTabs, setFullWidthTabs] = React.useState(false);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setPageControlStyle("underline")}>underline</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPageControlStyle("pills")}>pills</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setFullWidthTabs((v) => !v)}>toggle fullWidth</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("sm")}>sm</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("md")}>md</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("lg")}>lg</SgButton>
+      </div>
+
+      <SgPageControl pageControlStyle={pageControlStyle} size={size} fullWidthTabs={fullWidthTabs}>
+        <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>Registration content</SgPageControlPage>
+        <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Fiscal content</SgPageControlPage>
+        <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>Access content</SgPageControlPage>
+      </SgPageControl>
+    </div>
+  );
+}

@@ -1,0 +1,14 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <>
+      <SgInputCurrency id="demo-noborder" label="Sem borda" withBorder={false} name="noborder" register={register} currency="BRL" />
+      <SgInputCurrency id="demo-filled" label="Filled" filled name="filled" register={register} currency="BRL" />
+    </>
+  );
+}

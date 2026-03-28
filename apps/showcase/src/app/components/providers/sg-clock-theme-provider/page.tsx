@@ -29,8 +29,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function ClockWithPicker() {
@@ -80,97 +80,21 @@ export default function SgClockThemeProviderPage() {
           description={t(i18n, "showcase.component.clockThemeProvider.sections.basic.description")}
         >
           <ClockWithPicker />
-          <CodeBlock
-            code={`import React from "react";
-import {
-  SgClockThemeProvider,
-  SgClockThemePicker,
-  SgClock,
-  SgTimeProvider
-} from "@seedgrid/fe-components";
-
-export default function App() {
-  const [themeId, setThemeId] = React.useState("classic");
-
-  return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      <SgClockThemeProvider>
-        <SgClock themeId={themeId} />
-        <SgClockThemePicker value={themeId} onChange={setThemeId} />
-      </SgClockThemeProvider>
-    </SgTimeProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-clock-theme-provider/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.component.clockThemeProvider.sections.custom.title")}
           description={t(i18n, "showcase.component.clockThemeProvider.sections.custom.description")}
         >
-          <CodeBlock
-            code={`import { SgClockThemeProvider, SgClock, SgTimeProvider } from "@seedgrid/fe-components";
-import type { SgClockTheme } from "@seedgrid/fe-components";
-
-const myTheme: SgClockTheme = {
-  id: "neon-green",
-  label: "Neon Green",
-  order: 100,
-  render: ({ now }) => {
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const h = pad(now.getHours());
-    const m = pad(now.getMinutes());
-    const s = pad(now.getSeconds());
-
-    return (
-      <div style={{
-        fontFamily: "monospace",
-        fontSize: 48,
-        color: "#00ff41",
-        textShadow: "0 0 10px #00ff41",
-        background: "#000",
-        padding: "16px 24px",
-        borderRadius: 8
-      }}>
-        {h}:{m}:{s}
-      </div>
-    );
-  }
-};
-
-export default function App() {
-  return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      <SgClockThemeProvider value={{ themes: [myTheme] }}>
-        <SgClock themeId="neon-green" />
-      </SgClockThemeProvider>
-    </SgTimeProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-clock-theme-provider/samples/tema-local-customizado.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.component.clockThemeProvider.sections.global.title")}
           description={t(i18n, "showcase.component.clockThemeProvider.sections.global.description")}
         >
-          <CodeBlock
-            code={`import { registerTheme } from "@seedgrid/fe-components";
-import type { SgClockTheme } from "@seedgrid/fe-components";
-
-// Registra globalmente â€” disponivel para todos os SgClockThemeProvider
-const myTheme: SgClockTheme = {
-  id: "my-theme",
-  label: "My Theme",
-  order: 50,
-  render: ({ now }) => <div>{now.toLocaleTimeString()}</div>
-};
-
-registerTheme(myTheme);
-
-// Depois use normalmente em qualquer SgClock sem precisar passar para o provider
-// <SgClock themeId="my-theme" />`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-clock-theme-provider/samples/registro-global.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={CLOCK_THEME_PROVIDER_PROPS} />

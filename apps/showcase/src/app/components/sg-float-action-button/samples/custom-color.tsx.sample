@@ -1,0 +1,22 @@
+import React from "react";
+import { Heart, Settings, Star } from "lucide-react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex gap-6 items-center flex-wrap">
+      <div className="flex flex-col items-center gap-2">
+        <SgFloatActionButton color="#8b5cf6" icon={<Star className="size-4" />} onClick={() => {}} style={{ position: "relative" }} />
+        <span className="text-xs text-muted-foreground">#8b5cf6</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SgFloatActionButton color="#ec4899" icon={<Heart className="size-4" />} onClick={() => {}} style={{ position: "relative" }} />
+        <span className="text-xs text-muted-foreground">#ec4899</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SgFloatActionButton color="#f97316" icon={<Settings className="size-4" />} onClick={() => {}} style={{ position: "relative" }} />
+        <span className="text-xs text-muted-foreground">#f97316</span>
+      </div>
+    </div>
+  );
+}

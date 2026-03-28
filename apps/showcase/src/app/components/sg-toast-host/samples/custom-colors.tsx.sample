@@ -1,0 +1,38 @@
+"use client";
+
+import { SgButton, SgToastHost, toast } from "@seedgrid/fe-components";
+
+const styles = {
+  default: { backgroundColor: "#1f2937", color: "#f9fafb", borderColor: "#6b7280" },
+  success: { backgroundColor: "#065f46", color: "#ecfeff", borderColor: "#10b981" },
+  info: { backgroundColor: "#1e3a8a", color: "#dbeafe", borderColor: "#60a5fa" },
+  warning: { backgroundColor: "#78350f", color: "#fef3c7", borderColor: "#f59e0b" },
+  error: { backgroundColor: "#7f1d1d", color: "#fee2e2", borderColor: "#ef4444" },
+  loading: { backgroundColor: "#312e81", color: "#e0e7ff", borderColor: "#818cf8" }
+};
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToastHost />
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => toast.message("Default", { style: styles.default })}>default</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("Success", { style: styles.success })}>
+          success
+        </SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Info", { style: styles.info })}>
+          info
+        </SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Warning", { style: styles.warning })}>
+          warning
+        </SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Error", { style: styles.error })}>
+          error
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => toast.loading("Loading", { style: styles.loading })}>
+          loading
+        </SgButton>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,18 @@
+import React from "react";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputCurrency
+      id="demo-events"
+      label="Digite e acompanhe"
+      required
+      currency="BRL"
+      onChange={(v) => console.log("onChange:", v)}
+      onEnter={() => console.log("focus")}
+      onExit={() => console.log("blur")}
+      onClear={() => console.log("cleared")}
+      onValidation={(msg) => console.log("validation:", msg)}
+    />
+  );
+}

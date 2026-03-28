@@ -1,0 +1,50 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgCalendar, SgGrid } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [locale, setLocale] = React.useState<"pt-BR" | "en-US" | "es">("pt-BR");
+  const [weekStartsOn, setWeekStartsOn] = React.useState<0 | 1>(0);
+  const [numberOfMonths, setNumberOfMonths] = React.useState(6);
+  const [showAdjacentMonths, setShowAdjacentMonths] = React.useState(true);
+  const [selected, setSelected] = React.useState(new Date(2026, 2, 10));
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton appearance={locale === "pt-BR" ? "solid" : "outline"} onClick={() => setLocale("pt-BR")}>pt-BR</SgButton>
+        <SgButton appearance={locale === "en-US" ? "solid" : "outline"} onClick={() => setLocale("en-US")}>en-US</SgButton>
+        <SgButton appearance={locale === "es" ? "solid" : "outline"} onClick={() => setLocale("es")}>es</SgButton>
+        <SgButton appearance={weekStartsOn === 0 ? "solid" : "outline"} onClick={() => setWeekStartsOn((value) => (value === 0 ? 1 : 0))}>
+          {weekStartsOn === 0 ? "Sunday first" : "Monday first"}
+        </SgButton>
+      </SgGrid>
+
+      <SgButton appearance="outline" onClick={() => setShowAdjacentMonths((value) => !value)}>
+        {showAdjacentMonths ? "Hide adjacent months" : "Show adjacent months"}
+      </SgButton>
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton appearance={numberOfMonths === 1 ? "solid" : "outline"} onClick={() => setNumberOfMonths(1)}>1 month</SgButton>
+        <SgButton appearance={numberOfMonths === 3 ? "solid" : "outline"} onClick={() => setNumberOfMonths(3)}>3 months</SgButton>
+        <SgButton appearance={numberOfMonths === 6 ? "solid" : "outline"} onClick={() => setNumberOfMonths(6)}>6 months</SgButton>
+        <SgButton appearance={numberOfMonths === 12 ? "solid" : "outline"} onClick={() => setNumberOfMonths(12)}>12 months</SgButton>
+      </SgGrid>
+
+      <SgCalendar
+        value={selected}
+        onValueChange={setSelected}
+        locale={locale}
+        weekStartsOn={weekStartsOn}
+        numberOfMonths={numberOfMonths}
+        monthsPerLine={3}
+        showAdjacentMonths={showAdjacentMonths}
+        cardTitle="SgCalendar Playground"
+        cardProps={{ id: "showcase-calendar-playground", dragPersistKey: "showcase-calendar-playground" }}
+      />
+
+      <p className="text-xs text-muted-foreground">Selected: {selected.toLocaleDateString(locale)}</p>
+    </div>
+  );
+}

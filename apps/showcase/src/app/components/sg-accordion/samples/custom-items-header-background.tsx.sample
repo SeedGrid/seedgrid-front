@@ -1,0 +1,31 @@
+import * as React from "react";
+import { Mail, ShieldCheck, TriangleAlert } from "lucide-react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  {
+    id: "mail",
+    title: "Email",
+    icon: <Mail size={14} />,
+    end: <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase">novo</span>,
+    headerBackgroundColor: "rgb(var(--sg-info-100, 224 242 254))",
+    content: <p className="text-sm">Configuracoes de SMTP, remetente padrao e templates.</p>
+  },
+  {
+    id: "lock",
+    title: "Permissoes",
+    icon: <ShieldCheck size={14} />,
+    content: <p className="text-sm">Controle de perfis, papeis e trilhas de auditoria.</p>
+  },
+  {
+    id: "blocked",
+    title: "Modulo indisponivel",
+    icon: <TriangleAlert size={14} />,
+    disabled: true,
+    content: <p className="text-sm">Conteudo bloqueado.</p>
+  }
+];
+
+export default function Example() {
+  return <SgAccordion items={items} defaultActiveIndex={0} headerBackgroundColor="rgb(var(--sg-primary-50, 239 246 255))" />;
+}

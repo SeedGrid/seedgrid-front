@@ -1,0 +1,9 @@
+import { useSgTime } from "@seedgrid/fe-components";
+
+function LiveClock() {
+  const time = useSgTime();
+  const date = new Date(time.nowMs());
+  return <span>{date.toLocaleTimeString()}</span>;
+}
+
+export default LiveClock;

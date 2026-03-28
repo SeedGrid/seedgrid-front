@@ -1,0 +1,28 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgInputText, SgRoller3DDigit } from "@seedgrid/fe-components";
+
+const ITEMS = [" ", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
+
+export default function App() {
+  const [text, setText] = React.useState("SEEDGRID");
+  const [fontSize, setFontSize] = React.useState(28);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <SgInputText id="roller-text" label="Texto" value={text} onChange={setText} />
+        <label className="text-sm">fontSize:
+          <input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
+        </label>
+        <SgButton size="sm" onClick={() => setText((prev) => prev.split("").reverse().join(""))}>Invert</SgButton>
+      </div>
+      <div className="flex items-center gap-2">
+        {text.toUpperCase().padEnd(8, " ").split("").map((value, index) => (
+          <SgRoller3DDigit key={index} value={value} items={ITEMS} fontSize={fontSize} />
+        ))}
+      </div>
+    </div>
+  );
+}

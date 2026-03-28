@@ -33,8 +33,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const LOCALES = [
@@ -129,54 +129,14 @@ export default function UseComponentsI18nPage() {
           description={t(i18n, "showcase.hook.componentsI18n.sections.basic.description")}
         >
           <DynamicDemo />
-          <CodeBlock
-            code={`import {
-  useComponentsI18n,
-  t,
-  SgComponentsI18nProvider,
-  componentsMessagesEnUs
-} from "@seedgrid/fe-components";
-
-function MyComponent() {
-  const i18n = useComponentsI18n();
-  const clearLabel = t(i18n, "sg.input.clear");
-
-  return <span>{clearLabel}</span>;
-}
-
-export default function App() {
-  return (
-    <SgComponentsI18nProvider locale="en-US" messages={componentsMessagesEnUs}>
-      <MyComponent />
-    </SgComponentsI18nProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-components-i18n/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.hook.componentsI18n.sections.custom.title")}
           description={t(i18n, "showcase.hook.componentsI18n.sections.custom.description")}
         >
-          <CodeBlock
-            code={`import {
-  useComponentsI18n,
-  SgComponentsI18nProvider,
-  componentsMessagesEnUs,
-  t
-} from "@seedgrid/fe-components";
-
-// Criando um componente que usa as mensagens do locale ativo
-function ClearButton({ onClear }: { onClear: () => void }) {
-  const i18n = useComponentsI18n();
-
-  return (
-    <button onClick={onClear} aria-label={t(i18n, "sg.input.clear")}>
-      {t(i18n, "sg.input.clear")}
-    </button>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-components-i18n/samples/componentes-conscientes-do-locale.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={HOOK_RETURN} />

@@ -1,0 +1,27 @@
+"use client";
+
+import React from "react";
+import { SgLinearGauge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(64);
+
+  return (
+    <SgLinearGauge
+      min={0}
+      max={100}
+      value={value}
+      onValueChange={setValue}
+      ranges={[
+        { start: 0, end: 30, color: "#22c55e" },
+        { start: 30, end: 70, color: "#f59e0b" },
+        { start: 70, end: 100, color: "#ef4444" }
+      ]}
+      showTicks
+      showLabels
+      majorTickCount={5}
+      barPointer
+      primaryPointerDraggable
+    />
+  );
+}

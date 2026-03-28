@@ -1,0 +1,37 @@
+import React from "react";
+import { SgButton, SgExpandablePanel } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => setOpen(true)}>Abrir painel com fade</SgButton>
+      </div>
+
+      <SgExpandablePanel
+        mode="overlay"
+        expandTo="top"
+        placement="center"
+        open={open}
+        onOpenChange={setOpen}
+        role="dialog"
+        ariaLabel="Painel de notificacoes"
+        overlayClassName="bg-black/70"
+        animation={{ type: "fade", durationMs: 260 }}
+        closeOnOutsideClick={false}
+        trapFocus
+        size={{ default: 280, min: 180, max: 420 }}
+        header={<div className="font-medium">Notificacoes</div>}
+        footer={
+          <div className="flex justify-end">
+            <SgButton size="sm" onClick={() => setOpen(false)}>Fechar</SgButton>
+          </div>
+        }
+      >
+        <div className="text-sm">Props: role, ariaLabel, overlayClassName, animation fade e closeOnOutsideClick=false.</div>
+      </SgExpandablePanel>
+    </>
+  );
+}

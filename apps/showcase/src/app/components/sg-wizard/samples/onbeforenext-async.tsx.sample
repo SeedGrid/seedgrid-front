@@ -1,0 +1,33 @@
+import React from "react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgWizard
+      onBeforeNext={async () => {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        return true;
+      }}
+      onFinish={async () => {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+      }}
+    >
+      <SgWizardPage>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Validacao assicrona</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Antes de avancar, o wizard aguarda uma promise.
+          </p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Segunda etapa</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            O submit final tambem pode ser assicrono.
+          </p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

@@ -1,0 +1,18 @@
+import * as React from "react";
+import { SgGrid, SgPanel } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [dense, setDense] = React.useState(true);
+  return (
+    <div className="space-y-3 p-2">
+      <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setDense((prev) => !prev)}>dense: {String(dense)}</button>
+      <SgGrid minItemWidth="14rem" gap={10} rowHeight={100} dense={dense}>
+        <SgPanel className="rounded-md p-3">Item 1</SgPanel>
+        <SgPanel span={2} className="rounded-md p-3">Item 2 (span 2)</SgPanel>
+        <SgPanel rowSpan={2} className="rounded-md p-3">Item 3 (rowSpan 2)</SgPanel>
+        <SgPanel className="rounded-md p-3">Item 4</SgPanel>
+        <SgPanel className="rounded-md p-3">Item 5</SgPanel>
+      </SgGrid>
+    </div>
+  );
+}

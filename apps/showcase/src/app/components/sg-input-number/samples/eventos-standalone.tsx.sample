@@ -1,0 +1,17 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-events"
+      label="Digite e acompanhe"
+      required
+      decimals={2}
+      onChange={(v) => console.log("onChange:", v)}
+      onEnter={() => console.log("focus")}
+      onExit={() => console.log("blur")}
+      onClear={() => console.log("cleared")}
+      onValidation={(msg) => console.log("validation:", msg)}
+    />
+  );
+}

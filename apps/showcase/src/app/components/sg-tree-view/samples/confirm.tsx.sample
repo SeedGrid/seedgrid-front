@@ -1,0 +1,60 @@
+import React from "react";
+import { BarChart3, FileText, Shield, Users } from "lucide-react";
+import { SgCard, SgTreeView, type SgTreeNode, type SgTreeViewRef } from "@seedgrid/fe-components";
+
+const nodes: SgTreeNode[] = [
+  {
+    id: "root",
+    label: "Admin",
+    icon: <Shield className="h-4 w-4" />,
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        icon: <Users className="h-4 w-4" />,
+        children: [
+          { id: "users.list", label: "List users", icon: <FileText className="h-4 w-4" /> },
+          { id: "users.create", label: "Create user", icon: <FileText className="h-4 w-4" /> }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        icon: <BarChart3 className="h-4 w-4" />,
+        children: [
+          { id: "reports.sales", label: "Sales report", icon: <FileText className="h-4 w-4" /> },
+          { id: "reports.financial", label: "Financial report", icon: <FileText className="h-4 w-4" /> }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  const [confirmed, setConfirmed] = React.useState<string[]>([]);
+  const treeRef = React.useRef<SgTreeViewRef>(null);
+
+  return (
+    <>
+      <SgCard title="Confirm selection">
+        <SgTreeView
+          ref={treeRef}
+          nodes={nodes}
+          searchable
+          searchPlaceholder="Search..."
+          checkable
+          checkMode="confirm"
+          confirmSelection="leafOnly"
+          confirmBar={{
+            label: "Confirmar",
+            showCancel: true,
+            cancelLabel: "Limpar",
+            onConfirm: (ids) => setConfirmed(ids),
+            onCancel: () => treeRef.current?.clearChecked()
+          }}
+        />
+      </SgCard>
+      <div className="mt-3 text-xs text-muted-foreground">confirmIds: {confirmed.join(", ") || "-"}</div>
+    </>
+  );
+}

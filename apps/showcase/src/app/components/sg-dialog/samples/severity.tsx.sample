@@ -1,0 +1,27 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton severity="danger" onClick={() => setOpen(true)}>Abrir dialog danger</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        severity="danger"
+        title="Remover registro"
+        subtitle="Acao irreversivel"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>Cancelar</SgButton>
+            <SgButton severity="danger" onClick={() => setOpen(false)}>Excluir</SgButton>
+          </>
+        }
+      >
+        <div className="text-sm text-muted-foreground">Este registro sera excluido permanentemente.</div>
+      </SgDialog>
+    </>
+  );
+}

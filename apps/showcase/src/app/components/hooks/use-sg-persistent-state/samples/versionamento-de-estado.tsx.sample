@@ -1,0 +1,18 @@
+import { SgEnvironmentProvider } from "@seedgrid/fe-components";
+
+function MyComponent() {
+  return <div>stateVersion novo, dados antigos invalidos</div>;
+}
+
+export default function App() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "u:1" },
+        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 2 },
+      }}
+    >
+      <MyComponent />
+    </SgEnvironmentProvider>
+  );
+}

@@ -1,0 +1,42 @@
+"use client";
+
+import React from "react";
+import { SgLinearGauge, SgButton } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState(55);
+  const [orientation, setOrientation] = React.useState<"horizontal" | "vertical">("horizontal");
+  const [showLabels, setShowLabels] = React.useState(true);
+  const [showTicks, setShowTicks] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setOrientation("horizontal")}>horizontal</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOrientation("vertical")}>vertical</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setShowTicks((prev) => !prev)}>toggle ticks</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShowLabels((prev) => !prev)}>toggle labels</SgButton>
+      </div>
+      <SgLinearGauge
+        min={0}
+        max={100}
+        value={value}
+        onValueChange={setValue}
+        orientation={orientation}
+        width={orientation === "horizontal" ? 360 : 140}
+        height={orientation === "horizontal" ? 120 : 360}
+        showTicks={showTicks}
+        showLabels={showLabels}
+        barPointer
+        primaryPointerDraggable
+        ranges={[
+          { start: 0, end: 30, color: "#22c55e" },
+          { start: 30, end: 70, color: "#f59e0b" },
+          { start: 70, end: 100, color: "#ef4444" }
+        ]}
+      />
+    </div>
+  );
+}

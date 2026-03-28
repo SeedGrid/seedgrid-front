@@ -1,0 +1,39 @@
+import React from "react";
+import { Trash2, X } from "lucide-react";
+import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
+
+const cancelButton: SgConfirmationDialogButtonConfig = {
+  label: "No, keep it",
+  icon: <X className="size-4" />,
+  severity: "secondary",
+  appearance: "ghost"
+};
+
+const confirmButton: SgConfirmationDialogButtonConfig = {
+  label: "Yes, delete",
+  icon: <Trash2 className="size-4" />,
+  severity: "danger"
+};
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  const [log, setLog] = React.useState("none");
+
+  return (
+    <>
+      <SgButton severity="danger" onClick={() => setOpen(true)}>delete row</SgButton>
+      <SgConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Delete permission"
+        message="Confirm delete?"
+        severity="danger"
+        cancelButton={cancelButton}
+        confirmButton={confirmButton}
+        onCancel={() => setLog("cancel")}
+        onConfirm={() => setLog("confirm")}
+      />
+      <p className="text-xs text-muted-foreground">last action: {log}</p>
+    </>
+  );
+}

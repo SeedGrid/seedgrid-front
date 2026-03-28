@@ -1,0 +1,17 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgNeonDigit } from "@seedgrid/fe-components";
+
+const WORDS = ["teste", "seedgrid", "your text"] as const;
+
+export default function Example() {
+  const [index, setIndex] = React.useState(0);
+
+  return (
+    <div className="space-y-3">
+      <SgNeonDigit value={WORDS[index] ?? WORDS[0]} color="#e2f6ff" backgroundColor="#101934" shadowColor="#47d1ff" />
+      <SgButton size="sm" onClick={() => setIndex((prev) => (prev + 1) % WORDS.length)}>Change text</SgButton>
+    </div>
+  );
+}

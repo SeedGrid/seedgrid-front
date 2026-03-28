@@ -1,0 +1,7 @@
+import React from "react";
+import { FileText } from "lucide-react";
+import { SgSplitButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return <SgSplitButton label="File" leftIcon={<FileText className="size-4" />} items={[{ label: "Copy" }, { separator: true, label: "Export as PDF" }]} onClick={() => {}} />;
+}

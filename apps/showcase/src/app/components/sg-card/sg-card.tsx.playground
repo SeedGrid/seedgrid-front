@@ -1,0 +1,44 @@
+import * as React from "react";
+import { SgButton, SgCard } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [cardStyle, setCardStyle] = React.useState<"default" | "outlined" | "elevated" | "flat">("default");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [collapsible, setCollapsible] = React.useState(false);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setCardStyle(cardStyle === "default" ? "outlined" : cardStyle === "outlined" ? "elevated" : cardStyle === "elevated" ? "flat" : "default")}>
+          cardStyle: {cardStyle}
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize(size === "sm" ? "md" : size === "md" ? "lg" : "sm")}>
+          size: {size}
+        </SgButton>
+        <SgButton size="sm" appearance={collapsible ? "solid" : "outline"} onClick={() => setCollapsible((prev) => !prev)}>
+          collapsible: {String(collapsible)}
+        </SgButton>
+      </div>
+
+      <SgCard
+        cardStyle={cardStyle}
+        size={size}
+        collapsible={collapsible}
+        title="Resumo financeiro"
+        description="Visao rapida de indicadores"
+        footer={<span className="text-xs text-muted-foreground">Atualizado agora</span>}
+      >
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Receita</span>
+            <span className="font-semibold">R$ 25.400</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Pedidos</span>
+            <span className="font-semibold">183</span>
+          </div>
+        </div>
+      </SgCard>
+    </div>
+  );
+}

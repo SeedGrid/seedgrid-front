@@ -1,0 +1,21 @@
+import React from "react";
+import { SgButton, SgConfirmationDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>open custom surface</SgButton>
+      <SgConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Delete permission"
+        message="Confirm delete?"
+        severity="danger"
+        customColor="#fff7ed"
+        elevation="0 0 0 1px rgba(234, 88, 12, 0.22), 0 24px 56px rgba(234, 88, 12, 0.28)"
+      />
+    </>
+  );
+}

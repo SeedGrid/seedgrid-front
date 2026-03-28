@@ -24,8 +24,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const SECTION_TITLE_KEYS = [
@@ -113,143 +113,6 @@ function buildConfirmationProps(i18n: ShowcaseI18n): ShowcasePropRow[] {
     }
   ];
 }
-
-const BASIC_CODE = `import React from "react";
-import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function BasicConfirmationExample() {
-  const [open, setOpen] = React.useState(false);
-  const [result, setResult] = React.useState("none");
-
-  return (
-    <>
-      <SgButton onClick={() => setOpen(true)}>delete permission</SgButton>
-      <SgConfirmationDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Delete permission"
-        message="Confirm delete?"
-        severity="danger"
-        onCancel={() => setResult("cancel")}
-        onConfirm={() => setResult("confirm")}
-      />
-      <p className="text-xs text-muted-foreground">result: {result}</p>
-    </>
-  );
-}`;
-
-const LEFT_ICON_CODE = `import React from "react";
-import { AlertTriangle } from "lucide-react";
-import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function LeftIconConfirmationExample() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton appearance="outline" onClick={() => setOpen(true)}>open warning</SgButton>
-      <SgConfirmationDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Unsaved changes"
-        message="You have pending updates. Do you want to continue without saving?"
-        icon={<AlertTriangle className="size-5 text-amber-600" />}
-        iconPlacement="left"
-        severity="warning"
-      />
-    </>
-  );
-}`;
-
-const TOP_ICON_CODE = `import React from "react";
-import { ShieldAlert } from "lucide-react";
-import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function TopIconConfirmationExample() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton appearance="outline" onClick={() => setOpen(true)}>open top icon</SgButton>
-      <SgConfirmationDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Sensitive action"
-        message="This operation affects all users in the selected group."
-        icon={<ShieldAlert className="size-6 text-rose-600" />}
-        iconPlacement="top"
-        severity="danger"
-      />
-    </>
-  );
-}`;
-
-const CUSTOM_BUTTONS_CODE = `import React from "react";
-import { Trash2, X } from "lucide-react";
-import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const cancelButton: SgConfirmationDialogButtonConfig = {
-  label: "No, keep it",
-  icon: <X className="size-4" />,
-  severity: "secondary",
-  appearance: "ghost"
-};
-
-const confirmButton: SgConfirmationDialogButtonConfig = {
-  label: "Yes, delete",
-  icon: <Trash2 className="size-4" />,
-  severity: "danger"
-};
-
-export default function CustomButtonsConfirmationExample() {
-  const [open, setOpen] = React.useState(false);
-  const [log, setLog] = React.useState("none");
-
-  return (
-    <>
-      <SgButton severity="danger" onClick={() => setOpen(true)}>delete row</SgButton>
-      <SgConfirmationDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Delete permission"
-        message="Confirm delete?"
-        severity="danger"
-        cancelButton={cancelButton}
-        confirmButton={confirmButton}
-        onCancel={() => setLog("cancel")}
-        onConfirm={() => setLog("confirm")}
-      />
-      <p className="text-xs text-muted-foreground">last action: {log}</p>
-    </>
-  );
-}`;
-
-const SURFACE_CODE = `import React from "react";
-import { SgButton, SgConfirmationDialog, type SgConfirmationDialogButtonConfig } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function SurfaceConfirmationExample() {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton appearance="outline" onClick={() => setOpen(true)}>open custom surface</SgButton>
-      <SgConfirmationDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Delete permission"
-        message="Confirm delete?"
-        severity="danger"
-        customColor="#fff7ed"
-        elevation="0 0 0 1px rgba(234, 88, 12, 0.22), 0 24px 56px rgba(234, 88, 12, 0.28)"
-      />
-    </>
-  );
-}`;
 
 const PLAYGROUND_APP_FILE = `import * as React from "react";
 import * as SeedGrid from "@seedgrid/fe-components";
@@ -409,7 +272,7 @@ export default function SgConfirmationDialogShowcase() {
             onConfirm={() => setBasicResult("confirm")}
           />
           <p className="text-xs text-muted-foreground">result: {basicResult}</p>
-          <CodeBlock code={BASIC_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-confirmation-dialog/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[1] ?? ""}>
@@ -423,7 +286,7 @@ export default function SgConfirmationDialogShowcase() {
             iconPlacement="left"
             severity="warning"
           />
-          <CodeBlock code={LEFT_ICON_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-confirmation-dialog/samples/icone-a-esquerda.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[2] ?? ""}>
@@ -437,7 +300,7 @@ export default function SgConfirmationDialogShowcase() {
             iconPlacement="top"
             severity="danger"
           />
-          <CodeBlock code={TOP_ICON_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-confirmation-dialog/samples/icone-no-topo.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[3] ?? ""}>
@@ -454,7 +317,7 @@ export default function SgConfirmationDialogShowcase() {
             onConfirm={() => setCustomLog("confirm")}
           />
           <p className="text-xs text-muted-foreground">last action: {customLog}</p>
-          <CodeBlock code={CUSTOM_BUTTONS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-confirmation-dialog/samples/botoes-customizados.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[4] ?? ""}>
@@ -468,7 +331,7 @@ export default function SgConfirmationDialogShowcase() {
             customColor="#fff7ed"
             elevation="0 0 0 1px rgba(234, 88, 12, 0.22), 0 24px 56px rgba(234, 88, 12, 0.28)"
           />
-          <CodeBlock code={SURFACE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-confirmation-dialog/samples/surface-customizada.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[5] ?? ""}>
@@ -476,7 +339,7 @@ export default function SgConfirmationDialogShowcase() {
             title={t(i18n, "showcase.component.confirmation.sections.playground.playgroundTitle")}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-confirmation-dialog/sg-confirmation-dialog.tsx.playground"
             height={640}
             defaultOpen
           />

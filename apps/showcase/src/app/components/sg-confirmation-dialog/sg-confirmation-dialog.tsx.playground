@@ -1,0 +1,74 @@
+import * as React from "react";
+import * as SeedGrid from "@seedgrid/fe-components";
+import { AlertTriangle, Trash2, X } from "lucide-react";
+
+const SgConfirmationDialogFromLib = (SeedGrid as Record<string, unknown>).SgConfirmationDialog as React.ComponentType<any> | undefined;
+const SgButtonFromLib = (SeedGrid as Record<string, unknown>).SgButton as React.ComponentType<any> | undefined;
+
+export default function App() {
+  const hasComponent = typeof SgConfirmationDialogFromLib === "function" && typeof SgButtonFromLib === "function";
+  const [open, setOpen] = React.useState(false);
+  const [severity, setSeverity] = React.useState<"primary" | "success" | "info" | "warning" | "danger" | "plain">("warning");
+  const [iconPlacement, setIconPlacement] = React.useState<"left" | "top">("left");
+  const [customButtons, setCustomButtons] = React.useState(false);
+  const [lastAction, setLastAction] = React.useState("none");
+
+  return (
+    <div className="space-y-4 p-2">
+      {!hasComponent ? (
+        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+          SgConfirmationDialog is not available in the published Sandpack version. Showing fallback.
+        </div>
+      ) : null}
+
+      <div className="grid gap-2 sm:grid-cols-3 text-xs">
+        <label className="inline-flex items-center gap-2">
+          <input type="checkbox" checked={customButtons} onChange={(event) => setCustomButtons(event.target.checked)} />
+          custom buttons
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block">severity</span>
+          <select className="w-full rounded border border-border px-2 py-1" value={severity} onChange={(event) => setSeverity(event.target.value as any)}>
+            <option value="plain">plain</option>
+            <option value="primary">primary</option>
+            <option value="success">success</option>
+            <option value="info">info</option>
+            <option value="warning">warning</option>
+            <option value="danger">danger</option>
+          </select>
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block">iconPlacement</span>
+          <select className="w-full rounded border border-border px-2 py-1" value={iconPlacement} onChange={(event) => setIconPlacement(event.target.value as "left" | "top")}>
+            <option value="left">left</option>
+            <option value="top">top</option>
+          </select>
+        </label>
+      </div>
+
+      {hasComponent ? (
+        <>
+          <SgButtonFromLib onClick={() => setOpen(true)}>open confirmation</SgButtonFromLib>
+          <SgConfirmationDialogFromLib
+            open={open}
+            onOpenChange={setOpen}
+            title="Delete permission"
+            message="Confirm delete?"
+            icon={<AlertTriangle className="size-5 text-amber-600" />}
+            iconPlacement={iconPlacement}
+            severity={severity}
+            cancelButton={customButtons ? { label: "No", icon: <X className="size-4" />, appearance: "ghost" } : undefined}
+            confirmButton={customButtons ? { label: "Yes", icon: <Trash2 className="size-4" />, severity: "danger" } : undefined}
+            onCancel={() => setLastAction("cancel")}
+            onConfirm={() => setLastAction("confirm")}
+          />
+          <div className="rounded border border-border bg-muted/30 px-3 py-2 text-xs">
+            last action: {lastAction}
+          </div>
+        </>
+      ) : (
+        <div className="rounded border border-border p-3 text-xs">fallback mode</div>
+      )}
+    </div>
+  );
+}

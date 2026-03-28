@@ -1,0 +1,23 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgRoller3DDigit } from "@seedgrid/fe-components";
+
+const NAMES = ["LUCIANO", "MARTA", "SEEDGRID"];
+const ITEMS = [" ", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+
+export default function Example() {
+  const [nameIndex, setNameIndex] = React.useState(0);
+  const current = (NAMES[nameIndex] ?? "").padEnd(8, " ");
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        {current.split("").map((value, index) => (
+          <SgRoller3DDigit key={index} value={value} items={ITEMS} fontSize={28} transitionMs={110} />
+        ))}
+      </div>
+      <SgButton size="sm" onClick={() => setNameIndex((prev) => (prev + 1) % NAMES.length)}>Animar nome</SgButton>
+    </div>
+  );
+}

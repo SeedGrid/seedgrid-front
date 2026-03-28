@@ -29,8 +29,8 @@ function Section(props: Readonly<{ title: string; description?: string; children
   );
 }
 
-function CodeBlock(props: Readonly<{ code: string }>) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: Readonly<{ sampleFile: string }>) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -55,354 +55,6 @@ function emitToastByType(type: SgToastType, options?: SgToastOptions) {
   if (type === "error") return toast.error(title, options);
   return toast.loading(title, { duration: options?.duration ?? 2500, ...options });
 }
-
-// ---------------------------------------------------------------------------
-// Code snippets
-// ---------------------------------------------------------------------------
-
-const WHAT_IS_CODE = `// Antes: SgToaster fixo no layout (sem prioridade)
-import {
-  SgButton,
-  SgToastHost,
-  toast,
-  type SgToastId,
-  type SgToastType,
-  type SgToastOptions,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-<SgToaster position="top-right" />
-
-// Depois: SgToastHost â€” suporta prioridade entre instÃ¢ncias
-import {
-  SgButton,
-  SgToastHost,
-  toast,
-  type SgToastId,
-  type SgToastType,
-  type SgToastOptions,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-// layout.tsx â€” host padrÃ£o
-<SgToastHost position="top-right" />
-
-// page.tsx especÃ­fica â€” substitui o host do layout automaticamente
-<SgToastHost position="bottom-center" />`;
-
-const SETUP_CODE = `import { SgToastHost, toast } from "@seedgrid/fe-components";
-
-// layout.tsx â€” mount once at root
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="pt-BR">
-      <body>
-        <SgToastHost position="top-right" />
-        {children}
-      </body>
-    </html>
-  );
-}
-
-// Any component in the app:
-toast.message("Basic message");
-toast.success("Success!");
-toast.dismiss(); // remove all toasts
-`;
-
-const PRIORITY_CODE = `// layout.tsx â€” host padrÃ£o para todas as rotas
-import {
-  SgButton,
-  SgToastHost,
-  toast,
-  type SgToastId,
-  type SgToastType,
-  type SgToastOptions,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function RootLayout({ children }) {
-  return (
-    <html><body>
-      <SgToastHost position="top-right" />
-      {children}
-    </body></html>
-  );
-}
-
-// dashboard/page.tsx â€” host da pÃ¡gina substitui o do layout
-// Enquanto o usuÃ¡rio estiver nesta pÃ¡gina, o host do layout fica INATIVO.
-import {
-  SgButton,
-  SgToastHost,
-  toast,
-  type SgToastId,
-  type SgToastType,
-  type SgToastOptions,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function DashboardPage() {
-  return (
-    <div>
-      <SgToastHost position="bottom-center" duration={6000} />
-      <DashboardContent />
-    </div>
-  );
-}`;
-
-const TYPES_CODE = `import { toast } from "@seedgrid/fe-components";
-
-toast.message("Neutral message");
-toast.success("Operation completed");
-toast.info("Important info");
-toast.warning("Attention");
-toast.error("Failed to save");
-toast.loading("Processing...");
-`;
-
-const LOADING_BY_ID_CODE = `const id = toast.loading("Exporting report...");
-
-// atualiza o mesmo toast pelo id
-toast.success("Export completed", { id });
-// ou
-toast.error("Could not export", { id });
-
-// remover todos
-toast.dismiss();
-`;
-
-const PROMISE_CODE = `await toast.promise(
-  () => saveOnServer(),
-  {
-    loading: "Saving...",
-    success: (result) => "Saved successfully: " + result.id,
-    error: (err) => "Failure: " + (err instanceof Error ? err.message : "error")
-  },
-  {
-    description: "Helper handles loading/success/error lifecycle."
-  }
-);`;
-
-const CUSTOM_CODE = `toast.warning("Item archived", {
-  description: "You can undo this action.",
-  action: {
-    label: "Undo",
-    onClick: () => toast.success("Action undone")
-  }
-});
-
-toast.custom((id) => (
-  <div className="rounded-md border border-primary/40 bg-background p-3">
-    <div className="text-sm font-semibold">Custom toast</div>
-    <button onClick={() => toast.dismiss(id)}>Close</button>
-  </div>
-));`;
-
-const OPTIONS_CODE = `toast.info("Toast with options", {
-  description: "Long duration, no close button, custom style.",
-  duration: 10000,
-  closeButton: false,
-  className: "border-[#c56a2d]",
-  style: {
-    background: "#fff7f1",
-    color: "#5b3b23"
-  }
-});`;
-
-const TRANSPARENCY_CODE = `import { SgToastHost, toast } from "@seedgrid/fe-components";
-
-<SgToastHost transparency={80} />;
-
-toast.success("All good!");
-toast.warning("Attention!");
-toast.error("Failed!");
-`;
-
-const CUSTOM_COLORS_CODE = `import { SgToastHost, toast } from "@seedgrid/fe-components";
-
-<SgToastHost
-  customColors={{
-    default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
-    success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
-    info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
-    warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
-    error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
-    loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
-  }}
-/>;
-
-toast.message("Default message");
-toast.warning("Attention!");
-`;
-
-const POSITIONING_CODE = `// Todas as posiÃ§Ãµes disponÃ­veis
-<SgToastHost position="top-left" />
-<SgToastHost position="top-center" />
-<SgToastHost position="top-right" />    {/* default */}
-<SgToastHost position="bottom-left" />
-<SgToastHost position="bottom-center" />
-<SgToastHost position="bottom-right" />`;
-
-const PLAYGROUND_APP_FILE = `import * as React from "react";
-import {
-  SgButton,
-  SgToastHost,
-  toast,
-  type SgToastId,
-  type SgToastType,
-  type SgToastOptions,
-  SgStack,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const positions = [
-  "top-right",
-  "top-left",
-  "top-center",
-  "bottom-right",
-  "bottom-left",
-  "bottom-center"
-];
-
-export default function App() {
-  const [position, setPosition] = React.useState("top-right");
-  const [duration, setDuration] = React.useState(3500);
-  const [visibleToasts, setVisibleToasts] = React.useState(4);
-  const [closeButton, setCloseButton] = React.useState(true);
-  const [richColors, setRichColors] = React.useState(true);
-  const [transparency, setTransparency] = React.useState(0);
-  const [customPalette, setCustomPalette] = React.useState(false);
-
-  const toasterCustomColors = customPalette
-    ? {
-        default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
-        success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
-        info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
-        warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
-        error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
-        loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
-      }
-    : undefined;
-
-  const resolveToastVisual = (type) => {
-    const alpha = 1 - Math.max(0, Math.min(100, transparency)) / 100;
-    const colors = toasterCustomColors?.[type];
-    const style = {};
-
-    if (alpha < 1) style.opacity = alpha;
-    if (colors?.bg) style.backgroundColor = colors.bg;
-    if (colors?.fg) style.color = colors.fg;
-    if (colors?.border) style.borderColor = colors.border;
-
-    return Object.keys(style).length > 0 ? { style } : {};
-  };
-
-  return (
-    <div className="space-y-3">
-      <SgToastHost
-        position={position}
-        duration={duration}
-        visibleToasts={visibleToasts}
-        closeButton={closeButton}
-        richColors={richColors}
-        transparency={transparency}
-        customColors={toasterCustomColors}
-      />
-
-      <SgStack direction="row" wrap gap={8} align="center">
-        <label className="text-sm">
-          Position:
-          <select
-            className="ml-2 rounded border px-2 py-1 text-xs"
-            value={position}
-            onChange={(e) => setPosition(e.target.value)}
-          >
-            {positions.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-
-        <label className="text-sm">
-          Duration:
-          <input
-            className="ml-2 w-24 rounded border px-2 py-1 text-xs"
-            type="number"
-            min={500}
-            step={500}
-            value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
-          />
-        </label>
-
-        <label className="text-sm">
-          Visible:
-          <input
-            className="ml-2 w-16 rounded border px-2 py-1 text-xs"
-            type="number"
-            min={1}
-            max={10}
-            value={visibleToasts}
-            onChange={(e) => setVisibleToasts(Number(e.target.value))}
-          />
-        </label>
-
-        <label className="text-sm">
-          <input
-            className="mr-1"
-            type="checkbox"
-            checked={closeButton}
-            onChange={(e) => setCloseButton(e.target.checked)}
-          />
-          closeButton
-        </label>
-
-        <label className="text-sm">
-          <input
-            className="mr-1"
-            type="checkbox"
-            checked={richColors}
-            onChange={(e) => setRichColors(e.target.checked)}
-          />
-          richColors
-        </label>
-
-        <label className="text-sm">
-          Transparency:
-          <input
-            className="ml-2 w-20 rounded border px-2 py-1 text-xs"
-            type="number"
-            min={0}
-            max={90}
-            step={5}
-            value={transparency}
-            onChange={(e) => setTransparency(Number(e.target.value))}
-          />
-        </label>
-
-        <label className="text-sm">
-          <input
-            className="mr-1"
-            type="checkbox"
-            checked={customPalette}
-            onChange={(e) => setCustomPalette(e.target.checked)}
-          />
-          customColors
-        </label>
-      </SgStack>
-
-      <SgStack direction="row" wrap gap={8}>
-        <SgButton onClick={() => toast.message("Default message", resolveToastVisual("default"))}>Message</SgButton>
-        <SgButton severity="success" onClick={() => toast.success("All good!", resolveToastVisual("success"))}>Success</SgButton>
-        <SgButton severity="info" onClick={() => toast.info("Info", resolveToastVisual("info"))}>Info</SgButton>
-        <SgButton severity="warning" onClick={() => toast.warning("Attention!", resolveToastVisual("warning"))}>Warning</SgButton>
-        <SgButton severity="danger" onClick={() => toast.error("Failed!", resolveToastVisual("error"))}>Error</SgButton>
-        <SgButton appearance="outline" onClick={() => toast.loading("Loading...", { duration: 2500, ...resolveToastVisual("loading") })}>Loading</SgButton>
-        <SgButton appearance="outline" onClick={() => toast.dismiss()}>Dismiss all</SgButton>
-      </SgStack>
-    </div>
-  );
-}`;
 
 // ---------------------------------------------------------------------------
 // Props
@@ -550,7 +202,7 @@ export default function SgToastHostShowcase() {
             <p><strong>SgToaster</strong> â€” renderiza toasts no local onde Ã© colocado, sem nenhuma lÃ³gica de prioridade.</p>
             <p><strong>SgToastHost</strong> â€” igual ao SgToaster, mas se registra globalmente. Se houver dois hosts na Ã¡rvore ao mesmo tempo, o mais profundo (mais prÃ³ximo do conteÃºdo atual) fica ativo. O host do layout Ã© desativado automaticamente enquanto o da pÃ¡gina estiver montado.</p>
           </div>
-          <CodeBlock code={WHAT_IS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/o-que-e-o-sg-toast-host.tsx.sample" />
         </Section>
 
         {/* 2 */}
@@ -563,7 +215,7 @@ export default function SgToastHostShowcase() {
             <SgButton severity="success" onClick={() => toast.success("Success!")}>toast.success</SgButton>
             <SgButton appearance="outline" onClick={() => toast.dismiss()}>toast.dismiss (all)</SgButton>
           </div>
-          <CodeBlock code={SETUP_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/base-setup.tsx.sample" />
         </Section>
 
         {/* 3 */}
@@ -580,7 +232,7 @@ export default function SgToastHostShowcase() {
               <li>Nova pÃ¡gina com host prÃ³prio monta â†’ ela passa a ser ativa imediatamente.</li>
             </ol>
           </div>
-          <CodeBlock code={PRIORITY_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/prioridade-layout-vs-pagina.tsx.sample" />
         </Section>
 
         {/* 4 */}
@@ -596,7 +248,7 @@ export default function SgToastHostShowcase() {
             <SgButton severity="danger" onClick={() => toast.error("Failed to save")}>error</SgButton>
             <SgButton appearance="outline" onClick={() => toast.loading("Processing...")}>loading</SgButton>
           </div>
-          <CodeBlock code={TYPES_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/toast-types.tsx.sample" />
         </Section>
 
         {/* 5 */}
@@ -613,7 +265,7 @@ export default function SgToastHostShowcase() {
               loadingId: <code>{loadingId ?? "none"}</code>
             </span>
           </div>
-          <CodeBlock code={LOADING_BY_ID_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/loading-by-id-update-same-toast.tsx.sample" />
         </Section>
 
         {/* 6 */}
@@ -624,7 +276,7 @@ export default function SgToastHostShowcase() {
           <div className="flex flex-wrap gap-2">
             <SgButton onClick={runPromiseDemo}>Run promise demo</SgButton>
           </div>
-          <CodeBlock code={PROMISE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/toast-promise.tsx.sample" />
         </Section>
 
         {/* 7 */}
@@ -636,7 +288,7 @@ export default function SgToastHostShowcase() {
             <SgButton severity="warning" onClick={runActionDemo}>Toast with action</SgButton>
             <SgButton appearance="outline" onClick={runCustomDemo}>Custom toast</SgButton>
           </div>
-          <CodeBlock code={CUSTOM_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/actions-and-custom-toast.tsx.sample" />
         </Section>
 
         {/* 8 */}
@@ -647,7 +299,7 @@ export default function SgToastHostShowcase() {
           <div className="flex flex-wrap gap-2">
             <SgButton onClick={runOptionsDemo}>Trigger toast with options</SgButton>
           </div>
-          <CodeBlock code={OPTIONS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/options-per-toast.tsx.sample" />
         </Section>
 
         {/* 9 */}
@@ -664,7 +316,7 @@ export default function SgToastHostShowcase() {
             <SgButton appearance="outline" onClick={() => runTransparencyByType("loading")}>loading</SgButton>
             <SgButton appearance="outline" onClick={() => toast.dismiss()}>dismiss all</SgButton>
           </div>
-          <CodeBlock code={TRANSPARENCY_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/transparency.tsx.sample" />
         </Section>
 
         {/* 10 */}
@@ -681,7 +333,7 @@ export default function SgToastHostShowcase() {
             <SgButton appearance="outline" onClick={() => runCustomColorsByType("loading")}>loading</SgButton>
             <SgButton appearance="outline" onClick={() => toast.dismiss()}>dismiss all</SgButton>
           </div>
-          <CodeBlock code={CUSTOM_COLORS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/custom-colors.tsx.sample" />
         </Section>
 
         {/* 11 */}
@@ -700,7 +352,7 @@ export default function SgToastHostShowcase() {
               </SgButton>
             ))}
           </div>
-          <CodeBlock code={POSITIONING_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toast-host/samples/posicionamento.tsx.sample" />
         </Section>
 
         {/* 12 */}
@@ -712,7 +364,7 @@ export default function SgToastHostShowcase() {
             title="SgToastHost Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-toast-host/sg-toast-host.tsx.playground"
             height={560}
             defaultOpen
           />

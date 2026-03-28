@@ -1,0 +1,29 @@
+import * as React from "react";
+import { SgBadge, SgButton } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "warning" | "danger" | "info" | "neutral">("primary");
+  const [badgeStyle, setBadgeStyle] = React.useState<"solid" | "soft" | "outline" | "ghost">("solid");
+  const [dot, setDot] = React.useState(false);
+  const [value, setValue] = React.useState("Novo");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("warning")}>warning</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setBadgeStyle("solid")}>solid</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setBadgeStyle("soft")}>soft</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setBadgeStyle("outline")}>outline</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setBadgeStyle("ghost")}>ghost</SgButton>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <input value={value} onChange={(e) => setValue(e.target.value)} className="rounded border border-border px-2 py-1 text-sm" />
+        <label className="inline-flex items-center gap-2 text-xs"><input type="checkbox" checked={dot} onChange={(e) => setDot(e.target.checked)} /> dot</label>
+      </div>
+      <SgBadge value={dot ? undefined : value} severity={severity} badgeStyle={badgeStyle} dot={dot} />
+    </div>
+  );
+}

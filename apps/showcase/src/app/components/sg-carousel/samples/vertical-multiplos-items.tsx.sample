@@ -1,0 +1,12 @@
+<SgGrid columns={1} justify="center">
+  <div className="h-96 w-80">
+    <SgCarousel
+      items={createCarouselItems()}
+      numVisible={3}
+      numScroll={1}
+      orientation="vertical"
+      height="100%"
+      gap={8}
+    />
+  </div>
+</SgGrid>

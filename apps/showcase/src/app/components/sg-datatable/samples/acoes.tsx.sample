@@ -1,0 +1,97 @@
+import React from "react";
+import { SgButton, SgConfirmationDialog, SgDatatable, SgGrid, type SgDatatableColumn } from "@seedgrid/fe-components";
+import { Pencil, Trash2 } from "lucide-react";
+
+type PermissionRow = {
+  id: number;
+  name: string;
+  description: string;
+};
+
+const PERMISSION_ROWS: PermissionRow[] = [
+  { id: 1, name: "PERMIT_GET_ALL_SECRETS", description: "Permission to retrieve all secrets." },
+  { id: 2, name: "PERMIT_GET_SECRET_BY_ID", description: "Permission to retrieve a secret by its ID." },
+  { id: 3, name: "PERMIT_GET_SECRET_BY_NAME", description: "Permission to retrieve a secret by its name." },
+  { id: 4, name: "PERMIT_CREATE_NEW_SECRET", description: "Permission to create a new secret." },
+  { id: 5, name: "PERMIT_UPDATE_SECRET", description: "Permission to update an existing secret." },
+  { id: 6, name: "PERMIT_DELETE_SECRET", description: "Permission to delete a secret." },
+  { id: 7, name: "PERMIT_GET_ALL_USERS", description: "Permission to retrieve all users." },
+  { id: 8, name: "PERMIT_GET_USER_BY_ID", description: "Permission to retrieve a user by ID." },
+  { id: 9, name: "PERMIT_GET_USER_BY_NAME", description: "Permission to retrieve a user by name." },
+  { id: 10, name: "PERMIT_GET_USER_BY_EMAIL", description: "Permission to retrieve a user by email." },
+  { id: 11, name: "PERMIT_CREATE_USER", description: "Permission to create a user." },
+  { id: 12, name: "PERMIT_DISABLE_USER", description: "Permission to disable a user account." }
+];
+
+export default function ActionsDatatableExample() {
+  const [permissionRows, setPermissionRows] = React.useState<PermissionRow[]>(PERMISSION_ROWS);
+  const [lastPermissionAction, setLastPermissionAction] = React.useState("none");
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
+  const [pendingDelete, setPendingDelete] = React.useState<PermissionRow | null>(null);
+
+  const permissionColumns = React.useMemo<SgDatatableColumn<PermissionRow>[]>(() => [
+    { field: "id", header: "ID", sortable: true, align: "left", width: 80 },
+    { field: "name", header: "Name", sortable: true },
+    { field: "description", header: "Description", sortable: true },
+    {
+      header: "Actions",
+      align: "center",
+      width: 120,
+      body: (row) => (
+        <SgGrid columns={2} gap={6} className="mx-auto max-w-[76px]">
+          <SgButton size="sm" appearance="ghost" severity="secondary" iconOnly leftIcon={<Pencil className="size-4" />} aria-label={`Edit ${row.name}`} title={`Edit ${row.name}`} onClick={() => setLastPermissionAction(`edit: ${row.name}`)} />
+          <SgButton
+            size="sm"
+            appearance="ghost"
+            severity="danger"
+            iconOnly
+            leftIcon={<Trash2 className="size-4" />}
+            aria-label={`Delete ${row.name}`}
+            title={`Delete ${row.name}`}
+            onClick={() => {
+              setPendingDelete(row);
+              setConfirmDeleteOpen(true);
+            }}
+          />
+        </SgGrid>
+      )
+    }
+  ], []);
+
+  return (
+    <>
+      <SgDatatable
+        id="datatable-actions"
+        title="Permissions with row actions"
+        value={permissionRows}
+        columns={permissionColumns}
+        dataKey="id"
+        paginator
+        rows={4}
+        rowsPerPageOptions={[4, 8]}
+        showGridlines
+      />
+      <SgConfirmationDialog
+        open={confirmDeleteOpen}
+        onOpenChange={setConfirmDeleteOpen}
+        closeOnOverlayClick={false}
+        severity="danger"
+        title="Delete permission"
+        message={pendingDelete ? `Confirm delete ${pendingDelete.name}?` : "Confirm delete?"}
+        confirmButton={{ label: "Delete", icon: <Trash2 className="size-4" />, severity: "danger" }}
+        onCancel={() => {
+          setConfirmDeleteOpen(false);
+          setPendingDelete(null);
+        }}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          setPermissionRows((prev) => prev.filter((item) => item.id !== pendingDelete.id));
+          setLastPermissionAction(`delete: ${pendingDelete.name}`);
+          setConfirmDeleteOpen(false);
+          setPendingDelete(null);
+        }}
+      />
+      <p className="text-xs text-muted-foreground">last action: {lastPermissionAction}</p>
+    </>
+  );
+}

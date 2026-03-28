@@ -23,8 +23,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code.trimStart()} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const CURRENCY_EDIT_PLAYGROUND_CODE = `import * as React from "react";
@@ -402,19 +402,7 @@ export default function SgInputCurrencyPage() {
             {t(i18n, "showcase.component.currencyEdit.labels.currentValue", { value: basicValue })}
           </p>
         </form>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-basic"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.value")}"
-  name="total"
-  register={register}
-  currency="BRL"
-/>
-
-<SgButton type="submit" size="sm" appearance="outline">
-  ${t(i18n, "showcase.component.currencyEdit.actions.submit")}
-</SgButton>
-
-<p>${t(i18n, "showcase.component.currencyEdit.labels.currentValue", { value: watchValueSnippet })}</p>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/basico.tsx.sample" />
       </Section>
 
       <Section
@@ -443,24 +431,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-required"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.required")}"
-  required
-  name="required"
-  register={register}
-  currency="BRL"
-/>
-
-<SgInputCurrency
-  id="demo-required-custom"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.customMessage")}"
-  required
-  requiredMessage="${t(i18n, "showcase.component.currencyEdit.messages.requiredCustom")}"
-  name="requiredCustom"
-  register={register}
-  currency="BRL"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/obrigatorio.tsx.sample" />
       </Section>
 
       <Section
@@ -497,29 +468,7 @@ export default function SgInputCurrencyPage() {
             </SgButton>
           </SgGrid>
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-controlled"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.controlled")}"
-  name="controlled"
-  control={control}
-  currency="BRL"
-/>
-
-<SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
-  <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "12345.00")}>
-    ${t(i18n, "showcase.component.currencyEdit.actions.setApi")}
-  </SgButton>
-
-  <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "0.00")}>
-    ${t(i18n, "showcase.component.currencyEdit.actions.reset")}
-  </SgButton>
-
-  <SgButton size="sm" appearance="outline" severity="danger" onClick={() => setValue("controlled", "")}>
-    ${t(i18n, "showcase.component.currencyEdit.actions.clear")}
-  </SgButton>
-</SgGrid>
-
-<p>${t(i18n, "showcase.component.currencyEdit.labels.currentState")}: "{watch("controlled")}"</p>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/controlado.tsx.sample" />
       </Section>
 
       <Section
@@ -547,18 +496,7 @@ export default function SgInputCurrencyPage() {
             {validationMsg === null ? t(i18n, "showcase.component.currencyEdit.labels.valid") : `"${validationMsg}"`}
           </p>
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-validation"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.minimum")}"
-  name="validation"
-  register={register}
-  currency="BRL"
-  validation={(v) => {
-    const n = Number(v);
-    return Number.isFinite(n) && n >= 1000 ? null : "${t(i18n, "showcase.component.currencyEdit.messages.min1000")}";
-  }}
-  onValidation={(msg) => console.log(msg)}
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/validacao-customizada.tsx.sample" />
       </Section>
 
       <Section
@@ -596,32 +534,7 @@ export default function SgInputCurrencyPage() {
             locale="pt-PT"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-brl"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.brl")}"
-  name="total"
-  register={register}
-  currency="BRL"
-  locale="pt-BR"
-/>
-
-<SgInputCurrency
-  id="demo-usd"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.usd")}"
-  name="usd"
-  register={register}
-  currency="USD"
-  locale="en-US"
-/>
-
-<SgInputCurrency
-  id="demo-eur"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.eur")}"
-  name="eur"
-  register={register}
-  currency="EUR"
-  locale="pt-PT"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/moeda.tsx.sample" />
       </Section>
 
       <Section
@@ -650,24 +563,7 @@ export default function SgInputCurrencyPage() {
             currencySymbolPlacement="suffix"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-no-symbol"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.noSymbol")}"
-  name="noSymbol"
-  register={register}
-  currency="BRL"
-  showCurrencySymbol={false}
-/>
-
-<SgInputCurrency
-  id="demo-code"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.codeSuffix")}"
-  name="codeSuffix"
-  register={register}
-  currency="USD"
-  currencyDisplay="code"
-  currencySymbolPlacement="suffix"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/simbolo.tsx.sample" />
       </Section>
 
       <Section
@@ -726,17 +622,7 @@ export default function SgInputCurrencyPage() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-iconbtns"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.copyValue")}"
-  name="iconbtns"
-  register={register}
-  currency="BRL"
-  iconButtons={[
-    <SgButton key="copy" type="button" iconOnly size="sm" appearance="ghost" onClick={() => navigator.clipboard.writeText(iconBtnValue ?? "")} leftIcon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>} />,
-    <SgButton key="alert" type="button" iconOnly size="sm" appearance="ghost" onClick={() => alert("ok")} leftIcon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>} />
-  ]}
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/botoes-de-icone.tsx.sample" />
       </Section>
 
       <Section
@@ -754,14 +640,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-no-negative"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.positiveOnly")}"
-  name="positivo"
-  register={register}
-  allowNegative={false}
-  currency="BRL"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/sem-negativos.tsx.sample" />
       </Section>
 
       <Section
@@ -779,14 +658,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-no-decimals"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.quantity")}"
-  name="inteiro"
-  register={register}
-  decimals={0}
-  currency="BRL"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/sem-decimais.tsx.sample" />
       </Section>
 
       <Section
@@ -805,15 +677,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-minmax"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.minMax")}"
-  name="minmax"
-  register={register}
-  minValue={10}
-  maxValue={100}
-  currency="BRL"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/minimo-e-maximo.tsx.sample" />
       </Section>
 
       <Section
@@ -831,14 +695,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-empty"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.canBeEmpty")}"
-  name="vazio"
-  register={register}
-  emptyValue="null"
-  currency="BRL"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/valor-vazio.tsx.sample" />
       </Section>
 
       <Section
@@ -866,8 +723,7 @@ export default function SgInputCurrencyPage() {
             currency="BRL"
           />
         </div>
-        <CodeBlock code={`<SgInputCurrency id="demo-noborder" label="${t(i18n, "showcase.component.currencyEdit.labels.noBorder")}" withBorder={false} name="noborder" register={register} currency="BRL" />
-<SgInputCurrency id="demo-filled" label="${t(i18n, "showcase.component.currencyEdit.labels.filled")}" filled name="filled" register={register} currency="BRL" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/variacoes-visuais.tsx.sample" />
       </Section>
 
       <Section
@@ -914,41 +770,7 @@ export default function SgInputCurrencyPage() {
             {standaloneSaveResult ? <code className="rounded bg-muted px-1">{standaloneSaveResult}</code> : "-"}
           </p>
         </div>
-        <CodeBlock code={`import React from "react";
-import { SgButton, SgInputCurrency, SgGrid } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const refA = React.useRef<HTMLInputElement | null>(null);
-  const refB = React.useRef<HTMLInputElement | null>(null);
-  const refC = React.useRef<HTMLInputElement | null>(null);
-
-  React.useEffect(() => {
-    if (refA.current) refA.current.value = "1200.00";
-    if (refB.current) refB.current.value = "55.90";
-    if (refC.current) refC.current.value = "980.00";
-  }, []);
-
-  const handleSave = () => {
-    const payload = {
-      a: refA.current?.value ?? "",
-      b: refB.current?.value ?? "",
-      c: refC.current?.value ?? ""
-    };
-    console.log("Salvar:", payload);
-  };
-
-  return (
-    <div className="space-y-3">
-      <SgInputCurrency id="a" label="${t(i18n, "showcase.component.currencyEdit.labels.entry1")}" currency="BRL" inputProps={{ ref: refA }} />
-      <SgInputCurrency id="b" label="${t(i18n, "showcase.component.currencyEdit.labels.entry2")}" currency="BRL" inputProps={{ ref: refB }} />
-      <SgInputCurrency id="c" label="${t(i18n, "showcase.component.currencyEdit.labels.entry3")}" currency="BRL" inputProps={{ ref: refC }} />
-      <SgButton type="button" size="sm" appearance="outline" onClick={handleSave}>
-        ${t(i18n, "showcase.component.currencyEdit.actions.save")}
-      </SgButton>
-    </div>
-  );
-}`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/standalone.tsx.sample" />
       </Section>
 
       <Section
@@ -978,17 +800,7 @@ export default function Example() {
             )}
           </div>
         </div>
-        <CodeBlock code={`<SgInputCurrency
-  id="demo-events"
-  label="${t(i18n, "showcase.component.currencyEdit.labels.typeAndLog")}"
-  required
-  currency="BRL"
-  onChange={(v) => console.log("onChange:", v)}
-  onEnter={() => console.log("focus")}
-  onExit={() => console.log("blur")}
-  onClear={() => console.log("cleared")}
-  onValidation={(msg) => console.log("validation:", msg)}
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/eventos.tsx.sample" />
       </Section>
 
       <Section
@@ -1015,10 +827,7 @@ export default function Example() {
             currency="BRL"
           />
         </SgGrid>
-        <CodeBlock code={`<SgGrid columns={{ base: 1, sm: 2 }} gap={16}>
-  <SgInputCurrency id="demo-w200" label="${t(i18n, "showcase.component.currencyEdit.labels.width200")}" width={200} name="w200" register={register} currency="BRL" />
-  <SgInputCurrency id="demo-w300" label="${t(i18n, "showcase.component.currencyEdit.labels.width300Rounded")}" width={300} borderRadius={20} name="w300" register={register} currency="BRL" />
-</SgGrid>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-input-currency/samples/largura-e-borda.tsx.sample" />
       </Section>
 
       <Section
@@ -1030,7 +839,7 @@ export default function Example() {
           title="SgInputCurrency Playground"
           interactive
           codeContract="appFile"
-          code={CURRENCY_EDIT_PLAYGROUND_CODE}
+          playgroundFile="apps/showcase/src/app/components/sg-input-currency/sg-input-currency.tsx.playground"
           height={780}
           defaultOpen
         />

@@ -1,0 +1,18 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <SgInputCurrency
+      id="demo-no-negative"
+      label="Somente positivo"
+      name="positivo"
+      register={register}
+      allowNegative={false}
+      currency="BRL"
+    />
+  );
+}

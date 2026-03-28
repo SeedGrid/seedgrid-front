@@ -1,0 +1,9 @@
+<div className="h-64">
+  <SgCarousel
+    items={createCarouselItems()}
+    numVisible={3}
+    numScroll={1}
+    orientation="horizontal"
+    height="100%"
+  />
+</div>

@@ -1,0 +1,26 @@
+"use client";
+
+import { SgButton, SgToaster, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToaster transparency={80} />
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => toast.message("Default")}>default</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("Success")}>
+          success
+        </SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Info")}>
+          info
+        </SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Warning")}>
+          warning
+        </SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Error")}>
+          error
+        </SgButton>
+      </div>
+    </div>
+  );
+}

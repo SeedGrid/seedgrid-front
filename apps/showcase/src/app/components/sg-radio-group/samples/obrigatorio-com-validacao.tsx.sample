@@ -1,0 +1,31 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgRadioGroup, SgButton, type SgRadioGroupOption } from "@seedgrid/fe-components";
+import { Mail, Phone, Home } from "lucide-react";
+
+const CONTACT_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Email", value: "email", icon: <Mail className="w-4 h-4" /> },
+  { label: "Phone", value: "phone", icon: <Phone className="w-4 h-4" /> },
+  { label: "In person", value: "in-person", icon: <Home className="w-4 h-4" /> }
+];
+
+export default function Example() {
+  const { control, handleSubmit } = useForm();
+
+  const onSubmit = (data: unknown) => {
+    alert(`Dados do formulario: ${JSON.stringify(data, null, 2)}`);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <SgRadioGroup
+        name="preference"
+        title="Contact preference *"
+        source={CONTACT_OPTIONS}
+        control={control}
+        required
+      />
+      <SgButton type="submit">Submit</SgButton>
+    </form>
+  );
+}

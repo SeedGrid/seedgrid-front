@@ -1,0 +1,27 @@
+"use client";
+
+import React from "react";
+import { SgDiscardDigit, SgInputText } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState("42");
+  const [color, setColor] = React.useState("#0f172a");
+  const [backgroundColor, setBackgroundColor] = React.useState("#f8fafc");
+  const [fontSize, setFontSize] = React.useState(58);
+  const [stackDepth, setStackDepth] = React.useState(8);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-3 md:grid-cols-3">
+        <SgInputText id="discard-value" label="Value" value={value} onChange={setValue} />
+        <SgInputText id="discard-color" label="Color" value={color} onChange={setColor} />
+        <SgInputText id="discard-background" label="BackgroundColor" value={backgroundColor} onChange={setBackgroundColor} />
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="text-sm">fontSize:<input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} /></label>
+        <label className="text-sm">stackDepth:<input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={stackDepth} onChange={(e) => setStackDepth(Number(e.target.value))} /></label>
+      </div>
+      <SgDiscardDigit value={value} color={color} backgroundColor={backgroundColor} fontSize={fontSize} stackDepth={stackDepth} font={'"Inter", "Segoe UI", sans-serif'} />
+    </div>
+  );
+}

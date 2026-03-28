@@ -1,0 +1,9 @@
+import { SgComponentsI18nProvider, componentsMessagesEnUs } from "@seedgrid/fe-components";
+
+export default function App() {
+  return (
+    <SgComponentsI18nProvider locale="en-US" messages={componentsMessagesEnUs}>
+      <div>todos os componentes dentro usarao en-US</div>
+    </SgComponentsI18nProvider>
+  );
+}

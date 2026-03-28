@@ -1,0 +1,42 @@
+"use client";
+
+import React from "react";
+import { SgRadialGauge, SgButton } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState(62);
+  const [ringThickness, setRingThickness] = React.useState(18);
+  const [showTicks, setShowTicks] = React.useState(true);
+  const [showLabels, setShowLabels] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setShowTicks((prev) => !prev)}>toggle ticks</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShowLabels((prev) => !prev)}>toggle labels</SgButton>
+      </div>
+      <label className="text-sm">ringThickness:<input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={ringThickness} onChange={(e) => setRingThickness(Number(e.target.value))} /></label>
+      <SgRadialGauge
+        min={0}
+        max={100}
+        value={value}
+        onValueChange={setValue}
+        startAngle={140}
+        endAngle={40}
+        ringThickness={ringThickness}
+        showTicks={showTicks}
+        showLabels={showLabels}
+        majorTickCount={5}
+        minorTicksPerInterval={2}
+        primaryPointerDraggable
+        primaryPointerType="needle"
+        primaryPointerColor="#2563eb"
+        ranges={[
+          { start: 0, end: 40, color: "#22c55e", width: 14 },
+          { start: 40, end: 75, color: "#f59e0b", width: 14 },
+          { start: 75, end: 100, color: "#ef4444", width: 14 }
+        ]}
+      />
+    </div>
+  );
+}

@@ -1,0 +1,14 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+
+const FRUIT_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+  { label: "Orange", value: "orange" },
+  { label: "Uva", value: "grape" }
+];
+
+export default function Example() {
+  const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>(null);
+  return <SgRadioGroup id="horizontal" title="Select a fruit" source={FRUIT_OPTIONS} orientation="horizontal" value={selectedFruit ?? undefined} onChange={setSelectedFruit} />;
+}

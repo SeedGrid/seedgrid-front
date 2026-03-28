@@ -1,0 +1,11 @@
+import * as React from "react";
+import { SgGrid, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
+      <SgRating label="Read-only" value={3.5} allowHalf readOnly />
+      <SgRating label="Desabilitado" value={2} disabled />
+    </SgGrid>
+  );
+}

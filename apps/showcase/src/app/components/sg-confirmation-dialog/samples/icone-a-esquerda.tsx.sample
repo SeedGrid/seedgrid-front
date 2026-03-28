@@ -1,0 +1,22 @@
+import React from "react";
+import { AlertTriangle } from "lucide-react";
+import { SgButton, SgConfirmationDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>open warning</SgButton>
+      <SgConfirmationDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Unsaved changes"
+        message="You have pending updates. Do you want to continue without saving?"
+        icon={<AlertTriangle className="size-5 text-amber-600" />}
+        iconPlacement="left"
+        severity="warning"
+      />
+    </>
+  );
+}

@@ -1,0 +1,25 @@
+// Buttons
+--sg-btn-primary-bg
+--sg-btn-primary-fg
+--sg-btn-primary-border
+--sg-btn-primary-hover-bg
+--sg-btn-primary-ring
+
+// Inputs
+--sg-input-bg
+--sg-input-fg
+--sg-input-border
+--sg-input-border-hover
+--sg-input-border-focus
+--sg-input-ring
+
+// Cards
+--sg-card-bg
+--sg-card-fg
+--sg-card-border
+--sg-card-header-bg
+
+// Alerts
+--sg-alert-success-bg
+--sg-alert-success-fg
+--sg-alert-success-border

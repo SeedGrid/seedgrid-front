@@ -30,8 +30,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 type PickListTexts = {
@@ -337,79 +337,6 @@ const ROADMAP_SOURCE: SgPickListItem[] = [
   { label: "Billing", value: "billing" }
 ];
 
-const PLAYGROUND_APP_FILE = `import * as React from "react";
-import * as SeedGrid from "@seedgrid/fe-components";
-
-const SgPickListFromLib = (SeedGrid as Record<string, unknown>).SgPickList as
-  | React.ComponentType<any>
-  | undefined;
-
-const SOURCE = [
-  { label: "Alpha", value: "alpha" },
-  { label: "Beta", value: "beta" },
-  { label: "Gamma", value: "gamma" },
-  { label: "Delta", value: "delta" }
-];
-
-export default function App() {
-  const hasComponent = typeof SgPickListFromLib === "function";
-  const [value, setValue] = React.useState({ source: SOURCE, target: [] });
-  const [showSourceFilter, setShowSourceFilter] = React.useState(false);
-  const [showTargetFilter, setShowTargetFilter] = React.useState(false);
-
-  return (
-    <div className="space-y-4 p-2">
-      {!hasComponent ? (
-        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgPickList is not available in the published Sandpack version. Showing fallback.
-        </div>
-      ) : null}
-
-      <div className="grid gap-2 sm:grid-cols-2 text-xs">
-        <label className="inline-flex items-center gap-2">
-          <input type="checkbox" checked={showSourceFilter} onChange={(event) => setShowSourceFilter(event.target.checked)} />
-          showSourceFilter
-        </label>
-        <label className="inline-flex items-center gap-2">
-          <input type="checkbox" checked={showTargetFilter} onChange={(event) => setShowTargetFilter(event.target.checked)} />
-          showTargetFilter
-        </label>
-      </div>
-
-      <div className="rounded border border-border p-4">
-        {hasComponent ? (
-          <SgPickListFromLib
-            id="picklist-playground"
-            title="Playground"
-            source={SOURCE}
-            target={[]}
-            value={value}
-            onChange={(event: { source: any[]; target: any[] }) => setValue({ source: event.source, target: event.target })}
-            showSourceFilter={showSourceFilter}
-            showTargetFilter={showTargetFilter}
-          />
-        ) : (
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="rounded border border-border p-2">
-              <p className="mb-1 font-semibold">Source</p>
-              <ul className="space-y-1">
-                {value.source.map((item) => <li key={item.value}>{item.label}</li>)}
-              </ul>
-            </div>
-            <div className="rounded border border-border p-2">
-              <p className="mb-1 font-semibold">Target</p>
-              <ul className="space-y-1">
-                {value.target.map((item) => <li key={item.value}>{item.label}</li>)}
-              </ul>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-`;
-
 export default function SgPickListShowcase() {
   const i18n = useShowcaseI18n();
   const locale: keyof typeof PICK_LIST_TEXTS = isSupportedPickListLocale(i18n.locale) ? i18n.locale : "en-US";
@@ -508,33 +435,7 @@ export default function SgPickListShowcase() {
           <p className="text-sm text-[rgb(var(--sg-muted))]">
             {texts.currentStateLabel}: source [{basicValue.source.length}] | target [{basicValue.target.length}]
           </p>
-          <CodeBlock
-            code={`const ROADMAP_SOURCE = [
-  { label: "Authentication", value: "auth" },
-  { label: "Dashboard", value: "dashboard" },
-  { label: "Notifications", value: "notifications" },
-  { label: "Audit logs", value: "audit" },
-  { label: "Billing", value: "billing" }
-];
-
-const [basicValue, setBasicValue] = React.useState({
-  source: ROADMAP_SOURCE,
-  target: [] as SgPickListItem[]
-});
-
-<SgPickList
-  id="pick-basic"
-  title="Roadmap planning"
-  source={ROADMAP_SOURCE}
-  target={[]}
-  value={basicValue}
-  onChange={(event) => setBasicValue({ source: event.source, target: event.target })}
-/>
-
-<p className="text-sm text-[rgb(var(--sg-muted))]">
-  {texts.currentStateLabel}: source [{basicValue.source.length}] | target [{basicValue.target.length}]
-</p>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[1]}>
@@ -550,31 +451,7 @@ const [basicValue, setBasicValue] = React.useState({
             sourceHeader="Available"
             targetHeader="Selected"
           />
-          <CodeBlock
-            code={`const [filterValue, setFilterValue] = React.useState({
-  source: [
-    { label: "Berlin", value: "berlin" },
-    { label: "Boston", value: "boston" },
-    { label: "Lisbon", value: "lisbon" },
-    { label: "Madrid", value: "madrid" },
-    { label: "Sao Paulo", value: "sao-paulo" }
-  ] as SgPickListItem[],
-  target: [] as SgPickListItem[]
-});
-
-<SgPickList
-  id="pick-filter"
-  title="Cities"
-  source={filterValue.source}
-  target={filterValue.target}
-  value={filterValue}
-  onChange={(event) => setFilterValue({ source: event.source, target: event.target })}
-  showSourceFilter
-  showTargetFilter
-  sourceHeader="Available"
-  targetHeader="Selected"
-/>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/com-filtros.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[2]}>
@@ -592,34 +469,7 @@ const [basicValue, setBasicValue] = React.useState({
           <p className="text-xs text-muted-foreground">
             {texts.transferOnlyHint}
           </p>
-          <CodeBlock
-            code={`const [transferOnlyValue, setTransferOnlyValue] = React.useState({
-  source: [
-    { label: "Backlog", value: "backlog", icon: <Landmark className="h-4 w-4" /> },
-    { label: "In progress", value: "in-progress", icon: <RefreshCw className="h-4 w-4" /> },
-    { label: "Review", value: "review", icon: <Bell className="h-4 w-4" /> }
-  ] as SgPickListItem[],
-  target: [
-    { label: "Done", value: "done", icon: <Star className="h-4 w-4" /> }
-  ] as SgPickListItem[]
-});
-
-<SgPickList
-  id="pick-transfer-only"
-  title="Transfer only"
-  source={transferOnlyValue.source}
-  target={transferOnlyValue.target}
-  value={transferOnlyValue}
-  onChange={(event) => setTransferOnlyValue({ source: event.source, target: event.target })}
-  showSourceControls={false}
-  showTargetControls={false}
-  draggable={false}
-/>
-
-<p className="text-xs text-muted-foreground">
-  {texts.transferOnlyHint}
-</p>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/somente-transferencia-sem-ordenacao.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[3]}>
@@ -635,33 +485,7 @@ const [basicValue, setBasicValue] = React.useState({
             showTargetControls
             draggable
           />
-          <CodeBlock
-            code={`const [reorderValue, setReorderValue] = React.useState({
-  source: [
-    { label: "Task A", value: "task-a" },
-    { label: "Task B", value: "task-b" },
-    { label: "Task C", value: "task-c" }
-  ] as SgPickListItem[],
-  target: [
-    { label: "Done X", value: "done-x" },
-    { label: "Done Y", value: "done-y" }
-  ] as SgPickListItem[]
-});
-
-<p className="text-sm text-muted-foreground">{texts.dragHint}</p>
-
-<SgPickList
-  id="pick-reorder"
-  title="Sprint board"
-  source={reorderValue.source}
-  target={reorderValue.target}
-  value={reorderValue}
-  onChange={(event) => setReorderValue({ source: event.source, target: event.target })}
-  showSourceControls
-  showTargetControls
-  draggable
-/>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/reordenacao-com-controles-de-lista.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[4]}>
@@ -682,37 +506,7 @@ const [basicValue, setBasicValue] = React.useState({
             <SgButton onClick={() => pickListRef.current?.moveToSource()}>Move &lt;</SgButton>
             <SgButton onClick={() => pickListRef.current?.moveAllToSource()}>Move &lt;&lt;</SgButton>
           </SgGrid>
-          <CodeBlock
-            code={`const pickListRef = React.useRef<SgPickListRef>(null);
-
-const [externalValue, setExternalValue] = React.useState({
-  source: [
-    { label: "Email", value: "email" },
-    { label: "SMS", value: "sms" },
-    { label: "Push", value: "push" }
-  ] as SgPickListItem[],
-  target: [] as SgPickListItem[]
-});
-
-<SgPickList
-  ref={pickListRef}
-  id="pick-ref"
-  title="Channels"
-  source={externalValue.source}
-  target={externalValue.target}
-  value={externalValue}
-  onChange={(event) => setExternalValue({ source: event.source, target: event.target })}
-  showTransferControls={false}
-  selectionMode="multiple"
-/>
-
-<SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-  <SgButton onClick={() => pickListRef.current?.moveToTarget()}>Move &gt;</SgButton>
-  <SgButton onClick={() => pickListRef.current?.moveAllToTarget()}>Move &gt;&gt;</SgButton>
-  <SgButton onClick={() => pickListRef.current?.moveToSource()}>Move &lt;</SgButton>
-  <SgButton onClick={() => pickListRef.current?.moveAllToSource()}>Move &lt;&lt;</SgButton>
-</SgGrid>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/controles-externos-por-ref.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[5]}>
@@ -735,36 +529,7 @@ const [externalValue, setExternalValue] = React.useState({
               );
             }}
           />
-          <CodeBlock
-            code={`const [templateValue, setTemplateValue] = React.useState({
-  source: [
-    { label: "Frontend", value: "frontend", data: { owner: "Ana", effort: "M" } },
-    { label: "Backend", value: "backend", data: { owner: "Bruno", effort: "L" } },
-    { label: "QA", value: "qa", data: { owner: "Carla", effort: "S" }, disabled: true }
-  ] as SgPickListItem[],
-  target: [] as SgPickListItem[]
-});
-
-<SgPickList
-  id="pick-template"
-  title="Team capacity"
-  source={templateValue.source}
-  target={templateValue.target}
-  value={templateValue}
-  onChange={(event) => setTemplateValue({ source: event.source, target: event.target })}
-  itemTemplate={(item) => {
-    const meta = item.data as { owner: string; effort: string } | undefined;
-    return (
-      <SgGrid columns={{ base: 1, sm: 2 }} gap={8} className="w-full">
-        <span className="font-medium">{item.label}</span>
-        <span className="text-xs text-[rgb(var(--sg-muted))]">
-          {"Owner: " + (meta?.owner ?? "-") + " | Effort: " + (meta?.effort ?? "-")}
-        </span>
-      </SgGrid>
-    );
-  }}
-/>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-pick-list/samples/item-template-customizado.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[6]}>
@@ -772,7 +537,7 @@ const [externalValue, setExternalValue] = React.useState({
             title="SgPickList Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-pick-list/sg-pick-list.tsx.playground"
             height={700}
             defaultOpen
           />

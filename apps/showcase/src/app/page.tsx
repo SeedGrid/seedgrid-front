@@ -137,31 +137,7 @@ export default function HomePage() {
             control: <code className="rounded bg-muted px-1">control</code>
           })}
         </p>
-        <SgCodeBlockBase code={`import { useForm } from "react-hook-form";
-import { SgInputText, SgInputEmail } from "@seedgrid/fe-components";
-
-const { register, handleSubmit } = useForm({
-  defaultValues: { nome: "", email: "" }
-});
-
-<form onSubmit={handleSubmit(onSubmit)}>
-  <SgInputText
-    id="nome"
-    name="nome"
-    register={register}
-    label="Nome"
-    required
-    requiredMessage="Informe o nome."
-  />
-
-  <SgInputEmail
-    id="email"
-    name="email"
-    register={register}
-    label="Email"
-    required
-  />
-</form>`} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/samples/react-hook-form-basico.tsx.sample" />
       </section>
 
       <section className="mt-8 rounded-lg border border-border bg-foreground/5 p-5">
@@ -174,36 +150,11 @@ const { register, handleSubmit } = useForm({
         <p className="mt-2 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p2")}
         </p>
-        <SgCodeBlockBase code={`import { SgComponentsI18nProvider } from "@seedgrid/fe-components";
-
-const messagesEn = {
-  "components.inputs.required": "Required field.",
-  "components.inputs.email.invalid": "Invalid email."
-};
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en-US">
-      <body>
-        <SgComponentsI18nProvider locale="en-US" messages={messagesEn}>
-          {children}
-        </SgComponentsI18nProvider>
-      </body>
-    </html>
-  );
-}`} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/samples/i18n-provider-root-layout.tsx.sample" />
         <p className="mt-3 text-sm text-muted-foreground">
           {t(i18n, "showcase.home.i18n.p3")}
         </p>
-        <SgCodeBlockBase code={`import { setComponentsI18n } from "@seedgrid/fe-components";
-
-setComponentsI18n({
-  locale: "en-US",
-  messages: {
-    "components.inputs.required": "Required field.",
-    "components.password.common": "Password is too common."
-  }
-});`} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/samples/set-components-i18n.tsx.sample" />
       </section>
 
       {COMPONENTS.map((group) => (

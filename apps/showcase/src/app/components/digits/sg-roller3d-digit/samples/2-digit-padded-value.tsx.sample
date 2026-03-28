@@ -1,0 +1,19 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgRoller3DDigit } from "@seedgrid/fe-components";
+
+const MINUTES = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, "0"));
+
+export default function Example() {
+  const [value, setValue] = React.useState("00");
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgRoller3DDigit value={value} items={MINUTES} fontSize={22} />
+      <SgButton size="sm" onClick={() => setValue((prev) => String((Number(prev) + 1) % 60).padStart(2, "0"))}>
+        +1 minuto
+      </SgButton>
+    </div>
+  );
+}

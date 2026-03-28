@@ -1,0 +1,26 @@
+import React from "react";
+import { SgCheckboxGroup, SgButton, SgGrid, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const FRUIT_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+  { label: "Orange", value: "orange" },
+  { label: "Grape", value: "grape" }
+];
+
+export default function Example() {
+  const [selected, setSelected] = React.useState<(string | number)[]>(["banana"]);
+
+  return (
+    <div className="space-y-4">
+      <SgCheckboxGroup id="external-control" title="Favorite fruits" source={FRUIT_OPTIONS} value={selected} onChange={setSelected} />
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton onClick={() => setSelected(["apple"])}>Set Apple</SgButton>
+        <SgButton onClick={() => setSelected(["banana", "grape"])}>Banana + Grape</SgButton>
+        <SgButton onClick={() => setSelected(FRUIT_OPTIONS.map((o) => o.value))}>Select All</SgButton>
+        <SgButton onClick={() => setSelected([])}>Clear</SgButton>
+      </SgGrid>
+      <p className="text-sm text-[rgb(var(--sg-muted))]">Current value: <strong>[{selected.join(", ")}]</strong></p>
+    </div>
+  );
+}

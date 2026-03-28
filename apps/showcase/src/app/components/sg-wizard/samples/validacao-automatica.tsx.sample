@@ -1,0 +1,86 @@
+import React from "react";
+import {
+  SgInputEmail,
+  SgInputPhone,
+  SgInputText,
+  SgWizard,
+  SgWizardPage,
+} from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [submitted, setSubmitted] = React.useState<Record<string, string> | null>(null);
+  const [formValues, setFormValues] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  return (
+    <>
+      <SgWizard
+        stepper="numbered"
+        stepNavigation="previous-and-next"
+        onFinish={async () => {
+          setSubmitted(null);
+          await new Promise((resolve) => setTimeout(resolve, 800));
+          setSubmitted({ ...formValues });
+        }}
+      >
+        <SgWizardPage title="Identificacao">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SgInputText
+              id="wizard-name"
+              label="Nome"
+              required
+              requiredMessage="Nome obrigatorio"
+              inputProps={{
+                value: formValues.name,
+                onChange: (event) =>
+                  setFormValues((prev) => ({ ...prev, name: event.target.value })),
+              }}
+            />
+            <SgInputEmail
+              id="wizard-email"
+              label="Email"
+              required
+              requiredMessage="Email obrigatorio"
+              invalidMessage="Email invalido"
+              inputProps={{
+                value: formValues.email,
+                onChange: (event) =>
+                  setFormValues((prev) => ({ ...prev, email: event.target.value })),
+              }}
+            />
+          </div>
+        </SgWizardPage>
+        <SgWizardPage title="Contato">
+          <SgInputPhone
+            id="wizard-phone"
+            label="Telefone"
+            required
+            requiredMessage="Telefone obrigatorio"
+            lengthMessage="Telefone invalido"
+            inputProps={{
+              value: formValues.phone,
+              onChange: (event) =>
+                setFormValues((prev) => ({ ...prev, phone: event.target.value })),
+            }}
+          />
+        </SgWizardPage>
+        <SgWizardPage title="Resumo">
+          <div className="rounded border border-border bg-background p-3 text-sm">
+            <div>Nome: {formValues.name || "-"}</div>
+            <div>Email: {formValues.email || "-"}</div>
+            <div>Telefone: {formValues.phone || "-"}</div>
+          </div>
+        </SgWizardPage>
+      </SgWizard>
+
+      {submitted ? (
+        <pre className="mt-4 rounded border border-border bg-foreground/5 p-3 text-xs">
+          {JSON.stringify(submitted, null, 2)}
+        </pre>
+      ) : null}
+    </>
+  );
+}

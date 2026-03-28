@@ -1,0 +1,19 @@
+import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "general", title: "Geral", content: <p className="text-sm">Configuracoes gerais do modulo.</p> },
+  { id: "security", title: "Seguranca", content: <p className="text-sm">Politicas e regras de acesso.</p> },
+  { id: "billing", title: "Faturamento (override por item)", headerBackgroundColor: "rgb(var(--sg-warning-100, 254 249 195))", content: <p className="text-sm">Este item ignora a cor global do header.</p> }
+];
+
+export default function Example() {
+  const [headerColor, setHeaderColor] = React.useState("rgb(var(--sg-primary-50, 239 246 255))");
+
+  return (
+    <div className="space-y-3">
+      <input value={headerColor} onChange={(e) => setHeaderColor(e.target.value)} className="w-full rounded border border-border px-3 py-2 text-sm" />
+      <SgAccordion items={items} defaultActiveIndex={0} headerBackgroundColor={headerColor} />
+    </div>
+  );
+}

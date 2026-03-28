@@ -24,8 +24,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const POPUP_PLAYGROUND_CODE = `import * as React from "react";
@@ -154,38 +154,7 @@ export default function SgPopupPage() {
             actions={actions}
           />
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgPopup, type SgPopupAction } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const btnRef = React.useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton ref={btnRef} onClick={() => setOpen(true)}>
-        ${t(i18n, "showcase.component.popup.labels.open")}
-      </SgButton>
-      <SgPopup
-        title="${t(i18n, "showcase.component.popup.labels.title")}"
-        subtitle="${t(i18n, "showcase.component.popup.labels.content")}"
-        open={open}
-        onOpenChange={setOpen}
-        anchorRef={btnRef as React.RefObject<HTMLElement>}
-        placement="auto"
-        preferPlacement="right"
-        align="start"
-        actions={[
-          { label: "${t(i18n, "showcase.component.popup.actions.confirm")}" },
-          { label: "${t(i18n, "showcase.component.popup.actions.cancel")}" }
-        ]}
-      />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-popup/samples/basico.tsx.sample" />
       </Section>
 
       <Section
@@ -207,46 +176,7 @@ export default function Example() {
             actions={iconActions}
           />
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { Check, X } from "lucide-react";
-import { SgButton, SgPopup, type SgPopupAction } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const btnRef = React.useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <SgButton ref={btnRef} onClick={() => setOpen(true)}>
-        ${t(i18n, "showcase.component.popup.labels.openIcon")}
-      </SgButton>
-      <SgPopup
-        title="${t(i18n, "showcase.component.popup.labels.title")}"
-        open={open}
-        onOpenChange={setOpen}
-        anchorRef={btnRef as React.RefObject<HTMLElement>}
-        placement="auto"
-        preferPlacement="right"
-        align="start"
-        actions={[
-          {
-            label: "${t(i18n, "showcase.component.popup.actions.approve")}",
-            hint: "${t(i18n, "showcase.component.popup.actions.approveHint")}",
-            icon: <Check className="h-4 w-4" />
-          },
-          {
-            label: "${t(i18n, "showcase.component.popup.actions.reject")}",
-            hint: "${t(i18n, "showcase.component.popup.actions.rejectHint")}",
-            icon: <X className="h-4 w-4" />
-          }
-        ]}
-      />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-popup/samples/icone-hint.tsx.sample" />
       </Section>
 
       <Section
@@ -254,20 +184,7 @@ export default function Example() {
         description={t(i18n, "showcase.component.popup.sections.custom.description")}
       >
         <div className="w-full">
-          <CodeBlock
-            code={`<SgPopup
-  title="Config"
-  open={open}
-  onOpenChange={setOpen}
-  anchorRef={btnRef as React.RefObject<HTMLElement>}
-  placement="auto"
->
-  <div className="grid gap-2 text-sm">
-    <label className="text-xs">Modo</label>
-    <input className="h-9 rounded border px-2" />
-  </div>
-</SgPopup>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-popup/samples/custom.tsx.sample" />
         </div>
       </Section>
 
@@ -276,7 +193,7 @@ export default function Example() {
             title="SgPopup Playground"
             interactive
             codeContract="appFile"
-            code={POPUP_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-popup/sg-popup.tsx.playground"
             height={520}
             defaultOpen
           />

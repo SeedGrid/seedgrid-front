@@ -1,0 +1,25 @@
+import React from "react";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+import { SgButton, SgMenu, type SgMenuNode } from "@seedgrid/fe-components";
+
+const MENU: SgMenuNode[] = [
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
+  { id: "customers", label: "Customers", icon: <Users className="size-4" />, children: [{ id: "customers-new", label: "New", icon: <LayoutGrid className="size-4" /> }, { id: "customers-reports", label: "Reports", icon: <ClipboardList className="size-4" /> }] },
+  { id: "orders", label: "Orders", icon: <LayoutGrid className="size-4" />, children: [{ id: "orders-sales", label: "Sales", icon: <Search className="size-4" /> }] },
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
+];
+
+export default function Example() {
+  const [activeId, setActiveId] = React.useState("dashboard");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerPinned, setDrawerPinned] = React.useState(false);
+  return (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => setDrawerOpen(true)}>Open mobile menu</SgButton>
+        <SgButton appearance="outline" onClick={() => setDrawerPinned((v) => !v)}>{drawerPinned ? "Unpin drawer" : "Pin drawer"}</SgButton>
+      </div>
+      <SgMenu menu={MENU} selection={{ activeId }} menuStyle="drawer" open={drawerOpen} onOpenChange={setDrawerOpen} pinned={drawerPinned} onPinnedChange={setDrawerPinned} showPinButton closeOnNavigate search={{ enabled: true, placeholder: "Search..." }} brand={{ title: "SeedGrid ERP" }} onNavigate={(node) => setActiveId(node.id)} />
+    </>
+  );
+}

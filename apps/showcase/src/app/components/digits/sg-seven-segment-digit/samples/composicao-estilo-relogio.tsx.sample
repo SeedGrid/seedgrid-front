@@ -1,0 +1,38 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgSevenSegmentDigit } from "@seedgrid/fe-components";
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+function ColonDots() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 px-1">
+      <span className="size-2 rounded-full bg-red-500/80" />
+      <span className="size-2 rounded-full bg-red-500/80" />
+    </div>
+  );
+}
+
+export default function Example() {
+  const [seconds, setSeconds] = React.useState(0);
+  const total = seconds % 86400;
+  const hh = pad(Math.floor(total / 3600));
+  const mm = pad(Math.floor((total % 3600) / 60));
+  const ss = pad(total % 60);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-1">
+        {hh.split("").map((value, index) => <SgSevenSegmentDigit key={`h-${index}`} value={value} size={86} />)}
+        <ColonDots />
+        {mm.split("").map((value, index) => <SgSevenSegmentDigit key={`m-${index}`} value={value} size={86} />)}
+        <ColonDots />
+        {ss.split("").map((value, index) => <SgSevenSegmentDigit key={`s-${index}`} value={value} size={86} />)}
+      </div>
+      <SgButton size="sm" onClick={() => setSeconds((prev) => prev + 1)}>+1 second</SgButton>
+    </div>
+  );
+}

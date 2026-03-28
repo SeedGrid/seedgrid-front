@@ -1,0 +1,31 @@
+import React from "react";
+import { SgButton, SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgCard
+      leading={<div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">SG</div>}
+      trailing={<span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">ativo</span>}
+      title="Conta enterprise"
+      description="Resumo de performance e uso"
+      actions={<SgButton appearance="ghost" size="sm">Acao</SgButton>}
+      footer={
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>Expira em 12 dias</span>
+          <span className="text-emerald-600">+12%</span>
+        </div>
+      }
+    >
+      <div className="grid gap-2 text-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Receita</span>
+          <span className="font-semibold">R$ 128.400</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Crescimento</span>
+          <span className="font-semibold">+12%</span>
+        </div>
+      </div>
+    </SgCard>
+  );
+}

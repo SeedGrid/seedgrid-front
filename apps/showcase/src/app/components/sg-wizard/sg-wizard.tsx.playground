@@ -1,0 +1,88 @@
+import * as React from "react";
+import {
+  SgInputEmail,
+  SgInputPhone,
+  SgInputText,
+  SgWizard,
+  SgWizardPage,
+} from "@seedgrid/fe-components";
+
+export default function App() {
+  const [payload, setPayload] = React.useState<Record<string, string> | null>(null);
+  const [formValues, setFormValues] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgWizard
+        stepper="numbered"
+        stepNavigation="previous-and-next"
+        labels={{ next: "Next", previous: "Back", finish: "Finish" }}
+        validateStep={(index) => {
+          if (index !== 0) return true;
+          return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
+        }}
+        onFinish={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          setPayload({ ...formValues });
+        }}
+      >
+        <SgWizardPage title="Identificacao">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <SgInputText
+              id="playground-name"
+              label="Nome"
+              required
+              requiredMessage="Nome obrigatorio"
+              inputProps={{
+                value: formValues.name,
+                onChange: (event) =>
+                  setFormValues((prev) => ({ ...prev, name: event.target.value })),
+              }}
+            />
+            <SgInputEmail
+              id="playground-email"
+              label="Email"
+              required
+              requiredMessage="Email obrigatorio"
+              inputProps={{
+                value: formValues.email,
+                onChange: (event) =>
+                  setFormValues((prev) => ({ ...prev, email: event.target.value })),
+              }}
+            />
+          </div>
+        </SgWizardPage>
+        <SgWizardPage title="Contato">
+          <SgInputPhone
+            id="playground-phone"
+            label="Telefone"
+            required
+            requiredMessage="Telefone obrigatorio"
+            inputProps={{
+              value: formValues.phone,
+              onChange: (event) =>
+                setFormValues((prev) => ({ ...prev, phone: event.target.value })),
+            }}
+          />
+        </SgWizardPage>
+        <SgWizardPage title="Resumo">
+          <div className="rounded border border-border bg-background p-3 text-sm">
+            <div>Nome: {formValues.name || "-"}</div>
+            <div>Email: {formValues.email || "-"}</div>
+            <div>Telefone: {formValues.phone || "-"}</div>
+          </div>
+        </SgWizardPage>
+      </SgWizard>
+
+      {payload ? (
+        <pre className="rounded border border-border bg-foreground/5 p-3 text-xs">
+          {JSON.stringify(payload, null, 2)}
+        </pre>
+      ) : null}
+    </div>
+  );
+}

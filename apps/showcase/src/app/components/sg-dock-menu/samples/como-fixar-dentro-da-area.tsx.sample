@@ -1,0 +1,9 @@
+<div className="relative h-56 rounded-lg border-2 border-dashed border-border bg-muted/20">
+  <SgDockMenu
+    id="dock-anchored"
+    items={items}
+    position="center-bottom"
+    style={{ position: "absolute" }}
+    zIndex={10}
+  />
+</div>

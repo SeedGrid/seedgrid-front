@@ -21,10 +21,10 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function ExampleCodeCard(props: { code: string }) {
+function ExampleCodeCard(props: { sampleFile: string }) {
   return (
     <div className="mt-4">
-      <SgCodeBlockBase code={props.code} />
+      <SgCodeBlockBase sampleFile={props.sampleFile} />
     </div>
   );
 }
@@ -153,7 +153,7 @@ export default function SgPlaygroundPage() {
             defaultOpen={false}
             style={{ border: "1px solid rgba(59, 130, 246, 0.25)" }}
           />
-          <ExampleCodeCard code={READONLY_EXAMPLE_IMPL} />
+          <ExampleCodeCard sampleFile="apps/showcase/src/app/components/sg-playground/samples/read-only-mode.tsx.sample" />
         </div>
       </Section>
 
@@ -170,7 +170,7 @@ export default function SgPlaygroundPage() {
             defaultImports={`import { SgButton, SgInputText, SgStack } from "@seedgrid/fe-components";`}
             height={380}
           />
-          <ExampleCodeCard code={RENDER_BODY_EXAMPLE_IMPL} />
+          <ExampleCodeCard sampleFile="apps/showcase/src/app/components/sg-playground/samples/interactive-render-body.tsx.sample" />
         </div>
       </Section>
 
@@ -186,7 +186,7 @@ export default function SgPlaygroundPage() {
             code={APP_FILE_CODE}
             height={420}
           />
-          <ExampleCodeCard code={APP_FILE_EXAMPLE_IMPL} />
+          <ExampleCodeCard sampleFile="apps/showcase/src/app/components/sg-playground/samples/app-file-mode.tsx.sample" />
         </div>
       </Section>
 
@@ -205,7 +205,7 @@ export default function SgPlaygroundPage() {
             height={300}
             previewPadding={16}
           />
-          <ExampleCodeCard code={VISUAL_VARIANTS_EXAMPLE_IMPL} />
+          <ExampleCodeCard sampleFile="apps/showcase/src/app/components/sg-playground/samples/visual-variations.tsx.sample" />
         </div>
       </Section>
 

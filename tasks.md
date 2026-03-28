@@ -10,6 +10,15 @@ o que vai ser a tarefa:
     - utilizar o esbuild para validar os codigos se estão compiláveis, lembre-se que o usuário desenvolvedor vai copiar e colar esses codigos e os mesmos devem funcionar 
 
 
+### Critério de “não inventar”
+
+Você precisa travar o comportamento do agente:
+
+não faça refactors extras;
+não altere API pública;
+não mude comportamento visual;
+faça apenas a extração mecânica dos samples/playground e a adaptação mínima necessária para compilar.
+
 ### Checklist de acompanhamento
 
 #### Inputs
@@ -203,492 +212,481 @@ o que vai ser a tarefa:
     [x] 2) Controle externo
     [x] 3) Read-only e disabled
     [x] 4) Playground
-[ ] SgTextEditor: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Sem CSS
-    [ ] 3) Desabilitado
-    [ ] 4) Border radius
-    [ ] 5) Playground
-[ ] SgDatatable: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Filtros
-    [ ] 3) Seleção
-    [ ] 4) Templates
-    [ ] 5) Ações
-    [ ] 6) Controlado
-    [ ] 7) Server-side
-    [ ] 8) Loading e vazio
-    [ ] 9) Playground
-[ ] SgInputNumber: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Obrigatório
-    [ ] 3) Controlado
-    [ ] 4) Validação customizada
-    [ ] 5) Ícone prefixo
-    [ ] 6) Prefixo e sufixo
-    [ ] 7) Botões de ícone
-    [ ] 8) Sem negativos
-    [ ] 9) Sem decimais
-    [ ] 10) Mínimo e máximo
-    [ ] 11) Valor vazio
-    [ ] 12) Variações visuais
-    [ ] 13) Standalone
-    [ ] 14) Eventos
-    [ ] 15) Largura e borda
-    [ ] 16) Posição do rótulo
-    [ ] 17) Playground
-[ ] SgInputCurrency: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Obrigatório
-    [ ] 3) Controlado
-    [ ] 4) Validação customizada
-    [ ] 5) Moeda
-    [ ] 6) Símbolo
-    [ ] 7) Botões de ícone
-    [ ] 8) Sem negativos
-    [ ] 9) Sem decimais
-    [ ] 10) Mínimo e máximo
-    [ ] 11) Valor vazio
-    [ ] 12) Variações visuais
-    [ ] 13) Standalone
-    [ ] 14) Eventos
-    [ ] 15) Largura e borda
-    [ ] 16) Playground
+[x] SgTextEditor: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Sem CSS
+    [x] 3) Desabilitado
+    [x] 4) Border radius
+    [x] 5) Playground
+[x] SgDatatable: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Filtros
+    [x] 3) Seleção
+    [x] 4) Templates
+    [x] 5) Ações
+    [x] 6) Controlado
+    [x] 7) Server-side
+    [x] 8) Loading e vazio
+    [x] 9) Playground
+[x] SgInputNumber: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Obrigatório
+    [x] 3) Controlado
+    [x] 4) Validação customizada
+    [x] 5) Ícone prefixo
+    [x] 6) Prefixo e sufixo
+    [x] 7) Botões de ícone
+    [x] 8) Sem negativos
+    [x] 9) Sem decimais
+    [x] 10) Mínimo e máximo
+    [x] 11) Valor vazio
+    [x] 12) Variações visuais
+    [x] 13) Standalone
+    [x] 14) Eventos
+    [x] 15) Largura e borda
+    [x] 16) Posição do rótulo
+    [x] 17) Playground
+[x] SgInputCurrency: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Obrigatório
+    [x] 3) Controlado
+    [x] 4) Validação customizada
+    [x] 5) Moeda
+    [x] 6) Símbolo
+    [x] 7) Botões de ícone
+    [x] 8) Sem negativos
+    [x] 9) Sem decimais
+    [x] 10) Mínimo e máximo
+    [x] 11) Valor vazio
+    [x] 12) Variações visuais
+    [x] 13) Standalone
+    [x] 14) Eventos
+    [x] 15) Largura e borda
+    [x] 16) Playground
 
 #### Layout e navegação
-[ ] SgGroupBox: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Formulário
-    [ ] 3) Tamanho
-    [ ] 4) className
-    [ ] 5) Playground
-[ ] SgCard: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Leading e trailing
-    [ ] 3) Colapsável
-    [ ] 4) Variantes
-    [ ] 5) Surface colors
-    [ ] 6) Draggable + persistence
-    [ ] 7) Playground
-[ ] SgAccordion: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico vertical (single)
-    [ ] 2) Multiple + collapsible
-    [ ] 3) Horizontal
-    [ ] 4) Controlado por estado
-    [ ] 5) Custom items + header background
-    [ ] 6) Color customization example
-    [ ] 7) Playground
-[ ] SgSkeleton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basic shapes
-    [ ] 2) Text widths
-    [ ] 3) Animation
-    [ ] 4) Card placeholder
-    [ ] 5) List and table
-    [ ] 6) Playground
-[ ] SgScreen: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Complete example
-    [ ] 2) Playground
-[ ] SgDockScreen: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Playground
-[ ] SgMainPanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Complete example
-    [ ] 2) Playground
-[ ] SgPanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) align + width + height
-    [ ] 2) span + rowSpan
-    [ ] 3) borderStyle + padding + children
-    [ ] 4) scrollable + scrollbarGutter
-    [ ] 5) Combined example
-    [ ] 6) Playground
-[ ] SgGrid: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Columns responsivo
-    [ ] 2) Auto-Fit + RowSpan
-    [ ] 3) Playground
-[ ] SgStack: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Column + Row
-    [ ] 2) Playground
-[ ] SgBadge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Variants
-    [ ] 3) Sizes
-    [ ] 4) Counter
-    [ ] 5) Actions
-    [ ] 6) Playground
-[ ] SgBadgeOverlay: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Placements
-    [ ] 3) Playground
-[ ] SgAvatar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Shape e tamanho
-    [ ] 3) Severity e cores customizadas
-    [ ] 4) Avatar Group
-    [ ] 5) Playground
-[ ] SgBreadcrumb: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Caminho externo
-    [ ] 3) Overflow
-    [ ] 4) Playground
-[ ] SgMenu: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Sidebar fixa
-    [ ] 2) Drawer mobile
-    [ ] 3) PanelMenu
-    [ ] 4) Tiered
-    [ ] 5) MegaMenu horizontal
-    [ ] 6) MegaMenu vertical
-    [ ] 7) Sidebar dockable
-    [ ] 8) Playground
-[ ] SgExpandablePanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Inline controlado + resize
-    [ ] 2) Overlay + comportamento
-    [ ] 3) defaultOpen + estilização
-    [ ] 4) Acessibilidade + fade
-    [ ] 5) Sem backdrop + animation none
-    [ ] 6) Playground
-[ ] SgDialog: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Severity
-    [ ] 3) No close
-    [ ] 4) Strict
-    [ ] 5) Auto close
-    [ ] 6) Playground
-[ ] SgToolBar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) onClick assíncrono com toast
-    [ ] 3) Orientação e quebra
-    [ ] 4) Cores de fundo
-    [ ] 5) Playground
-[ ] SgDockLayout: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Playground
-[ ] SgTreeView: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Icon tone
-    [ ] 3) Confirm
-    [ ] 4) Size
-    [ ] 5) Expanded
-    [ ] 6) Json checked
-    [ ] 7) Playground
-[ ] SgPageControl: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Controle externo
-    [ ] 3) Ocultar página externamente
-    [ ] 4) Com hint nas abas
-    [ ] 5) Playground
-[ ] SgPopup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Básico
-    [ ] 2) Ícone + hint
-    [ ] 3) Custom
-    [ ] 4) Playground
-[ ] SgPlayground: revisar se precisa pasta `samples` própria ou se fica apenas como infraestrutura
+[x] SgGroupBox: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Formulário
+    [x] 3) Tamanho
+    [x] 4) className
+    [x] 5) Playground
+[x] SgCard: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Leading e trailing
+    [x] 3) Colapsável
+    [x] 4) Variantes
+    [x] 5) Surface colors
+    [x] 6) Draggable + persistence
+    [x] 7) Playground
+[x] SgAccordion: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico vertical (single)
+    [x] 2) Multiple + collapsible
+    [x] 3) Horizontal
+    [x] 4) Controlado por estado
+    [x] 5) Custom items + header background
+    [x] 6) Color customization example
+    [x] 7) Playground
+[x] SgSkeleton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basic shapes
+    [x] 2) Text widths
+    [x] 3) Animation
+    [x] 4) Card placeholder
+    [x] 5) List and table
+    [x] 6) Playground
+[x] SgScreen: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Complete example
+    [x] 2) Playground
+[x] SgDockScreen: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Playground
+[x] SgMainPanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Complete example
+    [x] 2) Playground
+[x] SgPanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) align + width + height
+    [x] 2) span + rowSpan
+    [x] 3) borderStyle + padding + children
+    [x] 4) scrollable + scrollbarGutter
+    [x] 5) Combined example
+    [x] 6) Playground
+[x] SgGrid: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Columns responsivo
+    [x] 2) Auto-Fit + RowSpan
+    [x] 3) Playground
+[x] SgStack: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Column + Row
+    [x] 2) Playground
+[x] SgBadge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Variants
+    [x] 3) Sizes
+    [x] 4) Counter
+    [x] 5) Actions
+    [x] 6) Playground
+[x] SgBadgeOverlay: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Placements
+    [x] 3) Playground
+[x] SgAvatar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Shape e tamanho
+    [x] 3) Severity e cores customizadas
+    [x] 4) Avatar Group
+    [x] 5) Playground
+[x] SgBreadcrumb: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Caminho externo
+    [x] 3) Overflow
+    [x] 4) Playground
+[x] SgMenu: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Sidebar fixa
+    [x] 2) Drawer mobile
+    [x] 3) PanelMenu
+    [x] 4) Tiered
+    [x] 5) MegaMenu horizontal
+    [x] 6) MegaMenu vertical
+    [x] 7) Sidebar dockable
+    [x] 8) Playground
+[x] SgExpandablePanel: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Inline controlado + resize
+    [x] 2) Overlay + comportamento
+    [x] 3) defaultOpen + estilização
+    [x] 4) Acessibilidade + fade
+    [x] 5) Sem backdrop + animation none
+    [x] 6) Playground
+[x] SgDialog: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Severity
+    [x] 3) No close
+    [x] 4) Strict
+    [x] 5) Auto close
+    [x] 6) Playground
+[x] SgToolBar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) onClick assíncrono com toast
+    [x] 3) Orientação e quebra
+    [x] 4) Cores de fundo
+    [x] 5) Playground
+[x] SgDockLayout: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Playground
+[x] SgTreeView: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Icon tone
+    [x] 3) Confirm
+    [x] 4) Size
+    [x] 5) Expanded
+    [x] 6) Json checked
+    [x] 7) Playground
+[x] SgPageControl: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Controle externo
+    [x] 3) Ocultar página externamente
+    [x] 4) Com hint nas abas
+    [x] 5) Playground
+[x] SgPopup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Básico
+    [x] 2) Ícone + hint
+    [x] 3) Custom
+    [x] 4) Playground
+[x] SgPlayground: revisar se precisa pasta `samples` própria ou se fica apenas como infraestrutura
 
 #### Ações, seleção e feedback
-[ ] SgButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Icones
-    [ ] 3) Severities
-    [ ] 4) Elevated Buttons
-    [ ] 5) Rounded Buttons
-    [ ] 6) Ghost Buttons (Flat)
-    [ ] 7) Outlined + Elevation
-    [ ] 8) Outlined Buttons
-    [ ] 9) Rounded Icon Buttons
-    [ ] 10) Rounded Text Icon Buttons
-    [ ] 11) Rounded and Outlined Icon Buttons
-    [ ] 12) Sizes
-    [ ] 13) Loading
-    [ ] 14) Custom Colors
-    [ ] 15) Playground
-[ ] SgFloatActionButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Positions
-    [ ] 2) Variants
-    [ ] 3) Shapes & Sizes
-    [ ] 4) Elevation
-    [ ] 5) Hint
-    [ ] 6) Actions - Linear Layout
-    [ ] 7) Circle Layout
-    [ ] 8) Semi-Circle Layout
-    [ ] 9) Quarter-Circle Layout
-    [ ] 10) Active Icon
-    [ ] 11) Animations
-    [ ] 12) Custom Color
-    [ ] 13) Disabled & Loading
-    [ ] 14) Drag & Drop
-    [ ] 15) Playground
-[ ] SgSplitButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Severidades
-    [ ] 3) Outlined
-    [ ] 4) Ghost
-    [ ] 5) Elevated
-    [ ] 6) Tamanhos
-    [ ] 7) Com icones
-    [ ] 8) Separadores de menu
-    [ ] 9) Disabled
-    [ ] 10) Loading
-    [ ] 11) Itens desabilitados
-    [ ] 12) Playground
-[ ] SgCheckboxGroup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Orientation Horizontal
-    [ ] 3) Com Icones
-    [ ] 4) Apenas Icones (Icon Only)
-    [ ] 5) Selecao Controlada
-    [ ] 6) Controle Externo (setValue/getValue)
-    [ ] 7) Com Opcao Desabilitada
-    [ ] 8) Grupo Disabled
-    [ ] 9) Read-only
-    [ ] 10) Obrigatorio com Validacao
-    [ ] 11) Horizontal com Icones Coloridos
-    [ ] 12) Selection Style Highlight (Lista)
-    [ ] 13) Com GroupBox Customizado
-    [ ] 14) React Hook Form - Register
-    [ ] 15) Playground Interativo
-    [ ] 16) Check All (showCheckAll)
-    [ ] 17) Checked inicial no source
-    [ ] 18) Ref imperativo (getChecked / checkAll / clearAll)
-[ ] SgRadioGroup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Orientation Horizontal
-    [ ] 3) Com Icones
-    [ ] 4) Apenas Icones (Icon Only)
-    [ ] 5) Selecao Controlada
-    [ ] 6) Controle Externo (setValue/getValue)
-    [ ] 7) Com Opcao Desabilitada
-    [ ] 8) Grupo Disabled
-    [ ] 9) Read-only
-    [ ] 10) Obrigatorio com Validacao
-    [ ] 11) Horizontal com Icones Coloridos
-    [ ] 12) Selection Style Highlight (Lista)
-    [ ] 13) Com GroupBox Customizado
-    [ ] 14) React Hook Form - Register
-    [ ] 15) Playground Interativo
-[ ] SgOrderList: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (controles internos)
-    [ ] 2) Selecao multipla + controles externos (ref)
-    [ ] 3) Drag and drop sem botoes
-    [ ] 4) Item template customizado e item desabilitado
-    [ ] 5) Ordem controlada por estado externo
-    [ ] 6) Playground interativo
-[ ] SgPickList: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Com Filtros
-    [ ] 3) Somente transferencia (sem ordenacao)
-    [ ] 4) Reordenacao com controles de lista
-    [ ] 5) Controles externos por ref
-    [ ] 6) Item template customizado
-    [ ] 7) Playground interativo
-[ ] SgRating: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Meia estrela + tooltip
-    [ ] 3) Read-only e desabilitado
-    [ ] 4) Tamanhos e quantidade de estrelas
-    [ ] 5) Cores e icones customizados
-    [ ] 6) Callbacks
-    [ ] 7) React Hook Form
-    [ ] 8) Campo obrigatorio
-    [ ] 9) Playground
-[ ] SgToastHost: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) O que e o SgToastHost
-    [ ] 2) Base setup
-    [ ] 3) Prioridade: layout vs pagina
-    [ ] 4) Toast types
-    [ ] 5) Loading by id (update same toast)
-    [ ] 6) toast.promise
-    [ ] 7) Actions and custom toast
-    [ ] 8) Options per toast
-    [ ] 9) Transparency
-    [ ] 10) Custom Colors
-    [ ] 11) Posicionamento
-    [ ] 12) Playground
-[ ] SgToaster: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Base setup
-    [ ] 2) Toast types
-    [ ] 3) Loading by id (update same toast)
-    [ ] 4) toast.promise
-    [ ] 5) Actions and custom toast
-    [ ] 6) Options per toast
-    [ ] 7) Transparency
-    [ ] 8) Custom Colors
-    [ ] 9) Playground
-[ ] SgConfirmationDialog: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Icone a esquerda
-    [ ] 3) Icone no topo
-    [ ] 4) Botoes customizados
-    [ ] 5) Surface customizada (customColor + elevation)
-    [ ] 6) Playground interativo
+[x] SgButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Icones
+    [x] 3) Severities
+    [x] 4) Elevated Buttons
+    [x] 5) Rounded Buttons
+    [x] 6) Ghost Buttons (Flat)
+    [x] 7) Outlined + Elevation
+    [x] 8) Outlined Buttons
+    [x] 9) Rounded Icon Buttons
+    [x] 10) Rounded Text Icon Buttons
+    [x] 11) Rounded and Outlined Icon Buttons
+    [x] 12) Sizes
+    [x] 13) Loading
+    [x] 14) Custom Colors
+    [x] 15) Playground
+[x] SgFloatActionButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Positions
+    [x] 2) Variants
+    [x] 3) Shapes & Sizes
+    [x] 4) Elevation
+    [x] 5) Hint
+    [x] 6) Actions - Linear Layout
+    [x] 7) Circle Layout
+    [x] 8) Semi-Circle Layout
+    [x] 9) Quarter-Circle Layout
+    [x] 10) Active Icon
+    [x] 11) Animations
+    [x] 12) Custom Color
+    [x] 13) Disabled & Loading
+    [x] 14) Drag & Drop
+    [x] 15) Playground
+[x] SgSplitButton: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Severidades
+    [x] 3) Outlined
+    [x] 4) Ghost
+    [x] 5) Elevated
+    [x] 6) Tamanhos
+    [x] 7) Com icones
+    [x] 8) Separadores de menu
+    [x] 9) Disabled
+    [x] 10) Loading
+    [x] 11) Itens desabilitados
+    [x] 12) Playground
+[x] SgCheckboxGroup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Orientation Horizontal
+    [x] 3) Com Icones
+    [x] 4) Apenas Icones (Icon Only)
+    [x] 5) Selecao Controlada
+    [x] 6) Controle Externo (setValue/getValue)
+    [x] 7) Com Opcao Desabilitada
+    [x] 8) Grupo Disabled
+    [x] 9) Read-only
+    [x] 10) Obrigatorio com Validacao
+    [x] 11) Horizontal com Icones Coloridos
+    [x] 12) Selection Style Highlight (Lista)
+    [x] 13) Com GroupBox Customizado
+    [x] 14) React Hook Form - Register
+    [x] 15) Playground Interativo
+    [x] 16) Check All (showCheckAll)
+    [x] 17) Checked inicial no source
+    [x] 18) Ref imperativo (getChecked / checkAll / clearAll)
+[x] SgRadioGroup: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Orientation Horizontal
+    [x] 3) Com Icones
+    [x] 4) Apenas Icones (Icon Only)
+    [x] 5) Selecao Controlada
+    [x] 6) Controle Externo (setValue/getValue)
+    [x] 7) Com Opcao Desabilitada
+    [x] 8) Grupo Disabled
+    [x] 9) Read-only
+    [x] 10) Obrigatorio com Validacao
+    [x] 11) Horizontal com Icones Coloridos
+    [x] 12) Selection Style Highlight (Lista)
+    [x] 13) Com GroupBox Customizado
+    [x] 14) React Hook Form - Register
+    [x] 15) Playground Interativo
+[x] SgOrderList: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (controles internos)
+    [x] 2) Selecao multipla + controles externos (ref)
+    [x] 3) Drag and drop sem botoes
+    [x] 4) Item template customizado e item desabilitado
+    [x] 5) Ordem controlada por estado externo
+    [x] 6) Playground interativo
+[x] SgPickList: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Com Filtros
+    [x] 3) Somente transferencia (sem ordenacao)
+    [x] 4) Reordenacao com controles de lista
+    [x] 5) Controles externos por ref
+    [x] 6) Item template customizado
+    [x] 7) Playground interativo
+[x] SgRating: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Meia estrela + tooltip
+    [x] 3) Read-only e desabilitado
+    [x] 4) Tamanhos e quantidade de estrelas
+    [x] 5) Cores e icones customizados
+    [x] 6) Callbacks
+    [x] 7) React Hook Form
+    [x] 8) Campo obrigatorio
+    [x] 9) Playground
+[x] SgToastHost: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) O que e o SgToastHost
+    [x] 2) Base setup
+    [x] 3) Prioridade: layout vs pagina
+    [x] 4) Toast types
+    [x] 5) Loading by id (update same toast)
+    [x] 6) toast.promise
+    [x] 7) Actions and custom toast
+    [x] 8) Options per toast
+    [x] 9) Transparency
+    [x] 10) Custom Colors
+    [x] 11) Posicionamento
+    [x] 12) Playground
+[x] SgToaster: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Base setup
+    [x] 2) Toast types
+    [x] 3) Loading by id (update same toast)
+    [x] 4) toast.promise
+    [x] 5) Actions and custom toast
+    [x] 6) Options per toast
+    [x] 7) Transparency
+    [x] 8) Custom Colors
+    [x] 9) Playground
+[x] SgConfirmationDialog: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Icone a esquerda
+    [x] 3) Icone no topo
+    [x] 4) Botoes customizados
+    [x] 5) Surface customizada (customColor + elevation)
+    [x] 6) Playground interativo
 
 #### Digits
-[ ] SgFlipDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) Letras (A-Z)
-    [ ] 3) Variacoes de tamanho
-    [ ] 4) Sequencia estilo relogio
-    [ ] 5) Auto increment
-    [ ] 6) Playground
-[ ] SgFadeDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) Letras (A-Z)
-    [ ] 3) Cores customizadas
-    [ ] 4) Auto increment
-    [ ] 5) Sequencia estilo relogio
-    [ ] 6) Tamanhos
-    [ ] 7) Playground
-[ ] SgRoller3DDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) 2-digit padded value
-    [ ] 3) Letras (A-Z)
-    [ ] 4) Animacao de nomes
-    [ ] 5) Variacoes de tamanho
-    [ ] 6) Playground
-[ ] SgMatrixDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) Texto matricial
-    [ ] 3) Variacoes de color/backgroundColor
-    [ ] 4) Escala da matriz
-    [ ] 5) Playground
-[ ] SgNeonDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Texto em neon
-    [ ] 3) Neon script (referencia visual)
-    [ ] 4) Variacoes de color/background/shadow
-    [ ] 5) Escala e leitura
-    [ ] 6) Playground
-[ ] SgDiscardDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico
-    [ ] 2) Folhas sequenciais
-    [ ] 3) Variacoes de papel
-    [ ] 4) Fontes
-    [ ] 5) Auto descarte
-    [ ] 6) Paginacao imperativa (ref)
-    [ ] 7) Playground
-[ ] SgSegmentDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) Composicao estilo relogio
-    [ ] 3) Tamanhos
-    [ ] 4) Cores
-    [ ] 5) Playground
-[ ] SgSevenSegmentDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (0-9)
-    [ ] 2) Hexadecimal (0-9 A-F)
-    [ ] 3) Temas de cor
-    [ ] 4) Tamanho e espessura
-    [ ] 5) Composicao estilo relogio
-    [ ] 6) Playground
+[x] SgFlipDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) Letras (A-Z)
+    [x] 3) Variacoes de tamanho
+    [x] 4) Sequencia estilo relogio
+    [x] 5) Auto increment
+    [x] 6) Playground
+[x] SgFadeDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) Letras (A-Z)
+    [x] 3) Cores customizadas
+    [x] 4) Auto increment
+    [x] 5) Sequencia estilo relogio
+    [x] 6) Tamanhos
+    [x] 7) Playground
+[x] SgRoller3DDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) 2-digit padded value
+    [x] 3) Letras (A-Z)
+    [x] 4) Animacao de nomes
+    [x] 5) Variacoes de tamanho
+    [x] 6) Playground
+[x] SgMatrixDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) Texto matricial
+    [x] 3) Variacoes de color/backgroundColor
+    [x] 4) Escala da matriz
+    [x] 5) Playground
+[x] SgNeonDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Texto em neon
+    [x] 3) Neon script (referencia visual)
+    [x] 4) Variacoes de color/background/shadow
+    [x] 5) Escala e leitura
+    [x] 6) Playground
+[x] SgDiscardDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico
+    [x] 2) Folhas sequenciais
+    [x] 3) Variacoes de papel
+    [x] 4) Fontes
+    [x] 5) Auto descarte
+    [x] 6) Paginacao imperativa (ref)
+    [x] 7) Playground
+[x] SgSegmentDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) Composicao estilo relogio
+    [x] 3) Tamanhos
+    [x] 4) Cores
+    [x] 5) Playground
+[x] SgSevenSegmentDigit: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (0-9)
+    [x] 2) Hexadecimal (0-9 A-F)
+    [x] 3) Temas de cor
+    [x] 4) Tamanho e espessura
+    [x] 5) Composicao estilo relogio
+    [x] 6) Playground
 
 #### Gadgets
-[ ] SgClock: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Analogico
-    [ ] 2) Tema inline (sem provider)
-    [ ] 3) Digital
-    [ ] 4) Roller 3D
-    [ ] 5) Flip
-    [ ] 6) Segment
-    [ ] 7) Seven Segment
-    [ ] 8) Fade
-    [ ] 9) Matrix
-    [ ] 10) Neon
-    [ ] 11) Discard
-    [ ] 12) Timezone
-    [ ] 13) Playground
-[ ] SgCalendar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Basico (mes atual)
-    [ ] 2) Selecionado controlado + limite de datas
-    [ ] 3) Locale + multiplos meses
-    [ ] 4) Playground
-[ ] SgStringAnimator: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Roller 3D - nomes (left-aligned)
-    [ ] 2) Roller 3D - numeros (right-aligned)
-    [ ] 3) Estilo Flip
-    [ ] 4) Estilo Neon
-    [ ] 5) Estilo Fade
-    [ ] 6) Estilo Discard
-    [ ] 7) Estilo Matrix
-    [ ] 8) autoStart - animacao automatica
-    [ ] 9) Velocidades
-    [ ] 10) Playground
-[ ] SgQRCode: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Interactive example
-    [ ] 2) Playground
-[ ] SgLinearGauge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Default (Horizontal)
-    [ ] 2) Vertical + Multi Pointers
-    [ ] 3) Playground
-[ ] SgRadialGauge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Speedometer Style
-    [ ] 2) Thicker Ring (ringThickness)
-    [ ] 3) Axis Inversed + Angulos Custom
-    [ ] 4) Multi Pointers + Annotation
-    [ ] 5) Range Pointer (Donut)
-    [ ] 6) Other Props (size, labels and accessibility)
-    [ ] 7) Playground
+[x] SgClock: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Analogico
+    [x] 2) Tema inline (sem provider)
+    [x] 3) Digital
+    [x] 4) Roller 3D
+    [x] 5) Flip
+    [x] 6) Segment
+    [x] 7) Seven Segment
+    [x] 8) Fade
+    [x] 9) Matrix
+    [x] 10) Neon
+    [x] 11) Discard
+    [x] 12) Timezone
+    [x] 13) Playground
+[x] SgCalendar: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Basico (mes atual)
+    [x] 2) Selecionado controlado + limite de datas
+    [x] 3) Locale + multiplos meses
+    [x] 4) Playground
+[x] SgStringAnimator: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Roller 3D - nomes (left-aligned)
+    [x] 2) Roller 3D - numeros (right-aligned)
+    [x] 3) Estilo Flip
+    [x] 4) Estilo Neon
+    [x] 5) Estilo Fade
+    [x] 6) Estilo Discard
+    [x] 7) Estilo Matrix
+    [x] 8) autoStart - animacao automatica
+    [x] 9) Velocidades
+    [x] 10) Playground
+[x] SgQRCode: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Interactive example
+    [x] 2) Playground
+[x] SgLinearGauge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Default (Horizontal)
+    [x] 2) Vertical + Multi Pointers
+    [x] 3) Playground
+[x] SgRadialGauge: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Speedometer Style
+    [x] 2) Thicker Ring (ringThickness)
+    [x] 3) Axis Inversed + Angulos Custom
+    [x] 4) Multi Pointers + Annotation
+    [x] 5) Range Pointer (Donut)
+    [x] 6) Other Props (size, labels and accessibility)
+    [x] 7) Playground
 
 #### Hooks
-[ ] useComponentsI18n: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Construir componentes conscientes do locale
-[ ] useSgEnvironment: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Default (sem provider)
-    [ ] 2) Com provider
-[ ] useSgPersistence: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Quando usar vs useSgPersistentState
-[ ] useSgPersistentState: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Com isolamento por namespace
-    [ ] 3) Serialize e deserialize customizados
-    [ ] 4) Versionamento de estado
-[ ] useSgTime: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Sem provider (fallback)
-    [ ] 3) Usando tick para re-renders
+[x] useComponentsI18n: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Construir componentes conscientes do locale
+[x] useSgEnvironment: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Default (sem provider)
+    [x] 2) Com provider
+[x] useSgPersistence: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Quando usar vs useSgPersistentState
+[x] useSgPersistentState: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Com isolamento por namespace
+    [x] 3) Serialize e deserialize customizados
+    [x] 4) Versionamento de estado
+[x] useSgTime: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Sem provider (fallback)
+    [x] 3) Usando tick para re-renders
 
 #### Providers
-[ ] SgClockThemeProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Tema local customizado
-    [ ] 3) Registro global
-[ ] SgComponentsI18nProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Troca dinamica de locale
-    [ ] 3) API imperativa (setComponentsI18n)
-    [ ] 4) Sobrescrita de mensagens
-[ ] SgEnvironmentProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Default (namespace vazio)
-    [ ] 2) Namespace customizado
-    [ ] 3) REST (por usuario)
-    [ ] 4) Hybrid (local + REST)
-    [ ] 5) Playground
-[ ] SgTimeProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Uso basico
-    [ ] 2) Sem provedor (fallback)
-    [ ] 3) Integracao com Next.js
+[x] SgClockThemeProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Tema local customizado
+    [x] 3) Registro global
+[x] SgComponentsI18nProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Troca dinamica de locale
+    [x] 3) API imperativa (setComponentsI18n)
+    [x] 4) Sobrescrita de mensagens
+[x] SgEnvironmentProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Default (namespace vazio)
+    [x] 2) Namespace customizado
+    [x] 3) REST (por usuario)
+    [x] 4) Hybrid (local + REST)
+    [x] 5) Playground
+[x] SgTimeProvider: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Uso basico
+    [x] 2) Sem provedor (fallback)
+    [x] 3) Integracao com Next.js
 
 #### Outros
-[ ] SgWizard: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
-    [ ] 1) Validacao automatica
-    [ ] 2) stepNavigation
-    [ ] 3) Stepper com Icones
-    [ ] 4) Stepper Numerado
-    [ ] 5) Labels customizados
-    [ ] 6) onBeforeNext async
-    [ ] 7) validateStep
-    [ ] 8) Playground
-[ ] SgBenchmark: decidir se entra no mesmo padrão de `samples` e validar com esbuild
-    [ ] 1) SgInputText (uncontrolled)
-    [ ] 2) Native input (uncontrolled)
-    [ ] 3) Playground
-[ ] Theme page: decidir se vira checklist próprio de exemplos de tema
-    [ ] 1) Instalacao
-    [ ] 2) Setup Basico
-    [ ] 3) Hook useSgTheme
-    [ ] 4) Usando CSS Variables
-    [ ] 5) Paletas de Cores
-    [ ] 6) Cores Semanticas
-    [ ] 7) Cores Neutras
-    [ ] 8) Tokens de Componentes
-    [ ] 9) Configuracao do Tailwind
-    [ ] 10) Estado Atual do Tema
-    [ ] 11) Persistencia no localStorage
+[x] SgWizard: criar `samples`, extrair `.tsx.playground`, separar exemplos da página e validar com esbuild
+    [x] 1) Validacao automatica
+    [x] 2) stepNavigation
+    [x] 3) Stepper com Icones
+    [x] 4) Stepper Numerado
+    [x] 5) Labels customizados
+    [x] 6) onBeforeNext async
+    [x] 7) validateStep
+    [x] 8) Playground
+[x] SgBenchmark: decidir se entra no mesmo padrão de `samples` e validar com esbuild
+    [x] 1) SgInputText (uncontrolled)
+    [x] 2) Native input (uncontrolled)
+    [x] 3) Playground
+- Theme page: manter como documentação temática; não virar checklist próprio de `samples`

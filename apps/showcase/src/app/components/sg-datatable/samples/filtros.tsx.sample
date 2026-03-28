@@ -1,0 +1,52 @@
+import React from "react";
+import { SgDatatable } from "@seedgrid/fe-components";
+
+type ProductRow = {
+  id: number;
+  code: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+  status: "INSTOCK" | "LOWSTOCK" | "OUTOFSTOCK";
+};
+
+const PRODUCT_ROWS: ProductRow[] = [
+  { id: 1, code: "P-1000", name: "Notebook Pro 14", category: "Computers", price: 1899, stock: 22, status: "INSTOCK" },
+  { id: 2, code: "P-1001", name: "Mechanical Keyboard", category: "Accessories", price: 149, stock: 64, status: "INSTOCK" },
+  { id: 3, code: "P-1002", name: "Ergonomic Mouse", category: "Accessories", price: 89, stock: 48, status: "INSTOCK" },
+  { id: 4, code: "P-1003", name: "4K Monitor 27", category: "Monitors", price: 499, stock: 8, status: "LOWSTOCK" },
+  { id: 5, code: "P-1004", name: "USB-C Dock", category: "Accessories", price: 219, stock: 11, status: "LOWSTOCK" },
+  { id: 6, code: "P-1005", name: "Noise Cancelling Headset", category: "Audio", price: 329, stock: 31, status: "INSTOCK" },
+  { id: 7, code: "P-1006", name: "Webcam 4K", category: "Video", price: 179, stock: 0, status: "OUTOFSTOCK" },
+  { id: 8, code: "P-1007", name: "Portable SSD 2TB", category: "Storage", price: 259, stock: 19, status: "INSTOCK" },
+  { id: 9, code: "P-1008", name: "Wi-Fi Router AX", category: "Networking", price: 199, stock: 5, status: "LOWSTOCK" },
+  { id: 10, code: "P-1009", name: "Graphics Tablet", category: "Creative", price: 399, stock: 13, status: "INSTOCK" },
+  { id: 11, code: "P-1010", name: "Studio Microphone", category: "Audio", price: 249, stock: 7, status: "LOWSTOCK" },
+  { id: 12, code: "P-1011", name: "Smart Light Bar", category: "Home Office", price: 99, stock: 0, status: "OUTOFSTOCK" }
+];
+
+const FILTER_COLUMNS = [
+  { field: "code", header: "Code", sortable: true, filter: true, filterPlaceholder: "Filter code" },
+  { field: "name", header: "Name", sortable: true, filter: true, filterPlaceholder: "Filter name" },
+  { field: "category", header: "Category", sortable: true, filter: true, filterPlaceholder: "Filter category" },
+  { field: "status", header: "Status", sortable: true, filter: true, filterPlaceholder: "Filter status" },
+  { field: "price", header: "Price", sortable: true, align: "right" }
+];
+
+export default function FilterDatatableExample() {
+  return (
+    <SgDatatable
+      id="datatable-filter"
+      title="Search and filter"
+      value={PRODUCT_ROWS}
+      columns={FILTER_COLUMNS}
+      dataKey="id"
+      paginator
+      rows={6}
+      showGlobalFilter
+      showColumnFilters
+      showClearFiltersButton
+    />
+  );
+}

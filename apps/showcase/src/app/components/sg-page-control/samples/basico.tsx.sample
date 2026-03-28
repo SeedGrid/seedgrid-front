@@ -1,0 +1,27 @@
+import React from "react";
+import { Receipt, ShieldCheck, UserRound } from "lucide-react";
+import { SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgPageControl
+      defaultActivePageId="registration"
+      style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 12 }}
+    >
+      <SgPageControlPage
+        id="registration"
+        title="Registration"
+        icon={<UserRound className="size-4" />}
+        style={{ backgroundColor: "rgba(59, 130, 246, 0.08)" }}
+      >
+        Registration content
+      </SgPageControlPage>
+      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>
+        Fiscal content
+      </SgPageControlPage>
+      <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>
+        Access content
+      </SgPageControlPage>
+    </SgPageControl>
+  );
+}

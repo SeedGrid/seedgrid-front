@@ -1,0 +1,42 @@
+import * as React from "react";
+import { SgButton, SgFlipDigit, SgGrid } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState("5");
+  const [width, setWidth] = React.useState(80);
+  const [height, setHeight] = React.useState(120);
+  const [fontSize, setFontSize] = React.useState(70);
+
+  const next = () => setValue((prev) => String((Number(prev) + 1) % 10));
+  const random = () => setValue(String(Math.floor(Math.random() * 10)));
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" onClick={next}>+1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={random}>Random</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("A")}>A</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("Z")}>Z</SgButton>
+      </SgGrid>
+
+      <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+        <label className="text-xs">
+          Width ({width})
+          <input className="mt-1 w-full" type="range" min={40} max={160} step={2} value={width} onChange={(e) => setWidth(Number(e.target.value))} />
+        </label>
+        <label className="text-xs">
+          Height ({height})
+          <input className="mt-1 w-full" type="range" min={60} max={220} step={2} value={height} onChange={(e) => setHeight(Number(e.target.value))} />
+        </label>
+        <label className="text-xs">
+          Font ({fontSize})
+          <input className="mt-1 w-full" type="range" min={30} max={150} step={2} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
+        </label>
+      </SgGrid>
+
+      <div className="rounded border border-border p-4">
+        <SgFlipDigit value={value} width={width} height={height} fontSize={fontSize} />
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,30 @@
+import React from "react";
+import { SgPickList, type SgPickListItem } from "@seedgrid/fe-components";
+
+const ROADMAP_SOURCE: SgPickListItem[] = [
+  { label: "Authentication", value: "auth" },
+  { label: "Dashboard", value: "dashboard" },
+  { label: "Notifications", value: "notifications" },
+  { label: "Audit logs", value: "audit" },
+  { label: "Billing", value: "billing" }
+];
+
+export default function Example() {
+  const [basicValue, setBasicValue] = React.useState({ source: ROADMAP_SOURCE, target: [] as SgPickListItem[] });
+
+  return (
+    <>
+      <SgPickList
+        id="pick-basic"
+        title="Roadmap planning"
+        source={ROADMAP_SOURCE}
+        target={[]}
+        value={basicValue}
+        onChange={(event) => setBasicValue({ source: event.source, target: event.target })}
+      />
+      <p className="text-sm text-[rgb(var(--sg-muted))]">
+        Estado atual: source [{basicValue.source.length}] | target [{basicValue.target.length}]
+      </p>
+    </>
+  );
+}

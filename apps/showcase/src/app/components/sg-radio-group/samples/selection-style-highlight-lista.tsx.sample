@@ -1,0 +1,30 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+import { Landmark, Bell, RefreshCw } from "lucide-react";
+
+const LIST_HIGHLIGHT_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Reserve", value: "reserve", icon: <Landmark className="w-4 h-4 text-indigo-600" /> },
+  { label: "Alert", value: "alert", icon: <Bell className="w-4 h-4 text-rose-600" /> },
+  { label: "Refresh", value: "refresh", icon: <RefreshCw className="w-4 h-4 text-emerald-600" /> }
+];
+
+export default function Example() {
+  const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<string | number | null>("reserve");
+
+  return (
+    <>
+      <SgRadioGroup
+        id="highlight-list"
+        title="Options"
+        source={LIST_HIGHLIGHT_OPTIONS}
+        value={selectedHighlightStyle ?? undefined}
+        onChange={setSelectedHighlightStyle}
+        selectionStyle="highlight"
+        className="max-w-xs"
+      />
+      <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
+        Value: <strong>{selectedHighlightStyle ?? "None"}</strong>
+      </p>
+    </>
+  );
+}

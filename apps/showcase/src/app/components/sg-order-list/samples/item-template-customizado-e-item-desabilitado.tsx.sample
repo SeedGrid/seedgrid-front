@@ -1,0 +1,35 @@
+import React from "react";
+import { SgOrderList, type SgOrderListItem, SgGrid } from "@seedgrid/fe-components";
+
+const BACKLOG_ITEMS: SgOrderListItem[] = [
+  { label: "Implementar filtros", value: "filtros", data: { effort: "M", priority: "Alta" } },
+  { label: "Ajustar layout mobile", value: "mobile", data: { effort: "S", priority: "Media" } },
+  { label: "Refatorar API de pedidos", value: "api", data: { effort: "L", priority: "Alta" } },
+  { label: "Atualizar testes E2E", value: "e2e", data: { effort: "M", priority: "Baixa" }, disabled: true }
+];
+
+export default function Example() {
+  const [backlogItems, setBacklogItems] = React.useState<SgOrderListItem[]>(BACKLOG_ITEMS);
+
+  return (
+    <SgOrderList
+      id="order-template"
+      title="Backlog da sprint"
+      source={BACKLOG_ITEMS}
+      value={backlogItems}
+      onChange={setBacklogItems}
+      controlsPosition="right"
+      itemTemplate={(item) => {
+        const meta = item.data as { effort: string; priority: string } | undefined;
+        return (
+          <SgGrid columns={{ base: 1, sm: 2 }} gap={8} className="w-full">
+            <span className="font-medium">{item.label}</span>
+            <span className="text-xs text-[rgb(var(--sg-muted))]">
+              {"Prioridade: " + (meta?.priority ?? "-") + " | Esforco: " + (meta?.effort ?? "-")}
+            </span>
+          </SgGrid>
+        );
+      }}
+    />
+  );
+}

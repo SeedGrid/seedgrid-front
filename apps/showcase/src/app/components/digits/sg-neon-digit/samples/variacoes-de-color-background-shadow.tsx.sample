@@ -1,0 +1,13 @@
+"use client";
+
+import { SgGrid, SgNeonDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 3 }} gap={12}>
+      <SgNeonDigit value="teste" color="#e2f6ff" backgroundColor="#0b1130" shadowColor="#38bdf8" />
+      <SgNeonDigit value="teste" color="#f5e9ff" backgroundColor="#170f2b" shadowColor="#a855f7" />
+      <SgNeonDigit value="teste" color="#fff7e8" backgroundColor="#2a1a14" shadowColor="#fb923c" />
+    </SgGrid>
+  );
+}

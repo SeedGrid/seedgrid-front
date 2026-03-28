@@ -1,0 +1,16 @@
+import * as React from "react";
+import { SgFlipDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const digit = "2";
+
+  return (
+    <div className="flex items-center gap-2">
+      <SgFlipDigit value={digit} />
+      <SgFlipDigit value={String((Number(digit) + 1) % 10)} />
+      <span className="mx-2 text-4xl font-bold">:</span>
+      <SgFlipDigit value={String((Number(digit) + 2) % 10)} />
+      <SgFlipDigit value={String((Number(digit) + 3) % 10)} />
+    </div>
+  );
+}

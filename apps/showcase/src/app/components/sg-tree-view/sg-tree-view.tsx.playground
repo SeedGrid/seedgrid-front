@@ -1,0 +1,48 @@
+import * as React from "react";
+import { SgTreeView, type SgTreeNode } from "@seedgrid/fe-components";
+
+const nodes: SgTreeNode[] = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users" },
+          { id: "users.create", label: "Create user" }
+        ]
+      },
+      {
+        id: "reports",
+        label: "Reports",
+        children: [
+          { id: "reports.sales", label: "Sales report" },
+          { id: "reports.financial", label: "Financial report" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function App() {
+  const [checkable, setCheckable] = React.useState(true);
+  const [searchable, setSearchable] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="flex gap-4 text-xs">
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={checkable} onChange={(e) => setCheckable(e.target.checked)} />checkable</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={searchable} onChange={(e) => setSearchable(e.target.checked)} />searchable</label>
+      </div>
+      <SgTreeView
+        nodes={nodes}
+        searchable={searchable}
+        searchPlaceholder="Search..."
+        checkable={checkable}
+        defaultExpandedIds={["root", "users"]}
+      />
+    </div>
+  );
+}

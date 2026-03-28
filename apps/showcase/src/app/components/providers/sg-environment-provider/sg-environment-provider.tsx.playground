@@ -1,0 +1,58 @@
+import * as React from "react";
+import {
+  SgEnvironmentProvider,
+  SgInputText,
+  buildSgPersistenceKey,
+  useSgEnvironment,
+} from "@seedgrid/fe-components";
+
+function EnvInfo({ baseKey }: { baseKey: string }) {
+  const env = useSgEnvironment();
+  const namespace = env.namespaceProvider.getNamespace();
+  const fullKey = buildSgPersistenceKey(baseKey, namespace, env.persistence.scope);
+
+  return (
+    <div className="space-y-1 rounded border border-border bg-background p-3 text-xs">
+      <div>namespace: <code>{namespace || "(vazio)"}</code></div>
+      <div>baseKey: <code>{baseKey}</code></div>
+      <div>fullKey: <code>{fullKey ?? "null"}</code></div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [namespace, setNamespace] = React.useState("u:123");
+  const [scope, setScope] = React.useState("app:crm");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-3 md:grid-cols-2">
+        <SgInputText
+          id="namespace"
+          label="Namespace"
+          inputProps={{
+            value: namespace,
+            onChange: (event) => setNamespace(event.currentTarget.value),
+          }}
+        />
+        <SgInputText
+          id="scope"
+          label="Scope"
+          inputProps={{
+            value: scope,
+            onChange: (event) => setScope(event.currentTarget.value),
+          }}
+        />
+      </div>
+
+      <SgEnvironmentProvider
+        value={{
+          namespaceProvider: { getNamespace: () => namespace },
+          persistence: { scope, mode: "fallback", stateVersion: 1 },
+        }}
+      >
+        <EnvInfo baseKey="fab:theme" />
+      </SgEnvironmentProvider>
+    </div>
+  );
+}

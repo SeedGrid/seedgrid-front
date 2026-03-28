@@ -1,0 +1,14 @@
+import React from "react";
+import { SgAvatar } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <SgAvatar label="C" shape="circle" />
+      <SgAvatar label="S" shape="square" />
+      <SgAvatar label="XS" size="xs" />
+      <SgAvatar label="LG" size="lg" />
+      <SgAvatar src="https://i.pravatar.cc/150?img=47" shape="square" />
+    </div>
+  );
+}

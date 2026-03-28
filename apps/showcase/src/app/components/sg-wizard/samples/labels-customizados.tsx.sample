@@ -1,0 +1,28 @@
+import React from "react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgWizard
+      labels={{ next: "Avancar", previous: "Voltar", finish: "Concluir" }}
+      onFinish={() => {}}
+    >
+      <SgWizardPage>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Primeiro passo customizado</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Exemplo com labels sobrescritos.
+          </p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Segundo passo customizado</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            O botao final tambem pode ser renomeado.
+          </p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

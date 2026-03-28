@@ -1,0 +1,76 @@
+import * as React from "react";
+import * as SeedGrid from "@seedgrid/fe-components";
+
+const SgOrderListFromLib = (SeedGrid as Record<string, unknown>).SgOrderList as React.ComponentType<any> | undefined;
+
+const ITEMS = [
+  { label: "Planejamento", value: "plan" },
+  { label: "Design", value: "design" },
+  { label: "Implementacao", value: "build" },
+  { label: "Testes", value: "test" },
+  { label: "Publicacao", value: "release" }
+];
+
+export default function App() {
+  const hasComponent = typeof SgOrderListFromLib === "function";
+  const [value, setValue] = React.useState(ITEMS);
+  const [showControls, setShowControls] = React.useState(true);
+  const [selectionMode, setSelectionMode] = React.useState<"single" | "multiple">("multiple");
+
+  return (
+    <div className="space-y-4 p-2">
+      {!hasComponent ? (
+        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+          SgOrderList is not available in the published Sandpack version. Showing fallback.
+        </div>
+      ) : null}
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="inline-flex items-center gap-2 text-xs">
+          <input
+            type="checkbox"
+            checked={showControls}
+            onChange={(event) => setShowControls(event.target.checked)}
+          />
+          showControls
+        </label>
+
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">selectionMode</span>
+          <select
+            value={selectionMode}
+            onChange={(event) => setSelectionMode(event.target.value as "single" | "multiple")}
+            className="w-full rounded border border-border px-2 py-1"
+          >
+            <option value="single">single</option>
+            <option value="multiple">multiple</option>
+          </select>
+        </label>
+      </div>
+
+      <div className="rounded border border-border p-4">
+        {hasComponent ? (
+          <SgOrderListFromLib
+            id="orderlist-playground"
+            title="Pipeline"
+            source={ITEMS}
+            value={value}
+            onChange={setValue}
+            showControls={showControls}
+            selectionMode={selectionMode}
+          />
+        ) : (
+          <ol className="list-inside list-decimal space-y-1 text-sm">
+            {value.map((item: { value: string; label: string }) => (
+              <li key={item.value}>{item.label}</li>
+            ))}
+          </ol>
+        )}
+      </div>
+
+      <div className="rounded border border-border bg-muted/30 px-3 py-2 text-xs">
+        order: {value.map((item) => item.label).join(" > ")}
+      </div>
+    </div>
+  );
+}

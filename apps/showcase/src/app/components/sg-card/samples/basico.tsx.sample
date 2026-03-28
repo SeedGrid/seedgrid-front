@@ -1,0 +1,28 @@
+import React from "react";
+import { SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgCard
+      title="Resumo financeiro"
+      description="Visao consolidada do dia"
+      footer={
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>Atualizado agora</span>
+          <span>Ultima sincronizacao</span>
+        </div>
+      }
+    >
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Receita</span>
+          <span className="font-semibold">R$ 12.400</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground">Pedidos</span>
+          <span className="font-semibold">83</span>
+        </div>
+      </div>
+    </SgCard>
+  );
+}

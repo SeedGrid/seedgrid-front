@@ -1,0 +1,9 @@
+<div className="h-64">
+  <SgCarousel
+    items={createCarouselItems(sampleImages.slice(0, 6))}
+    numVisible={1}
+    circular={false}
+    orientation="horizontal"
+    height="100%"
+  />
+</div>

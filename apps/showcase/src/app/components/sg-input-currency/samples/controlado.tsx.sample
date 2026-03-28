@@ -1,0 +1,25 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgButton, SgGrid, SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { control, watch, setValue } = useForm({
+    defaultValues: {
+      controlled: "1234.50"
+    }
+  });
+
+  return (
+    <div className="w-96 space-y-3">
+      <SgInputCurrency id="demo-controlled" label="Controlado" name="controlled" control={control} currency="BRL" />
+
+      <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "12345.00")}>Set API</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue("controlled", "0.00")}>Reset</SgButton>
+        <SgButton size="sm" appearance="outline" severity="danger" onClick={() => setValue("controlled", "")}>Limpar</SgButton>
+      </SgGrid>
+
+      <p>Estado atual: "{watch("controlled")}"</p>
+    </div>
+  );
+}

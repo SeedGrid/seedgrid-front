@@ -1,0 +1,21 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>Abrir com auto close</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        autoCloseMs={3000}
+        title="Sincronizacao concluida"
+        subtitle="O dialog fecha em 3 segundos"
+      >
+        <div className="text-sm text-muted-foreground">Esse exemplo mostra o uso de autoCloseMs.</div>
+      </SgDialog>
+    </>
+  );
+}

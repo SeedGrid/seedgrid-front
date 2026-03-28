@@ -1,0 +1,36 @@
+"use client";
+
+import React from "react";
+import { SgRadialGauge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(72);
+
+  return (
+    <SgRadialGauge
+      min={0}
+      max={120}
+      value={value}
+      onValueChange={setValue}
+      startAngle={150}
+      endAngle={30}
+      ringThickness={36}
+      radiusFactor={1}
+      axisColor="#e2e8f0"
+      showTicks={false}
+      showLabels
+      majorTickCount={6}
+      labelFormatter={(entry) => String(Math.round(entry))}
+      ranges={[
+        { start: 0, end: 40, color: "#22c55e" },
+        { start: 40, end: 85, color: "#f59e0b" },
+        { start: 85, end: 120, color: "#ef4444" }
+      ]}
+      primaryPointerType="marker"
+      primaryPointerShape="circle"
+      primaryPointerSize={14}
+      primaryPointerColor="#0f172a"
+      primaryPointerDraggable
+    />
+  );
+}

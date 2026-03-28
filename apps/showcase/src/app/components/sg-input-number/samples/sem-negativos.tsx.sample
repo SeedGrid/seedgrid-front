@@ -1,0 +1,13 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-no-negative"
+      label="Somente positivos"
+      name="positivo"
+      allowNegative={false}
+      decimals={2}
+    />
+  );
+}

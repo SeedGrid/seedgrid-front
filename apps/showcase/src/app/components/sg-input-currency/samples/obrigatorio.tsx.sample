@@ -1,0 +1,22 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <>
+      <SgInputCurrency id="demo-required" label="Obrigatório" required name="required" register={register} currency="BRL" />
+      <SgInputCurrency
+        id="demo-required-custom"
+        label="Mensagem customizada"
+        required
+        requiredMessage="Informe um valor monetário."
+        name="requiredCustom"
+        register={register}
+        currency="BRL"
+      />
+    </>
+  );
+}

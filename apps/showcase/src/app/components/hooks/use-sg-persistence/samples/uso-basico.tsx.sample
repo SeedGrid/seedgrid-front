@@ -1,0 +1,26 @@
+import { useSgPersistence } from "@seedgrid/fe-components";
+
+export default function SaveOnAction() {
+  const persistence = useSgPersistence();
+
+  const handleSave = async () => {
+    await persistence.save("user:preferences", { theme: "dark", lang: "pt-BR" });
+  };
+
+  const handleLoad = async () => {
+    const prefs = await persistence.load("user:preferences");
+    console.log(prefs);
+  };
+
+  const handleClear = async () => {
+    await persistence.clear("user:preferences");
+  };
+
+  return (
+    <div>
+      <button onClick={handleSave}>Salvar</button>
+      <button onClick={handleLoad}>Carregar</button>
+      <button onClick={handleClear}>Limpar</button>
+    </div>
+  );
+}

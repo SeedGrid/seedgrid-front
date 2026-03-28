@@ -1,0 +1,13 @@
+import React from "react";
+import { Heart, Star, ThumbsUp } from "lucide-react";
+import { SgCheckboxGroup, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const OPTIONS_WITH_ICONS: SgCheckboxGroupOption[] = [
+  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
+  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
+  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
+];
+
+export default function Example() {
+  return <SgCheckboxGroup id="with-icons" title="Choose actions" source={OPTIONS_WITH_ICONS} />;
+}

@@ -22,8 +22,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const EXAMPLE_SPEEDOMETER_CODE = `import React from "react";
@@ -534,7 +534,7 @@ export default function SgRadialGaugePage() {
               />
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_SPEEDOMETER_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/speedometer-style.tsx.sample" />
         </Section>
 
         <Section
@@ -591,7 +591,7 @@ export default function SgRadialGaugePage() {
               />
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_THICK_RING_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/thicker-ring-ringthickness.tsx.sample" />
         </Section>
 
         <Section
@@ -633,7 +633,7 @@ export default function SgRadialGaugePage() {
               className="w-64"
             />
           </div>
-          <CodeBlock code={EXAMPLE_AXIS_INVERSED_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/axis-inversed-angulos-custom.tsx.sample" />
         </Section>
 
         <Section title="4) Multi Pointers + Annotation" description="Combines marker, range pointer, and value-based annotation.">
@@ -684,7 +684,7 @@ export default function SgRadialGaugePage() {
               <p>Range pointer: <span className="font-semibold">{Math.round(consumption)}</span></p>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_MULTI_POINTER_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/multi-pointers-annotation.tsx.sample" />
         </Section>
 
         <Section title="5) Range Pointer (Donut)" description="Visual tipo donut usando pointer do tipo range.">
@@ -711,7 +711,7 @@ export default function SgRadialGaugePage() {
               centerContent={<div className="text-lg font-semibold text-slate-700">50 / 100</div>}
             />
           </div>
-          <CodeBlock code={EXAMPLE_RANGE_POINTER_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/range-pointer-donut.tsx.sample" />
         </Section>
 
         <Section
@@ -778,7 +778,7 @@ export default function SgRadialGaugePage() {
               </div>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_OTHER_PROPS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/samples/other-props-size-labels-accessibility.tsx.sample" />
         </Section>
 
         <Section
@@ -789,7 +789,7 @@ export default function SgRadialGaugePage() {
             title="SgRadialGauge Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/gadgets/sg-radial-gauge/sg-radial-gauge.tsx.playground"
             height={760}
             defaultOpen
           />

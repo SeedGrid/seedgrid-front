@@ -233,8 +233,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const MENU_CODE_SNIPPET = `const MENU = [
@@ -1178,7 +1178,7 @@ export default function SgMenuPage() {
               </div>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_SIDEBAR_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/sidebar-fixa.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -1203,7 +1203,7 @@ export default function SgMenuPage() {
             brand={{ title: "SeedGrid ERP" }}
             onNavigate={(node) => setActiveId(node.id)}
           />
-          <CodeBlock code={EXAMPLE_DRAWER_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/drawer-mobile.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -1212,7 +1212,7 @@ export default function SgMenuPage() {
               <SgMenu menu={MENU} selection={{ activeId }} menuStyle="inline" menuVariantStyle="PanelMenu" onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_PANEL_MENU_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/panel-menu.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -1221,7 +1221,7 @@ export default function SgMenuPage() {
               <SgMenu menu={MENU} selection={{ activeId }} menuStyle="inline" menuVariantStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_TIERED_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/tiered.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -1233,7 +1233,7 @@ export default function SgMenuPage() {
               menuVariantStyle="MegaMenuHorizontal"
             />
           </div>
-          <CodeBlock code={EXAMPLE_MEGA_HORIZONTAL_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/mega-menu-horizontal.tsx.sample" />
         </Section>
 
         <Section title={texts.section6Title} description={texts.section6Description}>
@@ -1245,7 +1245,7 @@ export default function SgMenuPage() {
               menuVariantStyle="MegaMenuVertical"
             />
           </div>
-          <CodeBlock code={EXAMPLE_MEGA_VERTICAL_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/mega-menu-vertical.tsx.sample" />
         </Section>
 
         <Section title={texts.section7Title} description={texts.section7Description}>
@@ -1312,7 +1312,7 @@ export default function SgMenuPage() {
               </SgDockLayout>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_DOCKABLE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/sidebar-dockable.tsx.sample" />
         </Section>
 
         <Section title={texts.section8Title} description={texts.section8Description}>
@@ -1320,7 +1320,7 @@ export default function SgMenuPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-menu/sg-menu.tsx.playground"
             height={780}
             defaultOpen
           />

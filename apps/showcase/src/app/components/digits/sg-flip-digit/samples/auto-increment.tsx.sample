@@ -1,0 +1,22 @@
+import * as React from "react";
+import { SgButton, SgFlipDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [running, setRunning] = React.useState(false);
+  const [autoDigit, setAutoDigit] = React.useState("0");
+
+  React.useEffect(() => {
+    if (!running) return;
+    const timer = window.setInterval(() => {
+      setAutoDigit((prev) => String((Number(prev) + 1) % 10));
+    }, 1300);
+    return () => window.clearInterval(timer);
+  }, [running]);
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgFlipDigit value={autoDigit} />
+      <SgButton onClick={() => setRunning((prev) => !prev)}>{running ? "Parar" : "Iniciar"}</SgButton>
+    </div>
+  );
+}

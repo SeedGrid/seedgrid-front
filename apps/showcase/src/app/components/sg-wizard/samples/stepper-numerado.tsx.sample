@@ -1,0 +1,33 @@
+import React from "react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgWizard stepper="numbered" onFinish={() => {}}>
+      <SgWizardPage title="Introducao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">1. Introducao</div>
+          <p className="mt-1 text-sm text-muted-foreground">Conteudo introdutorio.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Detalhes">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">2. Detalhes</div>
+          <p className="mt-1 text-sm text-muted-foreground">Preencha os detalhes.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Revisao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">3. Revisao</div>
+          <p className="mt-1 text-sm text-muted-foreground">Revise as informacoes.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Confirmacao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">4. Confirmacao</div>
+          <p className="mt-1 text-sm text-muted-foreground">Confirme e finalize.</p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

@@ -1,0 +1,30 @@
+import React from "react";
+import { SgPickList, type SgPickListItem } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [filterValue, setFilterValue] = React.useState({
+    source: [
+      { label: "Berlin", value: "berlin" },
+      { label: "Boston", value: "boston" },
+      { label: "Lisbon", value: "lisbon" },
+      { label: "Madrid", value: "madrid" },
+      { label: "Sao Paulo", value: "sao-paulo" }
+    ] as SgPickListItem[],
+    target: [] as SgPickListItem[]
+  });
+
+  return (
+    <SgPickList
+      id="pick-filter"
+      title="Cities"
+      source={filterValue.source}
+      target={filterValue.target}
+      value={filterValue}
+      onChange={(event) => setFilterValue({ source: event.source, target: event.target })}
+      showSourceFilter
+      showTargetFilter
+      sourceHeader="Available"
+      targetHeader="Selected"
+    />
+  );
+}

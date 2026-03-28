@@ -1,0 +1,32 @@
+import * as React from "react";
+import { Box, Building2, FilePenLine, Layers3 } from "lucide-react";
+import { SgBreadcrumb, SgButton, type SgBreadcrumbSeparator } from "@seedgrid/fe-components";
+
+const items = [
+  { id: "modules", label: "Modules", href: "/modules", icon: <Layers3 className="size-4" /> },
+  { id: "registrations", label: "Registrations", href: "/modules/registrations", icon: <Building2 className="size-4" /> },
+  { id: "products", label: "Products", href: "/modules/registrations/products", icon: <Box className="size-4" /> },
+  { id: "edit", label: "Edit", icon: <FilePenLine className="size-4" /> }
+];
+
+export default function App() {
+  const [separator, setSeparator] = React.useState<SgBreadcrumbSeparator>("chevron");
+  const [variant, setVariant] = React.useState<"default" | "subtle" | "primary">("default");
+  const [showHomeIcon, setShowHomeIcon] = React.useState(true);
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setSeparator("chevron")}>chevron</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeparator("slash")}>slash</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeparator("dot")}>dot</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setVariant("default")}>default</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setVariant("subtle")}>subtle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setVariant("primary")}>primary</SgButton>
+      </div>
+      <SgButton size="sm" appearance="outline" onClick={() => setShowHomeIcon((v) => !v)}>toggle home icon</SgButton>
+      <SgBreadcrumb items={items} separator={separator} variant={variant} showHomeIcon={showHomeIcon} />
+    </div>
+  );
+}

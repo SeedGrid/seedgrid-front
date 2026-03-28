@@ -1,0 +1,33 @@
+"use client";
+
+import React from "react";
+import { SgRadialGauge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(35);
+  return (
+    <SgRadialGauge
+      min={0}
+      max={100}
+      value={value}
+      onValueChange={setValue}
+      width={220}
+      height={220}
+      axisWidth={10}
+      ringThickness={16}
+      animationDuration={900}
+      primaryPointerType="needle"
+      primaryPointerLabel={`${Math.round(value)}%`}
+      labelFormatter={(entry) => `${Math.round(entry)}%`}
+      majorTickCount={5}
+      minorTicksPerInterval={0}
+      ariaLabel="Gauge de eficiencia"
+      style={{ filter: "drop-shadow(0 4px 10px rgb(0 0 0 / 0.12))" }}
+      ranges={[
+        { start: 0, end: 40, color: "#22c55e", width: 12 },
+        { start: 40, end: 70, color: "#f59e0b", width: 12 },
+        { start: 70, end: 100, color: "#ef4444", width: 12 }
+      ]}
+    />
+  );
+}

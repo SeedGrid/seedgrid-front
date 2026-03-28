@@ -1,0 +1,13 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+import { Sun, Moon, Cloud } from "lucide-react";
+
+const WEATHER_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Sun", value: "sun", icon: <Sun className="w-5 h-5 text-yellow-500" /> },
+  { label: "Moon", value: "moon", icon: <Moon className="w-5 h-5 text-blue-500" /> },
+  { label: "Cloud", value: "cloud", icon: <Cloud className="w-5 h-5 text-gray-500" /> }
+];
+
+export default function Example() {
+  return <SgRadioGroup id="horizontal-colored" title="Weather condition" source={WEATHER_OPTIONS} orientation="horizontal" />;
+}

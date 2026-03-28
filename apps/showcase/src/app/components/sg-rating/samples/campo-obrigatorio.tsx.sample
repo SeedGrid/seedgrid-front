@@ -1,0 +1,28 @@
+import * as React from "react";
+import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(0);
+
+  return (
+    <div className="space-y-3">
+      <SgRating
+        label="Required rating"
+        value={value}
+        required
+        requiredMessage="Provide a rating before continuing"
+        onChange={setValue}
+      />
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>Clear</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(1)}>Rate 1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>Rate 5</SgButton>
+      </SgGrid>
+
+      <p className="text-sm text-muted-foreground">
+        Current value: <strong>{value}</strong>
+      </p>
+    </div>
+  );
+}

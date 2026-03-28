@@ -1,0 +1,15 @@
+// React component
+<div className="bg-[rgb(var(--sg-primary-600))] text-[rgb(var(--sg-on-primary))]">
+  Primary Button
+</div>
+
+// Tailwind classes
+<div className="bg-sg-primary-600 text-sg-on-primary">
+  Primary Button
+</div>
+
+// Plain CSS
+.my-button {
+  background-color: rgb(var(--sg-primary-600));
+  color: rgb(var(--sg-on-primary));
+}

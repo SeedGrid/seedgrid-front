@@ -1,0 +1,35 @@
+import React from "react";
+import { Bell, Landmark, RefreshCw, Star } from "lucide-react";
+import { SgPickList, type SgPickListItem } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [transferOnlyValue, setTransferOnlyValue] = React.useState({
+    source: [
+      { label: "Backlog", value: "backlog", icon: <Landmark className="h-4 w-4" /> },
+      { label: "In progress", value: "in-progress", icon: <RefreshCw className="h-4 w-4" /> },
+      { label: "Review", value: "review", icon: <Bell className="h-4 w-4" /> }
+    ] as SgPickListItem[],
+    target: [
+      { label: "Done", value: "done", icon: <Star className="h-4 w-4" /> }
+    ] as SgPickListItem[]
+  });
+
+  return (
+    <>
+      <SgPickList
+        id="pick-transfer-only"
+        title="Transfer only"
+        source={transferOnlyValue.source}
+        target={transferOnlyValue.target}
+        value={transferOnlyValue}
+        onChange={(event) => setTransferOnlyValue({ source: event.source, target: event.target })}
+        showSourceControls={false}
+        showTargetControls={false}
+        draggable={false}
+      />
+      <p className="text-xs text-muted-foreground">
+        Exemplo para cenarios em que voce so precisa mover itens entre listas.
+      </p>
+    </>
+  );
+}

@@ -1,0 +1,10 @@
+import { useSgTime } from "@seedgrid/fe-components";
+
+function Uptime() {
+  const { tick, serverStartMs } = useSgTime();
+  const seconds = Math.floor((Date.now() - serverStartMs) / 1000);
+
+  return <span>uptime: {seconds}s (tick: {tick})</span>;
+}
+
+export default Uptime;

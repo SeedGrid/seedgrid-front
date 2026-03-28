@@ -1,0 +1,35 @@
+import React from "react";
+import { SgPickList, type SgPickListItem, SgGrid } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [templateValue, setTemplateValue] = React.useState({
+    source: [
+      { label: "Frontend", value: "frontend", data: { owner: "Ana", effort: "M" } },
+      { label: "Backend", value: "backend", data: { owner: "Bruno", effort: "L" } },
+      { label: "QA", value: "qa", data: { owner: "Carla", effort: "S" }, disabled: true }
+    ] as SgPickListItem[],
+    target: [] as SgPickListItem[]
+  });
+
+  return (
+    <SgPickList
+      id="pick-template"
+      title="Team capacity"
+      source={templateValue.source}
+      target={templateValue.target}
+      value={templateValue}
+      onChange={(event) => setTemplateValue({ source: event.source, target: event.target })}
+      itemTemplate={(item) => {
+        const meta = item.data as { owner: string; effort: string } | undefined;
+        return (
+          <SgGrid columns={{ base: 1, sm: 2 }} gap={8} className="w-full">
+            <span className="font-medium">{item.label}</span>
+            <span className="text-xs text-[rgb(var(--sg-muted))]">
+              {"Owner: " + (meta?.owner ?? "-") + " | Effort: " + (meta?.effort ?? "-")}
+            </span>
+          </SgGrid>
+        );
+      }}
+    />
+  );
+}

@@ -1,0 +1,32 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgInputNumber
+        id="demo-prefix-text"
+        label="Preço"
+        prefixText="R$"
+        name="prefix"
+        decimals={2}
+      />
+
+      <SgInputNumber
+        id="demo-suffix-text"
+        label="Peso"
+        suffixText="kg"
+        name="suffix"
+        decimals={2}
+      />
+
+      <SgInputNumber
+        id="demo-both"
+        label="Total"
+        prefixText="R$"
+        suffixText="m"
+        name="both"
+        decimals={2}
+      />
+    </>
+  );
+}

@@ -1,0 +1,31 @@
+import React from "react";
+import { SgOrderList, type SgOrderListItem } from "@seedgrid/fe-components";
+
+const TEAM_ITEMS: SgOrderListItem[] = [
+  { label: "Ana - Produto", value: "ana" },
+  { label: "Bruno - Design", value: "bruno" },
+  { label: "Carla - Frontend", value: "carla" },
+  { label: "Diego - Backend", value: "diego" },
+  { label: "Elaine - QA", value: "elaine" }
+];
+
+export default function Example() {
+  const [teamItems, setTeamItems] = React.useState<SgOrderListItem[]>(TEAM_ITEMS);
+
+  return (
+    <>
+      <SgOrderList
+        id="order-drag"
+        title="Time de atendimento"
+        source={TEAM_ITEMS}
+        value={teamItems}
+        onChange={setTeamItems}
+        showControls={false}
+        draggable
+      />
+      <p className="text-xs text-muted-foreground">
+        Dica: arraste os itens para reordenar, sem usar os botoes.
+      </p>
+    </>
+  );
+}

@@ -23,8 +23,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function AutoRemoveExample() {
@@ -130,21 +130,7 @@ export default function SgBadgePage() {
         <SgBadge value={t(i18n, "showcase.component.badge.labels.admin")} style={{ minWidth: 88, justifyContent: "center" }} />
         <SgBadge value={t(i18n, "showcase.component.badge.labels.pending")} severity="warning" badgeStyle="soft" />
         <SgBadge value={t(i18n, "showcase.component.badge.labels.paid")} severity="success" badgeStyle="solid" />
-        <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.admin")}" style={{ minWidth: 88, justifyContent: "center" }} />
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.pending")}" severity="warning" badgeStyle="soft" />
-      <SgBadge value="${t(i18n, "showcase.component.badge.labels.paid")}" severity="success" badgeStyle="solid" />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge/samples/basico.tsx.sample" />
       </Section>
 
       <Section
@@ -155,22 +141,7 @@ export default function Example() {
         <SgBadge value="Soft" badgeStyle="soft" severity="secondary" />
         <SgBadge value="Outline" badgeStyle="outline" severity="info" />
         <SgBadge value="Ghost" badgeStyle="ghost" severity="neutral" />
-        <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="Solid" badgeStyle="solid" />
-      <SgBadge value="Soft" badgeStyle="soft" severity="secondary" />
-      <SgBadge value="Outline" badgeStyle="outline" severity="info" />
-      <SgBadge value="Ghost" badgeStyle="ghost" severity="neutral" />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge/samples/variants.tsx.sample" />
       </Section>
 
       <Section
@@ -181,22 +152,7 @@ export default function Example() {
         <SgBadge value="SM" size="sm" />
         <SgBadge value="MD" size="md" />
         <SgBadge value="LG" size="lg" />
-        <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value="XS" size="xs" />
-      <SgBadge value="SM" size="sm" />
-      <SgBadge value="MD" size="md" />
-      <SgBadge value="LG" size="lg" />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge/samples/sizes.tsx.sample" />
       </Section>
 
       <Section
@@ -207,22 +163,7 @@ export default function Example() {
         <SgBadge value={120} max={99} severity="danger" />
         <SgBadge dot severity="success" />
         <SgBadge dot severity="success" pulse />
-        <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgBadge value={3} severity="danger" />
-      <SgBadge value={120} max={99} severity="danger" />
-      <SgBadge dot severity="success" />
-      <SgBadge dot severity="success" pulse />
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge/samples/counter.tsx.sample" />
       </Section>
 
       <Section
@@ -231,38 +172,7 @@ export default function Example() {
       >
         <AutoRemoveExample />
         <ManualRemoveExample />
-        <CodeBlock
-          code={`import React from "react";
-import { SgBadge } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [visible, setVisible] = React.useState(true);
-
-  return (
-    <>
-      <SgBadge
-        value="${t(i18n, "showcase.component.badge.labels.removableAuto")}"
-        removable
-        autoRemove
-        onRemove={() => alert("onRemove")}
-      />
-
-      {visible ? (
-        <SgBadge
-          value="${t(i18n, "showcase.component.badge.labels.removableManual")}"
-          removable
-          autoRemove={false}
-          onRemove={() => {
-            alert("onRemove");
-            setVisible(false);
-          }}
-        />
-      ) : null}
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-badge/samples/actions.tsx.sample" />
       </Section>
 
         <Section title="6) Playground (SgPlayground)" description="Ajuste as props principais do SgBadge.">
@@ -270,7 +180,7 @@ export default function Example() {
             title="SgBadge Playground"
             interactive
             codeContract="appFile"
-            code={BADGE_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-badge/sg-badge.tsx.playground"
             height={560}
             defaultOpen
           />

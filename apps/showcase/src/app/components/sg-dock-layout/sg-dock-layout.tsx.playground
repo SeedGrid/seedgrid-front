@@ -1,0 +1,43 @@
+import * as React from "react";
+import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+
+export default function App() {
+  return (
+    <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
+      <SgDockLayout id="dock-playground-v3">
+        <SgDockZone zone="top" className="absolute left-0 right-0 top-0 h-20 items-start border-b border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-top-v3" dockZone="top" orientationDirection="horizontal-left" title="Topo" draggable>
+            <SgToolbarIconButton icon={<Home className="size-4" />} label="Inicio" hint="Ir para inicio" />
+            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="bottom" className="absolute bottom-0 left-0 right-0 h-20 items-end border-t border-white/20 px-4 pb-4">
+          <SgToolBar id="tb-bottom-v3" dockZone="bottom" orientationDirection="horizontal-left" title="Base" draggable>
+            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
+            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="left" className="absolute bottom-20 left-0 top-20 w-44 items-start border-r border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-left-v3" dockZone="left" orientationDirection="vertical-down" title="Esquerda" collapsible draggable>
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="right" className="absolute bottom-20 right-0 top-20 w-44 items-start border-l border-white/20 px-4 pt-4">
+          <SgToolBar id="tb-right-v3" dockZone="right" orientationDirection="vertical-down" title="Direita" collapsible draggable>
+            <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
+            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
+          </SgToolBar>
+        </SgDockZone>
+
+        <SgDockZone zone="free" className="absolute bottom-20 left-44 right-44 top-20 items-center justify-center">
+          <div className="pointer-events-none text-sm text-white/60">Zona livre (free)</div>
+        </SgDockZone>
+      </SgDockLayout>
+    </div>
+  );
+}

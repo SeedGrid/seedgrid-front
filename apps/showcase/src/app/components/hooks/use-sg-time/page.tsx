@@ -22,8 +22,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function DigitalClock() {
@@ -87,29 +87,7 @@ export default function UseSgTimePage() {
               <DigitalClock />
             </SgTimeProvider>
           </div>
-          <CodeBlock
-            code={`import { useSgTime, SgTimeProvider } from "@seedgrid/fe-components";
-
-function DigitalClock() {
-  const time = useSgTime();
-  const date = new Date(time.nowMs());
-  const pad = (n: number) => String(n).padStart(2, "0");
-
-  return (
-    <span>
-      {pad(date.getHours())}:{pad(date.getMinutes())}:{pad(date.getSeconds())}
-    </span>
-  );
-}
-
-export default function App() {
-  return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      <DigitalClock />
-    </SgTimeProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-time/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
@@ -119,34 +97,14 @@ export default function App() {
           <div className="flex items-center justify-center rounded-lg border border-border bg-foreground/5 p-6">
             <FallbackClock />
           </div>
-          <CodeBlock
-            code={`import { useSgTime } from "@seedgrid/fe-components";
-
-// Sem SgTimeProvider, o hook retorna um fallback baseado em Date.now()
-// Funciona mas sem sincronizacao com o servidor
-function Clock() {
-  const time = useSgTime();
-  return <span>{new Date(time.nowMs()).toLocaleTimeString()}</span>;
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-time/samples/sem-provider-fallback.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.hook.time.sections.tick.title")}
           description={t(i18n, "showcase.hook.time.sections.tick.description")}
         >
-          <CodeBlock
-            code={`import { useSgTime, SgTimeProvider } from "@seedgrid/fe-components";
-
-// O tick garante re-render a cada segundo mesmo que nowMs() seja chamado como funcao
-// Isso evita timers redundantes em cada componente consumidor
-function Uptime() {
-  const { tick, serverStartMs } = useSgTime();
-  const seconds = Math.floor((Date.now() - serverStartMs) / 1000);
-
-  return <span>uptime: {seconds}s (tick: {tick})</span>;
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-time/samples/usando-tick-para-rerenders.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={HOOK_RETURN} />

@@ -1,0 +1,25 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgFadeDigit } from "@seedgrid/fe-components";
+
+const ALPHA = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+export default function Example() {
+  const [letter, setLetter] = React.useState("A");
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgFadeDigit value={letter} />
+      <SgButton
+        size="sm"
+        onClick={() => {
+          const index = ALPHA.indexOf(letter);
+          setLetter(ALPHA[(index + 1) % ALPHA.length] ?? "A");
+        }}
+      >
+        Proxima letra
+      </SgButton>
+    </div>
+  );
+}

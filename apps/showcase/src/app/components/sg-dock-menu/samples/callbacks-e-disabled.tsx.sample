@@ -1,0 +1,12 @@
+const [eventLog, setEventLog] = React.useState<string[]>([]);
+const callbackItems: SgDockMenuItem[] = items.map((item) => ({
+  ...item,
+  onClick: () => setEventLog((prev) => [`${item.label} clicked`, ...prev].slice(0, 10))
+}));
+
+<div className="space-y-4">
+  <SgDockMenu id="callback-dock" items={callbackItems} position="center-bottom" zIndex={10} style={{ position: "absolute" }} />
+  <div className="h-32 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
+    {eventLog.map((entry, idx) => <div key={idx}>{entry}</div>)}
+  </div>
+</div>

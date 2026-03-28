@@ -1,0 +1,5 @@
+import { componentsMessagesEnUs, setComponentsI18n } from "@seedgrid/fe-components";
+
+setComponentsI18n({ locale: "en-US", messages: componentsMessagesEnUs });
+
+export default setComponentsI18n;

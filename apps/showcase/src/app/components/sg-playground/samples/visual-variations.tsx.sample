@@ -1,0 +1,10 @@
+<SgPlayground
+  interactive
+  code={RENDER_BODY_CODE}
+  defaultImports={'import { SgButton, SgInputText, SgStack } from "@seedgrid/fe-components";'}
+  withCard={false}
+  expandable={false}
+  resizable={false}
+  height={300}
+  previewPadding={16}
+/>;

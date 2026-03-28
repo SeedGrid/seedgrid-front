@@ -1,0 +1,9 @@
+const items: SgDockMenuItem[] = [
+  { id: "search", icon: <Search size={22} />, label: "Search" },
+  { id: "favorites", icon: <Heart size={22} />, label: "Favorites", badge: 3 },
+  { id: "messages", icon: <MessageSquare size={22} />, label: "Messages", badge: "99+" }
+];
+
+<div className="relative h-64 rounded-lg border-2 border-dashed border-border bg-muted/20">
+  <SgDockMenu id="many-items-dock" items={items} position="center-bottom" itemSize={44} gap={10} zIndex={10} style={{ position: "absolute" }} />
+</div>

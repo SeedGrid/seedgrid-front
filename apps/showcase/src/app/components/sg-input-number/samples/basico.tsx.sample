@@ -1,0 +1,20 @@
+import { SgButton, SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgInputNumber
+        id="demo-basic"
+        label="Valor"
+        name="valor"
+        decimals={2}
+      />
+
+      <SgButton type="submit" size="sm" appearance="outline">
+        Submit
+      </SgButton>
+
+      <p>Valor atual: {"{watch(\"valor\")}"}</p>
+    </>
+  );
+}

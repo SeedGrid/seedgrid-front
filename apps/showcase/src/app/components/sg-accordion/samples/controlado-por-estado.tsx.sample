@@ -1,0 +1,24 @@
+import * as React from "react";
+import { SgAccordion, SgButton, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "personal", title: "Dados pessoais", content: <p className="text-sm">Conteudo 1</p> },
+  { id: "address", title: "Endereco", content: <p className="text-sm">Conteudo 2</p> },
+  { id: "billing", title: "Faturamento", content: <p className="text-sm">Conteudo 3</p> }
+];
+
+export default function Example() {
+  const [activeIndex, setActiveIndex] = React.useState<number[]>([0]);
+
+  return (
+    <div className="space-y-3">
+      <SgAccordion items={items} activeIndex={activeIndex} onActiveIndexChange={setActiveIndex} />
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([0])}>Abrir 1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([1])}>Abrir 2</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([2])}>Abrir 3</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setActiveIndex([])}>Fechar todos</SgButton>
+      </div>
+    </div>
+  );
+}

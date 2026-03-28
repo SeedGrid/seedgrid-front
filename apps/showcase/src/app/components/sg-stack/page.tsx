@@ -163,19 +163,7 @@ export default function SgStackPage() {
           </SgGrid>
 
           <SgStack className="mt-6">
-            <SgCodeBlockBase
-              code={`import { SgStack, SgButton } from "@seedgrid/fe-components";
-
-<SgStack gap={8}>
-  <SgButton>Save</SgButton>
-  <SgButton appearance="outline">Cancelar</SgButton>
-</SgStack>
-
-<SgStack direction="row" justify="between" align="center">
-  <span>Title</span>
-  <SgButton size="sm">Confirmar</SgButton>
-</SgStack>`}
-            />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-stack/samples/column-row.tsx.sample" />
           </SgStack>
         </Section>
 
@@ -184,7 +172,7 @@ export default function SgStackPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={STACK_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-stack/sg-stack.tsx.playground"
             height={500}
             defaultOpen
           />

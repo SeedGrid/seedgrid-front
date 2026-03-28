@@ -1,0 +1,21 @@
+import { SgTimeProvider, useSgTime } from "@seedgrid/fe-components";
+
+function LiveClock() {
+  const time = useSgTime();
+  const date = new Date(time.nowMs());
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return (
+    <span>
+      {pad(date.getHours())}:{pad(date.getMinutes())}:{pad(date.getSeconds())}
+    </span>
+  );
+}
+
+export default function App() {
+  return (
+    <SgTimeProvider initialServerTime={new Date().toISOString()}>
+      <LiveClock />
+    </SgTimeProvider>
+  );
+}

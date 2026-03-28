@@ -1,0 +1,41 @@
+import * as React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [open, setOpen] = React.useState(false);
+  const [severity, setSeverity] = React.useState<"plain" | "primary" | "secondary" | "success" | "warning" | "danger">("plain");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg" | "xl">("md");
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("plain")}>plain</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("sm")}>sm</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("md")}>md</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("lg")}>lg</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("xl")}>xl</SgButton>
+      </div>
+
+      <SgButton onClick={() => setOpen(true)}>Abrir dialog</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        severity={severity}
+        size={size}
+        title="Configuracao"
+        subtitle="Exemplo interativo"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>Cancelar</SgButton>
+            <SgButton onClick={() => setOpen(false)}>Confirmar</SgButton>
+          </>
+        }
+      >
+        <div className="text-sm text-muted-foreground">Conteudo do dialogo.</div>
+      </SgDialog>
+    </div>
+  );
+}

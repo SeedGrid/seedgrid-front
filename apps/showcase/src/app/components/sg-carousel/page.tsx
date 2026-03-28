@@ -27,8 +27,8 @@ function Section(props: {
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 // Sample items for the carousels (picsum.photos)
@@ -716,19 +716,7 @@ export default function SgCarouselPage() {
             style={{ borderRadius: 12, overflow: "hidden" }}
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={1}
-        orientation="horizontal"
-        height="100%"
-        style={{ borderRadius: 12, overflow: "hidden" }}
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/basico-horizontal.tsx.sample" />
       </Section>
 
       {/* Multiple Items Visible */}
@@ -746,19 +734,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={3}
-        numScroll={1}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/multiplos-items-visiveis.tsx.sample" />
       </Section>
 
       {/* Auto Play */}
@@ -777,20 +753,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems(sampleImages.slice(0, 6))}
-        numVisible={1}
-        autoPlay
-        autoPlayInterval={2000}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/auto-play.tsx.sample" />
       </Section>
 
       {/* Vertical Orientation */}
@@ -809,21 +772,7 @@ export default function SgCarouselPage() {
             />
           </div>
         </SgGrid>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            useGrid: true,
-            snippet: `    <SgGrid columns={1} justify="center">
-      <div className="h-96 w-80">
-        <SgCarousel
-          items={createCarouselItems(sampleImages.slice(0, 6))}
-          numVisible={1}
-          orientation="vertical"
-          height="100%"
-        />
-      </div>
-    </SgGrid>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/orientacao-vertical.tsx.sample" />
       </Section>
 
       {/* Vertical with Multiple Items */}
@@ -844,23 +793,7 @@ export default function SgCarouselPage() {
             />
           </div>
         </SgGrid>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            useGrid: true,
-            snippet: `    <SgGrid columns={1} justify="center">
-      <div className="h-96 w-80">
-        <SgCarousel
-          items={createCarouselItems()}
-          numVisible={3}
-          numScroll={1}
-          orientation="vertical"
-          height="100%"
-          gap={8}
-        />
-      </div>
-    </SgGrid>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/vertical-multiplos-items.tsx.sample" />
       </Section>
 
       {/* Without Circular */}
@@ -878,19 +811,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems(sampleImages.slice(0, 6))}
-        numVisible={1}
-        circular={false}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/sem-modo-circular.tsx.sample" />
       </Section>
 
       {/* Without Indicators */}
@@ -908,19 +829,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems(sampleImages.slice(0, 6))}
-        numVisible={1}
-        showIndicators={false}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/sem-indicadores.tsx.sample" />
       </Section>
 
       {/* Without Navigators */}
@@ -940,21 +849,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems(sampleImages.slice(0, 6))}
-        numVisible={1}
-        showNavigators={false}
-        autoPlay
-        autoPlayInterval={2500}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/sem-navegadores.tsx.sample" />
       </Section>
 
       {/* Custom Gap */}
@@ -973,20 +868,7 @@ export default function SgCarouselPage() {
             height="100%"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={3}
-        numScroll={1}
-        gap={32}
-        orientation="horizontal"
-        height="100%"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/gap-customizado.tsx.sample" />
       </Section>
 
       {/* With Callbacks */}
@@ -1025,46 +907,7 @@ export default function SgCarouselPage() {
             )}
           </div>
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            inFunctionCode: `  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [eventLog, setEventLog] = React.useState<string[]>([]);
-
-  const log = (message: string) => {
-    setEventLog((prev) => [\`[\${new Date().toLocaleTimeString()}] \${message}\`, ...prev].slice(0, 10));
-  };`,
-            snippet: `    <div className="space-y-4">
-      <div className="rounded bg-muted/40 p-3">
-        <p className="text-sm">
-          <span className="font-semibold">Ãndice Ativo:</span>{" "}
-          <code className="rounded bg-background px-2 py-1">{activeIndex}</code>
-        </p>
-      </div>
-      <div className="h-64">
-        <SgCarousel
-          items={createCarouselItems()}
-          numVisible={2}
-          numScroll={1}
-          orientation="horizontal"
-          height="100%"
-          onIndexChange={(index) => {
-            setActiveIndex(index);
-            log(\`Ãndice mudou para: \${index}\`);
-          }}
-        />
-      </div>
-      <div className="h-32 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
-        {eventLog.length === 0 ? (
-          <span className="text-muted-foreground">
-            Navegue pelo carrossel para ver os eventos...
-          </span>
-        ) : (
-          eventLog.map((entry, index) => <div key={index}>{entry}</div>)
-        )}
-      </div>
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/com-callbacks.tsx.sample" />
       </Section>
 
       {/* Responsive Example */}
@@ -1099,36 +942,7 @@ export default function SgCarouselPage() {
             className="block md:hidden"
           />
         </div>
-        <CodeBlock
-          code={buildCarouselExampleCode({
-            snippet: `    <div className="h-64">
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={4}
-        numScroll={2}
-        orientation="horizontal"
-        height="100%"
-        className="hidden lg:block"
-      />
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={2}
-        numScroll={1}
-        orientation="horizontal"
-        height="100%"
-        className="hidden md:block lg:hidden"
-      />
-      <SgCarousel
-        items={createCarouselItems()}
-        numVisible={1}
-        numScroll={1}
-        orientation="horizontal"
-        height="100%"
-        className="block md:hidden"
-      />
-    </div>`
-          })}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-carousel/samples/exemplo-responsivo.tsx.sample" />
       </Section>
 
       {/* Playground */}

@@ -174,13 +174,7 @@ export default function SgGridPage() {
           </SgGrid>
 
           <SgStack className="mt-6">
-            <SgCodeBlockBase
-              code={`<SgGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} gap={12}>
-  <SgPanel>Card 1</SgPanel>
-  <SgPanel>Card 2</SgPanel>
-  <SgPanel span={2}>Card 3 (span 2)</SgPanel>
-</SgGrid>`}
-            />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-grid/samples/columns-responsivo.tsx.sample" />
           </SgStack>
         </Section>
 
@@ -205,13 +199,7 @@ export default function SgGridPage() {
           </SgGrid>
 
           <SgStack className="mt-6">
-            <SgCodeBlockBase
-              code={`<SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
-  <SgPanel>Card A</SgPanel>
-  <SgPanel rowSpan={2}>Card B</SgPanel>
-  <SgPanel span={2}>Card C</SgPanel>
-</SgGrid>`}
-            />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-grid/samples/auto-fit-rowspan.tsx.sample" />
           </SgStack>
         </Section>
 
@@ -220,7 +208,7 @@ export default function SgGridPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={GRID_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-grid/sg-grid.tsx.playground"
             height={520}
             defaultOpen
           />

@@ -1,0 +1,29 @@
+"use client";
+
+import React from "react";
+import { SgInputText, SgNeonDigit } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState("Your Text");
+  const [color, setColor] = React.useState("#e4fbff");
+  const [backgroundColor, setBackgroundColor] = React.useState("#090f22");
+  const [shadowColor, setShadowColor] = React.useState("#47d1ff");
+  const [fontSize, setFontSize] = React.useState(62);
+
+  return (
+    <div className="space-y-4">
+      <SgInputText id="neon-value" label="Texto" value={value} onChange={setValue} />
+      <div className="grid gap-3 md:grid-cols-3">
+        <SgInputText id="neon-color" label="Color" value={color} onChange={setColor} />
+        <SgInputText id="neon-background" label="BackgroundColor" value={backgroundColor} onChange={setBackgroundColor} />
+        <SgInputText id="neon-shadow" label="ShadowColor" value={shadowColor} onChange={setShadowColor} />
+      </div>
+      <label className="text-sm">fontSize:
+        <input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
+      </label>
+      <div className="rounded border border-border p-4">
+        <SgNeonDigit value={value} color={color} backgroundColor={backgroundColor} shadowColor={shadowColor} fontSize={fontSize} />
+      </div>
+    </div>
+  );
+}

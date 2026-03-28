@@ -44,8 +44,8 @@ function Row(props: { children: React.ReactNode }) {
   return <div className="flex flex-wrap items-center gap-3">{props.children}</div>;
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code.trim()} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function capitalize(s: string) {
@@ -434,7 +434,7 @@ export default function SgSplitButtonShowcase() {
               style={{ minWidth: 180 }}
             />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="${texts.labels.save}" leftIcon={<Save className="size-4" />} onClick={() => {}} items={items} style={{ minWidth: 180 }} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/basico.tsx.sample" />
         </Section>
 
         <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
@@ -443,7 +443,7 @@ export default function SgSplitButtonShowcase() {
               <SgSplitButton key={s} label={capitalize(s)} severity={s} onClick={() => console.log(s)} items={basicItems} />
             ))}
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/severidades.tsx.sample" />
         </Section>
 
         <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
@@ -452,7 +452,7 @@ export default function SgSplitButtonShowcase() {
               <SgSplitButton key={s} label={capitalize(s)} severity={s} appearance="outline" onClick={() => console.log(s)} items={basicItems} />
             ))}
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="outline" onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/outlined.tsx.sample" />
         </Section>
 
         <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
@@ -461,7 +461,7 @@ export default function SgSplitButtonShowcase() {
               <SgSplitButton key={s} label={capitalize(s)} severity={s} appearance="ghost" onClick={() => console.log(s)} items={basicItems} />
             ))}
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="ghost" onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/ghost.tsx.sample" />
         </Section>
 
         <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
@@ -470,7 +470,7 @@ export default function SgSplitButtonShowcase() {
               <SgSplitButton key={s} label={capitalize(s)} severity={s} appearance="solid" elevation="sm" onClick={() => console.log(s)} items={basicItems} />
             ))}
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Primary" severity="primary" appearance="solid" elevation="sm" onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/elevated.tsx.sample" />
         </Section>
 
         <Section id="exemplo-6" title={texts.sectionTitles[5] ?? ""} description={texts.sectionDescriptions[5] ?? ""}>
@@ -479,9 +479,7 @@ export default function SgSplitButtonShowcase() {
             <SgSplitButton label={texts.labels.medium} size="md" leftIcon={<Save className="size-4" />} onClick={() => console.log("md")} items={basicItems} />
             <SgSplitButton label={texts.labels.large} size="lg" leftIcon={<Save className="size-4" />} onClick={() => console.log("lg")} items={basicItems} />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Small" size="sm" onClick={() => {}} items={items} />
-<SgSplitButton label="Medium" size="md" onClick={() => {}} items={items} />
-<SgSplitButton label="Large" size="lg" onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/tamanhos.tsx.sample" />
         </Section>
 
         <Section id="exemplo-7" title={texts.sectionTitles[6] ?? ""} description={texts.sectionDescriptions[6] ?? ""}>
@@ -499,14 +497,14 @@ export default function SgSplitButtonShowcase() {
             />
             <SgSplitButton label={texts.labels.share} leftIcon={<Share2 className="size-4" />} severity="info" onClick={() => console.log(texts.labels.share)} items={fileItems} />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Save" leftIcon={<Save className="size-4" />} onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/com-icones.tsx.sample" />
         </Section>
 
         <Section id="exemplo-8" title={texts.sectionTitles[7] ?? ""} description={texts.sectionDescriptions[7] ?? ""}>
           <Row>
             <SgSplitButton label={texts.labels.file} leftIcon={<FileText className="size-4" />} severity="secondary" onClick={() => console.log(texts.labels.file)} items={fileItems} />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="File" items={[{ label: "Copy" }, { separator: true, label: "Export as PDF" }]} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/separadores-de-menu.tsx.sample" />
         </Section>
 
         <Section id="exemplo-9" title={texts.sectionTitles[8] ?? ""} description={texts.sectionDescriptions[8] ?? ""}>
@@ -514,7 +512,7 @@ export default function SgSplitButtonShowcase() {
             <SgSplitButton label={texts.labels.save} leftIcon={<Save className="size-4" />} disabled onClick={() => {}} items={basicItems} />
             <SgSplitButton label={texts.labels.disabledOutline} severity="danger" appearance="outline" disabled onClick={() => {}} items={basicItems} />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Save" disabled onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/disabled.tsx.sample" />
         </Section>
 
         <Section id="exemplo-10" title={texts.sectionTitles[9] ?? ""} description={texts.sectionDescriptions[9] ?? ""}>
@@ -522,7 +520,7 @@ export default function SgSplitButtonShowcase() {
             <SgSplitButton label={texts.labels.saving} leftIcon={<Save className="size-4" />} loading onClick={() => {}} items={basicItems} />
             <SgSplitButton label={texts.labels.processing} severity="success" loading onClick={() => {}} items={basicItems} />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Saving..." loading onClick={() => {}} items={items} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/loading.tsx.sample" />
         </Section>
 
         <Section id="exemplo-11" title={texts.sectionTitles[10] ?? ""} description={texts.sectionDescriptions[10] ?? ""}>
@@ -538,7 +536,7 @@ export default function SgSplitButtonShowcase() {
               ]}
             />
           </Row>
-          <CodeBlock code={`<SgSplitButton label="Actions" items={[{ label: "Delete", disabled: true }]} onClick={() => {}} />`} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-split-button/samples/itens-desabilitados.tsx.sample" />
         </Section>
 
         <Section id="exemplo-12" title={texts.sectionTitles[11] ?? ""} description={texts.sectionDescriptions[11] ?? ""}>
@@ -546,7 +544,7 @@ export default function SgSplitButtonShowcase() {
             title={texts.labels.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={SPLIT_BUTTON_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-split-button/sg-split-button.tsx.playground"
             height={620}
             defaultOpen
           />

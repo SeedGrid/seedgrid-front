@@ -1,0 +1,24 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgDiscardDigit, type SgDiscardDigitHandle } from "@seedgrid/fe-components";
+
+const TOTAL_PAGES = 10;
+
+export default function Example() {
+  const ref = React.useRef<SgDiscardDigitHandle>(null);
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <div className="flex flex-wrap items-end gap-8">
+      <SgDiscardDigit ref={ref} value={String(page)} totalNumberPages={TOTAL_PAGES} fontSize={64} />
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground">Pagina <strong>{page}</strong> de {TOTAL_PAGES}</p>
+        <div className="flex gap-2">
+          <SgButton size="sm" disabled={page <= 1} onClick={() => { ref.current?.decreasePage(); setPage((prev) => Math.max(1, prev - 1)); }}>Previous</SgButton>
+          <SgButton size="sm" disabled={page >= TOTAL_PAGES} onClick={() => { ref.current?.increasePage(); setPage((prev) => Math.min(TOTAL_PAGES, prev + 1)); }}>Proxima</SgButton>
+        </div>
+      </div>
+    </div>
+  );
+}

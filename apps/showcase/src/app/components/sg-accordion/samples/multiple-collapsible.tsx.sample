@@ -1,0 +1,24 @@
+import * as React from "react";
+import { SgAccordion, SgButton, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "personal", title: "Dados pessoais", content: <p className="text-sm">Conteudo 1</p> },
+  { id: "address", title: "Endereco", content: <p className="text-sm">Conteudo 2</p> },
+  { id: "billing", title: "Faturamento", content: <p className="text-sm">Conteudo 3</p> }
+];
+
+export default function Example() {
+  const [open, setOpen] = React.useState<number[]>([0, 2]);
+
+  return (
+    <div className="space-y-3">
+      <SgAccordion items={items} multiple collapsible activeIndex={open} onActiveIndexChange={setOpen} />
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([0])}>Apenas 1</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([1, 2])}>2 e 3</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([0, 1, 2])}>Todos</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setOpen([])}>None</SgButton>
+      </div>
+    </div>
+  );
+}

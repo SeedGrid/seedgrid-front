@@ -357,7 +357,7 @@ export default function SgNeonDigitShowcase() {
               <SgButton size="sm" severity="secondary" onClick={prevDigit}>Previous (-1)</SgButton>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-neon-digit/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -365,7 +365,7 @@ export default function SgNeonDigitShowcase() {
             <SgNeonDigit value={word} color="#e2f6ff" backgroundColor="#101934" shadowColor="#47d1ff" />
             <SgButton size="sm" onClick={nextWord}>Change text</SgButton>
           </div>
-          <SgCodeBlockBase code={WORDS_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-neon-digit/samples/texto-em-neon.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -399,7 +399,7 @@ export default function SgNeonDigitShowcase() {
               />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={SCRIPT_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-neon-digit/samples/neon-script-referencia-visual.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -417,7 +417,7 @@ export default function SgNeonDigitShowcase() {
               <SgNeonDigit value="teste" color="#fff7e8" backgroundColor="#2a1a14" shadowColor="#fb923c" />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={THEMES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-neon-digit/samples/variacoes-de-color-background-shadow.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -435,7 +435,7 @@ export default function SgNeonDigitShowcase() {
               <SgNeonDigit value="5" fontSize={72} padding={18} />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={SIZE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-neon-digit/samples/escala-e-leitura.tsx.sample" />
         </Section>
 
         <Section title={texts.section6Title} description={texts.section6Description}>
@@ -443,7 +443,7 @@ export default function SgNeonDigitShowcase() {
             title="SgNeonDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-neon-digit/sg-neon-digit.tsx.playground"
             height={780}
             defaultOpen
           />

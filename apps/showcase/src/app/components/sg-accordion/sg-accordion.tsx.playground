@@ -1,0 +1,58 @@
+import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [orientation, setOrientation] = React.useState<"vertical" | "horizontal">("vertical");
+  const [multiple, setMultiple] = React.useState(false);
+  const [collapsible, setCollapsible] = React.useState(true);
+  const [keepMounted, setKeepMounted] = React.useState(true);
+  const [headerBackgroundColor, setHeaderBackgroundColor] = React.useState("rgb(var(--sg-primary-50, 239 246 255))");
+  const [active, setActive] = React.useState<number[]>([0]);
+
+  const items: SgAccordionItem[] = [
+    { id: "one", title: "Painel 1", content: <p className="text-sm">Conteudo do primeiro painel.</p> },
+    { id: "two", title: "Painel 2", content: <p className="text-sm">Conteudo do segundo painel.</p> },
+    { id: "three", title: "Painel 3", content: <p className="text-sm">Conteudo do terceiro painel.</p> }
+  ];
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Orientation</span>
+          <select value={orientation} onChange={(e) => setOrientation(e.target.value as "vertical" | "horizontal")} className="w-full rounded border border-border px-2 py-1">
+            <option value="vertical">vertical</option>
+            <option value="horizontal">horizontal</option>
+          </select>
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Header background</span>
+          <input value={headerBackgroundColor} onChange={(e) => setHeaderBackgroundColor(e.target.value)} className="w-full rounded border border-border px-2 py-1" />
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Active indexes</span>
+          <div className="rounded border border-border bg-slate-50 px-2 py-1 text-[11px]">{active.length > 0 ? active.join(", ") : "(vazio)"}</div>
+        </label>
+      </div>
+
+      <div className="flex flex-wrap gap-3 text-xs">
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={multiple} onChange={(e) => setMultiple(e.target.checked)} /> multiple</label>
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={collapsible} onChange={(e) => setCollapsible(e.target.checked)} /> collapsible</label>
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={keepMounted} onChange={(e) => setKeepMounted(e.target.checked)} /> keepMounted</label>
+      </div>
+
+      <SgAccordion
+        items={items}
+        orientation={orientation}
+        multiple={multiple}
+        collapsible={collapsible}
+        keepMounted={keepMounted}
+        activeIndex={active}
+        onActiveIndexChange={setActive}
+        horizontalHeaderWidth={56}
+        horizontalMinHeight={220}
+        headerBackgroundColor={headerBackgroundColor}
+      />
+    </div>
+  );
+}

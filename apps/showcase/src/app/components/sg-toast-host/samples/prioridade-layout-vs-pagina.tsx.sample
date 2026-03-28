@@ -1,0 +1,25 @@
+"use client";
+
+import { SgButton, SgToastHost, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md border border-border p-4">
+        <div className="text-sm font-semibold">Layout host</div>
+        <SgToastHost position="top-right" />
+      </div>
+
+      <div className="rounded-md border border-border bg-muted/20 p-4">
+        <div className="text-sm font-semibold">Page host</div>
+        <p className="mb-3 text-sm text-muted-foreground">
+          Enquanto este host estiver montado, ele tem prioridade sobre o host do layout.
+        </p>
+        <SgToastHost position="bottom-right" />
+        <SgButton onClick={() => toast.info("Toast renderizado pelo host mais profundo")}>
+          Disparar toast
+        </SgButton>
+      </div>
+    </div>
+  );
+}

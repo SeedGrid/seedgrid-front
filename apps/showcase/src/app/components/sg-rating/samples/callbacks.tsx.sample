@@ -1,0 +1,47 @@
+import * as React from "react";
+import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(3);
+  const [hover, setHover] = React.useState<number | null>(null);
+  const [logs, setLogs] = React.useState<string[]>([]);
+
+  const pushLog = React.useCallback((msg: string) => {
+    setLogs((prev) => [msg, ...prev].slice(0, 8));
+  }, []);
+
+  return (
+    <div className="space-y-3">
+      <SgRating
+        label="Callbacks"
+        value={value}
+        allowHalf
+        onChange={(next) => {
+          setValue(next);
+          pushLog("onChange -> " + String(next));
+        }}
+        onHover={setHover}
+      />
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>
+          Reset
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(5)}>
+          Max
+        </SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setLogs([])}>
+          Clear log
+        </SgButton>
+      </SgGrid>
+
+      <p className="text-sm text-muted-foreground">
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
+      </p>
+
+      <div className="h-28 overflow-y-auto rounded border border-border bg-foreground/5 p-2 font-mono text-xs">
+        {logs.length === 0 ? "No events" : logs.map((entry, index) => <div key={index}>{entry}</div>)}
+      </div>
+    </div>
+  );
+}

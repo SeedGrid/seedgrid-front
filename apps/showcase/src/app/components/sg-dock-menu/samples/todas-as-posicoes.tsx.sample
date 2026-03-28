@@ -1,0 +1,5 @@
+<div className="grid grid-cols-3 gap-4">
+  <div className="relative h-40 rounded-lg border-2 border-dashed border-border bg-muted/20"><SgDockMenu id="dock-left-top" items={items} position="left-top" itemSize={36} gap={8} zIndex={10} style={{ position: "absolute" }} /></div>
+  <div className="relative h-40 rounded-lg border-2 border-dashed border-border bg-muted/20"><SgDockMenu id="dock-center-top" items={items} position="center-top" itemSize={36} gap={8} zIndex={10} style={{ position: "absolute" }} /></div>
+  <div className="relative h-40 rounded-lg border-2 border-dashed border-border bg-muted/20"><SgDockMenu id="dock-right-top" items={items} position="right-top" itemSize={36} gap={8} zIndex={10} style={{ position: "absolute" }} /></div>
+</div>

@@ -32,8 +32,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function ToolbarInlineHost(props: { layoutId: string; children: React.ReactNode }) {
@@ -418,35 +418,7 @@ export default function SgToolBarPage() {
               </SgToolBar>
             </ToolbarInlineHost>
           </div>
-          <CodeBlock
-            code={`import React from "react";
-import {
-  SgDockLayout,
-  SgDockZone,
-  SgGrid,
-  SgToolBar,
-  SgToolbarIconButton,
-  toast,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { Home, Users, Settings } from "lucide-react";
-
-export default function Example() {
-  return (
-    <div className="w-full">
-      <SgDockLayout id="tb-layout-basic" className="grid grid-cols-1 grid-rows-1">
-        <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-          <SgToolBar id="tb-basic" title="${texts.labels.navigation}" orientationDirection="vertical-down">
-            <SgToolbarIconButton icon={<Home className="size-4" />} label="${texts.labels.home}" hint="${texts.hints.goHome}" severity="primary" className="ring-1 ring-primary/30" style={{ minWidth: 132 }} />
-            <SgToolbarIconButton icon={<Users className="size-4" />} label="${texts.labels.users}" hint="${texts.hints.openUsers}" />
-            <SgToolbarIconButton icon={<Settings className="size-4" />} label="${texts.labels.settings}" hint="${texts.hints.openSettings}" />
-          </SgToolBar>
-        </SgDockZone>
-      </SgDockLayout>
-    </div>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toolbar/samples/basico.tsx.sample" />
         </Section>
 
         <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
@@ -486,62 +458,7 @@ export default function Example() {
               </SgToolBar>
             </ToolbarInlineHost>
           </div>
-          <CodeBlock
-            code={`import React from "react";
-import {
-  SgDockLayout,
-  SgDockZone,
-  SgGrid,
-  SgToolBar,
-  SgToolbarIconButton,
-  toast,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { Plus, Pencil, Trash2 } from "lucide-react";
-
-export default function Example() {
-  return (
-    <div className="w-full">
-      <SgDockLayout id="tb-layout-async" className="grid grid-cols-1 grid-rows-1">
-        <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-          <SgToolBar id="tb-async" title="${texts.labels.quickActions}" orientationDirection="horizontal-left" collapsible>
-            <SgToolbarIconButton
-              icon={<Plus className="size-4" />}
-              label="${texts.labels.create}"
-              hint="${texts.hints.createRecord}"
-              severity="success"
-              onClick={async () => {
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                toast.success("${texts.toasts.createDone}");
-              }}
-            />
-            <SgToolbarIconButton
-              icon={<Pencil className="size-4" />}
-              label="${texts.labels.edit}"
-              hint="${texts.hints.editRecord}"
-              severity="info"
-              onClick={async () => {
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                toast.info("${texts.toasts.editDone}");
-              }}
-            />
-            <SgToolbarIconButton
-              icon={<Trash2 className="size-4" />}
-              label="${texts.labels.delete}"
-              hint="${texts.hints.deleteRecord}"
-              severity="danger"
-              onClick={async () => {
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                toast.warning("${texts.toasts.deleteDone}");
-              }}
-            />
-          </SgToolBar>
-        </SgDockZone>
-      </SgDockLayout>
-    </div>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toolbar/samples/onclick-assincrono-com-toast.tsx.sample" />
         </Section>
 
         <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
@@ -573,39 +490,7 @@ export default function Example() {
               </div>
             </SgGrid>
           </div>
-          <CodeBlock
-            code={`<SgGrid columns={{ base: 1, lg: 2 }} gap={12}>
-  <div className="rounded-lg border border-dashed border-border p-3">
-    <p className="mb-2 text-xs text-muted-foreground">orientationDirection="horizontal-left" + buttonsPerDirection=3</p>
-    <SgDockLayout id="tb-layout-horizontal" className="grid grid-cols-1 grid-rows-1">
-      <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-        <SgToolBar id="tb-horizontal" title="${texts.labels.quickActions}" orientationDirection="horizontal-left" buttonsPerDirection={3} collapsible>
-          <SgToolbarIconButton icon={<Plus className="size-4" />} label="${texts.labels.create}" hint="${texts.hints.createRecord}" severity="success" />
-          <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${texts.labels.edit}" hint="${texts.hints.editRecord}" severity="info" />
-          <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="${texts.labels.delete}" hint="${texts.hints.deleteRecord}" severity="danger" />
-          <SgToolbarIconButton icon={<Filter className="size-4" />} label="${texts.labels.filter}" hint="${texts.hints.filterResults}" />
-          <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="${texts.labels.refresh}" hint="${texts.hints.refreshData}" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
-  </div>
-
-  <div className="rounded-lg border border-dashed border-border p-3">
-    <p className="mb-2 text-xs text-muted-foreground">orientationDirection="vertical-down" + buttonsPerDirection=2</p>
-    <SgDockLayout id="tb-layout-vertical" className="grid grid-cols-1 grid-rows-1">
-      <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-        <SgToolBar id="tb-vertical" title="${texts.labels.navigation}" orientationDirection="vertical-down" buttonsPerDirection={2} collapsible>
-          <SgToolbarIconButton icon={<Home className="size-4" />} label="${texts.labels.home}" hint="${texts.hints.goHome}" severity="primary" />
-          <SgToolbarIconButton icon={<Users className="size-4" />} label="${texts.labels.users}" hint="${texts.hints.openUsers}" />
-          <SgToolbarIconButton icon={<Settings className="size-4" />} label="${texts.labels.settings}" hint="${texts.hints.openSettings}" />
-          <SgToolbarIconButton icon={<Filter className="size-4" />} label="${texts.labels.filter}" hint="${texts.hints.filterResults}" />
-          <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="${texts.labels.refresh}" hint="${texts.hints.refreshData}" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
-  </div>
-</SgGrid>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toolbar/samples/orientacao-e-quebra.tsx.sample" />
         </Section>
 
         <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
@@ -633,35 +518,7 @@ export default function Example() {
               </div>
             </SgGrid>
           </div>
-          <CodeBlock
-            code={`<SgGrid columns={{ base: 1, md: 2 }} gap={12}>
-  <div className="rounded-lg border border-dashed border-border p-3">
-    <p className="mb-2 text-xs text-muted-foreground">bgColor</p>
-    <SgDockLayout id="tb-layout-style-a" className="grid grid-cols-1 grid-rows-1">
-      <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-        <SgToolBar id="tb-style-a" title="${texts.labels.panelBody}" orientationDirection="vertical-down" collapsible bgColor="#ECFEFF">
-          <SgToolbarIconButton icon={<Home className="size-4" />} label="${texts.labels.home}" hint="${texts.hints.goHome}" severity="primary" />
-          <SgToolbarIconButton icon={<Users className="size-4" />} label="${texts.labels.users}" hint="${texts.hints.openUsers}" />
-          <SgToolbarIconButton icon={<Settings className="size-4" />} label="${texts.labels.settings}" hint="${texts.hints.openSettings}" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
-  </div>
-
-  <div className="rounded-lg border border-dashed border-border p-3">
-    <p className="mb-2 text-xs text-muted-foreground">bgColor + bgColorTitle</p>
-    <SgDockLayout id="tb-layout-style-b" className="grid grid-cols-1 grid-rows-1">
-      <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
-        <SgToolBar id="tb-style-b" title="${texts.labels.highlightedTitle}" orientationDirection="vertical-down" collapsible bgColor="#DAD7D2" bgColorTitle="#C9712D">
-          <SgToolbarIconButton icon={<Filter className="size-4" />} label="${texts.labels.filter}" hint="${texts.hints.filterResults}" />
-          <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="${texts.labels.refresh}" hint="${texts.hints.refreshData}" />
-          <SgToolbarIconButton icon={<Pencil className="size-4" />} label="${texts.labels.edit}" hint="${texts.hints.editRecord}" severity="info" />
-        </SgToolBar>
-      </SgDockZone>
-    </SgDockLayout>
-  </div>
-</SgGrid>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-toolbar/samples/cores-de-fundo.tsx.sample" />
         </Section>
 
         <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
@@ -670,7 +527,7 @@ export default function Example() {
               title={texts.playgroundTitle}
               interactive
               codeContract="appFile"
-              code={TOOLBAR_PLAYGROUND_CODE}
+              playgroundFile="apps/showcase/src/app/components/sg-toolbar/sg-toolbar.tsx.playground"
               height={520}
               defaultOpen
             />

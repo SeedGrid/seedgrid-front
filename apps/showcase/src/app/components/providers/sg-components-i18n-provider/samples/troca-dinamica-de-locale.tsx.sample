@@ -1,0 +1,32 @@
+import React from "react";
+import {
+  SgComponentsI18nProvider,
+  componentsMessagesEnUs,
+  componentsMessagesEs,
+  componentsMessagesPtBr,
+  componentsMessagesPtPt,
+} from "@seedgrid/fe-components";
+
+const LOCALES = {
+  "pt-BR": componentsMessagesPtBr,
+  "pt-PT": componentsMessagesPtPt,
+  "en-US": componentsMessagesEnUs,
+  es: componentsMessagesEs,
+};
+
+export default function App() {
+  const [locale, setLocale] = React.useState<keyof typeof LOCALES>("pt-BR");
+
+  return (
+    <>
+      {Object.keys(LOCALES).map((l) => (
+        <button key={l} onClick={() => setLocale(l as keyof typeof LOCALES)}>
+          {l}
+        </button>
+      ))}
+      <SgComponentsI18nProvider locale={locale} messages={LOCALES[locale]}>
+        <div>componentes refletem o locale escolhido</div>
+      </SgComponentsI18nProvider>
+    </>
+  );
+}

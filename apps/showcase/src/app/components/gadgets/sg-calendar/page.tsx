@@ -23,146 +23,6 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-const BASIC_EXAMPLE_CODE = `import { SgCalendar } from "@seedgrid/fe-components";
-
-export default function BasicCalendarExample() {
-  return (
-    <SgCalendar
-      locale="pt-BR"
-      defaultValue="2026-03-10"
-      defaultViewDate="2026-03-01"
-      cardTitle="Calendario base"
-      cardProps={{ id: "showcase-calendar-basic", dragPersistKey: "showcase-calendar-basic" }}
-    />
-  );
-}`;
-
-const CONTROLLED_EXAMPLE_CODE = `import * as React from "react";
-import { SgButton, SgCalendar, SgEnvironmentProvider, SgGrid } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function ControlledCalendarExample() {
-  const [selected, setSelected] = React.useState(new Date(2026, 2, 10));
-  const selectedText = React.useMemo(
-    () => selected.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }),
-    [selected]
-  );
-  const minDate = React.useMemo(() => new Date(2026, 2, 5), []);
-  const maxDate = React.useMemo(() => new Date(2026, 2, 25), []);
-
-  return (
-    <div className="space-y-2">
-      <SgCalendar
-        value={selected}
-        onValueChange={setSelected}
-        locale="pt-BR"
-        minDate={minDate}
-        maxDate={maxDate}
-        isDateDisabled={(date) => date.getDay() === 0 || date.getDay() === 6}
-        cardTitle="Agenda de visitas"
-        cardProps={{ id: "showcase-calendar-range", dragPersistKey: "showcase-calendar-range" }}
-      />
-      <p className="text-sm text-muted-foreground">Selecionado: {selectedText}</p>
-    </div>
-  );
-}`;
-
-const LOCALE_EXAMPLE_CODE = `import * as React from "react";
-import { SgButton, SgCalendar, SgEnvironmentProvider, SgGrid } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function LocaleCalendarExample() {
-  const [locale, setLocale] = React.useState<"pt-BR" | "en-US" | "es">("pt-BR");
-  const [weekStartsOn, setWeekStartsOn] = React.useState<0 | 1>(0);
-  const [numberOfMonths, setNumberOfMonths] = React.useState(6);
-
-  return (
-    <div className="space-y-3">
-      <SgGrid columns={{ base: 2, md: 5 }} gap={8}>
-        <SgButton appearance={locale === "pt-BR" ? "solid" : "outline"} onClick={() => setLocale("pt-BR")}>pt-BR</SgButton>
-        <SgButton appearance={locale === "en-US" ? "solid" : "outline"} onClick={() => setLocale("en-US")}>en-US</SgButton>
-        <SgButton appearance={locale === "es" ? "solid" : "outline"} onClick={() => setLocale("es")}>es</SgButton>
-        <SgButton appearance={weekStartsOn === 0 ? "solid" : "outline"} onClick={() => setWeekStartsOn(0)}>Sunday first</SgButton>
-        <SgButton appearance={weekStartsOn === 1 ? "solid" : "outline"} onClick={() => setWeekStartsOn(1)}>Monday first</SgButton>
-      </SgGrid>
-
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton appearance={numberOfMonths === 1 ? "solid" : "outline"} onClick={() => setNumberOfMonths(1)}>1 month</SgButton>
-        <SgButton appearance={numberOfMonths === 3 ? "solid" : "outline"} onClick={() => setNumberOfMonths(3)}>3 months</SgButton>
-        <SgButton appearance={numberOfMonths === 6 ? "solid" : "outline"} onClick={() => setNumberOfMonths(6)}>6 months</SgButton>
-        <SgButton appearance={numberOfMonths === 12 ? "solid" : "outline"} onClick={() => setNumberOfMonths(12)}>12 months</SgButton>
-      </SgGrid>
-
-      <SgCalendar
-        locale={locale}
-        weekStartsOn={weekStartsOn}
-        numberOfMonths={numberOfMonths}
-        monthsPerLine={3}
-        defaultValue="2026-03-10"
-        defaultViewDate="2026-03-01"
-        cardTitle="Calendar i18n + multi month"
-        cardProps={{ id: "showcase-calendar-i18n", dragPersistKey: "showcase-calendar-i18n" }}
-      />
-    </div>
-  );
-}`;
-
-const CALENDAR_PLAYGROUND_APP_FILE = `import * as React from "react";
-import {
-  SgButton,
-  SgCalendar,
-  SgEnvironmentProvider,
-  SgGrid,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function App() {
-  const [locale, setLocale] = React.useState<"pt-BR" | "en-US" | "es">("pt-BR");
-  const [weekStartsOn, setWeekStartsOn] = React.useState<0 | 1>(0);
-  const [numberOfMonths, setNumberOfMonths] = React.useState(6);
-  const [showAdjacentMonths, setShowAdjacentMonths] = React.useState(true);
-  const [selected, setSelected] = React.useState(new Date(2026, 2, 10));
-
-  return (
-    <div className="space-y-4 p-2">
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton appearance={locale === "pt-BR" ? "solid" : "outline"} onClick={() => setLocale("pt-BR")}>pt-BR</SgButton>
-        <SgButton appearance={locale === "en-US" ? "solid" : "outline"} onClick={() => setLocale("en-US")}>en-US</SgButton>
-        <SgButton appearance={locale === "es" ? "solid" : "outline"} onClick={() => setLocale("es")}>es</SgButton>
-        <SgButton appearance={weekStartsOn === 0 ? "solid" : "outline"} onClick={() => setWeekStartsOn((v) => (v === 0 ? 1 : 0))}>
-          {weekStartsOn === 0 ? "Sunday first" : "Monday first"}
-        </SgButton>
-      </SgGrid>
-
-      <SgButton appearance="outline" onClick={() => setShowAdjacentMonths((v) => !v)}>
-        {showAdjacentMonths ? "Hide adjacent months" : "Show adjacent months"}
-      </SgButton>
-
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton appearance={numberOfMonths === 1 ? "solid" : "outline"} onClick={() => setNumberOfMonths(1)}>1 month</SgButton>
-        <SgButton appearance={numberOfMonths === 3 ? "solid" : "outline"} onClick={() => setNumberOfMonths(3)}>3 months</SgButton>
-        <SgButton appearance={numberOfMonths === 6 ? "solid" : "outline"} onClick={() => setNumberOfMonths(6)}>6 months</SgButton>
-        <SgButton appearance={numberOfMonths === 12 ? "solid" : "outline"} onClick={() => setNumberOfMonths(12)}>12 months</SgButton>
-      </SgGrid>
-
-      <SgCalendar
-        value={selected}
-        onValueChange={setSelected}
-        locale={locale}
-        weekStartsOn={weekStartsOn}
-        numberOfMonths={numberOfMonths}
-        monthsPerLine={3}
-        showAdjacentMonths={showAdjacentMonths}
-        cardTitle="SgCalendar Playground"
-        cardProps={{ id: "showcase-calendar-playground", dragPersistKey: "showcase-calendar-playground" }}
-      />
-
-      <p className="text-xs text-muted-foreground">
-        Selected: {selected.toLocaleDateString(locale)}
-      </p>
-    </div>
-  );
-}`;
 
 type CalendarTexts = {
   subtitle: string;
@@ -425,17 +285,17 @@ export default function SgCalendarPage() {
 
           <Section title={texts.section1Title} description={texts.section1Description}>
             <BasicCalendarExample />
-            <SgCodeBlockBase code={BASIC_EXAMPLE_CODE} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-calendar/samples/basico-mes-atual.tsx.sample" />
           </Section>
 
           <Section title={texts.section2Title} description={texts.section2Description}>
             <ControlledCalendarExample />
-            <SgCodeBlockBase code={CONTROLLED_EXAMPLE_CODE} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-calendar/samples/selecionado-controlado-limite-de-datas.tsx.sample" />
           </Section>
 
           <Section title={texts.section3Title} description={texts.section3Description}>
             <LocaleCalendarExample />
-            <SgCodeBlockBase code={LOCALE_EXAMPLE_CODE} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-calendar/samples/locale-multiplos-meses.tsx.sample" />
           </Section>
 
           <Section title={texts.section4Title} description={texts.section4Description}>
@@ -443,7 +303,7 @@ export default function SgCalendarPage() {
               title={texts.playgroundTitle}
               interactive
               codeContract="appFile"
-              code={CALENDAR_PLAYGROUND_APP_FILE}
+              playgroundFile="apps/showcase/src/app/components/gadgets/sg-calendar/sg-calendar.tsx.playground"
               height={640}
               defaultOpen
             />

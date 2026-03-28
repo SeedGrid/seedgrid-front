@@ -1,0 +1,19 @@
+import { SgEnvironmentProvider, useSgEnvironment } from "@seedgrid/fe-components";
+
+function Consumer() {
+  const env = useSgEnvironment();
+  return <div>scope: {env.persistence.scope}</div>;
+}
+
+export default function App() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "user:42" },
+        persistence: { scope: "app:dashboard", mode: "strict", stateVersion: 3 },
+      }}
+    >
+      <Consumer />
+    </SgEnvironmentProvider>
+  );
+}

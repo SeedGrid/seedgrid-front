@@ -1,0 +1,13 @@
+import React from "react";
+import { SgBadge } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgBadge value="Solid" badgeStyle="solid" />
+      <SgBadge value="Soft" badgeStyle="soft" severity="secondary" />
+      <SgBadge value="Outline" badgeStyle="outline" severity="info" />
+      <SgBadge value="Ghost" badgeStyle="ghost" severity="neutral" />
+    </>
+  );
+}

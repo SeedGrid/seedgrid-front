@@ -1,0 +1,22 @@
+import React from "react";
+import { SgBreadcrumb, type SgBreadcrumbItem } from "@seedgrid/fe-components";
+
+const longItems: SgBreadcrumbItem[] = [
+  { id: "home", label: "Home", href: "/" },
+  { id: "admin", label: "Admin", href: "/admin" },
+  { id: "tenant", label: "Multi Tenancy", href: "/admin/tenant" },
+  { id: "billing", label: "Billing", href: "/admin/tenant/billing" },
+  { id: "plans", label: "Subscription", href: "/admin/tenant/billing/subscription" },
+  { id: "edit", label: "Edit plan" }
+];
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <SgBreadcrumb items={longItems} maxItems={4} overflowBehavior="collapse" separator="slash" />
+      <div className="max-w-[360px] rounded-lg border border-border p-2">
+        <SgBreadcrumb items={longItems} overflowBehavior="scroll" separator="dot" />
+      </div>
+    </div>
+  );
+}

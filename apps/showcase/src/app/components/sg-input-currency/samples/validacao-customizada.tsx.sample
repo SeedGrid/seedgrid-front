@@ -1,0 +1,22 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <SgInputCurrency
+      id="demo-validation"
+      label="Mínimo"
+      name="validation"
+      register={register}
+      currency="BRL"
+      validation={(value) => {
+        const amount = Number(value);
+        return Number.isFinite(amount) && amount >= 1000 ? null : "O valor deve ser maior ou igual a 1000.";
+      }}
+      onValidation={(msg) => console.log(msg)}
+    />
+  );
+}

@@ -1,0 +1,17 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgDiscardDigit } from "@seedgrid/fe-components";
+
+const PAGES = ["001", "002", "003", "004", "005"] as const;
+
+export default function Example() {
+  const [index, setIndex] = React.useState(0);
+
+  return (
+    <div className="space-y-3">
+      <SgDiscardDigit value={PAGES[index] ?? PAGES[0]} color="#111827" font={'"Inter", "Segoe UI", sans-serif'} backgroundColor="#fffef7" fontSize={58} />
+      <SgButton size="sm" onClick={() => setIndex((prev) => (prev + 1) % PAGES.length)}>Descartar folha</SgButton>
+    </div>
+  );
+}

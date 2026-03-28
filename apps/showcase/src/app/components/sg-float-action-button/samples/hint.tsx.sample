@@ -1,0 +1,21 @@
+import React from "react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex gap-8 items-center flex-wrap py-4">
+      {(["top", "right", "bottom", "left"] as const).map((hintPosition) => (
+        <div key={hintPosition} className="flex flex-col items-center gap-2">
+          <SgFloatActionButton
+            hint="Add new"
+            hintPosition={hintPosition}
+            hintDelay={0}
+            onClick={() => {}}
+            style={{ position: "relative" }}
+          />
+          <span className="text-xs text-muted-foreground">hintPosition="{hintPosition}"</span>
+        </div>
+      ))}
+    </div>
+  );
+}

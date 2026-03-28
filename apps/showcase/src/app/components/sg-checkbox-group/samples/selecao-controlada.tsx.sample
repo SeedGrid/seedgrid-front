@@ -1,0 +1,19 @@
+import React from "react";
+import { SgCheckboxGroup, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const BASIC_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" }
+];
+
+export default function Example() {
+  const [selected, setSelected] = React.useState<(string | number)[]>(["option2"]);
+
+  return (
+    <>
+      <SgCheckboxGroup id="controlled-selection" title="Controlled selection" source={BASIC_OPTIONS} value={selected} onChange={setSelected} />
+      <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">Value: [{selected.join(", ")}]</p>
+    </>
+  );
+}

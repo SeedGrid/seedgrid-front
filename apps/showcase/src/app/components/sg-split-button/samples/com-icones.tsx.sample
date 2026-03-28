@@ -1,0 +1,35 @@
+import React from "react";
+import { Copy, Download, FileText, Home, Mail, Plus, Printer, RefreshCw, Save, Share2, Trash2, Upload } from "lucide-react";
+import { SgSplitButton } from "@seedgrid/fe-components";
+
+const basicItems = [
+  { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+  { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+  { label: "Homepage", icon: <Home className="size-4" />, onClick: () => {} }
+];
+
+const fileItems = [
+  { label: "Copy", icon: <Copy className="size-4" />, onClick: () => {} },
+  { label: "Print", icon: <Printer className="size-4" />, onClick: () => {} },
+  { separator: true, label: "Export as PDF", icon: <FileText className="size-4" />, onClick: () => {} },
+  { label: "Share via email", icon: <Mail className="size-4" />, onClick: () => {} }
+];
+
+export default function Example() {
+  return (
+    <>
+      <SgSplitButton label="Save" leftIcon={<Save className="size-4" />} severity="primary" onClick={() => {}} items={basicItems} />
+      <SgSplitButton
+        label="New"
+        leftIcon={<Plus className="size-4" />}
+        severity="success"
+        onClick={() => {}}
+        items={[
+          { label: "Import", icon: <Upload className="size-4" />, onClick: () => {} },
+          { label: "Download template", icon: <Download className="size-4" />, onClick: () => {} }
+        ]}
+      />
+      <SgSplitButton label="Share" leftIcon={<Share2 className="size-4" />} severity="info" onClick={() => {}} items={fileItems} />
+    </>
+  );
+}

@@ -1,0 +1,18 @@
+import React from "react";
+import { SgButton } from "@seedgrid/fe-components";
+
+const SEVERITIES = ["primary", "secondary", "success", "info", "warning", "help", "danger"] as const;
+
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      {SEVERITIES.map((severity) => (
+        <SgButton key={severity} severity={severity} shape="rounded">{capitalize(severity)}</SgButton>
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,20 @@
+import React from "react";
+import { SgButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+    window.setTimeout(() => setIsLoading(false), 1200);
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <SgButton onClick={handleClick} loading={isLoading}>
+        Submit
+      </SgButton>
+      <SgButton disabled>Disabled</SgButton>
+    </div>
+  );
+}

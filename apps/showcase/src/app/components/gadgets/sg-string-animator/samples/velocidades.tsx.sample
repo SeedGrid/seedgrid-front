@@ -1,0 +1,16 @@
+"use client";
+
+import { SgStringAnimator } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="grid gap-4 md:grid-cols-3">
+      {[10, 50, 90].map((velocity) => (
+        <div key={velocity} className="space-y-2">
+          <div className="text-xs text-muted-foreground">velocity={velocity}</div>
+          <SgStringAnimator sourceString="SEED" targetString="GRID" stringAnimatorStyle="roller3d" fontSize={24} autoStart velocity={velocity} />
+        </div>
+      ))}
+    </div>
+  );
+}

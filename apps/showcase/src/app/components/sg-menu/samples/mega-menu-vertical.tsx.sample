@@ -1,0 +1,12 @@
+import React from "react";
+import { Settings, Users } from "lucide-react";
+import { SgMenu, type SgMenuNode } from "@seedgrid/fe-components";
+
+const MEGA_MENU: SgMenuNode[] = [
+  { id: "fashion", label: "Fashion", icon: <Users className="size-4" />, children: [{ id: "fashion-woman", label: "Woman", children: [{ id: "w1", label: "Woman Casual", url: "/fashion/woman/1" }] }] },
+  { id: "electronics", label: "Electronics", icon: <Settings className="size-4" />, children: [{ id: "electronics-computer", label: "Computer", children: [{ id: "c1", label: "Laptop", url: "/electronics/computer/1" }] }] }
+];
+
+export default function Example() {
+  return <div className="rounded-lg border border-border p-3"><SgMenu menu={MEGA_MENU} selection={{ activeId: "fashion" }} menuStyle="inline" menuVariantStyle="MegaMenuVertical" /></div>;
+}

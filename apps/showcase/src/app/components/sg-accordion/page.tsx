@@ -596,7 +596,7 @@ export default function SgAccordionPage() {
         description={texts.section1Description}
       >
         <SgAccordion items={VERTICAL_ITEMS} />
-        <SgCodeBlockBase code={BASIC_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/basico-vertical-single.tsx.sample" />
       </Section>
 
       <Section
@@ -616,7 +616,7 @@ export default function SgAccordionPage() {
           <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([0, 1, 2])}>Todos</SgButton>
           <SgButton size="sm" appearance="outline" onClick={() => setMultiControlled([])}>None</SgButton>
         </div>
-        <SgCodeBlockBase code={MULTIPLE_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/multiple-collapsible.tsx.sample" />
       </Section>
 
       <Section
@@ -630,7 +630,7 @@ export default function SgAccordionPage() {
           horizontalHeaderWidth={56}
           horizontalMinHeight={220}
         />
-        <SgCodeBlockBase code={HORIZONTAL_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/horizontal.tsx.sample" />
       </Section>
 
       <Section
@@ -648,7 +648,7 @@ export default function SgAccordionPage() {
           <SgButton size="sm" appearance="outline" onClick={() => setControlled([2])}>Abrir 3</SgButton>
           <SgButton size="sm" appearance="outline" onClick={() => setControlled([])}>Fechar todos</SgButton>
         </div>
-        <SgCodeBlockBase code={CONTROLLED_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/controlado-por-estado.tsx.sample" />
       </Section>
 
       <Section
@@ -660,7 +660,7 @@ export default function SgAccordionPage() {
           defaultActiveIndex={0}
           headerBackgroundColor="rgb(var(--sg-primary-50, 239 246 255))"
         />
-        <SgCodeBlockBase code={CUSTOM_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/custom-items-header-background.tsx.sample" />
       </Section>
 
       <Section
@@ -691,7 +691,7 @@ export default function SgAccordionPage() {
           defaultActiveIndex={0}
           headerBackgroundColor={headerColorExample}
         />
-        <SgCodeBlockBase code={COLOR_CUSTOMIZATION_CODE} />
+        <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-accordion/samples/color-customization-example.tsx.sample" />
       </Section>
 
       <Section
@@ -702,7 +702,7 @@ export default function SgAccordionPage() {
           title="SgAccordion Playground"
           interactive
           codeContract="appFile"
-          code={PLAYGROUND_APP_FILE}
+          playgroundFile="apps/showcase/src/app/components/sg-accordion/sg-accordion.tsx.playground"
           height={680}
           defaultOpen
         />

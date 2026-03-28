@@ -1,0 +1,13 @@
+import React from "react";
+import { User } from "lucide-react";
+import { SgAvatar } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <SgAvatar label="P" />
+      <SgAvatar icon={<User />} severity="secondary" />
+      <SgAvatar src="https://i.pravatar.cc/150?img=32" alt="Amy Elsner" />
+    </div>
+  );
+}

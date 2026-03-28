@@ -1,0 +1,13 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-empty"
+      label="Pode ser vazio"
+      name="vazio"
+      emptyValue="null"
+      decimals={2}
+    />
+  );
+}

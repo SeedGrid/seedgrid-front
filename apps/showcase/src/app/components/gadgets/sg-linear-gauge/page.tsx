@@ -22,8 +22,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const EXAMPLE_DEFAULT_CODE = `import React from "react";
@@ -218,7 +218,7 @@ export default function SgLinearGaugePage() {
               />
             </label>
           </div>
-          <CodeBlock code={EXAMPLE_DEFAULT_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-linear-gauge/samples/default-horizontal.tsx.sample" />
         </Section>
 
         <Section title="2) Vertical + Multi Pointers" description="Vertical orientation with two draggable pointers.">
@@ -281,7 +281,7 @@ export default function SgLinearGaugePage() {
               </label>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_VERTICAL_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-linear-gauge/samples/vertical-multi-pointers.tsx.sample" />
         </Section>
 
         <Section title="3) Playground" description="Try orientation, ticks, and labels.">
@@ -289,7 +289,7 @@ export default function SgLinearGaugePage() {
             title="SgLinearGauge Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/gadgets/sg-linear-gauge/sg-linear-gauge.tsx.playground"
             height={660}
             defaultOpen
           />

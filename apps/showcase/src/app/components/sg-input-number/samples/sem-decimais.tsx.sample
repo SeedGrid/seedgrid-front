@@ -1,0 +1,12 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-no-decimals"
+      label="Quantidade"
+      name="inteiro"
+      decimals={0}
+    />
+  );
+}

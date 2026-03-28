@@ -1,0 +1,46 @@
+import React from "react";
+import { SgButton, SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgCard
+        title="Painel recolhido"
+        description="Abre sob demanda"
+        collapsible
+        defaultOpen={false}
+        collapseToggleAlign="right"
+        collapseIconSize={20}
+        footer={<div className="flex justify-end"><SgButton size="sm">Acao</SgButton></div>}
+      >
+        <div className="text-sm text-muted-foreground">Conteudo recolhivel do card.</div>
+      </SgCard>
+
+      <SgCard
+        title="Painel aberto"
+        description="Comeca expandido"
+        collapsible
+        defaultOpen
+        collapseToggleAlign="right"
+        collapseIconSize={20}
+        footer={
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>128 itens</span>
+            <span>R$ 9.820</span>
+          </div>
+        }
+      >
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Tickets</span>
+            <span className="font-semibold">128</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-muted-foreground">Valor</span>
+            <span className="font-semibold">R$ 9.820</span>
+          </div>
+        </div>
+      </SgCard>
+    </>
+  );
+}

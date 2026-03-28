@@ -1,0 +1,30 @@
+import { SgButton, SgGrid, SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgInputNumber
+        id="demo-controlled"
+        label="Controlado"
+        name="controlled"
+        decimals={2}
+      />
+
+      <SgGrid columns={{ base: 1, sm: 3 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => {}}>
+          Set API
+        </SgButton>
+
+        <SgButton size="sm" appearance="outline" onClick={() => {}}>
+          Reset
+        </SgButton>
+
+        <SgButton size="sm" appearance="outline" severity="danger" onClick={() => {}}>
+          Clear
+        </SgButton>
+      </SgGrid>
+
+      <p>Estado atual: "{'{watch("controlled")}'}"</p>
+    </>
+  );
+}

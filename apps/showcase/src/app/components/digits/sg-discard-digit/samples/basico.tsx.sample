@@ -1,0 +1,18 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgDiscardDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [stackDepth, setStackDepth] = React.useState(8);
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgDiscardDigit value="7" color="#0f172a" font={'"Inter", "Segoe UI", sans-serif'} backgroundColor="#f8fafc" stackDepth={stackDepth} />
+      <div className="flex flex-col gap-2">
+        <SgButton size="sm" onClick={() => setStackDepth((prev) => Math.min(30, prev + 1))}>Next (+1 folha)</SgButton>
+        <SgButton size="sm" severity="secondary" onClick={() => setStackDepth((prev) => Math.max(2, prev - 1))}>Previous (-1 folha)</SgButton>
+      </div>
+    </div>
+  );
+}

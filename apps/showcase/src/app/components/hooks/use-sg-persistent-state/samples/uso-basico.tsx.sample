@@ -1,0 +1,17 @@
+import { useSgPersistentState } from "@seedgrid/fe-components";
+
+export default function Counter() {
+  const { value, setValue, clear, hydrated } = useSgPersistentState({
+    baseKey: "app:counter",
+    defaultValue: 0,
+  });
+
+  return (
+    <div>
+      <span>{hydrated ? value : "..."}</span>
+      <button onClick={() => setValue((v) => v + 1)}>+1</button>
+      <button onClick={() => setValue((v) => v - 1)}>-1</button>
+      <button onClick={() => clear()}>Reset</button>
+    </div>
+  );
+}

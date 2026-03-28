@@ -1,0 +1,34 @@
+import React from "react";
+import { SgButton, SgExpandablePanel } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <SgButton appearance="outline" onClick={() => setOpen(true)}>Abrir sem backdrop</SgButton>
+      </div>
+
+      <SgExpandablePanel
+        mode="overlay"
+        expandTo="bottom"
+        open={open}
+        onOpenChange={setOpen}
+        showBackdrop={false}
+        closeOnOutsideClick={false}
+        closeOnEsc
+        animation={{ type: "none", durationMs: 0 }}
+        size={{ default: 220, min: 160, max: 360 }}
+        header={<div className="font-medium">Sem backdrop</div>}
+        footer={
+          <div className="flex justify-end">
+            <SgButton size="sm" onClick={() => setOpen(false)}>Fechar</SgButton>
+          </div>
+        }
+      >
+        <div className="text-sm">Props: showBackdrop=false e animation type none.</div>
+      </SgExpandablePanel>
+    </>
+  );
+}

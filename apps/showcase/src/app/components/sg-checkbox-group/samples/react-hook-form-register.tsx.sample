@@ -1,0 +1,22 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgCheckboxGroup, SgButton, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const FRUIT_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+  { label: "Orange", value: "orange" },
+  { label: "Grape", value: "grape" }
+];
+
+export default function Example() {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data: any) => alert(`Dados do formulario: ${JSON.stringify(data, null, 2)}`);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <SgCheckboxGroup name="fruits" title="Choose your fruits" source={FRUIT_OPTIONS} register={register} />
+      <SgButton type="submit">Submit</SgButton>
+    </form>
+  );
+}

@@ -281,7 +281,7 @@ export default function SgSegmentDigitShowcase() {
               <SgButton size="sm" severity="info" onClick={randomDigit}>Random</SgButton>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-segment-digit/samples/basico-0-9.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -298,7 +298,7 @@ export default function SgSegmentDigitShowcase() {
             </div>
             <SgButton size="sm" onClick={() => setSeconds((prev) => prev + 1)}>+1 second</SgButton>
           </div>
-          <SgCodeBlockBase code={CLOCK_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-segment-digit/samples/composicao-estilo-relogio.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -316,7 +316,7 @@ export default function SgSegmentDigitShowcase() {
               <SgSegmentDigit value="8" size={52} />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={SIZES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-segment-digit/samples/tamanhos.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -344,7 +344,7 @@ export default function SgSegmentDigitShowcase() {
               </div>
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={COLORS_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-segment-digit/samples/cores.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -352,7 +352,7 @@ export default function SgSegmentDigitShowcase() {
             title="SgSegmentDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-segment-digit/sg-segment-digit.tsx.playground"
             height={540}
             defaultOpen
           />

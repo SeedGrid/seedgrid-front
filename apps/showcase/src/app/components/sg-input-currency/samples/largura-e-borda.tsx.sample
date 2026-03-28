@@ -1,0 +1,14 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgGrid, SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <SgGrid columns={{ base: 1, sm: 2 }} gap={16}>
+      <SgInputCurrency id="demo-w200" label="Width 200" width={200} name="w200" register={register} currency="BRL" />
+      <SgInputCurrency id="demo-w300" label="Width 300 rounded" width={300} borderRadius={20} name="w300" register={register} currency="BRL" />
+    </SgGrid>
+  );
+}

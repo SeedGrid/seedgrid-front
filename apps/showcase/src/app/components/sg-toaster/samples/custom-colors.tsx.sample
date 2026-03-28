@@ -1,0 +1,38 @@
+"use client";
+
+import { SgButton, SgToaster, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToaster
+        customColors={{
+          default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
+          success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
+          info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
+          warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
+          error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
+          loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
+        }}
+      />
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => toast.message("Default")}>default</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("Success")}>
+          success
+        </SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Info")}>
+          info
+        </SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Warning")}>
+          warning
+        </SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Error")}>
+          error
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => toast.loading("Loading")}>
+          loading
+        </SgButton>
+      </div>
+    </div>
+  );
+}

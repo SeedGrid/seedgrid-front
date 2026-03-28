@@ -1,0 +1,25 @@
+import React from "react";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+import { SgMenu, type SgMenuNode } from "@seedgrid/fe-components";
+
+const MENU: SgMenuNode[] = [
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
+  { id: "customers", label: "Customers", icon: <Users className="size-4" />, children: [{ id: "customers-new", label: "New", icon: <LayoutGrid className="size-4" /> }, { id: "customers-reports", label: "Reports", icon: <ClipboardList className="size-4" /> }] },
+  { id: "orders", label: "Orders", icon: <LayoutGrid className="size-4" />, children: [{ id: "orders-sales", label: "Sales", icon: <Search className="size-4" /> }] },
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
+];
+
+const USER_MENU: SgMenuNode[] = [{ id: "perfil", label: "My profile", onClick: () => {} }, { id: "logout", label: "Sign out", onClick: () => {} }];
+
+export default function Example() {
+  const [activeId, setActiveId] = React.useState("dashboard");
+  const [collapsed, setCollapsed] = React.useState(false);
+  return (
+    <div className="h-[460px] overflow-hidden rounded-lg border border-border">
+      <div className="flex h-full">
+        <SgMenu menu={MENU} selection={{ activeId }} menuStyle="sidebar" mode="accordion" collapsed={collapsed} onCollapsedChange={setCollapsed} showCollapseButton search={{ enabled: true, placeholder: "Search module..." }} brand={{ title: "SeedGrid ERP" }} user={{ name: "Lucia Souza", subtitle: "Finance" }} userMenu={USER_MENU} onNavigate={(node) => setActiveId(node.id)} />
+        <div className="flex-1 space-y-3 p-4"><h3 className="text-base font-semibold">Main content</h3><p className="text-sm text-muted-foreground">Active item: <span className="font-medium text-foreground">{activeId}</span></p></div>
+      </div>
+    </div>
+  );
+}

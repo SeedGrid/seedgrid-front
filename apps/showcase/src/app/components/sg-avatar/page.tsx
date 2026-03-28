@@ -118,8 +118,8 @@ function Row(props: { children: React.ReactNode }) {
   return <div className="flex flex-wrap items-center gap-4">{props.children}</div>;
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const EXAMPLE_BASIC_CODE = `import React from "react";
@@ -287,7 +287,7 @@ export default function SgAvatarPage() {
             <SgAvatar icon={<User />} severity="secondary" />
             <SgAvatar src={IMG_AMY} alt="Amy Elsner" />
           </Row>
-          <CodeBlock code={EXAMPLE_BASIC_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-avatar/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -298,7 +298,7 @@ export default function SgAvatarPage() {
             <SgAvatar label="LG" size="lg" />
             <SgAvatar src={IMG_ASIYA} alt="Asiya Javayant" shape="square" />
           </Row>
-          <CodeBlock code={EXAMPLE_SHAPES_SIZES_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-avatar/samples/shape-e-tamanho.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -317,7 +317,7 @@ export default function SgAvatarPage() {
               }}
             />
           </Row>
-          <CodeBlock code={EXAMPLE_SEVERITY_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-avatar/samples/severity-e-cores-customizadas.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -339,7 +339,7 @@ export default function SgAvatarPage() {
               </SgAvatarGroup>
             </Row>
           </div>
-          <CodeBlock code={EXAMPLE_GROUP_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-avatar/samples/avatar-group.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -347,7 +347,7 @@ export default function SgAvatarPage() {
             title="SgAvatar Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-avatar/sg-avatar.tsx.playground"
             height={620}
             defaultOpen
           />

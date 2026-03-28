@@ -1,0 +1,23 @@
+import * as React from "react";
+import { SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [value, setValue] = React.useState(2.5);
+  const [hover, setHover] = React.useState<number | null>(null);
+
+  return (
+    <div className="space-y-2">
+      <SgRating
+        label="Hover and click half stars"
+        value={value}
+        allowHalf
+        showTooltip
+        onChange={setValue}
+        onHover={setHover}
+      />
+      <p className="text-sm text-muted-foreground">
+        Selected: <strong>{value}</strong> | Hover: <strong>{hover ?? "none"}</strong>
+      </p>
+    </div>
+  );
+}

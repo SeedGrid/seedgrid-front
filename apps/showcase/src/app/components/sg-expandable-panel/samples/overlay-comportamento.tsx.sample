@@ -1,0 +1,43 @@
+import React from "react";
+import { SgButton, SgExpandablePanel } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => setOpen(true)}>Abrir drawer</SgButton>
+      </div>
+
+      <SgExpandablePanel
+        mode="overlay"
+        expandTo="left"
+        placement="center"
+        open={open}
+        onOpenChange={setOpen}
+        size={{ default: 360, min: 260, max: 640 }}
+        resizable
+        closeOnEsc
+        closeOnOutsideClick
+        trapFocus
+        showBackdrop
+        handle={<div className="mx-auto h-1.5 w-12 rounded-full bg-muted-foreground/35" />}
+        header={<div className="font-medium">Drawer com foco preso</div>}
+        footer={
+          <div className="flex justify-end">
+            <SgButton size="sm" onClick={() => setOpen(false)}>Fechar</SgButton>
+          </div>
+        }
+      >
+        <div className="space-y-2 text-sm">
+          <p>Props: placement, closeOnEsc, closeOnOutsideClick, trapFocus e showBackdrop.</p>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" defaultChecked />
+            <span>Somente ativos</span>
+          </label>
+        </div>
+      </SgExpandablePanel>
+    </>
+  );
+}

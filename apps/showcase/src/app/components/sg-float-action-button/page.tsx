@@ -22,8 +22,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 /* Ã¢â€â‚¬Ã¢â€â‚¬ icons Ã¢â€â‚¬Ã¢â€â‚¬ */
@@ -75,73 +75,6 @@ const FAB_EXAMPLE_LINKS = [
   { id: "exemplo-14", label: "14) Drag & Drop" },
   { id: "exemplo-15", label: "15) Playground" }
 ];
-
-const FAB_PLAYGROUND_CODE = `import * as React from "react";
-import {
-  Heart,
-  Plus,
-  Star,
-} from "lucide-react";
-import {
-  SgFloatActionButton,
-  SgGrid,
-  type SgFABAction,
-  SgButton,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const actions = [
-  { icon: <Plus className="size-4" />, label: "New", onClick: () => {} },
-  { icon: <Star className="size-4" />, label: "Favorite", onClick: () => {} },
-];
-
-export default function App() {
-  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "danger">("primary");
-  const [shape, setShape] = React.useState<"circle" | "rounded" | "square">("circle");
-  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
-  const [type, setType] = React.useState<"none" | "linear" | "circle" | "semi-circle" | "quarter-circle">("linear");
-  const [direction, setDirection] = React.useState<"up" | "down" | "left" | "right">("up");
-
-  return (
-    <div className="space-y-4 p-2">
-      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("secondary")}>secondary</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setShape("circle")}>circle</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setShape("rounded")}>rounded</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setShape("square")}>square</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setSize(size === "sm" ? "md" : size === "md" ? "lg" : "sm")}>
-          size: {size}
-        </SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setType("linear")}>linear</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setType("circle")}>circle</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setType("semi-circle")}>semi-circle</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setType("quarter-circle")}>quarter-circle</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setDirection("up")}>up</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setDirection("down")}>down</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setDirection("left")}>left</SgButton>
-        <SgButton size="sm" appearance="outline" onClick={() => setDirection("right")}>right</SgButton>
-      </SgGrid>
-
-      <div className="relative h-72 rounded border border-dashed border-border bg-muted/20">
-        <SgFloatActionButton
-          absolute
-          position="right-bottom"
-          severity={severity}
-          shape={shape}
-          size={size}
-          icon={<Heart className="size-4" />}
-          actions={actions}
-          type={type}
-          direction={direction}
-          onClick={() => {}}
-        />
-      </div>
-    </div>
-  );
-}`;
 
 export default function SgFloatActionButtonPage() {
   const i18n = useShowcaseI18n();
@@ -336,14 +269,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">8 positions</span>
           </div>
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton position="left-top" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-top" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-top" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-center" size="sm" severity="warning" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-center" size="sm" severity="danger" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="left-bottom" size="sm" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="center-bottom" size="sm" severity="secondary" icon={<Edit />} onClick={handleClick} />
-<SgFloatActionButton position="right-bottom" size="sm" severity="success" icon={<Edit />} onClick={handleClick} />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/positions.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Variants Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -360,14 +286,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton severity="primary" />
-<SgFloatActionButton severity="secondary" />
-<SgFloatActionButton severity="success" />
-<SgFloatActionButton severity="info" />
-<SgFloatActionButton severity="warning" />
-<SgFloatActionButton severity="help" />
-<SgFloatActionButton severity="danger" />
-<SgFloatActionButton severity="plain" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/variants.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Shapes & Sizes Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -394,9 +313,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton shape="circle" size="sm" />
-<SgFloatActionButton shape="rounded" size="md" />
-<SgFloatActionButton shape="square" size="lg" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/shapes-sizes.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Elevation Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -413,10 +330,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton elevation="none" />
-<SgFloatActionButton elevation="sm" />
-<SgFloatActionButton elevation="md" />
-<SgFloatActionButton elevation="lg" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/elevation.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Hint Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -439,12 +353,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           ))}
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  hint="Add new"
-  hintPosition="top"
-  hintDelay={300}
-  onClick={handleClick}
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/hint.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Actions - Linear Layout Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -471,16 +380,7 @@ export default function SgFloatActionButtonPage() {
             <SgFloatActionButton absolute position="left-center" actions={actionsNoLabel} type="linear" direction="right" />
           </DemoBox>
         </div>
-        <CodeBlock code={`const actions = [
-  { icon: <UserPlus />, label: "New user", onClick: () => {} },
-  { icon: <FilePlus />, label: "New file", onClick: () => {} },
-  { icon: <FolderPlus />, label: "New folder", onClick: () => {} },
-];
-
-<SgFloatActionButton actions={actions} type="linear" direction="up" />
-<SgFloatActionButton actions={actions} type="linear" direction="down" />
-<SgFloatActionButton actions={actions} type="linear" direction="left" />
-<SgFloatActionButton actions={actions} type="linear" direction="right" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/actions-linear-layout.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Circle Layout Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -500,12 +400,7 @@ export default function SgFloatActionButtonPage() {
             severity="secondary"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="circle"
-  radius={120}
-  severity="secondary"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/circle-layout.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Semi-Circle Layout Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -559,29 +454,7 @@ export default function SgFloatActionButtonPage() {
             />
           </DemoBox>
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="up"
-  severity="success"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="down"
-  severity="warning"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="left"
-  severity="danger"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="semi-circle"
-  direction="right"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/semi-circle-layout.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Quarter-Circle Layout Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -636,30 +509,7 @@ export default function SgFloatActionButtonPage() {
             />
           </DemoBox>
         </div>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="up"
-  severity="secondary"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="down"
-  severity="success"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="left"
-  severity="warning"
-/>
-<SgFloatActionButton
-  actions={actions}
-  type="quarter-circle"
-  direction="right"
-  severity="danger"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/quarter-circle-layout.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Active Icon Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -680,13 +530,7 @@ export default function SgFloatActionButtonPage() {
             severity="secondary"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  actions={actions}
-  activeIcon={<Settings />}
-  type="semi-circle"
-  direction="up"
-  severity="secondary"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/active-icon.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Animations Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -713,11 +557,7 @@ export default function SgFloatActionButtonPage() {
             </div>
           )})}
         </div>
-        <CodeBlock code={`<SgFloatActionButton animation="scale" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="fade" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="slide" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="rotate" animationOn="hover" severity="danger" />
-<SgFloatActionButton animation="pulse" animationOn="hover" severity="danger" />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/animations.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Custom Color Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -740,9 +580,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">#f97316</span>
           </div>
         </div>
-        <CodeBlock code={`<SgFloatActionButton color="#8b5cf6" icon={<Star />} />
-<SgFloatActionButton color="#ec4899" icon={<Heart />} />
-<SgFloatActionButton color="#f97316" icon={<Settings />} />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/custom-color.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Disabled & Loading Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -761,8 +599,7 @@ export default function SgFloatActionButtonPage() {
             <span className="text-xs text-muted-foreground">loading</span>
           </div>
         </div>
-        <CodeBlock code={`<SgFloatActionButton disabled />
-<SgFloatActionButton loading />`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/disabled-loading.tsx.sample" />
       </Section>
 
       {/* Ã¢â€â‚¬Ã¢â€â‚¬ Drag & Drop Ã¢â€â‚¬Ã¢â€â‚¬ */}
@@ -783,16 +620,7 @@ export default function SgFloatActionButtonPage() {
             position="right-bottom"
           />
         </DemoBox>
-        <CodeBlock code={`<SgFloatActionButton
-  enableDragDrop
-  dragId="showcase-fab-drag"
-  actions={actions}
-  type="linear"
-  direction="up"
-  severity="info"
-  absolute
-  position="right-bottom"
-/>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-float-action-button/samples/drag-drop.tsx.sample" />
       </Section>
 
       <Section
@@ -804,7 +632,7 @@ export default function SgFloatActionButtonPage() {
           title="SgFloatActionButton Playground"
           interactive
           codeContract="appFile"
-          code={FAB_PLAYGROUND_CODE}
+          playgroundFile="apps/showcase/src/app/components/sg-float-action-button/sg-float-action-button.tsx.playground"
           height={700}
           defaultOpen
         />

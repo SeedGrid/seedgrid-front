@@ -1,0 +1,11 @@
+<div className="relative h-80 rounded-lg border-2 border-dashed border-border bg-muted/20">
+  <SgDockMenu
+    id="draggable-dock"
+    dragId="demo-dockmenu-draggable"
+    items={items}
+    position="center-bottom"
+    enableDragDrop
+    zIndex={10}
+    style={{ position: "absolute" }}
+  />
+</div>

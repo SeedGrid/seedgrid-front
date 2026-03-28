@@ -1,0 +1,40 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgCalendar, SgGrid } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [locale, setLocale] = React.useState<"pt-BR" | "en-US" | "es">("pt-BR");
+  const [weekStartsOn, setWeekStartsOn] = React.useState<0 | 1>(0);
+  const [numberOfMonths, setNumberOfMonths] = React.useState(6);
+
+  return (
+    <div className="space-y-3">
+      <SgGrid columns={{ base: 2, md: 5 }} gap={8}>
+        <SgButton appearance={locale === "pt-BR" ? "solid" : "outline"} onClick={() => setLocale("pt-BR")}>pt-BR</SgButton>
+        <SgButton appearance={locale === "en-US" ? "solid" : "outline"} onClick={() => setLocale("en-US")}>en-US</SgButton>
+        <SgButton appearance={locale === "es" ? "solid" : "outline"} onClick={() => setLocale("es")}>es</SgButton>
+        <SgButton appearance={weekStartsOn === 0 ? "solid" : "outline"} onClick={() => setWeekStartsOn(0)}>Sunday first</SgButton>
+        <SgButton appearance={weekStartsOn === 1 ? "solid" : "outline"} onClick={() => setWeekStartsOn(1)}>Monday first</SgButton>
+      </SgGrid>
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton appearance={numberOfMonths === 1 ? "solid" : "outline"} onClick={() => setNumberOfMonths(1)}>1 month</SgButton>
+        <SgButton appearance={numberOfMonths === 3 ? "solid" : "outline"} onClick={() => setNumberOfMonths(3)}>3 months</SgButton>
+        <SgButton appearance={numberOfMonths === 6 ? "solid" : "outline"} onClick={() => setNumberOfMonths(6)}>6 months</SgButton>
+        <SgButton appearance={numberOfMonths === 12 ? "solid" : "outline"} onClick={() => setNumberOfMonths(12)}>12 months</SgButton>
+      </SgGrid>
+
+      <SgCalendar
+        locale={locale}
+        weekStartsOn={weekStartsOn}
+        numberOfMonths={numberOfMonths}
+        monthsPerLine={3}
+        defaultValue="2026-03-10"
+        defaultViewDate="2026-03-01"
+        cardTitle="Calendar i18n + multi month"
+        cardProps={{ id: "showcase-calendar-i18n", dragPersistKey: "showcase-calendar-i18n" }}
+      />
+    </div>
+  );
+}

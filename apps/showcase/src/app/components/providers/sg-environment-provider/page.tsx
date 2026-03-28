@@ -23,69 +23,9 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
-
-const ENVIRONMENT_PLAYGROUND_APP_FILE = `import * as React from "react";
-import {
-  SgEnvironmentProvider,
-  buildSgPersistenceKey,
-  useSgEnvironment,
-  SgInputText,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-function EnvInfo({ baseKey }: { baseKey: string }) {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const fullKey = buildSgPersistenceKey(baseKey, namespace, env.persistence.scope);
-
-  return (
-    <div className="space-y-1 rounded border border-border bg-background p-3 text-xs">
-      <div>namespace: <code>{namespace || "(vazio)"}</code></div>
-      <div>baseKey: <code>{baseKey}</code></div>
-      <div>fullKey: <code>{fullKey ?? "null"}</code></div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [namespace, setNamespace] = React.useState("u:123");
-  const [scope, setScope] = React.useState("app:crm");
-
-  return (
-    <div className="space-y-4 p-2">
-      <div className="grid gap-3 md:grid-cols-2">
-        <SgInputText
-          id="namespace"
-          label="Namespace"
-          inputProps={{
-            value: namespace,
-            onChange: (event) => setNamespace(event.currentTarget.value)
-          }}
-        />
-        <SgInputText
-          id="scope"
-          label="Scope"
-          inputProps={{
-            value: scope,
-            onChange: (event) => setScope(event.currentTarget.value)
-          }}
-        />
-      </div>
-
-      <SgEnvironmentProvider
-        value={{
-          namespaceProvider: { getNamespace: () => namespace },
-          persistence: { scope, mode: "fallback", stateVersion: 1 }
-        }}
-      >
-        <EnvInfo baseKey="fab:theme" />
-      </SgEnvironmentProvider>
-    </div>
-  );
-}`;
 
 const ENVIRONMENT_PROVIDER_PROPS: ShowcasePropRow[] = [
   { prop: "value.namespaceProvider", type: "{ getNamespace: () => string }", defaultValue: "interno", description: "Fornecedor do namespace atual para isolamento dos dados." },
@@ -147,19 +87,7 @@ export default function SgEnvironmentProviderPage() {
         <div className="w-full">
           <EnvInfo baseKey="fab:theme" />
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgEnvironmentProvider, buildSgPersistenceKey, useSgEnvironment, SgInputText } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-function Example() {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
-
-  return <div>fullKey: {fullKey ?? "null"}</div>;
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-environment-provider/samples/default-namespace-vazio.tsx.sample" />
       </Section>
 
       <Section
@@ -181,31 +109,7 @@ function Example() {
             <EnvInfo baseKey="fab:theme" />
           </SgEnvironmentProvider>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgEnvironmentProvider, buildSgPersistenceKey, useSgEnvironment, SgInputText } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-function EnvInfo() {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const fullKey = buildSgPersistenceKey("fab:theme", namespace, env.persistence.scope);
-  return <div>fullKey: {fullKey ?? "null"}</div>;
-}
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      <EnvInfo />
-    </SgEnvironmentProvider>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-environment-provider/samples/namespace-customizado.tsx.sample" />
       </Section>
 
       <Section
@@ -213,38 +117,7 @@ export default function Example() {
         description={t(i18n, "showcase.component.environment.sections.rest.description")}
       >
         <div className="w-full">
-          <CodeBlock
-            code={`import React from "react";
-import { SgEnvironmentProvider, buildSgPersistenceKey, useSgEnvironment, SgInputText } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const api = createApiPersistenceStrategy({
-  baseUrl: "https://api.seedgrid.com",
-  scope: "app:crm",
-  stateVersion: 1
-});
-
-const local = createLocalStorageStrategy();
-const persistence = createCompositePersistenceStrategy({
-  mode: "fallback",
-  primary: api,
-  secondary: local
-});
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistenceStrategy: persistence,
-        persistence: { scope: "app:crm", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      {/* componentes persistentes */}
-    </SgEnvironmentProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-environment-provider/samples/rest-por-usuario.tsx.sample" />
         </div>
       </Section>
 
@@ -253,38 +126,7 @@ export default function Example() {
         description={t(i18n, "showcase.component.environment.sections.hybrid.description")}
       >
         <div className="w-full">
-          <CodeBlock
-            code={`import React from "react";
-import { SgEnvironmentProvider, buildSgPersistenceKey, useSgEnvironment, SgInputText } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const api = createApiPersistenceStrategy({
-  baseUrl: "https://api.seedgrid.com",
-  scope: "app:crm",
-  stateVersion: 1
-});
-
-const local = createLocalStorageStrategy();
-const persistence = createCompositePersistenceStrategy({
-  mode: "mirror",
-  primary: api,
-  secondary: local
-});
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "u:123" },
-        persistenceStrategy: persistence,
-        persistence: { scope: "app:crm", mode: "mirror", stateVersion: 1 }
-      }}
-    >
-      {/* componentes persistentes */}
-    </SgEnvironmentProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-environment-provider/samples/hybrid-local-rest.tsx.sample" />
         </div>
       </Section>
 
@@ -296,7 +138,7 @@ export default function Example() {
           title="SgEnvironmentProvider Playground"
           interactive
           codeContract="appFile"
-          code={ENVIRONMENT_PLAYGROUND_APP_FILE}
+          playgroundFile="apps/showcase/src/app/components/providers/sg-environment-provider/sg-environment-provider.tsx.playground"
           height={540}
           defaultOpen
         />

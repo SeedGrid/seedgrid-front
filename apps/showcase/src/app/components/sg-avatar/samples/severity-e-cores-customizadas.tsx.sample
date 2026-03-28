@@ -1,0 +1,14 @@
+import React from "react";
+import { Camera } from "lucide-react";
+import { SgAvatar } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center gap-4">
+      <SgAvatar label="P" severity="primary" />
+      <SgAvatar label="S" severity="success" />
+      <SgAvatar label="D" severity="danger" />
+      <SgAvatar icon={<Camera />} severity="custom" customColors={{ bg: "#7c3aed", fg: "#ffffff", border: "#5b21b6", ring: "rgba(124,58,237,0.35)" }} />
+    </div>
+  );
+}

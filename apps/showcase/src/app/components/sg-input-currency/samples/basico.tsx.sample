@@ -1,0 +1,21 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgButton, SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: {
+      total: "0.00"
+    }
+  });
+
+  return (
+    <form onSubmit={handleSubmit((data) => console.log(data))} className="w-80 space-y-2">
+      <SgInputCurrency id="demo-basic" label="Valor" name="total" register={register} currency="BRL" />
+      <SgButton type="submit" size="sm" appearance="outline">
+        Enviar
+      </SgButton>
+      <p>Valor atual: "{watch("total")}"</p>
+    </form>
+  );
+}

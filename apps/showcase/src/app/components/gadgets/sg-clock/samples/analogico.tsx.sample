@@ -1,0 +1,36 @@
+import * as React from "react";
+import { SgButton, SgClock, SgClockThemePicker } from "@seedgrid/fe-components";
+
+export default function Example(props: { initialServerTime?: string }) {
+  const [themeId, setThemeId] = React.useState("seedgrid");
+  const [secondMode, setSecondMode] = React.useState<"step" | "smooth">("step");
+  const [showSeconds, setShowSeconds] = React.useState(true);
+
+  return (
+    <div className="grid gap-6 md:grid-cols-[260px_1fr]">
+      <div className="space-y-3">
+        <SgClockThemePicker value={themeId} onChange={setThemeId} label="Tema" />
+        <div className="flex flex-wrap gap-2">
+          <SgButton onClick={() => setSecondMode((value) => (value === "step" ? "smooth" : "step"))}>
+            {secondMode === "step" ? "Segundo em salto" : "Segundo suave"}
+          </SgButton>
+          <SgButton onClick={() => setShowSeconds((value) => !value)}>
+            {showSeconds ? "Segundos ligados" : "Segundos desligados"}
+          </SgButton>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
+        <SgClock
+          clockStyle="analog"
+          size={320}
+          initialServerTime={props.initialServerTime ?? new Date().toISOString()}
+          themeId={themeId}
+          showSeconds={showSeconds}
+          secondHandMode={secondMode}
+          timezone="America/Sao_Paulo"
+        />
+      </div>
+    </div>
+  );
+}

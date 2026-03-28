@@ -1,0 +1,12 @@
+import * as React from "react";
+import { SgAccordion, type SgAccordionItem } from "@seedgrid/fe-components";
+
+const items: SgAccordionItem[] = [
+  { id: "personal", title: "Dados pessoais", content: <p className="text-sm">Nome, email e telefone.</p> },
+  { id: "address", title: "Endereco", content: <p className="text-sm">Rua, cidade e CEP.</p> },
+  { id: "billing", title: "Faturamento", content: <p className="text-sm">Cobranca e historico.</p> }
+];
+
+export default function Example() {
+  return <SgAccordion items={items} />;
+}

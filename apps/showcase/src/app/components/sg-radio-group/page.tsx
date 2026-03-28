@@ -46,8 +46,8 @@ function Section(props: { id?: string; title: string; description?: string; chil
   );
 }
 
-function CodeBlock(props: { children: string }) {
-  return <SgCodeBlockBase code={props.children} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function PropsTable(props: { id: string; props: PropDef[]; title: string; colProp: string; colType: string; colDefault: string; colDescription: string }) {
@@ -675,28 +675,7 @@ export default function SgRadioGroupShowcase() {
         <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
           Valor selecionado: <strong>{selectedBasic}</strong>
         </p>
-        <CodeBlock>
-          {`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-const [selectedBasic, setSelectedBasic] = React.useState<string | number | null>("option1");
-
-<SgRadioGroup
-  id="basic"
-  title="Choose an option"
-  source={BASIC_OPTIONS}
-  value={selectedBasic ?? undefined}
-  onChange={setSelectedBasic}
-  style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 12, padding: 12 }}
-/>
-
-<p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
-  Valor selecionado: <strong>{selectedBasic}</strong>
-</p>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/basico.tsx.sample" />
       </Section>
 
       <Section id="exemplo-2" title={texts.sectionTitles[1] ?? ""}>
@@ -708,25 +687,7 @@ const [selectedBasic, setSelectedBasic] = React.useState<string | number | null>
           value={selectedFruit ?? undefined}
           onChange={setSelectedFruit}
         />
-        <CodeBlock>
-          {`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Uva", value: "grape" }
-];
-
-const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>(null);
-
-<SgRadioGroup
-  id="horizontal"
-  title="Select a fruit"
-  source={FRUIT_OPTIONS}
-  orientation="horizontal"
-  value={selectedFruit ?? undefined}
-  onChange={setSelectedFruit}
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/orientation-horizontal.tsx.sample" />
       </Section>
 
       <Section id="exemplo-3" title={texts.sectionTitles[2] ?? ""}>
@@ -735,19 +696,7 @@ const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>
           title="Choose an action"
           source={OPTIONS_WITH_ICONS}
         />
-        <CodeBlock>
-          {`const OPTIONS_WITH_ICONS = [
-  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
-  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
-  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
-];
-
-<SgRadioGroup
-  id="with-icons"
-  title="Choose an action"
-  source={OPTIONS_WITH_ICONS}
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/com-icones.tsx.sample" />
       </Section>
 
       <Section id="exemplo-4" title={texts.sectionTitles[3] ?? ""}>
@@ -757,20 +706,7 @@ const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>
           source={SHAPE_OPTIONS}
           iconOnly
         />
-        <CodeBlock>
-          {`const SHAPE_OPTIONS = [
-  { label: "Circle", value: "circle", icon: <Circle className="w-5 h-5" /> },
-  { label: "Square", value: "square", icon: <Square className="w-5 h-5" /> },
-  { label: "Triangle", value: "triangle", icon: <Triangle className="w-5 h-5" /> }
-];
-
-<SgRadioGroup
-  id="icon-only"
-  title="Choose a shape"
-  source={SHAPE_OPTIONS}
-  iconOnly
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/apenas-icones.tsx.sample" />
       </Section>
 
       <Section id="exemplo-5" title={texts.sectionTitles[4] ?? ""}>
@@ -784,27 +720,7 @@ const [selectedFruit, setSelectedFruit] = React.useState<string | number | null>
         <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
           Value: {selectedControlled === null ? "None" : selectedControlled}
         </p>
-        <CodeBlock>
-          {`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-const [selectedControlled, setSelectedControlled] = React.useState<string | number | null>("option2");
-
-<SgRadioGroup
-  id="controlled-selection"
-  title="Controlled selection"
-  source={BASIC_OPTIONS}
-  value={selectedControlled ?? undefined}
-  onChange={setSelectedControlled}
-/>
-
-<p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
-  Value: {selectedControlled === null ? "None" : selectedControlled}
-</p>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/selecao-controlada.tsx.sample" />
       </Section>
 
       <Section id="exemplo-6" title={texts.sectionTitles[5] ?? ""}>
@@ -834,43 +750,7 @@ const [selectedControlled, setSelectedControlled] = React.useState<string | numb
             Current value: <strong>{externalValue || "None"}</strong>
           </p>
         </div>
-        <CodeBlock>
-          {`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Uva", value: "grape" }
-];
-
-const [externalValue, setExternalValue] = React.useState<string | number | null>("banana");
-
-<div className="space-y-4">
-  <SgRadioGroup
-    id="external-control"
-    title="Favorite fruit"
-    source={FRUIT_OPTIONS}
-    value={externalValue ?? undefined}
-    onChange={setExternalValue}
-  />
-  <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-    <SgButton onClick={() => setExternalValue("apple")}>
-      Set Apple
-    </SgButton>
-    <SgButton onClick={() => setExternalValue("banana")}>
-      Set Banana
-    </SgButton>
-    <SgButton onClick={() => setExternalValue("orange")}>
-      Set Orange
-    </SgButton>
-    <SgButton onClick={() => setExternalValue(null)}>
-      Clear
-    </SgButton>
-  </SgGrid>
-  <p className="text-sm text-[rgb(var(--sg-muted))]">
-    Current value: <strong>{externalValue || "None"}</strong>
-  </p>
-</div>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/controle-externo-setvalue-getvalue.tsx.sample" />
       </Section>
 
       <Section id="exemplo-7" title={texts.sectionTitles[6] ?? ""}>
@@ -879,20 +759,7 @@ const [externalValue, setExternalValue] = React.useState<string | number | null>
           title="Priority level"
           source={PRIORITY_OPTIONS}
         />
-        <CodeBlock>
-          {`const PRIORITY_OPTIONS = [
-  { label: "Low", value: "low" },
-  { label: "Medium", value: "medium" },
-  { label: "High", value: "high" },
-  { label: "Urgent", value: "urgent", disabled: true }
-];
-
-<SgRadioGroup
-  id="with-disabled-option"
-  title="Priority level"
-  source={PRIORITY_OPTIONS}
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/com-opcao-desabilitada.tsx.sample" />
       </Section>
 
       <Section id="exemplo-8" title={texts.sectionTitles[7] ?? ""}>
@@ -903,21 +770,7 @@ const [externalValue, setExternalValue] = React.useState<string | number | null>
           value="option2"
           disabled
         />
-        <CodeBlock>
-          {`const BASIC_OPTIONS = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" }
-];
-
-<SgRadioGroup
-  id="disabled-group"
-  title="Options desabilitadas"
-  source={BASIC_OPTIONS}
-  value="option2"
-  disabled
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/grupo-disabled.tsx.sample" />
       </Section>
 
       <Section id="exemplo-9" title={texts.sectionTitles[8] ?? ""}>
@@ -928,22 +781,7 @@ const [externalValue, setExternalValue] = React.useState<string | number | null>
           value="banana"
           readOnly
         />
-        <CodeBlock>
-          {`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Uva", value: "grape" }
-];
-
-<SgRadioGroup
-  id="readonly"
-  title="Current configuration (read-only)"
-  source={FRUIT_OPTIONS}
-  value="banana"
-  readOnly
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/read-only.tsx.sample" />
       </Section>
 
       <Section id="exemplo-10" title={texts.sectionTitles[9] ?? ""}>
@@ -957,31 +795,7 @@ const [externalValue, setExternalValue] = React.useState<string | number | null>
           />
           <SgButton type="submit">Submit</SgButton>
         </form>
-        <CodeBlock>
-          {`const CONTACT_OPTIONS = [
-  { label: "Email", value: "email", icon: <Mail className="w-4 h-4" /> },
-  { label: "Phone", value: "phone", icon: <Phone className="w-4 h-4" /> },
-  { label: "In person", value: "in-person", icon: <Home className="w-4 h-4" /> }
-];
-
-const { control, handleSubmit } = useForm();
-
-const onSubmit = (data: any) => {
-  console.log("Form submitted:", data);
-  alert(\`Dados do formulario: \${JSON.stringify(data, null, 2)}\`);
-};
-
-<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-  <SgRadioGroup
-    name="preference"
-    title="Contact preference *"
-    source={CONTACT_OPTIONS}
-    control={control}
-    required
-  />
-  <SgButton type="submit">Submit</SgButton>
-</form>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/obrigatorio-com-validacao.tsx.sample" />
       </Section>
 
       <Section id="exemplo-11" title={texts.sectionTitles[10] ?? ""}>
@@ -991,20 +805,7 @@ const onSubmit = (data: any) => {
           source={WEATHER_OPTIONS}
           orientation="horizontal"
         />
-        <CodeBlock>
-          {`const WEATHER_OPTIONS = [
-  { label: "Sun", value: "sun", icon: <Sun className="w-5 h-5 text-yellow-500" /> },
-  { label: "Moon", value: "moon", icon: <Moon className="w-5 h-5 text-blue-500" /> },
-  { label: "Cloud", value: "cloud", icon: <Cloud className="w-5 h-5 text-gray-500" /> }
-];
-
-<SgRadioGroup
-  id="horizontal-colored"
-  title="Weather condition"
-  source={WEATHER_OPTIONS}
-  orientation="horizontal"
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/horizontal-com-icones-coloridos.tsx.sample" />
       </Section>
 
       <Section id="exemplo-12" title={texts.sectionTitles[11] ?? ""}>
@@ -1020,29 +821,7 @@ const onSubmit = (data: any) => {
         <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
           Value: <strong>{selectedHighlightStyle ?? "None"}</strong>
         </p>
-        <CodeBlock>
-          {`const LIST_HIGHLIGHT_OPTIONS = [
-  { label: "Reserve", value: "reserve", icon: <Landmark className="w-4 h-4 text-indigo-600" /> },
-  { label: "Alert", value: "alert", icon: <Bell className="w-4 h-4 text-rose-600" /> },
-  { label: "Refresh", value: "refresh", icon: <RefreshCw className="w-4 h-4 text-emerald-600" /> }
-];
-
-const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<string | number | null>("reserve");
-
-<SgRadioGroup
-  id="highlight-list"
-  title="Options"
-  source={LIST_HIGHLIGHT_OPTIONS}
-  value={selectedHighlightStyle ?? undefined}
-  onChange={setSelectedHighlightStyle}
-  selectionStyle="highlight"
-  className="max-w-xs"
-/>
-
-<p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">
-  Value: <strong>{selectedHighlightStyle ?? "None"}</strong>
-</p>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/selection-style-highlight-lista.tsx.sample" />
       </Section>
 
       <Section id="exemplo-13" title={texts.sectionTitles[12] ?? ""}>
@@ -1055,23 +834,7 @@ const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<strin
             className: "border-2 border-[rgb(var(--sg-primary-500))]"
           }}
         />
-        <CodeBlock>
-          {`const OPTIONS_WITH_ICONS = [
-  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
-  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
-  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
-];
-
-<SgRadioGroup
-  id="custom-groupbox"
-  title="Choose with custom style"
-  source={OPTIONS_WITH_ICONS}
-  groupBoxProps={{
-    title: "Preferences",
-    className: "border-2 border-[rgb(var(--sg-primary-500))]"
-  }}
-/>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/com-groupbox-customizado.tsx.sample" />
       </Section>
 
       <Section id="exemplo-14" title={texts.sectionTitles[13] ?? ""}>
@@ -1084,31 +847,7 @@ const [selectedHighlightStyle, setSelectedHighlightStyle] = React.useState<strin
           />
           <SgButton type="submit">Submit</SgButton>
         </form>
-        <CodeBlock>
-          {`const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Orange", value: "orange" },
-  { label: "Uva", value: "grape" }
-];
-
-const { register, handleSubmit } = useForm();
-
-const onSubmit = (data: any) => {
-  console.log("Form submitted:", data);
-  alert(\`Dados do formulario: \${JSON.stringify(data, null, 2)}\`);
-};
-
-<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-  <SgRadioGroup
-    name="fruit"
-    title="Choose your fruit"
-    source={FRUIT_OPTIONS}
-    register={register}
-  />
-  <SgButton type="submit">Submit</SgButton>
-</form>`}
-        </CodeBlock>
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-radio-group/samples/react-hook-form-register.tsx.sample" />
       </Section>
 
       <Section id="exemplo-15" title={texts.sectionTitles[14] ?? ""}>
@@ -1116,7 +855,7 @@ const onSubmit = (data: any) => {
           title={texts.playgroundTitle}
           interactive
           codeContract="appFile"
-          code={RADIO_GROUP_PLAYGROUND_APP_FILE}
+          playgroundFile="apps/showcase/src/app/components/sg-radio-group/sg-radio-group.tsx.playground"
           height={650}
           defaultOpen
         />

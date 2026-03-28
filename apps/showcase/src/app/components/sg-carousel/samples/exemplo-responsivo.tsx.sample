@@ -1,0 +1,26 @@
+<div className="h-64">
+  <SgCarousel
+    items={createCarouselItems()}
+    numVisible={4}
+    numScroll={2}
+    orientation="horizontal"
+    height="100%"
+    className="hidden lg:block"
+  />
+  <SgCarousel
+    items={createCarouselItems()}
+    numVisible={2}
+    numScroll={1}
+    orientation="horizontal"
+    height="100%"
+    className="hidden md:block lg:hidden"
+  />
+  <SgCarousel
+    items={createCarouselItems()}
+    numVisible={1}
+    numScroll={1}
+    orientation="horizontal"
+    height="100%"
+    className="block md:hidden"
+  />
+</div>

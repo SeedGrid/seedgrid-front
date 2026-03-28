@@ -23,8 +23,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const TEXT_EDITOR_PLAYGROUND_APP_FILE = `import * as React from "react";
@@ -136,29 +136,7 @@ export default function SgTextEditorPage() {
             style={{ border: "1px solid rgba(59, 130, 246, 0.2)", borderRadius: 14, padding: 8 }}
             onSave={(file) => onSave(file)}
           />
-          <CodeBlock
-            code={`import React from "react";
-import { SgTextEditor } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [htmlBody, setHtmlBody] = React.useState("<p><strong>SeedGrid</strong> editor</p>");
-  const [cssText, setCssText] = React.useState("body { font-family: Arial; }");
-
-  return (
-    <SgTextEditor
-      id="sg-text-editor"
-      valueHtml={htmlBody}
-      onChangeHtml={setHtmlBody}
-      cssText={cssText}
-      onCssTextChange={setCssText}
-      showCssEditor
-      style={{ border: "1px solid rgba(59, 130, 246, 0.2)", borderRadius: 14, padding: 8 }}
-      onSave={(file) => console.log(file.name)}
-    />
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-text-editor/samples/basico.tsx.sample" />
         </Section>
 
         <Section
@@ -172,25 +150,7 @@ export default function Example() {
             showCssEditor={false}
             onSave={(file) => onSave(file)}
           />
-          <CodeBlock
-            code={`import React from "react";
-import { SgTextEditor } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [htmlBody, setHtmlBody] = React.useState("<p>Editor without CSS</p>");
-
-  return (
-    <SgTextEditor
-      id="sg-text-editor-no-css"
-      valueHtml={htmlBody}
-      onChangeHtml={setHtmlBody}
-      showCssEditor={false}
-      onSave={(file) => console.log(file.name)}
-    />
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-text-editor/samples/sem-css.tsx.sample" />
         </Section>
 
         <Section
@@ -203,20 +163,7 @@ export default function Example() {
             disabled
             showCssEditor={false}
           />
-          <CodeBlock
-            code={`import { SgTextEditor } from "@seedgrid/fe-components";
-
-export default function Example() {
-  return (
-    <SgTextEditor
-      id="sg-text-editor-disabled"
-      valueHtml="<p><strong>Locked content</strong></p>"
-      disabled
-      showCssEditor={false}
-    />
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-text-editor/samples/desabilitado.tsx.sample" />
         </Section>
 
         <Section
@@ -233,30 +180,7 @@ export default function Example() {
             borderRadius={20}
             onSave={(file) => onSave(file)}
           />
-          <CodeBlock
-            code={`import React from "react";
-import { SgTextEditor } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const [radiusBody, setRadiusBody] = React.useState("<p>Editor with custom border radius</p>");
-  const [cssText, setCssText] = React.useState("body { font-family: Arial; }");
-  const onSave = (file: File) => console.log(file.name);
-
-  return (
-    <SgTextEditor
-      id="sg-text-editor-radius"
-      valueHtml={radiusBody}
-      onChangeHtml={setRadiusBody}
-      cssText={cssText}
-      onCssTextChange={setCssText}
-      showCssEditor
-      borderRadius={20}
-      onSave={(file) => onSave(file)}
-    />
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-text-editor/samples/border-radius.tsx.sample" />
         </Section>
 
         <Section
@@ -267,7 +191,7 @@ export default function Example() {
             title="SgTextEditor Playground"
             interactive
             codeContract="appFile"
-            code={TEXT_EDITOR_PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-text-editor/sg-text-editor.tsx.playground"
             height={780}
             defaultOpen
           />

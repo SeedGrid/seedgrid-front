@@ -1,0 +1,27 @@
+import * as React from "react";
+import { SgMainPanel, SgPanel } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [leftWidth, setLeftWidth] = React.useState(20);
+  const [rightWidth, setRightWidth] = React.useState(18);
+  const [bottomHeight, setBottomHeight] = React.useState(10);
+
+  return (
+    <div className="space-y-3 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setLeftWidth((prev) => (prev === 20 ? 25 : 20))}>left: {leftWidth}%</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setRightWidth((prev) => (prev === 18 ? 22 : 18))}>right: {rightWidth}%</button>
+        <button className="rounded border border-border bg-background px-2 py-1 text-xs" onClick={() => setBottomHeight((prev) => (prev === 10 ? 14 : 10))}>bottom: {bottomHeight}%</button>
+      </div>
+      <div className="h-[360px] rounded-xl bg-muted/30 p-3">
+        <SgMainPanel gap={8} className="h-full rounded-lg bg-background p-3">
+          <SgPanel align="top" height={12} className="rounded-md p-3">Top</SgPanel>
+          <SgPanel align="left" width={leftWidth} className="rounded-md p-3">Left</SgPanel>
+          <SgPanel align="right" width={rightWidth} className="rounded-md p-3">Right</SgPanel>
+          <SgPanel align="bottom" height={bottomHeight} className="rounded-md p-3">Bottom</SgPanel>
+          <SgPanel align="client" className="rounded-md p-3">Client</SgPanel>
+        </SgMainPanel>
+      </div>
+    </div>
+  );
+}

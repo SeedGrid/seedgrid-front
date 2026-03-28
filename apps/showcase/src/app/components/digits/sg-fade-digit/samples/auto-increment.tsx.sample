@@ -1,0 +1,17 @@
+"use client";
+
+import React from "react";
+import { SgFadeDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [digit, setDigit] = React.useState("0");
+
+  React.useEffect(() => {
+    const id = window.setInterval(() => {
+      setDigit((prev) => String((Number(prev) + 1) % 10));
+    }, 600);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return <SgFadeDigit value={digit} color="#22d3ee" backgroundColor="#082f49" />;
+}

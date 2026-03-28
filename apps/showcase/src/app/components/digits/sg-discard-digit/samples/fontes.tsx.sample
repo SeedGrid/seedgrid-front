@@ -1,0 +1,12 @@
+"use client";
+
+import { SgGrid, SgDiscardDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
+      <SgDiscardDigit value="42" color="#0f172a" font={'"Inter", "Segoe UI", sans-serif'} backgroundColor="#f8fafc" fontSize={60} />
+      <SgDiscardDigit value="42" color="#1f2937" font={'"Merriweather", "Times New Roman", serif'} backgroundColor="#fffef7" fontSize={60} />
+    </SgGrid>
+  );
+}

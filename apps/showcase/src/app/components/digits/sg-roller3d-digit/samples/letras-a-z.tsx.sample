@@ -1,0 +1,19 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgRoller3DDigit } from "@seedgrid/fe-components";
+
+const ALPHA = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+export default function Example() {
+  const [letter, setLetter] = React.useState("A");
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgRoller3DDigit value={letter} items={ALPHA} fontSize={32} />
+      <SgButton size="sm" onClick={() => setLetter(ALPHA[(ALPHA.indexOf(letter) + 1) % ALPHA.length] ?? "A")}>
+        Proxima letra
+      </SgButton>
+    </div>
+  );
+}

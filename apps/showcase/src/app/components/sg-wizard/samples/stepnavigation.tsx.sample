@@ -1,0 +1,37 @@
+import React from "react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgWizard stepper="numbered" initialStep={2} stepNavigation="previous" onFinish={() => {}}>
+      <SgWizardPage title="Introducao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">1. Introducao</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Somente etapas anteriores podem ser clicadas.
+          </p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Detalhes">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">2. Detalhes</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            O usuario pode voltar clicando no stepper.
+          </p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Revisao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">3. Revisao</div>
+          <p className="mt-1 text-sm text-muted-foreground">O step atual nao fica clicavel.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Confirmacao">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">4. Confirmacao</div>
+          <p className="mt-1 text-sm text-muted-foreground">Passos futuros continuam bloqueados.</p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

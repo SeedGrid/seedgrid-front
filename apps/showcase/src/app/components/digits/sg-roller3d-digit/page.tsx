@@ -361,7 +361,7 @@ export default function SgRoller3DDigitShowcase() {
               <SgButton onClick={prevDigit} size="sm" severity="secondary">Previous (-1)</SgButton>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/samples/basico-0-9.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -369,7 +369,7 @@ export default function SgRoller3DDigitShowcase() {
             <SgRoller3DDigit value={minuteVal} items={MINUTES} fontSize={22} />
             <SgButton onClick={nextMinute} size="sm">+1 minuto</SgButton>
           </div>
-          <SgCodeBlockBase code={PADDED_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/samples/2-digit-padded-value.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -377,7 +377,7 @@ export default function SgRoller3DDigitShowcase() {
             <SgRoller3DDigit value={letter} items={ALPHA} fontSize={32} />
             <SgButton onClick={nextLetter} size="sm">Proxima letra</SgButton>
           </div>
-          <SgCodeBlockBase code={ALPHA_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/samples/letras-a-z.tsx.sample" />
         </Section>
 
         <Section
@@ -385,7 +385,7 @@ export default function SgRoller3DDigitShowcase() {
           description={texts.section4Description}
         >
           <NameAnimator />
-          <SgCodeBlockBase code={NAME_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/samples/animacao-de-nomes.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -397,7 +397,7 @@ export default function SgRoller3DDigitShowcase() {
               </div>
             ))}
           </div>
-          <SgCodeBlockBase code={SIZE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/samples/variacoes-de-tamanho.tsx.sample" />
         </Section>
 
         <Section title={texts.section6Title} description={texts.section6Description}>
@@ -405,7 +405,7 @@ export default function SgRoller3DDigitShowcase() {
             title="SgRoller3DDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-roller3d-digit/sg-roller3d-digit.tsx.playground"
             height={360}
             defaultOpen
           />

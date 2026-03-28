@@ -1,0 +1,16 @@
+import * as React from "react";
+import { SgGrid, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [smValue, setSmValue] = React.useState(3);
+  const [lgValue, setLgValue] = React.useState(4);
+  const [manyValue, setManyValue] = React.useState(7);
+
+  return (
+    <SgGrid columns={{ base: 1, md: 2 }} gap={16}>
+      <SgRating label="sm / 5 estrelas" size="sm" value={smValue} onChange={setSmValue} />
+      <SgRating label="lg / 5 estrelas" size="lg" value={lgValue} onChange={setLgValue} />
+      <SgRating label="10 estrelas" stars={10} size="sm" value={manyValue} onChange={setManyValue} />
+    </SgGrid>
+  );
+}

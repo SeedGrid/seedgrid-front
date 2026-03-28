@@ -23,8 +23,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const CARD_PLAYGROUND_CODE = `import * as React from "react";
@@ -139,37 +139,7 @@ export default function SgCardPage() {
             </div>
           </div>
         </SgCard>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <SgCard
-      title="${t(i18n, "showcase.component.card.labels.basicTitle")}"
-      description="${t(i18n, "showcase.component.card.labels.basicDescription")}"
-      footer={
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>${t(i18n, "showcase.component.card.labels.basicFooterLeft")}</span>
-          <span>${t(i18n, "showcase.component.card.labels.basicFooterRight")}</span>
-        </div>
-      }
-    >
-      <div className="space-y-2 text-sm">
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.basicLine1")}</span>
-          <span className="font-semibold">R$ 12.400</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.basicLine2")}</span>
-          <span className="font-semibold">83</span>
-        </div>
-      </div>
-    </SgCard>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/basico.tsx.sample" />
       </Section>
 
       <Section
@@ -208,40 +178,7 @@ export default function Example() {
             </div>
           </div>
         </SgCard>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <SgCard
-      leading={<div className="size-8 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">SG</div>}
-      trailing={<span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">${t(i18n, "showcase.component.card.labels.trailing")}</span>}
-      title="${t(i18n, "showcase.component.card.labels.leadingTitle")}"
-      description="${t(i18n, "showcase.component.card.labels.leadingDescription")}"
-      actions={<SgButton appearance="ghost" size="sm">${t(i18n, "showcase.component.card.labels.action")}</SgButton>}
-      footer={
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>${t(i18n, "showcase.component.card.labels.leadingFooterLeft")}</span>
-          <span className="text-emerald-600">${t(i18n, "showcase.component.card.labels.leadingFooterRight")}</span>
-        </div>
-      }
-    >
-      <div className="grid gap-2 text-sm">
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.leadingMetric1")}</span>
-          <span className="font-semibold">R$ 128.400</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>${t(i18n, "showcase.component.card.labels.leadingMetric2")}</span>
-          <span className="font-semibold">+12%</span>
-        </div>
-      </div>
-    </SgCard>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/leading-e-trailing.tsx.sample" />
       </Section>
 
       <Section
@@ -290,59 +227,7 @@ export default function Example() {
             </div>
           </SgCard>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgCard
-        title="${t(i18n, "showcase.component.card.labels.collapsibleTitle")}"
-        description="${t(i18n, "showcase.component.card.labels.collapsibleDescription")}"
-        collapsible
-        defaultOpen={false}
-        collapseToggleAlign="right"
-        collapseIconSize={20}
-        footer={
-          <div className="flex justify-end">
-            <SgButton size="sm">${t(i18n, "showcase.component.card.labels.action")}</SgButton>
-          </div>
-        }
-      >
-        <div className="text-sm text-muted-foreground">${t(i18n, "showcase.component.card.labels.collapsibleContent")}</div>
-      </SgCard>
-
-      <SgCard
-        title="${t(i18n, "showcase.component.card.labels.collapsibleOpenTitle")}"
-        description="${t(i18n, "showcase.component.card.labels.collapsibleOpenDescription")}"
-        collapsible
-        defaultOpen
-        collapseToggleAlign="right"
-        collapseIconSize={20}
-        footer={
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterLeft")}</span>
-            <span>${t(i18n, "showcase.component.card.labels.collapsibleOpenFooterRight")}</span>
-          </div>
-        }
-      >
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">${t(i18n, "showcase.component.card.labels.collapsibleOpenLine1")}</span>
-            <span className="font-semibold">128</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">${t(i18n, "showcase.component.card.labels.collapsibleOpenLine2")}</span>
-            <span className="font-semibold">R$ 9.820</span>
-          </div>
-        </div>
-      </SgCard>
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/colapsavel.tsx.sample" />
       </Section>
 
       <Section
@@ -363,33 +248,7 @@ export default function Example() {
             <div className="text-sm text-muted-foreground">{t(i18n, "showcase.component.card.labels.sizeLg")}</div>
           </SgCard>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <>
-      <SgCard cardStyle="default" title="${t(i18n, "showcase.component.card.labels.variantDefault")}" size="sm">
-        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
-      </SgCard>
-
-      <SgCard cardStyle="elevated" title="${t(i18n, "showcase.component.card.labels.variantElevated")}" size="sm">
-        <div>${t(i18n, "showcase.component.card.labels.sizeSm")}</div>
-      </SgCard>
-
-      <SgCard cardStyle="outlined" title="${t(i18n, "showcase.component.card.labels.variantOutlined")}" size="lg">
-        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
-      </SgCard>
-
-      <SgCard cardStyle="flat" title="${t(i18n, "showcase.component.card.labels.variantFlat")}" size="lg">
-        <div>${t(i18n, "showcase.component.card.labels.sizeLg")}</div>
-      </SgCard>
-    </>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/variantes.tsx.sample" />
       </Section>
 
       <Section
@@ -420,40 +279,7 @@ export default function Example() {
             </div>
           </div>
         </SgCard>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <SgCard
-      title="Custom background areas"
-      description="Header and footer can have independent background colors."
-      bgColor="#f8fafc"
-      bgColorTitle="#dbeafe"
-      bgColorFooter="#e2e8f0"
-      footer={
-        <div className="flex items-center justify-between text-xs text-slate-600">
-          <span>Updated now</span>
-          <span>Footer area</span>
-        </div>
-      }
-    >
-      <div className="space-y-2 text-sm text-slate-700">
-        <div className="flex items-center justify-between">
-          <span>Revenue</span>
-          <span className="font-semibold">R$ 24.980</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span>Orders</span>
-          <span className="font-semibold">162</span>
-        </div>
-      </div>
-    </SgCard>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/surface-colors.tsx.sample" />
       </Section>
 
       <Section
@@ -493,49 +319,7 @@ export default function Example() {
             </SgCard>
           </div>
         </SgEnvironmentProvider>
-        <CodeBlock
-          code={`import React from "react";
-import { SgButton, SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "showcase" },
-        persistence: { scope: "app:showcase", mode: "fallback", stateVersion: 1 }
-      }}
-    >
-      <div className="relative h-[300px] overflow-hidden rounded-xl border border-dashed border-border/70 bg-muted/20 p-2">
-        <SgCard
-          id="sg-card-draggable-demo"
-          draggable
-          defaultPosition={{ x: 16, y: 16 }}
-          dragPersistKey="sg-card-draggable-demo"
-          title="Drag me by the title bar"
-          description="Try moving and refreshing this page."
-          collapsible
-          collapseToggleAlign="right"
-          collapseIconSize={20}
-          bgColor="#ffffff"
-          footer={<div className="text-xs text-muted-foreground">Persisted drag position.</div>}
-        >
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Status</span>
-              <span className="font-semibold text-emerald-600">Online</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Region</span>
-              <span className="font-semibold">Sao Paulo</span>
-            </div>
-          </div>
-        </SgCard>
-      </div>
-    </SgEnvironmentProvider>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-card/samples/draggable-persistence.tsx.sample" />
       </Section>
 
         <Section title="7) Playground (SgPlayground)" description="Ajuste as principais props do SgCard.">
@@ -543,7 +327,7 @@ export default function Example() {
             title="SgCard Playground"
             interactive
             codeContract="appFile"
-            code={CARD_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-card/sg-card.tsx.playground"
             height={560}
             defaultOpen
           />

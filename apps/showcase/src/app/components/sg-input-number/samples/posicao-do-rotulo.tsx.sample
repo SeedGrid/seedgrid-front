@@ -1,0 +1,25 @@
+import { SgGrid, SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 3 }} gap={8} className="w-full">
+      <SgInputNumber
+        id="sg-input-number-label-float"
+        label="Float"
+        labelPosition="float"
+      />
+      <SgInputNumber
+        id="sg-input-number-label-top"
+        label="Top"
+        labelPosition="top"
+      />
+      <SgInputNumber
+        id="sg-input-number-label-left"
+        label="Left"
+        labelPosition="left"
+        labelWidth={140}
+        labelAlign="end"
+      />
+    </SgGrid>
+  );
+}

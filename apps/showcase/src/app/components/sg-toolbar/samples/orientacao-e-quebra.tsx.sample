@@ -1,0 +1,39 @@
+import React from "react";
+import { SgDockLayout, SgDockZone, SgGrid, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
+import { Filter, Home, Pencil, Plus, RefreshCcw, Settings, Trash2, Users } from "lucide-react";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, lg: 2 }} gap={12}>
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">orientationDirection="horizontal-left" + buttonsPerDirection=3</p>
+        <SgDockLayout id="tb-layout-horizontal" className="grid grid-cols-1 grid-rows-1">
+          <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
+            <SgToolBar id="tb-horizontal" title="Acoes rapidas" orientationDirection="horizontal-left" buttonsPerDirection={3} collapsible>
+              <SgToolbarIconButton icon={<Plus className="size-4" />} label="Criar" hint="Criar novo registro" severity="success" />
+              <SgToolbarIconButton icon={<Pencil className="size-4" />} label="Editar" hint="Editar registro selecionado" severity="info" />
+              <SgToolbarIconButton icon={<Trash2 className="size-4" />} label="Excluir" hint="Excluir registro selecionado" severity="danger" />
+              <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+              <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados" />
+            </SgToolBar>
+          </SgDockZone>
+        </SgDockLayout>
+      </div>
+
+      <div className="rounded-lg border border-dashed border-border p-3">
+        <p className="mb-2 text-xs text-muted-foreground">orientationDirection="vertical-down" + buttonsPerDirection=2</p>
+        <SgDockLayout id="tb-layout-vertical" className="grid grid-cols-1 grid-rows-1">
+          <SgDockZone zone="free" className="col-start-1 row-start-1 !items-start !justify-start !p-0">
+            <SgToolBar id="tb-vertical" title="Navegacao" orientationDirection="vertical-down" buttonsPerDirection={2} collapsible>
+              <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para Home" severity="primary" />
+              <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Abrir usuarios" />
+              <SgToolbarIconButton icon={<Settings className="size-4" />} label="Configuracoes" hint="Abrir configuracoes" />
+              <SgToolbarIconButton icon={<Filter className="size-4" />} label="Filtro" hint="Filtrar resultados" />
+              <SgToolbarIconButton icon={<RefreshCcw className="size-4" />} label="Atualizar" hint="Atualizar dados" />
+            </SgToolBar>
+          </SgDockZone>
+        </SgDockLayout>
+      </div>
+    </SgGrid>
+  );
+}

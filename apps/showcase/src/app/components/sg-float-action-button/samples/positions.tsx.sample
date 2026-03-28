@@ -1,0 +1,22 @@
+import React from "react";
+import { Pencil } from "lucide-react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+function DemoBox(props: { children: React.ReactNode }) {
+  return <div className="relative h-72 w-full rounded-md border border-dashed border-border bg-muted/20 pt-10">{props.children}</div>;
+}
+
+export default function Example() {
+  return (
+    <DemoBox>
+      <SgFloatActionButton absolute position="left-top" size="sm" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="center-top" size="sm" severity="secondary" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="right-top" size="sm" severity="success" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="left-center" size="sm" severity="warning" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="right-center" size="sm" severity="danger" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="left-bottom" size="sm" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="center-bottom" size="sm" severity="secondary" icon={<Pencil className="size-4" />} onClick={() => {}} />
+      <SgFloatActionButton absolute position="right-bottom" size="sm" severity="success" icon={<Pencil className="size-4" />} onClick={() => {}} />
+    </DemoBox>
+  );
+}

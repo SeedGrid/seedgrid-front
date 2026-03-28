@@ -31,8 +31,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const GROUP_BOX_PLAYGROUND_CODE = `import * as React from "react";
@@ -160,15 +160,7 @@ export default function SgGroupBoxPage() {
             </div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox
-  title="${t(i18n, "showcase.component.groupBox.labels.personalData")}"
-  style={{ boxShadow: "inset 0 0 0 1px rgba(59, 130, 246, 0.2)" }}
->
-  <div className="grid gap-3 sm:grid-cols-2">
-    <div>${t(i18n, "showcase.component.groupBox.labels.field1")}</div>
-    <div>${t(i18n, "showcase.component.groupBox.labels.field2")}</div>
-  </div>
-</SgGroupBox>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-group-box/samples/basico.tsx.sample" />
       </Section>
 
       <Section
@@ -193,51 +185,7 @@ export default function SgGroupBoxPage() {
             {t(i18n, "showcase.component.groupBox.labels.values")}: {JSON.stringify(values)}
           </p>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { useForm, type FieldValues } from "react-hook-form";
-import {
-  SgGroupBox,
-  SgInputPostalCode,
-  SgInputEmail,
-  SgInputPassword,
-  SgInputPhone,
-  SgInputText,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export default function Example() {
-  const { control, handleSubmit, watch } = useForm<FieldValues>({
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      cep: "",
-      password: ""
-    }
-  });
-  const values = watch();
-
-  const onSubmit = (data) => console.log(data);
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.formTitle")}">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <SgInputText id="name" name="name" control={control} label="${t(i18n, "showcase.component.groupBox.labels.fullName")}" required />
-          <SgInputEmail id="email" name="email" control={control} label="${t(i18n, "showcase.component.groupBox.labels.email")}" required />
-          <SgInputPhone id="phone" name="phone" control={control} label="${t(i18n, "showcase.component.groupBox.labels.phone")}" required />
-          <SgInputPostalCode id="cep" name="cep" control={control} label="${t(i18n, "showcase.component.groupBox.labels.cep")}" required />
-          <div className="sm:col-span-2">
-            <SgInputPassword id="password" name="password" control={control} label="${t(i18n, "showcase.component.groupBox.labels.password")}" required />
-          </div>
-        </div>
-      </SgGroupBox>
-      <p>${t(i18n, "showcase.component.groupBox.labels.values")}: {JSON.stringify(values)}</p>
-    </form>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-group-box/samples/formulario.tsx.sample" />
       </Section>
 
       <Section
@@ -252,13 +200,7 @@ export default function Example() {
             <div className="rounded border border-border bg-foreground/5 p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.width320")}" width={320}>
-  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
-</SgGroupBox>
-
-<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.height180")}" height={180}>
-  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
-</SgGroupBox>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-group-box/samples/tamanho.tsx.sample" />
       </Section>
 
       <Section
@@ -270,9 +212,7 @@ export default function Example() {
             <div className="rounded border border-border bg-background p-3 text-sm">{t(i18n, "showcase.component.groupBox.labels.content")}</div>
           </SgGroupBox>
         </div>
-        <CodeBlock code={`<SgGroupBox title="${t(i18n, "showcase.component.groupBox.labels.classNameTitle")}" className="bg-foreground/5 p-2 rounded-xl">
-  <div>${t(i18n, "showcase.component.groupBox.labels.content")}</div>
-</SgGroupBox>`} />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-group-box/samples/class-name.tsx.sample" />
       </Section>
 
         <Section
@@ -283,7 +223,7 @@ export default function Example() {
             title="SgGroupBox Playground"
             interactive
             codeContract="appFile"
-            code={GROUP_BOX_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-group-box/sg-group-box.tsx.playground"
             height={560}
             defaultOpen
           />

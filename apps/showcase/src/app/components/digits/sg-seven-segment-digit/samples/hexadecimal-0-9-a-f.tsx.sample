@@ -1,0 +1,17 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgSevenSegmentDigit } from "@seedgrid/fe-components";
+
+const HEX = Array.from("0123456789ABCDEF");
+
+export default function Example() {
+  const [index, setIndex] = React.useState(10);
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgSevenSegmentDigit value={HEX[index] ?? "A"} color="#f97316" backgroundColor="#180b05" offColor="rgba(124,45,18,0.24)" />
+      <SgButton size="sm" onClick={() => setIndex((prev) => (prev + 1) % HEX.length)}>Next char</SgButton>
+    </div>
+  );
+}

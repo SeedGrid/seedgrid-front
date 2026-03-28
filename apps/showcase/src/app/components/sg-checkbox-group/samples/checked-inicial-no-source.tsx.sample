@@ -1,0 +1,17 @@
+import React from "react";
+import { SgCheckboxGroup } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgCheckboxGroup
+      id="source-checked"
+      title="Favorite fruits (initial from source)"
+      source={[
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana", checked: true },
+        { label: "Orange", value: "orange" },
+        { label: "Grape", value: "grape", checked: true }
+      ]}
+    />
+  );
+}

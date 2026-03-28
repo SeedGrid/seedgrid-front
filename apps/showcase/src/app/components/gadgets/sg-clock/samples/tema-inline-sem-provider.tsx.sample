@@ -1,0 +1,31 @@
+import React from "react";
+import { SgClock } from "@seedgrid/fe-components";
+
+export default function Example(props: { initialServerTime?: string }) {
+  return (
+    <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
+      <SgClock
+        clockStyle="analog"
+        size={260}
+        initialServerTime={props.initialServerTime ?? new Date().toISOString()}
+        showSeconds
+        secondHandMode="smooth"
+        theme={{
+          id: "inline-theme",
+          label: "Inline Theme",
+          render: () => (
+            <>
+              <circle cx="50" cy="50" r="48" className="fill-white dark:fill-neutral-950" />
+              <circle cx="50" cy="50" r="47" className="fill-none stroke-neutral-300 dark:stroke-neutral-700" />
+              <circle cx="50" cy="50" r="38" className="fill-none stroke-neutral-200 dark:stroke-neutral-800" />
+              <circle cx="50" cy="50" r="6" className="fill-neutral-100 dark:fill-neutral-900" />
+              <text x="50" y="56" textAnchor="middle" className="fill-neutral-400 text-[8px] font-semibold">
+                SeedGrid
+              </text>
+            </>
+          ),
+        }}
+      />
+    </div>
+  );
+}

@@ -291,7 +291,7 @@ export default function SgMatrixDigitShowcase() {
               <SgButton size="sm" severity="info" onClick={randomDigit}>Random</SgButton>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-matrix-digit/samples/basico-0-9.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -306,7 +306,7 @@ export default function SgMatrixDigitShowcase() {
             />
             <SgButton size="sm" onClick={nextMessage}>Change text</SgButton>
           </div>
-          <SgCodeBlockBase code={TEXT_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-matrix-digit/samples/texto-matricial.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -324,7 +324,7 @@ export default function SgMatrixDigitShowcase() {
               <SgMatrixDigit value="SG" color="#fb923c" backgroundColor="#101826" />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={COLOR_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-matrix-digit/samples/variacoes-de-color-backgroundcolor.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -342,7 +342,7 @@ export default function SgMatrixDigitShowcase() {
               <SgMatrixDigit value="123" dotSize={13} gap={4} charGap={10} />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={SIZE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-matrix-digit/samples/escala-da-matriz.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -350,7 +350,7 @@ export default function SgMatrixDigitShowcase() {
             title="SgMatrixDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-matrix-digit/sg-matrix-digit.tsx.playground"
             height={640}
             defaultOpen
           />

@@ -26,8 +26,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function EnvDebug() {
@@ -93,17 +93,7 @@ export default function UseSgEnvironmentPage() {
           description={t(i18n, "showcase.hook.environment.sections.default.description")}
         >
           <EnvDebug />
-          <CodeBlock
-            code={`import { useSgEnvironment, buildSgPersistenceKey } from "@seedgrid/fe-components";
-
-function Component() {
-  const env = useSgEnvironment();
-  const namespace = env.namespaceProvider.getNamespace();
-  const key = buildSgPersistenceKey("component:state", namespace, env.persistence.scope);
-
-  return <div>Chave resolvida: {key ?? "sem persistencia"}</div>;
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-environment/samples/default-sem-provider.tsx.sample" />
         </Section>
 
         <Section
@@ -118,28 +108,7 @@ function Component() {
           >
             <EnvDebug />
           </SgEnvironmentProvider>
-          <CodeBlock
-            code={`import { useSgEnvironment, SgEnvironmentProvider } from "@seedgrid/fe-components";
-
-function Consumer() {
-  const env = useSgEnvironment();
-  // Acessa namespace, scope, mode e stateVersion do provider mais proximo
-  return <div>scope: {env.persistence.scope}</div>;
-}
-
-export default function App() {
-  return (
-    <SgEnvironmentProvider
-      value={{
-        namespaceProvider: { getNamespace: () => "user:42" },
-        persistence: { scope: "app:dashboard", mode: "strict", stateVersion: 3 }
-      }}
-    >
-      <Consumer />
-    </SgEnvironmentProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-environment/samples/com-provider.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={HOOK_RETURN} />

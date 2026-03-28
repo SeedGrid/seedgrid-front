@@ -1,0 +1,35 @@
+import React from "react";
+import { Check, X } from "lucide-react";
+import { SgButton, SgPopup } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const btnRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton ref={btnRef} onClick={() => setOpen(true)}>Abrir popup com icones</SgButton>
+      <SgPopup
+        title="Aprovacao"
+        open={open}
+        onOpenChange={setOpen}
+        anchorRef={btnRef as React.RefObject<HTMLElement>}
+        placement="auto"
+        preferPlacement="right"
+        align="start"
+        actions={[
+          {
+            label: "Aprovar",
+            hint: "Aprova a acao atual",
+            icon: <Check className="h-4 w-4" />
+          },
+          {
+            label: "Rejeitar",
+            hint: "Cancela a acao atual",
+            icon: <X className="h-4 w-4" />
+          }
+        ]}
+      />
+    </>
+  );
+}

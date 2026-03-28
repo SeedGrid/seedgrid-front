@@ -1,0 +1,140 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgStack, SgToastHost, toast } from "@seedgrid/fe-components";
+
+const positions = [
+  "top-right",
+  "top-left",
+  "top-center",
+  "bottom-right",
+  "bottom-left",
+  "bottom-center"
+] as const;
+
+export default function App() {
+  const [position, setPosition] = React.useState<(typeof positions)[number]>("top-right");
+  const [duration, setDuration] = React.useState(3500);
+  const [closeButton, setCloseButton] = React.useState(true);
+  const [transparency, setTransparency] = React.useState(0);
+  const [customPalette, setCustomPalette] = React.useState(false);
+
+  const customColors = customPalette
+    ? {
+        default: { bg: "#1f2937", fg: "#f9fafb", border: "#6b7280" },
+        success: { bg: "#065f46", fg: "#ecfeff", border: "#10b981" },
+        info: { bg: "#1e3a8a", fg: "#dbeafe", border: "#60a5fa" },
+        warning: { bg: "#78350f", fg: "#fef3c7", border: "#f59e0b" },
+        error: { bg: "#7f1d1d", fg: "#fee2e2", border: "#ef4444" },
+        loading: { bg: "#312e81", fg: "#e0e7ff", border: "#818cf8" }
+      }
+    : undefined;
+
+  const resolveStyle = React.useCallback(
+    (type: "default" | "success" | "info" | "warning" | "error" | "loading") => {
+      const colors = customColors?.[type];
+      const alpha = 1 - Math.max(0, Math.min(100, transparency)) / 100;
+      return {
+        duration,
+        closeButton,
+        style: {
+          opacity: alpha,
+          backgroundColor: colors?.bg,
+          color: colors?.fg,
+          borderColor: colors?.border
+        }
+      };
+    },
+    [closeButton, customColors, duration, transparency]
+  );
+
+  return (
+    <div className="space-y-3">
+      <SgToastHost position={position} />
+
+      <SgStack direction="row" wrap gap={8} align="center">
+        <label className="text-sm">
+          Position:
+          <select
+            className="ml-2 rounded border px-2 py-1 text-xs"
+            value={position}
+            onChange={(event) => setPosition(event.target.value as (typeof positions)[number])}
+          >
+            {positions.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="text-sm">
+          Duration:
+          <input
+            className="ml-2 w-24 rounded border px-2 py-1 text-xs"
+            type="number"
+            min={500}
+            step={500}
+            value={duration}
+            onChange={(event) => setDuration(Number(event.target.value))}
+          />
+        </label>
+
+        <label className="text-sm">
+          Transparency:
+          <input
+            className="ml-2 w-20 rounded border px-2 py-1 text-xs"
+            type="number"
+            min={0}
+            max={90}
+            step={5}
+            value={transparency}
+            onChange={(event) => setTransparency(Number(event.target.value))}
+          />
+        </label>
+
+        <label className="text-sm">
+          <input
+            className="mr-1"
+            type="checkbox"
+            checked={closeButton}
+            onChange={(event) => setCloseButton(event.target.checked)}
+          />
+          closeButton
+        </label>
+
+        <label className="text-sm">
+          <input
+            className="mr-1"
+            type="checkbox"
+            checked={customPalette}
+            onChange={(event) => setCustomPalette(event.target.checked)}
+          />
+          customColors
+        </label>
+      </SgStack>
+
+      <SgStack direction="row" wrap gap={8}>
+        <SgButton onClick={() => toast.message("Default message", resolveStyle("default"))}>Message</SgButton>
+        <SgButton severity="success" onClick={() => toast.success("All good!", resolveStyle("success"))}>
+          Success
+        </SgButton>
+        <SgButton severity="info" onClick={() => toast.info("Info", resolveStyle("info"))}>
+          Info
+        </SgButton>
+        <SgButton severity="warning" onClick={() => toast.warning("Attention!", resolveStyle("warning"))}>
+          Warning
+        </SgButton>
+        <SgButton severity="danger" onClick={() => toast.error("Failed!", resolveStyle("error"))}>
+          Error
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => toast.loading("Loading...", resolveStyle("loading"))}>
+          Loading
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => toast.dismiss()}>
+          Dismiss all
+        </SgButton>
+      </SgStack>
+    </div>
+  );
+}

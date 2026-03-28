@@ -1,0 +1,17 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgInputNumber
+      id="demo-validation"
+      label="Somente pares"
+      name="validation"
+      decimals={0}
+      validation={(v) => {
+        const n = Number(v);
+        return Number.isFinite(n) && n % 2 === 0 ? null : "Apenas números pares";
+      }}
+      onValidation={(msg) => console.log(msg)}
+    />
+  );
+}

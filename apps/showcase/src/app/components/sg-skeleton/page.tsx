@@ -283,7 +283,7 @@ export default function SgSkeletonPage() {
           <SgSkeleton shape="circle" size={56} />
         </div>
         <div className="mt-6">
-          <SgCodeBlockBase code={SHAPES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-skeleton/samples/basic-shapes.tsx.sample" />
         </div>
       </Section>
 
@@ -298,7 +298,7 @@ export default function SgSkeletonPage() {
           <SgSkeleton shape="text" width="52%" />
         </div>
         <div className="mt-6">
-          <SgCodeBlockBase code={WIDTHS_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-skeleton/samples/text-widths.tsx.sample" />
         </div>
       </Section>
 
@@ -321,7 +321,7 @@ export default function SgSkeletonPage() {
           </div>
         </div>
         <div className="mt-6">
-          <SgCodeBlockBase code={ANIMATION_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-skeleton/samples/animation.tsx.sample" />
         </div>
       </Section>
 
@@ -338,7 +338,7 @@ export default function SgSkeletonPage() {
           </div>
         </div>
         <div className="mt-6">
-          <SgCodeBlockBase code={CARD_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-skeleton/samples/card-placeholder.tsx.sample" />
         </div>
       </Section>
 
@@ -375,7 +375,7 @@ export default function SgSkeletonPage() {
           </div>
         </div>
         <div className="mt-6">
-          <SgCodeBlockBase code={LIST_TABLE_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-skeleton/samples/list-and-table.tsx.sample" />
         </div>
       </Section>
 
@@ -387,7 +387,7 @@ export default function SgSkeletonPage() {
           title="SgSkeleton Playground"
           interactive
           codeContract="appFile"
-          code={SKELETON_PLAYGROUND_APP_FILE}
+          playgroundFile="apps/showcase/src/app/components/sg-skeleton/sg-skeleton.tsx.playground"
           height={640}
           defaultOpen
         />

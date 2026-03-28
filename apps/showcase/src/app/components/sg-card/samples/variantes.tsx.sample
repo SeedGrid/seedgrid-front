@@ -1,0 +1,13 @@
+import React from "react";
+import { SgCard } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <SgCard cardStyle="default" title="Default" size="sm"><div className="text-sm text-muted-foreground">size sm</div></SgCard>
+      <SgCard cardStyle="elevated" title="Elevated" size="sm"><div className="text-sm text-muted-foreground">size sm</div></SgCard>
+      <SgCard cardStyle="outlined" title="Outlined" size="lg"><div className="text-sm text-muted-foreground">size lg</div></SgCard>
+      <SgCard cardStyle="flat" title="Flat" size="lg"><div className="text-sm text-muted-foreground">size lg</div></SgCard>
+    </div>
+  );
+}

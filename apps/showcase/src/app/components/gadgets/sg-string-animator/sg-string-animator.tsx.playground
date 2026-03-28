@@ -1,0 +1,29 @@
+"use client";
+
+import React from "react";
+import { SgStringAnimator, SgInputText, SgButton } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [source, setSource] = React.useState("SEEDGRID");
+  const [target, setTarget] = React.useState("SHOWCASE");
+  const [fontSize, setFontSize] = React.useState(28);
+  const [style, setStyle] = React.useState<"roller3d" | "flip" | "neon" | "fade" | "discard" | "matrix">("roller3d");
+  const [autoStart, setAutoStart] = React.useState(false);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-3 md:grid-cols-2">
+        <SgInputText id="anim-source" label="Source" value={source} onChange={setSource} />
+        <SgInputText id="anim-target" label="Target" value={target} onChange={setTarget} />
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        {(["roller3d", "flip", "neon", "fade", "discard", "matrix"] as const).map((item) => (
+          <SgButton key={item} size="sm" appearance={style === item ? "solid" : "outline"} onClick={() => setStyle(item)}>{item}</SgButton>
+        ))}
+        <SgButton size="sm" appearance="outline" onClick={() => setAutoStart((prev) => !prev)}>{autoStart ? "autoStart ON" : "autoStart OFF"}</SgButton>
+        <label className="text-sm">fontSize:<input className="ml-2 w-20 rounded border px-2 py-1 text-xs" type="number" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} /></label>
+      </div>
+      <SgStringAnimator sourceString={source} targetString={target} stringAnimatorStyle={style} fontSize={fontSize} autoStart={autoStart} />
+    </div>
+  );
+}

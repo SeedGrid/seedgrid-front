@@ -1,0 +1,37 @@
+import React from "react";
+import { SgOrderList, type SgOrderListItem, type SgOrderListRef, SgButton, SgGrid } from "@seedgrid/fe-components";
+
+const PIPELINE_STEPS: SgOrderListItem[] = [
+  { label: "Prospeccao", value: "lead" },
+  { label: "Qualificacao", value: "qualify" },
+  { label: "Proposta", value: "proposal" },
+  { label: "Negociacao", value: "negotiation" },
+  { label: "Fechamento", value: "close" }
+];
+
+export default function Example() {
+  const [pipelineItems, setPipelineItems] = React.useState<SgOrderListItem[]>(PIPELINE_STEPS);
+  const pipelineRef = React.useRef<SgOrderListRef>(null);
+
+  return (
+    <div className="space-y-4">
+      <SgOrderList
+        ref={pipelineRef}
+        id="order-ref"
+        title="Etapas do pipeline"
+        source={PIPELINE_STEPS}
+        value={pipelineItems}
+        onChange={setPipelineItems}
+        selectionMode="multiple"
+        showControls={false}
+      />
+      <SgGrid columns={{ base: 2, md: 5 }} gap={8}>
+        <SgButton onClick={() => pipelineRef.current?.moveTop()}>Move Top</SgButton>
+        <SgButton onClick={() => pipelineRef.current?.moveUp()}>Move Up</SgButton>
+        <SgButton onClick={() => pipelineRef.current?.moveDown()}>Move Down</SgButton>
+        <SgButton onClick={() => pipelineRef.current?.moveBottom()}>Move Bottom</SgButton>
+        <SgButton onClick={() => pipelineRef.current?.clearSelection()}>Clear Selection</SgButton>
+      </SgGrid>
+    </div>
+  );
+}

@@ -242,7 +242,7 @@ export default function SgScreenPage() {
           </SgPanel>
 
           <SgStack className="mt-6">
-            <SgCodeBlockBase code={fullExampleCode} />
+            <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-screen/samples/complete-example.tsx.sample" />
           </SgStack>
         </Section>
 
@@ -251,7 +251,7 @@ export default function SgScreenPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={SCREEN_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-screen/sg-screen.tsx.playground"
             height={540}
             defaultOpen
           />

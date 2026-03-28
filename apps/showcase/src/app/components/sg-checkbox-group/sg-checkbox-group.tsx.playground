@@ -1,0 +1,76 @@
+import * as React from "react";
+import * as SeedGrid from "@seedgrid/fe-components";
+import { Heart, Star, ThumbsUp } from "lucide-react";
+
+const SgCheckboxGroupFromLib = (SeedGrid as Record<string, unknown>).SgCheckboxGroup as React.ComponentType<any> | undefined;
+
+const OPTIONS = [
+  { label: "Favorito", value: "favorite", icon: <Heart className="h-4 w-4" /> },
+  { label: "Importante", value: "important", icon: <Star className="h-4 w-4" /> },
+  { label: "Curtir", value: "like", icon: <ThumbsUp className="h-4 w-4" /> }
+];
+
+export default function App() {
+  const hasComponent = typeof SgCheckboxGroupFromLib === "function";
+  const [title, setTitle] = React.useState("Choose options");
+  const [orientation, setOrientation] = React.useState<"vertical" | "horizontal">("vertical");
+  const [iconOnly, setIconOnly] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
+  const [readOnly, setReadOnly] = React.useState(false);
+  const [required, setRequired] = React.useState(false);
+  const [showCheckAll, setShowCheckAll] = React.useState(false);
+  const [value, setValue] = React.useState<(string | number)[]>(["favorite"]);
+
+  return (
+    <div className="space-y-4 p-2">
+      {!hasComponent ? <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">SgCheckboxGroup is not available in the published Sandpack version. Showing fallback.</div> : null}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Title</span>
+          <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded border border-border px-2 py-1" />
+        </label>
+        <label className="text-xs">
+          <span className="mb-1 block font-medium">Orientation</span>
+          <select value={orientation} onChange={(event) => setOrientation(event.target.value as "vertical" | "horizontal")} className="w-full rounded border border-border px-2 py-1">
+            <option value="vertical">vertical</option>
+            <option value="horizontal">horizontal</option>
+          </select>
+        </label>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 text-xs">
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={iconOnly} onChange={(event) => setIconOnly(event.target.checked)} />iconOnly</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={disabled} onChange={(event) => setDisabled(event.target.checked)} />disabled</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={readOnly} onChange={(event) => setReadOnly(event.target.checked)} />readOnly</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={required} onChange={(event) => setRequired(event.target.checked)} />required</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={showCheckAll} onChange={(event) => setShowCheckAll(event.target.checked)} />showCheckAll</label>
+      </div>
+      <div className="rounded border border-border p-4">
+        {hasComponent ? (
+          <SgCheckboxGroupFromLib
+            id="checkbox-playground"
+            title={title}
+            source={OPTIONS}
+            orientation={orientation}
+            iconOnly={iconOnly}
+            disabled={disabled}
+            readOnly={readOnly}
+            required={required}
+            showCheckAll={showCheckAll}
+            value={value}
+            onChange={(next: (string | number)[]) => setValue(next)}
+          />
+        ) : (
+          <div className="space-y-2">
+            {OPTIONS.map((opt) => (
+              <label key={opt.value} className="flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={value.includes(opt.value)} disabled={disabled || readOnly} onChange={() => setValue((prev) => prev.includes(opt.value) ? prev.filter((v) => v !== opt.value) : [...prev, opt.value])} />
+                <span>{opt.label}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="rounded border border-border bg-muted/30 px-3 py-2 text-xs">value: [{value.join(", ")}]</div>
+    </div>
+  );
+}

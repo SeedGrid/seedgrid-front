@@ -1,0 +1,19 @@
+import React from "react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="grid grid-cols-3 gap-6 w-full">
+      {(["circle", "rounded", "square"] as const).map((shape) => (
+        <div key={shape} className="flex flex-col items-center gap-4">
+          <span className="text-xs font-medium text-muted-foreground">{shape}</span>
+          <div className="flex gap-4 items-center">
+            {(["sm", "md", "lg"] as const).map((size) => (
+              <SgFloatActionButton key={size} shape={shape} size={size} onClick={() => {}} style={{ position: "relative" }} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

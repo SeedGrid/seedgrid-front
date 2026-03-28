@@ -1,0 +1,13 @@
+"use client";
+
+import { SgFadeDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex items-end gap-4">
+      <SgFadeDigit value="5" fontSize={18} />
+      <SgFadeDigit value="5" fontSize={36} />
+      <SgFadeDigit value="5" fontSize={60} />
+    </div>
+  );
+}

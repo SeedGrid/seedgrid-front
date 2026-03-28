@@ -1,0 +1,44 @@
+import * as React from "react";
+import { SgButton, SgGrid } from "@seedgrid/fe-components";
+import { Check } from "lucide-react";
+
+export default function App() {
+  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "info" | "warning" | "help" | "danger">("primary");
+  const [appearance, setAppearance] = React.useState<"solid" | "outline" | "ghost">("solid");
+  const [rounded, setRounded] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 1, sm: 2, md: 3 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("solid")}>solid</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("outline")}>outline</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAppearance("ghost")}>ghost</SgButton>
+        <SgButton size="sm" appearance={rounded ? "solid" : "outline"} onClick={() => setRounded((prev) => !prev)}>
+          rounded: {String(rounded)}
+        </SgButton>
+        <SgButton size="sm" appearance={loading ? "solid" : "outline"} onClick={() => setLoading((prev) => !prev)}>
+          loading: {String(loading)}
+        </SgButton>
+        <SgButton size="sm" appearance={disabled ? "solid" : "outline"} onClick={() => setDisabled((prev) => !prev)}>
+          disabled: {String(disabled)}
+        </SgButton>
+      </SgGrid>
+
+      <SgButton
+        severity={severity}
+        appearance={appearance}
+        shape={rounded ? "rounded" : "default"}
+        loading={loading}
+        disabled={disabled}
+        leftIcon={<Check className="size-4" />}
+      >
+        Preview Button
+      </SgButton>
+    </div>
+  );
+}

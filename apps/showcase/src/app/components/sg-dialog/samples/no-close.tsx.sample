@@ -1,0 +1,27 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>Abrir sem botao de fechar</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        closeable={false}
+        title="Fluxo guiado"
+        subtitle="Sem icone de fechar"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>Cancelar</SgButton>
+            <SgButton onClick={() => setOpen(false)}>Confirmar</SgButton>
+          </>
+        }
+      >
+        <div className="text-sm text-muted-foreground">O fechamento fica concentrado nas acoes do rodape.</div>
+      </SgDialog>
+    </>
+  );
+}

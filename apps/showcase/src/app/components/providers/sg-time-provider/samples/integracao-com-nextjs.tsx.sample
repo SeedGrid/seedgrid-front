@@ -1,0 +1,9 @@
+import { SgTimeProvider } from "@seedgrid/fe-components";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SgTimeProvider initialServerTime={new Date().toISOString()}>
+      {children}
+    </SgTimeProvider>
+  );
+}

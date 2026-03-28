@@ -1,0 +1,18 @@
+import React from "react";
+import { Home, RefreshCw, Save, Trash2 } from "lucide-react";
+import { SgSplitButton } from "@seedgrid/fe-components";
+
+const items = [
+  { label: "Update", icon: <RefreshCw className="size-4" />, onClick: () => {} },
+  { label: "Delete", icon: <Trash2 className="size-4" />, onClick: () => {} },
+  { label: "Homepage", icon: <Home className="size-4" />, onClick: () => {} }
+];
+
+export default function Example() {
+  return (
+    <>
+      <SgSplitButton label="Saving..." leftIcon={<Save className="size-4" />} loading onClick={() => {}} items={items} />
+      <SgSplitButton label="Processing..." severity="success" loading onClick={() => {}} items={items} />
+    </>
+  );
+}

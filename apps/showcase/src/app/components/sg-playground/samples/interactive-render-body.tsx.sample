@@ -1,0 +1,8 @@
+<SgPlayground
+  title="Editor + real-time preview"
+  description="Use Run to refresh the preview."
+  interactive
+  code={RENDER_BODY_CODE}
+  defaultImports={'import { SgButton, SgInputText, SgStack } from "@seedgrid/fe-components";'}
+  height={380}
+/>;

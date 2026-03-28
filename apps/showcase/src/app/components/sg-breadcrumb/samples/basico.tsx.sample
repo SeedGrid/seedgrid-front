@@ -1,0 +1,14 @@
+import React from "react";
+import { Box, Building2, FilePenLine, Layers3 } from "lucide-react";
+import { SgBreadcrumb, type SgBreadcrumbItem } from "@seedgrid/fe-components";
+
+const items: SgBreadcrumbItem[] = [
+  { id: "modules", label: "Modules", href: "/modules", icon: <Layers3 className="size-4" /> },
+  { id: "registrations", label: "Registrations", href: "/modules/registrations", icon: <Building2 className="size-4" /> },
+  { id: "products", label: "Products", href: "/modules/registrations/products", icon: <Box className="size-4" /> },
+  { id: "edit", label: "Edit", icon: <FilePenLine className="size-4" /> }
+];
+
+export default function Example() {
+  return <SgBreadcrumb items={items} separator="chevron" showHomeIcon />;
+}

@@ -1,0 +1,34 @@
+import React from "react";
+import { Bell, Heart, Landmark, RefreshCw, Star } from "lucide-react";
+import { SgOrderList, type SgOrderListItem, SgButton, SgGrid } from "@seedgrid/fe-components";
+
+const PRODUCT_ITEMS: SgOrderListItem[] = [
+  { label: "Notebook", value: "notebook", icon: <Landmark className="h-4 w-4" /> },
+  { label: "Mouse", value: "mouse", icon: <RefreshCw className="h-4 w-4" /> },
+  { label: "Teclado", value: "keyboard", icon: <Bell className="h-4 w-4" /> },
+  { label: "Monitor", value: "monitor", icon: <Star className="h-4 w-4" /> },
+  { label: "Webcam", value: "webcam", icon: <Heart className="h-4 w-4" /> }
+];
+
+export default function Example() {
+  const [controlledItems, setControlledItems] = React.useState<SgOrderListItem[]>(PRODUCT_ITEMS);
+
+  return (
+    <div className="space-y-4">
+      <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+        <SgButton onClick={() => setControlledItems(PRODUCT_ITEMS)}>Reset</SgButton>
+        <SgButton onClick={() => setControlledItems((prev) => [...prev].reverse())}>Reverse</SgButton>
+        <SgButton onClick={() => setControlledItems((prev) => [...prev].sort((a, b) => a.label.localeCompare(b.label)))}>
+          Sort A-Z
+        </SgButton>
+      </SgGrid>
+      <SgOrderList
+        id="order-controlled"
+        title="Produtos (controlado)"
+        source={PRODUCT_ITEMS}
+        value={controlledItems}
+        onChange={setControlledItems}
+      />
+    </div>
+  );
+}

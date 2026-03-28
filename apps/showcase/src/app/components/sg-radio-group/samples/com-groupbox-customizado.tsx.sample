@@ -1,0 +1,23 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+import { Heart, Star, ThumbsUp } from "lucide-react";
+
+const OPTIONS_WITH_ICONS: SgRadioGroupOption[] = [
+  { label: "Favorito", value: "favorite", icon: <Heart className="w-4 h-4" /> },
+  { label: "Importante", value: "important", icon: <Star className="w-4 h-4" /> },
+  { label: "Curtir", value: "like", icon: <ThumbsUp className="w-4 h-4" /> }
+];
+
+export default function Example() {
+  return (
+    <SgRadioGroup
+      id="custom-groupbox"
+      title="Choose with custom style"
+      source={OPTIONS_WITH_ICONS}
+      groupBoxProps={{
+        title: "Preferences",
+        className: "border-2 border-[rgb(var(--sg-primary-500))]"
+      }}
+    />
+  );
+}

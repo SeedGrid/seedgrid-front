@@ -1,0 +1,29 @@
+"use client";
+
+import { SgToastHost } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md border border-border p-4">
+        <div className="text-sm font-semibold">layout.tsx</div>
+        <p className="text-sm text-muted-foreground">Host global montado no layout da aplicação.</p>
+        <div className="mt-3 rounded-md border border-dashed border-border p-3">
+          <SgToastHost position="top-right" />
+          <span className="text-xs text-muted-foreground">SgToastHost do layout</span>
+        </div>
+      </div>
+
+      <div className="rounded-md border border-border p-4">
+        <div className="text-sm font-semibold">page.tsx</div>
+        <p className="text-sm text-muted-foreground">
+          Quando outro host é montado mais fundo na árvore React, ele assume a renderização dos toasts.
+        </p>
+        <div className="mt-3 rounded-md border border-dashed border-border p-3">
+          <SgToastHost position="bottom-right" />
+          <span className="text-xs text-muted-foreground">SgToastHost da página</span>
+        </div>
+      </div>
+    </div>
+  );
+}

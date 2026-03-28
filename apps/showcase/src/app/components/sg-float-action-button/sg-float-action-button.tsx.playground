@@ -1,0 +1,54 @@
+import * as React from "react";
+import { Heart, Plus, Star } from "lucide-react";
+import { SgFloatActionButton, SgGrid, type SgFABAction, SgButton } from "@seedgrid/fe-components";
+
+const actions: SgFABAction[] = [
+  { icon: <Plus className="size-4" />, label: "New", onClick: () => {} },
+  { icon: <Star className="size-4" />, label: "Favorite", onClick: () => {} }
+];
+
+export default function App() {
+  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "danger">("primary");
+  const [shape, setShape] = React.useState<"circle" | "rounded" | "square">("circle");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [type, setType] = React.useState<"none" | "linear" | "circle" | "semi-circle" | "quarter-circle">("linear");
+  const [direction, setDirection] = React.useState<"up" | "down" | "left" | "right">("up");
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("secondary")}>secondary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("circle")}>circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("rounded")}>rounded</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("square")}>square</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize(size === "sm" ? "md" : size === "md" ? "lg" : "sm")}>size: {size}</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("linear")}>linear</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("circle")}>circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("semi-circle")}>semi-circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setType("quarter-circle")}>quarter-circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("up")}>up</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("down")}>down</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("left")}>left</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("right")}>right</SgButton>
+      </SgGrid>
+
+      <div className="relative h-72 rounded border border-dashed border-border bg-muted/20">
+        <SgFloatActionButton
+          absolute
+          position="right-bottom"
+          severity={severity}
+          shape={shape}
+          size={size}
+          icon={<Heart className="size-4" />}
+          actions={actions}
+          type={type}
+          direction={direction}
+          onClick={() => {}}
+        />
+      </div>
+    </div>
+  );
+}

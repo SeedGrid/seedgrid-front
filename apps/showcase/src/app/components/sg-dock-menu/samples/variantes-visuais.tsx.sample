@@ -1,0 +1,8 @@
+<div className="space-y-4">
+  <div className="relative h-48 rounded-lg border-2 border-dashed border-border bg-muted/20">
+    <SgDockMenu id="dock-no-magnify" items={items} position="center-bottom" magnify={false} zIndex={10} style={{ position: "absolute" }} />
+  </div>
+  <div className="relative h-48 rounded-lg border-2 border-dashed border-border bg-muted/20">
+    <SgDockMenu id="dock-no-labels" items={items} position="center-bottom" showLabels={false} zIndex={10} style={{ position: "absolute" }} />
+  </div>
+</div>

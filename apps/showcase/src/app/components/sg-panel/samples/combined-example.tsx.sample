@@ -1,0 +1,20 @@
+import React from "react";
+import { SgGrid, SgMainPanel, SgPanel, SgStack } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgStack gap={10}>
+      <SgPanel className="h-[260px] rounded-xl bg-muted/30" padding={10}>
+        <SgMainPanel gap={8} className="h-full rounded-lg bg-background p-3">
+          <SgPanel align="top" height={10} borderStyle="solid" padding={12}>header</SgPanel>
+          <SgPanel align="left" width={18} borderStyle="dashed" padding={8} scrollable="y">menu</SgPanel>
+          <SgPanel align="client" borderStyle="none" padding={10} scrollable="auto" scrollbarGutter>conteudo</SgPanel>
+        </SgMainPanel>
+      </SgPanel>
+      <SgGrid columns={{ base: 1, md: 3 }} gap={8}>
+        <SgPanel span={2}>span=2</SgPanel>
+        <SgPanel rowSpan={2}>rowSpan=2</SgPanel>
+      </SgGrid>
+    </SgStack>
+  );
+}

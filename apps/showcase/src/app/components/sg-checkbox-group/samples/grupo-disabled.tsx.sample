@@ -1,0 +1,12 @@
+import React from "react";
+import { SgCheckboxGroup, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const BASIC_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" }
+];
+
+export default function Example() {
+  return <SgCheckboxGroup id="disabled-group" title="Options desabilitadas" source={BASIC_OPTIONS} value={["option2"]} disabled />;
+}

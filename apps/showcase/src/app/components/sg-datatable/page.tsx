@@ -35,8 +35,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 type ProductRow = {
@@ -1220,7 +1220,7 @@ export default function SgDatatableShowcase() {
             stripedRows
             showGridlines
           />
-          <CodeBlock code={BASIC_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[1] ?? ""}>
@@ -1236,7 +1236,7 @@ export default function SgDatatableShowcase() {
             showColumnFilters
             showClearFiltersButton
           />
-          <CodeBlock code={FILTER_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/filtros.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[2] ?? ""}>
@@ -1279,7 +1279,7 @@ export default function SgDatatableShowcase() {
           <p className="text-sm text-[rgb(var(--sg-muted))]">
             selected: <strong>{selectionLabel}</strong>
           </p>
-          <CodeBlock code={SELECTION_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/selecao.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[3] ?? ""}>
@@ -1293,7 +1293,7 @@ export default function SgDatatableShowcase() {
             rows={5}
             showGridlines
           />
-          <CodeBlock code={TEMPLATE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/templates.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[4] ?? ""}>
@@ -1331,7 +1331,7 @@ export default function SgDatatableShowcase() {
           <p className="text-xs text-muted-foreground">
             last action: {lastPermissionAction}
           </p>
-          <CodeBlock code={ACTIONS_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/acoes.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[5] ?? ""}>
@@ -1379,7 +1379,7 @@ export default function SgDatatableShowcase() {
           <p className="text-xs text-muted-foreground">
             sort: {controlledSort.sortField ?? "none"} ({controlledSort.sortOrder}) | first: {controlledPage.first} | rows: {controlledPage.rows}
           </p>
-          <CodeBlock code={CONTROLLED_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/controlado.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[6] ?? ""}>
@@ -1432,7 +1432,7 @@ export default function SgDatatableShowcase() {
           <p className="text-xs text-muted-foreground">
             current page rows: {serverRows.length} | total records: {serverTotalRecords}
           </p>
-          <CodeBlock code={SERVER_SIDE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/server-side.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[7] ?? ""}>
@@ -1454,7 +1454,7 @@ export default function SgDatatableShowcase() {
             loading={loading}
             emptyMessage="No products available."
           />
-          <CodeBlock code={LOADING_EMPTY_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-datatable/samples/loading-e-vazio.tsx.sample" />
         </Section>
 
         <Section title={sectionTitles[8] ?? ""}>
@@ -1462,7 +1462,7 @@ export default function SgDatatableShowcase() {
             title="SgDatatable Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-datatable/sg-datatable.tsx.playground"
             height={760}
             defaultOpen
           />

@@ -30,8 +30,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 type OrderListTexts = {
@@ -275,86 +275,6 @@ const BACKLOG_ITEMS: SgOrderListItem[] = [
   { label: "Atualizar testes E2E", value: "e2e", data: { effort: "M", priority: "Baixa" }, disabled: true }
 ];
 
-const ORDER_LIST_PLAYGROUND_APP_FILE = `import * as React from "react";
-import * as SeedGrid from "@seedgrid/fe-components";
-
-const SgOrderListFromLib = (SeedGrid as Record<string, unknown>).SgOrderList as
-  | React.ComponentType<any>
-  | undefined;
-
-const ITEMS = [
-  { label: "Planejamento", value: "plan" },
-  { label: "Design", value: "design" },
-  { label: "Implementacao", value: "build" },
-  { label: "Testes", value: "test" },
-  { label: "Publicacao", value: "release" }
-];
-
-export default function App() {
-  const hasComponent = typeof SgOrderListFromLib === "function";
-  const [value, setValue] = React.useState(ITEMS);
-  const [showControls, setShowControls] = React.useState(true);
-  const [selectionMode, setSelectionMode] = React.useState<"single" | "multiple">("multiple");
-
-  return (
-    <div className="space-y-4 p-2">
-      {!hasComponent ? (
-        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-          SgOrderList is not available in the published Sandpack version. Showing fallback.
-        </div>
-      ) : null}
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="inline-flex items-center gap-2 text-xs">
-          <input
-            type="checkbox"
-            checked={showControls}
-            onChange={(event) => setShowControls(event.target.checked)}
-          />
-          showControls
-        </label>
-
-        <label className="text-xs">
-          <span className="mb-1 block font-medium">selectionMode</span>
-          <select
-            value={selectionMode}
-            onChange={(event) => setSelectionMode(event.target.value as "single" | "multiple")}
-            className="w-full rounded border border-border px-2 py-1"
-          >
-            <option value="single">single</option>
-            <option value="multiple">multiple</option>
-          </select>
-        </label>
-      </div>
-
-      <div className="rounded border border-border p-4">
-        {hasComponent ? (
-          <SgOrderListFromLib
-            id="orderlist-playground"
-            title="Pipeline"
-            source={ITEMS}
-            value={value}
-            onChange={setValue}
-            showControls={showControls}
-            selectionMode={selectionMode}
-          />
-        ) : (
-          <ol className="list-inside list-decimal space-y-1 text-sm">
-            {value.map((item: { value: string; label: string }) => (
-              <li key={item.value}>{item.label}</li>
-            ))}
-          </ol>
-        )}
-      </div>
-
-      <div className="rounded border border-border bg-muted/30 px-3 py-2 text-xs">
-        order: {value.map((item) => item.label).join(" > ")}
-      </div>
-    </div>
-  );
-}
-`;
-
 export default function SgOrderListShowcase() {
   const i18n = useShowcaseI18n();
   const locale: keyof typeof ORDER_LIST_TEXTS = isSupportedOrderListLocale(i18n.locale) ? i18n.locale : "en-US";
@@ -409,29 +329,7 @@ export default function SgOrderListShowcase() {
           <p className="text-sm text-[rgb(var(--sg-muted))]">
             Ordem atual: <strong>{basicItems.map((item) => item.label).join(" > ")}</strong>
           </p>
-          <CodeBlock
-            code={`const PRODUCT_ITEMS = [
-  { label: "Notebook", value: "notebook", icon: <Landmark className="h-4 w-4" /> },
-  { label: "Mouse", value: "mouse", icon: <RefreshCw className="h-4 w-4" /> },
-  { label: "Teclado", value: "keyboard", icon: <Bell className="h-4 w-4" /> },
-  { label: "Monitor", value: "monitor", icon: <Star className="h-4 w-4" /> },
-  { label: "Webcam", value: "webcam", icon: <Heart className="h-4 w-4" /> }
-];
-
-const [basicItems, setBasicItems] = React.useState<SgOrderListItem[]>(PRODUCT_ITEMS);
-
-<SgOrderList
-  id="order-basic"
-  title="Produtos"
-  source={PRODUCT_ITEMS}
-  value={basicItems}
-  onChange={setBasicItems}
-/>
-
-<p className="text-sm text-[rgb(var(--sg-muted))]">
-  Ordem atual: <strong>{basicItems.map((item) => item.label).join(" > ")}</strong>
-</p>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-order-list/samples/basico-controles-internos.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[1]}>
@@ -452,37 +350,7 @@ const [basicItems, setBasicItems] = React.useState<SgOrderListItem[]>(PRODUCT_IT
             <SgButton onClick={() => pipelineRef.current?.moveBottom()}>Move Bottom</SgButton>
             <SgButton onClick={() => pipelineRef.current?.clearSelection()}>Clear Selection</SgButton>
           </SgGrid>
-          <CodeBlock
-            code={`const PIPELINE_STEPS = [
-  { label: "Prospeccao", value: "lead" },
-  { label: "Qualificacao", value: "qualify" },
-  { label: "Proposta", value: "proposal" },
-  { label: "Negociacao", value: "negotiation" },
-  { label: "Fechamento", value: "close" }
-];
-
-const [pipelineItems, setPipelineItems] = React.useState<SgOrderListItem[]>(PIPELINE_STEPS);
-const pipelineRef = React.useRef<SgOrderListRef>(null);
-
-<SgOrderList
-  ref={pipelineRef}
-  id="order-ref"
-  title="Etapas do pipeline"
-  source={PIPELINE_STEPS}
-  value={pipelineItems}
-  onChange={setPipelineItems}
-  selectionMode="multiple"
-  showControls={false}
-/>
-
-<SgGrid columns={{ base: 2, md: 5 }} gap={8}>
-  <SgButton onClick={() => pipelineRef.current?.moveTop()}>Move Top</SgButton>
-  <SgButton onClick={() => pipelineRef.current?.moveUp()}>Move Up</SgButton>
-  <SgButton onClick={() => pipelineRef.current?.moveDown()}>Move Down</SgButton>
-  <SgButton onClick={() => pipelineRef.current?.moveBottom()}>Move Bottom</SgButton>
-  <SgButton onClick={() => pipelineRef.current?.clearSelection()}>Clear Selection</SgButton>
-</SgGrid>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-order-list/samples/selecao-multipla-controles-externos-ref.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[2]}>
@@ -498,31 +366,7 @@ const pipelineRef = React.useRef<SgOrderListRef>(null);
           <p className="text-xs text-muted-foreground">
             Dica: arraste os itens para reordenar, sem usar os botoes.
           </p>
-          <CodeBlock
-            code={`const TEAM_ITEMS = [
-  { label: "Ana - Produto", value: "ana" },
-  { label: "Bruno - Design", value: "bruno" },
-  { label: "Carla - Frontend", value: "carla" },
-  { label: "Diego - Backend", value: "diego" },
-  { label: "Elaine - QA", value: "elaine" }
-];
-
-const [teamItems, setTeamItems] = React.useState<SgOrderListItem[]>(TEAM_ITEMS);
-
-<SgOrderList
-  id="order-drag"
-  title="Time de atendimento"
-  source={TEAM_ITEMS}
-  value={teamItems}
-  onChange={setTeamItems}
-  showControls={false}
-  draggable
-/>
-
-<p className="text-xs text-muted-foreground">
-  Dica: arraste os itens para reordenar, sem usar os botoes.
-</p>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-order-list/samples/drag-and-drop-sem-botoes.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[3]}>
@@ -545,36 +389,7 @@ const [teamItems, setTeamItems] = React.useState<SgOrderListItem[]>(TEAM_ITEMS);
               );
             }}
           />
-          <CodeBlock
-            code={`const BACKLOG_ITEMS = [
-  { label: "Implementar filtros", value: "filtros", data: { effort: "M", priority: "Alta" } },
-  { label: "Ajustar layout mobile", value: "mobile", data: { effort: "S", priority: "Media" } },
-  { label: "Refatorar API de pedidos", value: "api", data: { effort: "L", priority: "Alta" } },
-  { label: "Atualizar testes E2E", value: "e2e", data: { effort: "M", priority: "Baixa" }, disabled: true }
-];
-
-const [backlogItems, setBacklogItems] = React.useState<SgOrderListItem[]>(BACKLOG_ITEMS);
-
-<SgOrderList
-  id="order-template"
-  title="Backlog da sprint"
-  source={BACKLOG_ITEMS}
-  value={backlogItems}
-  onChange={setBacklogItems}
-  controlsPosition="right"
-  itemTemplate={(item) => {
-    const meta = item.data as { effort: string; priority: string } | undefined;
-    return (
-      <SgGrid columns={{ base: 1, sm: 2 }} gap={8} className="w-full">
-        <span className="font-medium">{item.label}</span>
-        <span className="text-xs text-[rgb(var(--sg-muted))]">
-          {"Prioridade: " + (meta?.priority ?? "-") + " | Esforco: " + (meta?.effort ?? "-")}
-        </span>
-      </SgGrid>
-    );
-  }}
-/>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-order-list/samples/item-template-customizado-e-item-desabilitado.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[4]}>
@@ -592,25 +407,7 @@ const [backlogItems, setBacklogItems] = React.useState<SgOrderListItem[]>(BACKLO
             value={controlledItems}
             onChange={setControlledItems}
           />
-          <CodeBlock
-            code={`const [controlledItems, setControlledItems] = React.useState<SgOrderListItem[]>(PRODUCT_ITEMS);
-
-<SgGrid columns={{ base: 1, md: 3 }} gap={8}>
-  <SgButton onClick={() => setControlledItems(PRODUCT_ITEMS)}>Reset</SgButton>
-  <SgButton onClick={() => setControlledItems((prev) => [...prev].reverse())}>Reverse</SgButton>
-  <SgButton onClick={() => setControlledItems((prev) => [...prev].sort((a, b) => a.label.localeCompare(b.label)))}>
-    Sort A-Z
-  </SgButton>
-</SgGrid>
-
-<SgOrderList
-  id="order-controlled"
-  title="Produtos (controlado)"
-  source={PRODUCT_ITEMS}
-  value={controlledItems}
-  onChange={setControlledItems}
-/>`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-order-list/samples/ordem-controlada-por-estado-externo.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[5]}>
@@ -618,7 +415,7 @@ const [backlogItems, setBacklogItems] = React.useState<SgOrderListItem[]>(BACKLO
             title="SgOrderList Playground"
             interactive
             codeContract="appFile"
-            code={ORDER_LIST_PLAYGROUND_APP_FILE}
+            playgroundFile="apps/showcase/src/app/components/sg-order-list/sg-order-list.tsx.playground"
             height={650}
             defaultOpen
           />

@@ -32,6 +32,10 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
+}
+
 function RollerShowcase(props: { timezone: string; initialServerTime: string }) {
   const [showSeconds, setShowSeconds] = React.useState(true);
   const [format, setFormat] = React.useState<"12h" | "24h">("12h");
@@ -60,49 +64,7 @@ function RollerShowcase(props: { timezone: string; initialServerTime: string }) 
         />
       </div>
 
-      <SgCodeBlockBase
-        code={`import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export function RollerShowcase(props: { timezone: string; initialServerTime: string }) {
-  const [showSeconds, setShowSeconds] = React.useState(true);
-  const [format, setFormat] = React.useState<"12h" | "24h">("12h");
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <SgButton onClick={() => setShowSeconds((v) => !v)}>
-          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
-        </SgButton>
-        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
-          {format === "24h" ? "24h" : "12h"}
-        </SgButton>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-6">
-        <SgClock
-          clockStyle="digital"
-          digitalStyle="roller3d"
-          size="lg"
-          initialServerTime={props.initialServerTime}
-          timezone={props.timezone}
-          format={format}
-          showSeconds={showSeconds}
-          style={{ borderRadius: 12, padding: 12, backgroundColor: "rgba(15, 23, 42, 0.04)" }}
-        />
-      </div>
-    </div>
-  );
-}`}
-      />
+      <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/roller-3d.tsx.sample" />
     </div>
   );
 }
@@ -134,48 +96,7 @@ function FlipShowcase(props: { timezone: string; initialServerTime: string }) {
         />
       </div>
 
-      <SgCodeBlockBase
-        code={`import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export function FlipShowcase(props: { timezone: string; initialServerTime: string }) {
-  const [showSeconds, setShowSeconds] = React.useState(true);
-  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <SgButton onClick={() => setShowSeconds((v) => !v)}>
-          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
-        </SgButton>
-        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
-          {format === "24h" ? "24h" : "12h"}
-        </SgButton>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-6">
-        <SgClock
-          clockStyle="digital"
-          digitalStyle="flip"
-          size="lg"
-          initialServerTime={props.initialServerTime}
-          timezone={props.timezone}
-          format={format}
-          showSeconds={showSeconds}
-        />
-      </div>
-    </div>
-  );
-}`}
-      />
+      <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/flip.tsx.sample" />
     </div>
   );
 }
@@ -218,64 +139,12 @@ function getExtraStyleExampleName(style: ExtraDigitalStyle): string {
   return style.charAt(0).toUpperCase() + style.slice(1) + "Example";
 }
 
-function buildExtraStyleCode(style: ExtraDigitalStyle): string {
-  const size = getExtraStyleSize(style);
-  const wrapperClassName = getExtraStyleWrapperClassName(style);
-  const exampleName = getExtraStyleExampleName(style);
-  const hasScale = style === "matrix" || style === "discard";
-  const scaleLine =
-    style === "discard"
-      ? '  const scale = showSeconds ? (format === "12h" ? 0.98 : 1.05) : format === "12h" ? 1.14 : 1.22;\n'
-      : style === "matrix"
-        ? '  const scale = showSeconds ? (format === "12h" ? 0.84 : 0.9) : 1;\n'
-        : "";
-  const openScale = hasScale
-    ? '        <div style={{ transform: "scale(" + scale + ")", transformOrigin: "center" }}>\n'
-    : "";
-  const closeScale = hasScale ? "        </div>\n" : "";
+function getExtraStyleSampleFile(style: ExtraDigitalStyle): string {
+  if (style === "sevenSegment") {
+    return "apps/showcase/src/app/components/gadgets/sg-clock/samples/seven-segment.tsx.sample";
+  }
 
-  return `import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export function ${exampleName}(props: { initialServerTime: string }) {
-  const [showSeconds, setShowSeconds] = React.useState(true);
-  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-${scaleLine}
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <SgButton onClick={() => setShowSeconds((v) => !v)}>
-          {showSeconds ? "Segundos: ON" : "Segundos: OFF"}
-        </SgButton>
-        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
-          {format === "24h" ? "24h" : "12h"}
-        </SgButton>
-      </div>
-
-      <div className="rounded-xl border border-border bg-background p-6">
-        <div className="${wrapperClassName}">
-${openScale}          <SgClock
-            clockStyle="digital"
-            digitalStyle="${style}"
-            size="${size}"
-            initialServerTime={props.initialServerTime}
-            timezone="America/Sao_Paulo"
-            format={format}
-            showSeconds={showSeconds}
-          />
-${closeScale}        </div>
-      </div>
-    </div>
-  );
-}`;
+  return `apps/showcase/src/app/components/gadgets/sg-clock/samples/${style}.tsx.sample`;
 }
 
 function DigitalStyleShowcase(props: { initialServerTime: string; style: ExtraDigitalStyle }) {
@@ -313,91 +182,10 @@ function DigitalStyleShowcase(props: { initialServerTime: string; style: ExtraDi
         </div>
       </div>
 
-      <SgCodeBlockBase code={buildExtraStyleCode(props.style)} />
+      <CodeBlock sampleFile={getExtraStyleSampleFile(props.style)} />
     </div>
   );
 }
-const CLOCK_PLAYGROUND_APP_FILE = `import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-const DIGITAL_STYLE_OPTIONS: SgClockDigitalStyle[] = [
-  "default",
-  "segment",
-  "sevenSegment",
-  "roller3d",
-  "flip",
-  "fade",
-  "matrix",
-  "neon",
-  "discard"
-];
-
-function nextDigitalStyle(current: SgClockDigitalStyle): SgClockDigitalStyle {
-  const idx = DIGITAL_STYLE_OPTIONS.indexOf(current);
-  if (idx < 0) return DIGITAL_STYLE_OPTIONS[0] ?? "default";
-  return DIGITAL_STYLE_OPTIONS[(idx + 1) % DIGITAL_STYLE_OPTIONS.length] ?? "default";
-}
-
-export default function App() {
-  const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
-  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-  const [showSeconds, setShowSeconds] = React.useState(true);
-  const [digitalStyle, setDigitalStyle] = React.useState<SgClockDigitalStyle>("default");
-  const initialServerTime = new Date().toISOString();
-
-  return (
-    <SgClockThemeProvider value={{ mode: "fallback", fallbackThemeId: "classic" }}>
-      <div className="space-y-4 p-2">
-        <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
-          <SgButton size="sm" appearance={showSeconds ? "solid" : "outline"} onClick={() => setShowSeconds((prev) => !prev)}>
-            seconds
-          </SgButton>
-          <SgButton size="sm" appearance="outline" onClick={() => setFormat((prev) => (prev === "24h" ? "12h" : "24h"))}>
-            {format}
-          </SgButton>
-          <SgButton size="sm" appearance="outline" onClick={() => setDigitalStyle((prev) => nextDigitalStyle(prev))}>
-            {digitalStyle}
-          </SgButton>
-          <SgButton size="sm" appearance="outline" onClick={() => setTimezone((prev) => (prev === "America/Sao_Paulo" ? "Europe/Lisbon" : "America/Sao_Paulo"))}>
-            {timezone === "America/Sao_Paulo" ? "Sao Paulo" : "Lisbon"}
-          </SgButton>
-        </SgGrid>
-
-        <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
-          <div className="rounded border border-border bg-background p-4">
-            <SgClock
-              clockStyle="digital"
-              size="lg"
-              initialServerTime={initialServerTime}
-              timezone={timezone}
-              format={format}
-              showSeconds={showSeconds}
-              digitalStyle={digitalStyle}
-            />
-          </div>
-          <div className="rounded border border-border bg-background p-4">
-            <SgClock
-              clockStyle="analog"
-              size={220}
-              initialServerTime={initialServerTime}
-              showSeconds={showSeconds}
-              secondHandMode="smooth"
-              timezone={timezone}
-            />
-          </div>
-        </SgGrid>
-      </div>
-    </SgClockThemeProvider>
-  );
-}`;
 const CLOCK_PROPS: ShowcasePropRow[] = [
   { prop: "clockStyle", type: '"analog" | "digital"', defaultValue: '"digital"', description: "Seleciona o modo de renderizacao do relogio." },
   { prop: "size", type: 'number | "sm" | "md" | "lg"', defaultValue: '"md" (digital) / 240 (analog)', description: "Define o tamanho do relogio analogico ou digital." },
@@ -491,64 +279,7 @@ export function SgClockShowcaseClient({ initialServerTime }: { initialServerTime
             </div>
 
             <div className="mt-6">
-              <SgCodeBlockBase
-                code={`import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { t, useShowcaseI18n } from "../../../../i18n";
-
-export function AnalogExample(props: { initialServerTime: string }) {
-  const i18n = useShowcaseI18n();
-  const [themeId, setThemeId] = React.useState("seedgrid");
-  const [secondMode, setSecondMode] = React.useState<"step" | "smooth">("step");
-  const [showSeconds, setShowSeconds] = React.useState(true);
-  const [timezone] = React.useState("America/Sao_Paulo");
-
-  return (
-    <div className="grid gap-6 md:grid-cols-[260px_1fr]">
-      <div className="space-y-3">
-        <SgClockThemePicker
-          value={themeId}
-          onChange={setThemeId}
-          label={t(i18n, "showcase.component.clock.labels.theme")}
-        />
-
-        <div className="flex flex-wrap gap-2">
-          <SgButton onClick={() => setSecondMode((v) => (v === "step" ? "smooth" : "step"))}>
-            {secondMode === "step"
-              ? t(i18n, "showcase.component.clock.labels.secondStep")
-              : t(i18n, "showcase.component.clock.labels.secondSmooth")}
-          </SgButton>
-          <SgButton onClick={() => setShowSeconds((v) => !v)}>
-            {showSeconds
-              ? t(i18n, "showcase.component.clock.labels.secondsOn")
-              : t(i18n, "showcase.component.clock.labels.secondsOff")}
-          </SgButton>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
-        <SgClock
-          clockStyle="analog"
-          size={320}
-          initialServerTime={props.initialServerTime}
-          themeId={themeId}
-          showSeconds={showSeconds}
-          secondHandMode={secondMode}
-          timezone={timezone}
-        />
-      </div>
-    </div>
-  );
-}`}
-              />
+              <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/analogico.tsx.sample" />
             </div>
 
             </Section>
@@ -583,38 +314,7 @@ export function AnalogExample(props: { initialServerTime: string }) {
             </div>
 
             <div className="mt-6">
-              <SgCodeBlockBase
-                code={`import { SgClock } from "@seedgrid/fe-components";
-
-export function InlineThemeExample(props: { initialServerTime: string }) {
-  return (
-    <div className="flex items-center justify-center rounded-xl border border-border bg-background p-6">
-      <SgClock
-        clockStyle="analog"
-        size={260}
-        initialServerTime={props.initialServerTime}
-        showSeconds
-        secondHandMode="smooth"
-        theme={{
-          id: "inline-theme",
-          label: "Inline Theme",
-          render: () => (
-            <>
-              <circle cx="50" cy="50" r="48" className="fill-white dark:fill-neutral-950" />
-              <circle cx="50" cy="50" r="47" className="fill-none stroke-neutral-300 dark:stroke-neutral-700" />
-              <circle cx="50" cy="50" r="38" className="fill-none stroke-neutral-200 dark:stroke-neutral-800" />
-              <circle cx="50" cy="50" r="6" className="fill-neutral-100 dark:fill-neutral-900" />
-              <text x="50" y="56" textAnchor="middle" className="fill-neutral-400 text-[8px] font-semibold">
-                SeedGrid
-              </text>
-            </>
-          )
-        }}
-      />
-    </div>
-  );
-}`}
-              />
+              <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/tema-inline-sem-provider.tsx.sample" />
             </div>
             </Section>
 
@@ -633,39 +333,7 @@ export function InlineThemeExample(props: { initialServerTime: string }) {
               <SgClock clockStyle="digital" size="lg" initialServerTime={initialServerTime} timezone={timezone} format={format} digitalStyle="default" />
             </div>
             <div className="mt-6">
-              <SgCodeBlockBase
-                code={`import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export function DigitalExample(props: { initialServerTime: string }) {
-  const [timezone] = React.useState("America/Sao_Paulo");
-  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-
-  return (
-    <>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
-          {format === "24h" ? "24h" : "12h"}
-        </SgButton>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <SgClock clockStyle="digital" size="sm" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle="default" />
-        <SgClock clockStyle="digital" size="md" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle="default" />
-        <SgClock clockStyle="digital" size="lg" initialServerTime={props.initialServerTime} timezone={timezone} format={format} digitalStyle="default" />
-      </div>
-    </>
-  );
-}`}
-              />
+              <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/digital.tsx.sample" />
             </div>
             </Section>
 
@@ -702,43 +370,7 @@ export function DigitalExample(props: { initialServerTime: string }) {
               <SgClock clockStyle="analog" size={220} initialServerTime={initialServerTime} themeId={themeId} timezone={timezone} showSeconds={false} />
             </div>
             <div className="mt-6">
-              <SgCodeBlockBase
-                code={`import * as React from "react";
-import {
-  SgClock,
-  SgClockThemePicker,
-  SgClockThemeProvider,
-  SgButton,
-  registerThemes,
-  sgClockThemesBuiltIn,
-} from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-
-export function TimezoneExample(props: { initialServerTime: string }) {
-  const [themeId] = React.useState("seedgrid");
-  const [timezone, setTimezone] = React.useState("America/Sao_Paulo");
-  const [format, setFormat] = React.useState<"12h" | "24h">("24h");
-
-  return (
-    <>
-      <div className="flex flex-wrap gap-2">
-        <SgButton onClick={() => setTimezone("America/Sao_Paulo")}>Sao Paulo</SgButton>
-        <SgButton onClick={() => setTimezone("Europe/Lisbon")}>Lisboa</SgButton>
-        <SgButton onClick={() => setTimezone("America/New_York")}>New York</SgButton>
-        <SgButton onClick={() => setTimezone("Asia/Tokyo")}>Tokyo</SgButton>
-        <SgButton onClick={() => setFormat((v) => (v === "24h" ? "12h" : "24h"))}>
-          {format === "24h" ? "24h" : "12h"}
-        </SgButton>
-      </div>
-
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <SgClock clockStyle="digital" size="lg" initialServerTime={props.initialServerTime} timezone={timezone} format={format} showSeconds />
-        <SgClock clockStyle="analog" size={220} initialServerTime={props.initialServerTime} themeId={themeId} timezone={timezone} showSeconds={false} />
-      </div>
-    </>
-  );
-}`}
-              />
+              <CodeBlock sampleFile="apps/showcase/src/app/components/gadgets/sg-clock/samples/timezone.tsx.sample" />
             </div>
             </Section>
 
@@ -750,7 +382,7 @@ export function TimezoneExample(props: { initialServerTime: string }) {
                 title="SgClock Playground"
                 interactive
                 codeContract="appFile"
-                code={CLOCK_PLAYGROUND_APP_FILE}
+                playgroundFile="apps/showcase/src/app/components/gadgets/sg-clock/sg-clock.tsx.playground"
                 height={620}
                 defaultOpen
               />

@@ -1,0 +1,14 @@
+import { useSgTheme } from "@seedgrid/fe-theme";
+
+function MyComponent() {
+  const { setTheme, setMode, currentMode } = useSgTheme();
+
+  return (
+    <div>
+      <button onClick={() => setTheme({ seed: "#7C3AED" })}>Set Purple Seed</button>
+      <button onClick={() => setMode(currentMode === "light" ? "dark" : "light")}>
+        Toggle Dark Mode
+      </button>
+    </div>
+  );
+}

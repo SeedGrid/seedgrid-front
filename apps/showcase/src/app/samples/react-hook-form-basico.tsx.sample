@@ -1,0 +1,25 @@
+import { useForm } from "react-hook-form";
+import { SgInputEmail, SgInputText } from "@seedgrid/fe-components";
+
+const { register, handleSubmit } = useForm({
+  defaultValues: { nome: "", email: "" }
+});
+
+<form onSubmit={handleSubmit(onSubmit)}>
+  <SgInputText
+    id="nome"
+    name="nome"
+    register={register}
+    label="Nome"
+    required
+    requiredMessage="Informe o nome."
+  />
+
+  <SgInputEmail
+    id="email"
+    name="email"
+    register={register}
+    label="Email"
+    required
+  />
+</form>;

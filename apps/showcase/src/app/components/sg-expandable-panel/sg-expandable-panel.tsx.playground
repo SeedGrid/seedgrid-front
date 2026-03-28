@@ -1,0 +1,75 @@
+import * as React from "react";
+import { SgButton, SgExpandablePanel } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [open, setOpen] = React.useState(false);
+  const [mode, setMode] = React.useState<"inline" | "overlay">("overlay");
+  const [direction, setDirection] = React.useState<"left" | "right" | "top" | "bottom">("left");
+  const [placement, setPlacement] = React.useState<"start" | "center" | "end">("start");
+  const [animationType, setAnimationType] = React.useState<"slide" | "fade" | "none">("slide");
+  const [resizable, setResizable] = React.useState(true);
+  const [showBackdrop, setShowBackdrop] = React.useState(true);
+  const [trapFocus, setTrapFocus] = React.useState(true);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setMode("overlay")}>overlay</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMode("inline")}>inline</SgButton>
+        <SgButton size="sm" onClick={() => setOpen((v) => !v)}>{open ? "Fechar" : "Abrir"}</SgButton>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("left")}>left</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("right")}>right</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("top")}>top</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setDirection("bottom")}>bottom</SgButton>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("start")}>start</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("center")}>center</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setPlacement("end")}>end</SgButton>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setAnimationType("slide")}>slide</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAnimationType("fade")}>fade</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setAnimationType("none")}>none</SgButton>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setResizable((v) => !v)}>{resizable ? "resizable on" : "resizable off"}</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShowBackdrop((v) => !v)}>{showBackdrop ? "backdrop on" : "backdrop off"}</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setTrapFocus((v) => !v)}>{trapFocus ? "trapFocus on" : "trapFocus off"}</SgButton>
+      </div>
+
+      <div className="h-[320px] overflow-hidden rounded-lg border border-border">
+        <div className="flex h-full">
+          <div className="flex-1 p-4 text-sm">Area principal</div>
+          <SgExpandablePanel
+            mode={mode}
+            expandTo={direction}
+            placement={placement}
+            open={open}
+            onOpenChange={setOpen}
+            size={{ default: 280, min: 180, max: 520 }}
+            resizable={resizable}
+            showBackdrop={showBackdrop}
+            closeOnOutsideClick={mode === "overlay"}
+            trapFocus={trapFocus}
+            animation={{ type: animationType, durationMs: animationType === "none" ? 0 : 180 }}
+            header={<div className="font-medium">Playground</div>}
+            footer={
+              <div className="flex justify-end">
+                <SgButton size="sm" onClick={() => setOpen(false)}>Fechar</SgButton>
+              </div>
+            }
+          >
+            <div className="text-sm">Conteudo do painel.</div>
+          </SgExpandablePanel>
+        </div>
+      </div>
+    </div>
+  );
+}

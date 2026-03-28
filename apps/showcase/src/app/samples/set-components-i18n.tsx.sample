@@ -1,0 +1,9 @@
+import { setComponentsI18n } from "@seedgrid/fe-components";
+
+setComponentsI18n({
+  locale: "en-US",
+  messages: {
+    "components.inputs.required": "Required field.",
+    "components.password.common": "Password is too common."
+  }
+});

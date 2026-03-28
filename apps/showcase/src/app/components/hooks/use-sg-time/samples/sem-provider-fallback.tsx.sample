@@ -1,0 +1,8 @@
+import { useSgTime } from "@seedgrid/fe-components";
+
+function Clock() {
+  const time = useSgTime();
+  return <span>{new Date(time.nowMs()).toLocaleTimeString()}</span>;
+}
+
+export default Clock;

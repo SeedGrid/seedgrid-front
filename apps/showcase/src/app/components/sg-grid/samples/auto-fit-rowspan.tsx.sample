@@ -1,0 +1,19 @@
+import React from "react";
+import { SgGrid, SgPanel, SgStack } from "@seedgrid/fe-components";
+
+function Card(props: { title: string; subtitle?: string }) {
+  return <SgPanel padding={12} className="rounded-lg"><SgStack gap={8}><p className="font-medium">{props.title}</p><p className="text-xs text-muted-foreground">{props.subtitle ?? "Card padrao"}</p></SgStack></SgPanel>;
+}
+
+export default function Example() {
+  return (
+    <SgGrid minItemWidth="16rem" gap={12} rowHeight={120} dense>
+      <Card title="Card A" />
+      <SgPanel rowSpan={2} padding={12} className="rounded-lg"><SgStack gap={8}><p className="font-medium">Card B (rowSpan 2)</p><p className="text-xs text-muted-foreground">Ocupa 2 linhas do grid.</p></SgStack></SgPanel>
+      <Card title="Card C" />
+      <SgPanel span={2} padding={12} className="rounded-lg"><SgStack gap={8}><p className="font-medium">Card D (span 2)</p><p className="text-xs text-muted-foreground">Ocupa 2 colunas.</p></SgStack></SgPanel>
+      <Card title="Card E" />
+      <Card title="Card F" />
+    </SgGrid>
+  );
+}

@@ -1,0 +1,37 @@
+import React from "react";
+import { Box, Building2, FilePenLine, Layers3, Receipt, Settings } from "lucide-react";
+import { SgBreadcrumb, SgButton, type SgBreadcrumbItem } from "@seedgrid/fe-components";
+
+const ROUTES = {
+  registration: [
+    { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
+    { id: "registrations", label: "Registrations", href: "/erp/registrations", icon: <Building2 className="size-4" /> },
+    { id: "customers", label: "Customers", icon: <Receipt className="size-4" /> }
+  ],
+  fiscal: [
+    { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
+    { id: "fiscal", label: "Fiscal", href: "/erp/fiscal", icon: <Receipt className="size-4" /> },
+    { id: "access", label: "Access", icon: <FilePenLine className="size-4" /> }
+  ],
+  integration: [
+    { id: "erp", label: "ERP", href: "/erp", icon: <Layers3 className="size-4" /> },
+    { id: "integration", label: "Integration", href: "/erp/integration", icon: <Settings className="size-4" /> },
+    { id: "connectors", label: "Connectors", icon: <Building2 className="size-4" /> }
+  ]
+} satisfies Record<"registration" | "fiscal" | "integration", SgBreadcrumbItem[]>;
+
+export default function Example() {
+  const [routeKey, setRouteKey] = React.useState<keyof typeof ROUTES>("registration");
+  const [lastNavigate, setLastNavigate] = React.useState("-");
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("registration")}>Go to Registration</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("fiscal")}>Go to Fiscal</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setRouteKey("integration")}>Go to Integration</SgButton>
+      </div>
+      <SgBreadcrumb items={ROUTES[routeKey]} separator="arrow" variant="subtle" onNavigate={(item) => setLastNavigate(item.id)} />
+      <p>active route: {routeKey} | last click: {lastNavigate}</p>
+    </div>
+  );
+}

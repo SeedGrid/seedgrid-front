@@ -1,0 +1,12 @@
+import { registerTheme, type SgClockTheme } from "@seedgrid/fe-components";
+
+const myTheme: SgClockTheme = {
+  id: "my-theme",
+  label: "My Theme",
+  order: 50,
+  render: ({ now }) => <div>{now.toLocaleTimeString()}</div>,
+};
+
+registerTheme(myTheme);
+
+export default myTheme;

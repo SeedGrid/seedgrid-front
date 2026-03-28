@@ -24,8 +24,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const DOCK_LAYOUT_PLAYGROUND_CODE = `import * as React from "react";
@@ -223,64 +223,7 @@ export default function SgDockLayoutPage() {
             </SgDockZone>
           </SgDockLayout>
         </div>
-        <CodeBlock
-          code={`import React from "react";
-import { SgDockLayout, SgDockZone, SgToolBar, SgToolbarIconButton } from "@seedgrid/fe-components";
-import { SgPlayground } from "@seedgrid/fe-playground";
-import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
-
-export default function Example() {
-  return (
-    <div className="relative h-[420px] overflow-hidden rounded-xl border border-border bg-black">
-      <SgDockLayout
-        id="showcase-dock-basic-v9"
-        className="grid h-full grid-cols-[8rem_1fr_8rem] grid-rows-[auto_1fr_auto]"
-        style={{ boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.08)" }}
-      >
-        <SgDockZone
-          zone="top"
-          className="col-span-3 row-start-1 items-start border-b border-white/20"
-          style={{ backgroundColor: "rgba(255, 255, 255, 0.03)" }}
-        >
-          <SgToolBar id="tb-main-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="${topLabel}" draggable>
-            <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Ir para inicio" />
-            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar registros" />
-          </SgToolBar>
-          <SgToolBar id="tb-top-extra-basic-v9" dockZone="top" orientationDirection="horizontal-left" title="Acoes" draggable>
-            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
-            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Relatorio" hint="Abrir relatorios" />
-          </SgToolBar>
-        </SgDockZone>
-
-        <SgDockZone zone="left" className="col-start-1 row-start-2 items-start border-r border-white/20">
-          <SgToolBar id="tb-left-basic-v9" dockZone="left" orientationDirection="vertical-down" title="Navegacao" collapsible draggable>
-            <SgToolbarIconButton icon={<Users className="size-4" />} label="Clientes" hint="Abrir clientes" />
-            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Config" hint="Abrir configuracoes" />
-          </SgToolBar>
-        </SgDockZone>
-
-        <SgDockZone zone="right" className="col-start-3 row-start-2 items-start border-l border-white/20">
-          <SgToolBar id="tb-right-basic-v9" dockZone="right" orientationDirection="vertical-down" title="Equipe" collapsible draggable>
-            <SgToolbarIconButton icon={<Users className="size-4" />} label="Usuarios" hint="Gerenciar usuarios" />
-            <SgToolbarIconButton icon={<Settings className="size-4" />} label="Ajustes" hint="Abrir ajustes" />
-          </SgToolBar>
-        </SgDockZone>
-
-        <SgDockZone zone="bottom" className="col-span-3 row-start-3 items-end border-t border-white/20">
-          <SgToolBar id="tb-bottom-a-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape A" draggable>
-            <SgToolbarIconButton icon={<LayoutGrid className="size-4" />} label="Painel" hint="Abrir painel" />
-            <SgToolbarIconButton icon={<Search className="size-4" />} label="Buscar" hint="Pesquisar no rodape" />
-          </SgToolBar>
-          <SgToolBar id="tb-bottom-b-basic-v9" dockZone="bottom" orientationDirection="horizontal-left" title="Rodape B" draggable>
-            <SgToolbarIconButton icon={<ClipboardList className="size-4" />} label="Tarefas" hint="Abrir tarefas" />
-            <SgToolbarIconButton icon={<Home className="size-4" />} label="Home" hint="Voltar ao inicio" />
-          </SgToolBar>
-        </SgDockZone>
-      </SgDockLayout>
-    </div>
-  );
-}`}
-        />
+        <CodeBlock sampleFile="apps/showcase/src/app/components/sg-dock-layout/samples/basico.tsx.sample" />
       </Section>
 
         <Section title={texts.sectionPlaygroundTitle} description={texts.sectionPlaygroundDescription}>
@@ -288,7 +231,7 @@ export default function Example() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={DOCK_LAYOUT_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-dock-layout/sg-dock-layout.tsx.playground"
             height={560}
             defaultOpen
           />

@@ -1,0 +1,19 @@
+import React from "react";
+import { Landmark, Bell, RefreshCw } from "lucide-react";
+import { SgCheckboxGroup, type SgCheckboxGroupOption } from "@seedgrid/fe-components";
+
+const LIST_HIGHLIGHT_OPTIONS: SgCheckboxGroupOption[] = [
+  { label: "Reserve", value: "reserve", icon: <Landmark className="w-4 h-4 text-indigo-600" /> },
+  { label: "Alert", value: "alert", icon: <Bell className="w-4 h-4 text-rose-600" /> },
+  { label: "Refresh", value: "refresh", icon: <RefreshCw className="w-4 h-4 text-emerald-600" /> }
+];
+
+export default function Example() {
+  const [selected, setSelected] = React.useState<(string | number)[]>(["reserve"]);
+  return (
+    <>
+      <SgCheckboxGroup id="highlight-list" title="Options" source={LIST_HIGHLIGHT_OPTIONS} value={selected} onChange={setSelected} selectionStyle="highlight" className="max-w-xs" />
+      <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">Value: <strong>[{selected.join(", ")}]</strong></p>
+    </>
+  );
+}

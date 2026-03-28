@@ -1,0 +1,31 @@
+import React from "react";
+import { Download, Home, Plus, Printer, Save, Settings, Trash2, Users } from "lucide-react";
+import { SgDockLayout, SgDockZone, SgMenu, SgRadioGroup, SgToolBar, SgToolbarIconButton, type SgMenuNode, type SgRadioGroupOption } from "@seedgrid/fe-components";
+
+const DOCKABLE_MENU: SgMenuNode[] = [{ id: "dk-dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> }, { id: "dk-clientes", label: "Customers", icon: <Users className="size-4" /> }, { id: "dk-configuracoes", label: "Settings", icon: <Settings className="size-4" /> }];
+const DOCKABLE_USER_MENU: SgMenuNode[] = [{ id: "dk-meu-perfil", label: "My Profile", onClick: () => {} }, { id: "dk-logout", label: "Sign out", onClick: () => {} }];
+const DOCKABLE_MENU_STYLE_OPTIONS: SgRadioGroupOption[] = [{ label: "PanelMenu", value: "PanelMenu" }, { label: "Tiered Menu", value: "Tiered" }];
+const DOCKABLE_SHELL_STYLE = { "--primary": "27 62% 47%", "--primary-foreground": "0 0% 100%", "--muted": "35 55% 94%", "--muted-foreground": "28 30% 36%", "--border": "32 42% 83%", "--ring": "27 62% 47%", "--background": "40 33% 97%", "--card": "40 33% 97%" } as React.CSSProperties;
+
+export default function Example() {
+  const [dockActiveId, setDockActiveId] = React.useState("dk-dashboard");
+  const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
+  return (
+    <div className="space-y-3">
+      <SgRadioGroup title="Menu Style" source={DOCKABLE_MENU_STYLE_OPTIONS} value={dockMenuStyle} orientation="horizontal" onChange={(value) => { if (value === "PanelMenu" || value === "Tiered") setDockMenuStyle(value); }} />
+      <div className="relative min-h-[520px] overflow-visible rounded-lg border border-[#e2cebc] bg-[#f0ebe4]" style={DOCKABLE_SHELL_STYLE}>
+        <SgDockLayout id="showcase-menu-dock-v2" className="grid min-h-[520px] grid-cols-[auto_1fr_auto] grid-rows-[3.5rem_1fr_auto]">
+          <SgDockZone zone="top" /><SgDockZone zone="left" /><SgDockZone zone="right" /><SgDockZone zone="bottom" /><SgDockZone zone="free"><div className="pointer-events-none text-sm text-[#7e5f46]">Free center area</div></SgDockZone>
+          <SgMenu id="menu-dock-sidebar-v2" menu={DOCKABLE_MENU} selection={{ activeId: dockActiveId }} menuStyle="sidebar" menuVariantStyle={dockMenuStyle} mode="accordion" dockable dockZone="left" draggable showCollapseButton search={{ enabled: true, placeholder: "Search module..." }} brand={{ title: "SeedGrid ERP" }} user={{ name: "Lucia Souza", subtitle: "Finance" }} userMenu={DOCKABLE_USER_MENU} onNavigate={(node) => setDockActiveId(node.id)} />
+          <SgToolBar id="toolbar-dock-v1" dockZone="top" orientationDirection="horizontal-left" title="Tools" draggable collapsible={false}>
+            <SgToolbarIconButton icon={<Plus className="size-4" />} hint="New record" severity="primary" />
+            <SgToolbarIconButton icon={<Save className="size-4" />} hint="Save" />
+            <SgToolbarIconButton icon={<Printer className="size-4" />} hint="Print" />
+            <SgToolbarIconButton icon={<Download className="size-4" />} hint="Export" />
+            <SgToolbarIconButton icon={<Trash2 className="size-4" />} hint="Delete" severity="danger" />
+          </SgToolBar>
+        </SgDockLayout>
+      </div>
+    </div>
+  );
+}

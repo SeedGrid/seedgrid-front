@@ -1,0 +1,33 @@
+import React from "react";
+import { SgPickList, type SgPickListItem } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [reorderValue, setReorderValue] = React.useState({
+    source: [
+      { label: "Task A", value: "task-a" },
+      { label: "Task B", value: "task-b" },
+      { label: "Task C", value: "task-c" }
+    ] as SgPickListItem[],
+    target: [
+      { label: "Done X", value: "done-x" },
+      { label: "Done Y", value: "done-y" }
+    ] as SgPickListItem[]
+  });
+
+  return (
+    <>
+      <p className="text-sm text-muted-foreground">Dica: arraste itens entre listas ou dentro da mesma lista para reordenar.</p>
+      <SgPickList
+        id="pick-reorder"
+        title="Sprint board"
+        source={reorderValue.source}
+        target={reorderValue.target}
+        value={reorderValue}
+        onChange={(event) => setReorderValue({ source: event.source, target: event.target })}
+        showSourceControls
+        showTargetControls
+        draggable
+      />
+    </>
+  );
+}

@@ -1,0 +1,9 @@
+<div className="h-64">
+  <SgCarousel
+    items={createCarouselItems()}
+    numVisible={1}
+    orientation="horizontal"
+    height="100%"
+    style={{ borderRadius: 12, overflow: "hidden" }}
+  />
+</div>

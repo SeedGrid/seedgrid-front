@@ -1,0 +1,36 @@
+import React from "react";
+import { SgPickList, type SgPickListItem, type SgPickListRef, SgButton, SgGrid } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const pickListRef = React.useRef<SgPickListRef>(null);
+  const [externalValue, setExternalValue] = React.useState({
+    source: [
+      { label: "Email", value: "email" },
+      { label: "SMS", value: "sms" },
+      { label: "Push", value: "push" }
+    ] as SgPickListItem[],
+    target: [] as SgPickListItem[]
+  });
+
+  return (
+    <div className="space-y-4">
+      <SgPickList
+        ref={pickListRef}
+        id="pick-ref"
+        title="Channels"
+        source={externalValue.source}
+        target={externalValue.target}
+        value={externalValue}
+        onChange={(event) => setExternalValue({ source: event.source, target: event.target })}
+        showTransferControls={false}
+        selectionMode="multiple"
+      />
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton onClick={() => pickListRef.current?.moveToTarget()}>Move &gt;</SgButton>
+        <SgButton onClick={() => pickListRef.current?.moveAllToTarget()}>Move &gt;&gt;</SgButton>
+        <SgButton onClick={() => pickListRef.current?.moveToSource()}>Move &lt;</SgButton>
+        <SgButton onClick={() => pickListRef.current?.moveAllToSource()}>Move &lt;&lt;</SgButton>
+      </SgGrid>
+    </div>
+  );
+}

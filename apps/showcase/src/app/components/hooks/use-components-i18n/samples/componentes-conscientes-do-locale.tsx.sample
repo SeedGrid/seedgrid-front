@@ -1,0 +1,13 @@
+import { t, useComponentsI18n } from "@seedgrid/fe-components";
+
+function ClearButton({ onClear }: { onClear: () => void }) {
+  const i18n = useComponentsI18n();
+
+  return (
+    <button onClick={onClear} aria-label={t(i18n, "sg.input.clear")}>
+      {t(i18n, "sg.input.clear")}
+    </button>
+  );
+}
+
+export default ClearButton;

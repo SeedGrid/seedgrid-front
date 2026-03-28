@@ -1,0 +1,20 @@
+import * as React from "react";
+import { SgButton, SgFlipDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [digit, setDigit] = React.useState("0");
+  const nextDigit = () => setDigit((prev) => String((Number(prev) + 1) % 10));
+  const prevDigit = () => setDigit((prev) => String((Number(prev) - 1 + 10) % 10));
+  const randomDigit = () => setDigit(String(Math.floor(Math.random() * 10)));
+
+  return (
+    <div className="flex items-center gap-4">
+      <SgFlipDigit value={digit} />
+      <div className="flex flex-col gap-2">
+        <SgButton onClick={nextDigit} size="sm">Next (+1)</SgButton>
+        <SgButton onClick={prevDigit} size="sm" severity="secondary">Previous (-1)</SgButton>
+        <SgButton onClick={randomDigit} size="sm" severity="info">Random</SgButton>
+      </div>
+    </div>
+  );
+}

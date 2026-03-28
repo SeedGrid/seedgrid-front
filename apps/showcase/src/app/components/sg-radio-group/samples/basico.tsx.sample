@@ -1,0 +1,26 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+
+const BASIC_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" }
+];
+
+export default function Example() {
+  const [selectedBasic, setSelectedBasic] = React.useState<string | number | null>("option1");
+
+  return (
+    <>
+      <SgRadioGroup
+        id="basic"
+        title="Choose an option"
+        source={BASIC_OPTIONS}
+        value={selectedBasic ?? undefined}
+        onChange={setSelectedBasic}
+        style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 12, padding: 12 }}
+      />
+      <p className="mt-2 text-sm text-[rgb(var(--sg-muted))]">Valor selecionado: <strong>{selectedBasic}</strong></p>
+    </>
+  );
+}

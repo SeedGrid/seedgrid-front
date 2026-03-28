@@ -1,0 +1,34 @@
+import React from "react";
+import { SgButton, SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const refA = React.useRef<HTMLInputElement | null>(null);
+  const refB = React.useRef<HTMLInputElement | null>(null);
+  const refC = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    if (refA.current) refA.current.value = "1200.00";
+    if (refB.current) refB.current.value = "55.90";
+    if (refC.current) refC.current.value = "980.00";
+  }, []);
+
+  const handleSave = () => {
+    const payload = {
+      a: refA.current?.value ?? "",
+      b: refB.current?.value ?? "",
+      c: refC.current?.value ?? ""
+    };
+    console.log("Salvar:", payload);
+  };
+
+  return (
+    <div className="space-y-3">
+      <SgInputNumber id="a" label="Entrada 1" decimals={2} inputProps={{ ref: refA }} />
+      <SgInputNumber id="b" label="Entrada 2" decimals={2} inputProps={{ ref: refB }} />
+      <SgInputNumber id="c" label="Entrada 3" decimals={2} inputProps={{ ref: refC }} />
+      <SgButton type="button" size="sm" appearance="outline" onClick={handleSave}>
+        Salvar
+      </SgButton>
+    </div>
+  );
+}

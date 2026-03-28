@@ -1,0 +1,70 @@
+import * as React from "react";
+import { SgButton, SgGrid, SgRating } from "@seedgrid/fe-components";
+
+const sizes = ["sm", "md", "lg", "xl"] as const;
+type Size = (typeof sizes)[number];
+
+export default function App() {
+  const [value, setValue] = React.useState(3);
+  const [stars, setStars] = React.useState(5);
+  const [size, setSize] = React.useState<Size>("md");
+  const [allowHalf, setAllowHalf] = React.useState(false);
+  const [cancel, setCancel] = React.useState(true);
+  const [disabled, setDisabled] = React.useState(false);
+  const [readOnly, setReadOnly] = React.useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
+  const [required, setRequired] = React.useState(false);
+
+  return (
+    <div className="space-y-4 p-2">
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton size="sm" appearance="outline" onClick={() => setStars((prev) => Math.max(1, prev - 1))}>- stars</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setStars((prev) => Math.min(10, prev + 1))}>+ stars</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(0)}>Clear</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setValue(stars)}>Max</SgButton>
+      </SgGrid>
+
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        {sizes.map((sizeOption) => (
+          <SgButton
+            key={sizeOption}
+            size="sm"
+            appearance={size === sizeOption ? "solid" : "outline"}
+            onClick={() => setSize(sizeOption)}
+          >
+            size {sizeOption}
+          </SgButton>
+        ))}
+      </SgGrid>
+
+      <SgGrid columns={{ base: 2, md: 3 }} gap={8}>
+        <SgButton size="sm" appearance={allowHalf ? "solid" : "outline"} onClick={() => setAllowHalf((v) => !v)}>allowHalf</SgButton>
+        <SgButton size="sm" appearance={cancel ? "solid" : "outline"} onClick={() => setCancel((v) => !v)}>cancel</SgButton>
+        <SgButton size="sm" appearance={disabled ? "solid" : "outline"} onClick={() => setDisabled((v) => !v)}>disabled</SgButton>
+        <SgButton size="sm" appearance={readOnly ? "solid" : "outline"} onClick={() => setReadOnly((v) => !v)}>readOnly</SgButton>
+        <SgButton size="sm" appearance={showTooltip ? "solid" : "outline"} onClick={() => setShowTooltip((v) => !v)}>showTooltip</SgButton>
+        <SgButton size="sm" appearance={required ? "solid" : "outline"} onClick={() => setRequired((v) => !v)}>required</SgButton>
+      </SgGrid>
+
+      <div className="rounded-md border border-border p-5">
+        <SgRating
+          label="Rating Playground"
+          value={value}
+          stars={stars}
+          size={size}
+          allowHalf={allowHalf}
+          cancel={cancel}
+          disabled={disabled}
+          readOnly={readOnly}
+          showTooltip={showTooltip}
+          required={required}
+          onChange={setValue}
+        />
+      </div>
+
+      <div className="rounded-md border border-border bg-muted/30 p-3 text-xs">
+        value: <strong>{value}</strong> | stars: <strong>{stars}</strong> | size: <strong>{size}</strong>
+      </div>
+    </div>
+  );
+}

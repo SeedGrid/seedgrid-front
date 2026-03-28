@@ -1,0 +1,15 @@
+"use client";
+
+import { SgGrid, SgSevenSegmentDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 5 }} gap={12}>
+      <SgSevenSegmentDigit value="8" palette="red" />
+      <SgSevenSegmentDigit value="8" palette="blue" />
+      <SgSevenSegmentDigit value="8" palette="yellow" />
+      <SgSevenSegmentDigit value="8" palette="green" />
+      <SgSevenSegmentDigit value="8" palette="white" />
+    </SgGrid>
+  );
+}

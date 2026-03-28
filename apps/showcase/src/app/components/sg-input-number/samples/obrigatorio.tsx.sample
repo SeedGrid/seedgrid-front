@@ -1,0 +1,24 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgInputNumber
+        id="demo-required"
+        label="Obrigatório"
+        required
+        name="required"
+        decimals={2}
+      />
+
+      <SgInputNumber
+        id="demo-required-custom"
+        label="Mensagem customizada"
+        required
+        requiredMessage="Campo obrigatório customizado"
+        name="requiredCustom"
+        decimals={2}
+      />
+    </>
+  );
+}

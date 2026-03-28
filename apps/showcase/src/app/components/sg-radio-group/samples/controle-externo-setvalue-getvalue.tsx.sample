@@ -1,0 +1,26 @@
+import React from "react";
+import { SgRadioGroup, SgButton, SgGrid, type SgRadioGroupOption } from "@seedgrid/fe-components";
+
+const FRUIT_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Apple", value: "apple" },
+  { label: "Banana", value: "banana" },
+  { label: "Orange", value: "orange" },
+  { label: "Uva", value: "grape" }
+];
+
+export default function Example() {
+  const [externalValue, setExternalValue] = React.useState<string | number | null>("banana");
+
+  return (
+    <div className="space-y-4">
+      <SgRadioGroup id="external-control" title="Favorite fruit" source={FRUIT_OPTIONS} value={externalValue ?? undefined} onChange={setExternalValue} />
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton onClick={() => setExternalValue("apple")}>Set Apple</SgButton>
+        <SgButton onClick={() => setExternalValue("banana")}>Set Banana</SgButton>
+        <SgButton onClick={() => setExternalValue("orange")}>Set Orange</SgButton>
+        <SgButton onClick={() => setExternalValue(null)}>Clear</SgButton>
+      </SgGrid>
+      <p className="text-sm text-[rgb(var(--sg-muted))]">Current value: <strong>{externalValue || "None"}</strong></p>
+    </div>
+  );
+}

@@ -1,0 +1,13 @@
+"use client";
+
+import { SgRoller3DDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex items-end gap-4">
+      <SgRoller3DDigit value="5" fontSize={16} />
+      <SgRoller3DDigit value="5" fontSize={32} />
+      <SgRoller3DDigit value="5" fontSize={56} />
+    </div>
+  );
+}

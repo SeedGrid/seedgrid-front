@@ -1,0 +1,40 @@
+import React from "react";
+import { SgCard, SgEnvironmentProvider } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgEnvironmentProvider
+      value={{
+        namespaceProvider: { getNamespace: () => "showcase" },
+        persistence: { scope: "app:showcase", mode: "fallback", stateVersion: 1 }
+      }}
+    >
+      <div className="relative h-[300px] overflow-hidden rounded-xl border border-dashed border-border/70 bg-muted/20 p-2">
+        <SgCard
+          id="sg-card-draggable-demo"
+          draggable
+          defaultPosition={{ x: 16, y: 16 }}
+          dragPersistKey="sg-card-draggable-demo"
+          title="Drag me by the title bar"
+          description="Try moving and refreshing this page."
+          collapsible
+          collapseToggleAlign="right"
+          collapseIconSize={20}
+          bgColor="#ffffff"
+          footer={<div className="text-xs text-muted-foreground">Persisted drag position.</div>}
+        >
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Status</span>
+              <span className="font-semibold text-emerald-600">Online</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Region</span>
+              <span className="font-semibold">Sao Paulo</span>
+            </div>
+          </div>
+        </SgCard>
+      </div>
+    </SgEnvironmentProvider>
+  );
+}

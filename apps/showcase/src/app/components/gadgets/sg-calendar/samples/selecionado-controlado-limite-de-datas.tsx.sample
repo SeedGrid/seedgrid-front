@@ -1,0 +1,28 @@
+"use client";
+
+import React from "react";
+import { SgCalendar } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [selected, setSelected] = React.useState(new Date(2026, 2, 10));
+  const minDate = React.useMemo(() => new Date(2026, 2, 5), []);
+  const maxDate = React.useMemo(() => new Date(2026, 2, 25), []);
+
+  return (
+    <div className="space-y-2">
+      <SgCalendar
+        value={selected}
+        onValueChange={setSelected}
+        locale="pt-BR"
+        minDate={minDate}
+        maxDate={maxDate}
+        isDateDisabled={(date) => date.getDay() === 0 || date.getDay() === 6}
+        cardTitle="Agenda de visitas"
+        cardProps={{ id: "showcase-calendar-range", dragPersistKey: "showcase-calendar-range" }}
+      />
+      <p className="text-sm text-muted-foreground">
+        Selecionado: {selected.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })}
+      </p>
+    </div>
+  );
+}

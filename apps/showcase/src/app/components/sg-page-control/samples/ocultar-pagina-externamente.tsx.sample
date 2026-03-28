@@ -1,0 +1,22 @@
+import React from "react";
+import { Receipt, ShieldCheck, UserRound, Wrench } from "lucide-react";
+import { SgPageControl, SgPageControlPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [activePageId, setActivePageId] = React.useState("registration");
+  const [hiddenPageIds] = React.useState<string[]>(["integrations"]);
+
+  return (
+    <SgPageControl
+      activePageId={activePageId}
+      onActivePageIdChange={(pageId) => setActivePageId(pageId)}
+      hiddenPageIds={hiddenPageIds}
+      keepMounted
+    >
+      <SgPageControlPage id="registration" title="Registration" icon={<UserRound className="size-4" />}>Registration content</SgPageControlPage>
+      <SgPageControlPage id="fiscal" title="Fiscal" icon={<Receipt className="size-4" />}>Fiscal content</SgPageControlPage>
+      <SgPageControlPage id="access" title="Access" icon={<ShieldCheck className="size-4" />}>Access content</SgPageControlPage>
+      <SgPageControlPage id="integrations" title="Integrations" icon={<Wrench className="size-4" />}>Integrations content</SgPageControlPage>
+    </SgPageControl>
+  );
+}

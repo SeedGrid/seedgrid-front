@@ -1,0 +1,32 @@
+"use client";
+
+import { SgButton, SgToaster, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  async function runDemo() {
+    const task = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      if (Math.random() < 0.35) {
+        throw new Error("Erro aleatório da demo");
+      }
+      return { id: "ORD-2026-001" };
+    };
+
+    try {
+      await toast.promise(task, {
+        loading: "Salvando pedido...",
+        success: (value) => `Pedido salvo: ${value.id}`,
+        error: (error) => `Falha: ${error instanceof Error ? error.message : "erro"}`
+      });
+    } catch {
+      // a notificação já foi tratada pelo helper
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <SgToaster />
+      <SgButton onClick={runDemo}>Run promise demo</SgButton>
+    </div>
+  );
+}

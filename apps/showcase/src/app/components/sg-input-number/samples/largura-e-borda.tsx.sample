@@ -1,0 +1,10 @@
+import { SgInputNumber } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <>
+      <SgInputNumber id="demo-w200" label="Width 200" width={200} name="w200" decimals={2} />
+      <SgInputNumber id="demo-w300" label="Width 300 + rounded" width={300} borderRadius={20} name="w300" decimals={2} />
+    </>
+  );
+}

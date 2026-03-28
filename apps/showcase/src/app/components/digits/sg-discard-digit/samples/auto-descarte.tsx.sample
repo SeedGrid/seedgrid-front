@@ -1,0 +1,27 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgDiscardDigit } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [running, setRunning] = React.useState(false);
+  const [counter, setCounter] = React.useState("00");
+
+  React.useEffect(() => {
+    if (!running) return;
+    const id = window.setInterval(() => {
+      setCounter((prev) => String((Number(prev) + 1) % 100).padStart(2, "0"));
+    }, 800);
+    return () => window.clearInterval(id);
+  }, [running]);
+
+  return (
+    <div className="space-y-3">
+      <SgDiscardDigit value={counter} color="#0f172a" font={'"Inter", "Segoe UI", sans-serif'} backgroundColor="#f8fafc" fontSize={58} />
+      <div className="flex gap-2">
+        <SgButton size="sm" onClick={() => setRunning(true)}>Iniciar</SgButton>
+        <SgButton size="sm" severity="secondary" onClick={() => setRunning(false)}>Parar</SgButton>
+      </div>
+    </div>
+  );
+}

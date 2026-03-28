@@ -23,8 +23,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const EXAMPLE_INLINE_CONTROLLED_CODE = `import React from "react";
@@ -527,7 +527,7 @@ export default function SgExpandablePanelPage() {
               </SgExpandablePanel>
             </div>
           </div>
-          <CodeBlock code={EXAMPLE_INLINE_CONTROLLED_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-expandable-panel/samples/inline-controlado-resize.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
@@ -563,7 +563,7 @@ export default function SgExpandablePanelPage() {
               </label>
             </div>
           </SgExpandablePanel>
-          <CodeBlock code={EXAMPLE_OVERLAY_BEHAVIOR_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-expandable-panel/samples/overlay-comportamento.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
@@ -607,7 +607,7 @@ export default function SgExpandablePanelPage() {
               <p>Prop de estado: defaultOpen.</p>
             </div>
           </SgExpandablePanel>
-          <CodeBlock code={EXAMPLE_DEFAULT_OPEN_STYLES_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-expandable-panel/samples/default-open-estilizacao.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
@@ -637,7 +637,7 @@ export default function SgExpandablePanelPage() {
           >
             <div className="text-sm">Props: role, ariaLabel, overlayClassName, animation fade e closeOnOutsideClick=false.</div>
           </SgExpandablePanel>
-          <CodeBlock code={EXAMPLE_ACCESSIBILITY_FADE_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-expandable-panel/samples/acessibilidade-fade.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
@@ -664,7 +664,7 @@ export default function SgExpandablePanelPage() {
           >
             <div className="text-sm">Props: showBackdrop=false e animation type none.</div>
           </SgExpandablePanel>
-          <CodeBlock code={EXAMPLE_NO_BACKDROP_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-expandable-panel/samples/sem-backdrop-animation-none.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[5] ?? ""} description={texts.sectionDescriptions[5] ?? ""}>
@@ -672,7 +672,7 @@ export default function SgExpandablePanelPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-expandable-panel/sg-expandable-panel.tsx.playground"
             height={780}
             defaultOpen
           />

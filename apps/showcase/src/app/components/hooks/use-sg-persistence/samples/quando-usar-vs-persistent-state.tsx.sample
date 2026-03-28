@@ -1,0 +1,13 @@
+import { useSgPersistence, useSgPersistentState } from "@seedgrid/fe-components";
+
+const { value, setValue } = useSgPersistentState({ baseKey: "key", defaultValue: 0 });
+
+async function example(formData: unknown) {
+  const persistence = useSgPersistence();
+  await persistence.save("form:draft", formData);
+  await persistence.load("form:draft");
+  await persistence.clear("form:draft");
+  return { value, setValue };
+}
+
+export default example;

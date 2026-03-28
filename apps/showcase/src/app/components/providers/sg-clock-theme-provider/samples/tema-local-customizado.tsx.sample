@@ -1,0 +1,39 @@
+import { SgClock, SgClockThemeProvider, SgTimeProvider, type SgClockTheme } from "@seedgrid/fe-components";
+
+const myTheme: SgClockTheme = {
+  id: "neon-green",
+  label: "Neon Green",
+  order: 100,
+  render: ({ now }) => {
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const h = pad(now.getHours());
+    const m = pad(now.getMinutes());
+    const s = pad(now.getSeconds());
+
+    return (
+      <div
+        style={{
+          fontFamily: "monospace",
+          fontSize: 48,
+          color: "#00ff41",
+          textShadow: "0 0 10px #00ff41",
+          background: "#000",
+          padding: "16px 24px",
+          borderRadius: 8,
+        }}
+      >
+        {h}:{m}:{s}
+      </div>
+    );
+  },
+};
+
+export default function App() {
+  return (
+    <SgTimeProvider initialServerTime={new Date().toISOString()}>
+      <SgClockThemeProvider value={{ themes: [myTheme] }}>
+        <SgClock themeId="neon-green" />
+      </SgClockThemeProvider>
+    </SgTimeProvider>
+  );
+}

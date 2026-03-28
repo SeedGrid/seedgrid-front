@@ -1,0 +1,24 @@
+import React from "react";
+import { Bell, Heart, Landmark, RefreshCw, Star } from "lucide-react";
+import { SgOrderList, type SgOrderListItem } from "@seedgrid/fe-components";
+
+const PRODUCT_ITEMS: SgOrderListItem[] = [
+  { label: "Notebook", value: "notebook", icon: <Landmark className="h-4 w-4" /> },
+  { label: "Mouse", value: "mouse", icon: <RefreshCw className="h-4 w-4" /> },
+  { label: "Teclado", value: "keyboard", icon: <Bell className="h-4 w-4" /> },
+  { label: "Monitor", value: "monitor", icon: <Star className="h-4 w-4" /> },
+  { label: "Webcam", value: "webcam", icon: <Heart className="h-4 w-4" /> }
+];
+
+export default function Example() {
+  const [basicItems, setBasicItems] = React.useState<SgOrderListItem[]>(PRODUCT_ITEMS);
+
+  return (
+    <>
+      <SgOrderList id="order-basic" title="Produtos" source={PRODUCT_ITEMS} value={basicItems} onChange={setBasicItems} />
+      <p className="text-sm text-[rgb(var(--sg-muted))]">
+        Ordem atual: <strong>{basicItems.map((item) => item.label).join(" > ")}</strong>
+      </p>
+    </>
+  );
+}

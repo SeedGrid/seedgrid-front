@@ -1,0 +1,18 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { SgInputCurrency } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const { register } = useForm();
+
+  return (
+    <SgInputCurrency
+      id="demo-no-decimals"
+      label="Quantidade"
+      name="inteiro"
+      register={register}
+      decimals={0}
+      currency="BRL"
+    />
+  );
+}

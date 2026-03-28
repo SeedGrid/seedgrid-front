@@ -1,0 +1,27 @@
+"use client";
+
+import { SgButton, SgToaster, toast } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-3">
+      <SgToaster />
+      <SgButton
+        onClick={() =>
+          toast.info("Toast com opções", {
+            description: "10s de duração, sem closeButton e com estilo customizado.",
+            duration: 10000,
+            closeButton: false,
+            className: "border-[#c56a2d]",
+            style: {
+              background: "#fff7f1",
+              color: "#5b3b23"
+            }
+          })
+        }
+      >
+        Trigger toast with options
+      </SgButton>
+    </div>
+  );
+}

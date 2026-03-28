@@ -1,0 +1,36 @@
+"use client";
+
+import React from "react";
+import { SgFadeDigit } from "@seedgrid/fe-components";
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+export default function Example() {
+  const [time, setTime] = React.useState(() => ({ h: 12, m: 34, s: 56 }));
+
+  React.useEffect(() => {
+    const id = window.setInterval(() => {
+      setTime((prev) => {
+        const total = (prev.h * 3600 + prev.m * 60 + prev.s + 1) % 86400;
+        return {
+          h: Math.floor(total / 3600),
+          m: Math.floor((total % 3600) / 60),
+          s: total % 60
+        };
+      });
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2">
+      {pad(time.h).split("").map((value, index) => <SgFadeDigit key={`h-${index}`} value={value} fontSize={40} />)}
+      <span className="text-2xl font-bold">:</span>
+      {pad(time.m).split("").map((value, index) => <SgFadeDigit key={`m-${index}`} value={value} fontSize={40} />)}
+      <span className="text-2xl font-bold">:</span>
+      {pad(time.s).split("").map((value, index) => <SgFadeDigit key={`s-${index}`} value={value} fontSize={40} />)}
+    </div>
+  );
+}

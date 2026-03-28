@@ -1,0 +1,27 @@
+import * as React from "react";
+import { useForm, type FieldValues } from "react-hook-form";
+import { SgButton, SgRating } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [submitResult, setSubmitResult] = React.useState("-");
+  const { control, handleSubmit, watch } = useForm<FieldValues>({
+    defaultValues: {
+      productRating: 4,
+      movieRating: 2.5
+    }
+  });
+
+  return (
+    <form onSubmit={handleSubmit((data) => setSubmitResult(JSON.stringify(data)))} className="space-y-4">
+      <SgRating label="Rate the product" name="productRating" control={control} />
+      <SgRating label="Rate the movie" name="movieRating" control={control} allowHalf />
+      <SgButton type="submit" size="sm">Submit rating</SgButton>
+      <p className="text-xs text-muted-foreground">
+        watch.productRating: <strong>{String(watch("productRating"))}</strong>
+        {" | "}
+        watch.movieRating: <strong>{String(watch("movieRating"))}</strong>
+      </p>
+      <p className="text-xs text-muted-foreground">Last submit: {submitResult}</p>
+    </form>
+  );
+}

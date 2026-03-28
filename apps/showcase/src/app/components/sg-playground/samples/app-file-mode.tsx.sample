@@ -1,0 +1,7 @@
+<SgPlayground
+  title="Complete App.tsx"
+  interactive
+  codeContract="appFile"
+  code={APP_FILE_CODE}
+  height={420}
+/>;

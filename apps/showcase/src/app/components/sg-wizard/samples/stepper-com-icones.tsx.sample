@@ -1,0 +1,36 @@
+import React from "react";
+import { MapPin, Send, Tag } from "lucide-react";
+import { SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgWizard
+      stepper="icons"
+      onFinish={() => {}}
+      style={{ border: "1px solid rgba(59, 130, 246, 0.25)", borderRadius: 14, padding: 12 }}
+    >
+      <SgWizardPage
+        title="Posicao"
+        icon={<MapPin className="size-5" />}
+        style={{ backgroundColor: "rgba(59, 130, 246, 0.06)" }}
+      >
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Passo 1 - Posicao</div>
+          <p className="mt-1 text-sm text-muted-foreground">Select the desired position.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Categoria" icon={<Tag className="size-5" />}>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Passo 2 - Categoria</div>
+          <p className="mt-1 text-sm text-muted-foreground">Choose the category.</p>
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Enviar" icon={<Send className="size-5" />}>
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Passo 3 - Enviar</div>
+          <p className="mt-1 text-sm text-muted-foreground">Revise e envie.</p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

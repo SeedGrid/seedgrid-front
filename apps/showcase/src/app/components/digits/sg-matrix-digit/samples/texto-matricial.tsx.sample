@@ -1,0 +1,18 @@
+"use client";
+
+import React from "react";
+import { SgButton, SgMatrixDigit } from "@seedgrid/fe-components";
+
+const MESSAGES = ["SEEDGRID", "MATRIX 2026", "ABC-123"] as const;
+
+export default function Example() {
+  const [index, setIndex] = React.useState(0);
+  const value = MESSAGES[index] ?? MESSAGES[0];
+
+  return (
+    <div className="space-y-3">
+      <SgMatrixDigit value={value} color="#a3e635" backgroundColor="#06090f" dotSize={8} gap={2} charGap={6} />
+      <SgButton size="sm" onClick={() => setIndex((prev) => (prev + 1) % MESSAGES.length)}>Change text</SgButton>
+    </div>
+  );
+}

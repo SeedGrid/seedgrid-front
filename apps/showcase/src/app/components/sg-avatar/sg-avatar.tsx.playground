@@ -1,0 +1,30 @@
+import * as React from "react";
+import { User } from "lucide-react";
+import { SgAvatar, SgButton } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [shape, setShape] = React.useState<"circle" | "square">("circle");
+  const [size, setSize] = React.useState<"sm" | "md" | "lg">("md");
+  const [severity, setSeverity] = React.useState<"primary" | "secondary" | "success" | "warning" | "danger" | "info" | "neutral">("primary");
+  const [bordered, setBordered] = React.useState(true);
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("circle")}>circle</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setShape("square")}>square</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setBordered((v) => !v)}>toggle border</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("sm")}>sm</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("md")}>md</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSize("lg")}>lg</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-3">
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("primary")}>primary</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("success")}>success</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setSeverity("danger")}>danger</SgButton>
+      </div>
+      <SgAvatar label="SG" icon={<User />} shape={shape} size={size} severity={severity} bordered={bordered} />
+    </div>
+  );
+}

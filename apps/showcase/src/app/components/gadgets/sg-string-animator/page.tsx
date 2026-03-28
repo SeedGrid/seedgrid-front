@@ -875,7 +875,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section1Description}
         >
           <Ex1 />
-          <SgCodeBlockBase code={EX1_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/roller-3d-nomes-left-aligned.tsx.sample" />
         </Section>
 
         {/* 2 */}
@@ -884,7 +884,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section2Description}
         >
           <Ex2 />
-          <SgCodeBlockBase code={EX2_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/roller-3d-numeros-right-aligned.tsx.sample" />
         </Section>
 
         {/* 3 */}
@@ -893,7 +893,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section3Description}
         >
           <Ex3 />
-          <SgCodeBlockBase code={EX3_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/estilo-flip.tsx.sample" />
         </Section>
 
         {/* 4 */}
@@ -902,7 +902,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section4Description}
         >
           <Ex4 />
-          <SgCodeBlockBase code={EX4_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/estilo-neon.tsx.sample" />
         </Section>
 
         {/* 5 */}
@@ -911,7 +911,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section5Description}
         >
           <Ex5 />
-          <SgCodeBlockBase code={EX5_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/estilo-fade.tsx.sample" />
         </Section>
 
         {/* 6 */}
@@ -920,7 +920,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section6Description}
         >
           <Ex6 />
-          <SgCodeBlockBase code={EX6_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/estilo-discard.tsx.sample" />
         </Section>
 
         {/* 7 */}
@@ -929,7 +929,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section7Description}
         >
           <Ex7 />
-          <SgCodeBlockBase code={EX7_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/estilo-matrix.tsx.sample" />
         </Section>
 
         {/* 8 */}
@@ -938,7 +938,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section8Description}
         >
           <Ex8 />
-          <SgCodeBlockBase code={EX8_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/autostart-animacao-automatica.tsx.sample" />
         </Section>
 
         {/* 9 */}
@@ -947,7 +947,7 @@ export default function SgStringAnimatorShowcase() {
           description={texts.section9Description}
         >
           <Ex9 />
-          <SgCodeBlockBase code={EX9_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/gadgets/sg-string-animator/samples/velocidades.tsx.sample" />
         </Section>
 
         {/* Playground */}
@@ -959,7 +959,7 @@ export default function SgStringAnimatorShowcase() {
             title={texts.playgroundCardTitle}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/gadgets/sg-string-animator/sg-string-animator.tsx.playground"
             height={760}
             defaultOpen
           />

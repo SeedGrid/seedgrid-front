@@ -1,0 +1,13 @@
+import React from "react";
+import { SgRadioGroup, type SgRadioGroupOption } from "@seedgrid/fe-components";
+
+const PRIORITY_OPTIONS: SgRadioGroupOption[] = [
+  { label: "Low", value: "low" },
+  { label: "Medium", value: "medium" },
+  { label: "High", value: "high" },
+  { label: "Urgent", value: "urgent", disabled: true }
+];
+
+export default function Example() {
+  return <SgRadioGroup id="with-disabled-option" title="Priority level" source={PRIORITY_OPTIONS} />;
+}

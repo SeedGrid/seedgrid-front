@@ -1,0 +1,31 @@
+"use client";
+
+import React from "react";
+import { SgInputText, SgMatrixDigit } from "@seedgrid/fe-components";
+
+export default function App() {
+  const [value, setValue] = React.useState("SEEDGRID");
+  const [color, setColor] = React.useState("#22d3ee");
+  const [backgroundColor, setBackgroundColor] = React.useState("#0b1220");
+  const [dotSize, setDotSize] = React.useState(9);
+  const [gap, setGap] = React.useState(3);
+  const [charGap, setCharGap] = React.useState(7);
+
+  return (
+    <div className="space-y-4">
+      <SgInputText id="matrix-value" label="Texto" value={value} onChange={setValue} />
+      <div className="grid gap-3 md:grid-cols-2">
+        <SgInputText id="matrix-color" label="Color" value={color} onChange={setColor} />
+        <SgInputText id="matrix-background" label="BackgroundColor" value={backgroundColor} onChange={setBackgroundColor} />
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="text-sm">dotSize:<input className="ml-2 w-16 rounded border px-2 py-1 text-xs" type="number" value={dotSize} onChange={(e) => setDotSize(Number(e.target.value))} /></label>
+        <label className="text-sm">gap:<input className="ml-2 w-16 rounded border px-2 py-1 text-xs" type="number" value={gap} onChange={(e) => setGap(Number(e.target.value))} /></label>
+        <label className="text-sm">charGap:<input className="ml-2 w-16 rounded border px-2 py-1 text-xs" type="number" value={charGap} onChange={(e) => setCharGap(Number(e.target.value))} /></label>
+      </div>
+      <div className="rounded border border-border p-4">
+        <SgMatrixDigit value={value} color={color} backgroundColor={backgroundColor} dotSize={dotSize} gap={gap} charGap={charGap} />
+      </div>
+    </div>
+  );
+}

@@ -26,8 +26,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function ManualPersistenceDemo() {
@@ -109,51 +109,14 @@ export default function UseSgPersistencePage() {
           description={t(i18n, "showcase.hook.persistence.sections.basic.description")}
         >
           <ManualPersistenceDemo />
-          <CodeBlock
-            code={`import { useSgPersistence } from "@seedgrid/fe-components";
-
-export default function SaveOnAction() {
-  const persistence = useSgPersistence();
-
-  const handleSave = async () => {
-    await persistence.save("user:preferences", { theme: "dark", lang: "pt-BR" });
-  };
-
-  const handleLoad = async () => {
-    const prefs = await persistence.load("user:preferences");
-    console.log(prefs);
-  };
-
-  const handleClear = async () => {
-    await persistence.clear("user:preferences");
-  };
-
-  return (
-    <div>
-      <button onClick={handleSave}>Salvar</button>
-      <button onClick={handleLoad}>Carregar</button>
-      <button onClick={handleClear}>Limpar</button>
-    </div>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistence/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.hook.persistence.sections.when.title")}
           description={t(i18n, "showcase.hook.persistence.sections.when.description")}
         >
-          <CodeBlock
-            code={`// Use useSgPersistentState quando quiser estado React sincronizado automaticamente
-const { value, setValue } = useSgPersistentState({ baseKey: "key", defaultValue: 0 });
-
-// Use useSgPersistence quando precisar controlar manualmente o momento do save
-// Exemplos: salvar ao submit de um formulario, salvar em lote, ou acesso raw a estrategia
-const persistence = useSgPersistence();
-await persistence.save("form:draft", formData);
-await persistence.load("form:draft");
-await persistence.clear("form:draft");`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/hooks/use-sg-persistence/samples/quando-usar-vs-persistent-state.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={HOOK_RETURN} />

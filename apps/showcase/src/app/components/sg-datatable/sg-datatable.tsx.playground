@@ -1,0 +1,85 @@
+import * as React from "react";
+import * as SeedGrid from "@seedgrid/fe-components";
+
+const SgDatatableFromLib = (SeedGrid as Record<string, unknown>).SgDatatable as
+  | React.ComponentType<any>
+  | undefined;
+
+const ROWS = [
+  { id: 1, code: "A-101", name: "Alpha", category: "Tools", price: 45, stock: 14 },
+  { id: 2, code: "A-102", name: "Beta", category: "Tools", price: 30, stock: 8 },
+  { id: 3, code: "A-103", name: "Gamma", category: "Office", price: 72, stock: 20 },
+  { id: 4, code: "A-104", name: "Delta", category: "Office", price: 15, stock: 40 },
+  { id: 5, code: "A-105", name: "Omega", category: "Hardware", price: 120, stock: 5 }
+];
+
+const COLUMNS = [
+  { field: "code", header: "Code", sortable: true },
+  { field: "name", header: "Name", sortable: true },
+  { field: "category", header: "Category", sortable: true },
+  { field: "price", header: "Price", sortable: true, align: "right" },
+  { field: "stock", header: "Stock", sortable: true, align: "right" }
+];
+
+export default function App() {
+  const hasComponent = typeof SgDatatableFromLib === "function";
+  const [rows, setRows] = React.useState(5);
+  const [paginator, setPaginator] = React.useState(true);
+  const [globalFilter, setGlobalFilter] = React.useState(false);
+  const [columnFilters, setColumnFilters] = React.useState(false);
+  const [stripedRows, setStripedRows] = React.useState(true);
+  const [showGridlines, setShowGridlines] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState(ROWS);
+
+  return (
+    <div className="space-y-4 p-2">
+      {!hasComponent ? (
+        <div className="rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+          SgDatatable is not available in the published Sandpack version. Showing fallback.
+        </div>
+      ) : null}
+
+      <div className="grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4">
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={paginator} onChange={(event) => setPaginator(event.target.checked)} /> paginator</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={globalFilter} onChange={(event) => setGlobalFilter(event.target.checked)} /> showGlobalFilter</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={columnFilters} onChange={(event) => setColumnFilters(event.target.checked)} /> showColumnFilters</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={stripedRows} onChange={(event) => setStripedRows(event.target.checked)} /> stripedRows</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={showGridlines} onChange={(event) => setShowGridlines(event.target.checked)} /> showGridlines</label>
+        <label className="inline-flex items-center gap-2"><input type="checkbox" checked={loading} onChange={(event) => setLoading(event.target.checked)} /> loading</label>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        <button className="rounded border border-border px-2 py-1 text-xs" onClick={() => setRows((prev) => Math.max(2, prev - 1))}>- rows</button>
+        <button className="rounded border border-border px-2 py-1 text-xs" onClick={() => setRows((prev) => Math.min(10, prev + 1))}>+ rows</button>
+        <button className="rounded border border-border px-2 py-1 text-xs" onClick={() => setData((prev) => (prev.length ? [] : ROWS))}>toggle empty</button>
+      </div>
+
+      <div className="rounded border border-border p-3">
+        {hasComponent ? (
+          <SgDatatableFromLib
+            id="datatable-playground"
+            title="Datatable Playground"
+            value={data}
+            columns={COLUMNS}
+            dataKey="id"
+            paginator={paginator}
+            rows={rows}
+            rowsPerPageOptions={[3, 5, 10]}
+            showGlobalFilter={globalFilter}
+            showColumnFilters={columnFilters}
+            stripedRows={stripedRows}
+            showGridlines={showGridlines}
+            loading={loading}
+            showClearFiltersButton
+          />
+        ) : (
+          <table className="w-full text-sm">
+            <thead><tr><th className="text-left">Code</th><th className="text-left">Name</th><th className="text-left">Category</th></tr></thead>
+            <tbody>{data.map((row) => <tr key={row.id}><td>{row.code}</td><td>{row.name}</td><td>{row.category}</td></tr>)}</tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,75 @@
+import React from "react";
+import { SgButton, SgDatatable, SgGrid, type SgDatatablePageEvent, type SgDatatableSortEvent, type SgDatatableSortOrder } from "@seedgrid/fe-components";
+
+type ProductRow = {
+  id: number;
+  code: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+  status: "INSTOCK" | "LOWSTOCK" | "OUTOFSTOCK";
+};
+
+const PRODUCT_ROWS: ProductRow[] = [
+  { id: 1, code: "P-1000", name: "Notebook Pro 14", category: "Computers", price: 1899, stock: 22, status: "INSTOCK" },
+  { id: 2, code: "P-1001", name: "Mechanical Keyboard", category: "Accessories", price: 149, stock: 64, status: "INSTOCK" },
+  { id: 3, code: "P-1002", name: "Ergonomic Mouse", category: "Accessories", price: 89, stock: 48, status: "INSTOCK" },
+  { id: 4, code: "P-1003", name: "4K Monitor 27", category: "Monitors", price: 499, stock: 8, status: "LOWSTOCK" },
+  { id: 5, code: "P-1004", name: "USB-C Dock", category: "Accessories", price: 219, stock: 11, status: "LOWSTOCK" },
+  { id: 6, code: "P-1005", name: "Noise Cancelling Headset", category: "Audio", price: 329, stock: 31, status: "INSTOCK" },
+  { id: 7, code: "P-1006", name: "Webcam 4K", category: "Video", price: 179, stock: 0, status: "OUTOFSTOCK" },
+  { id: 8, code: "P-1007", name: "Portable SSD 2TB", category: "Storage", price: 259, stock: 19, status: "INSTOCK" },
+  { id: 9, code: "P-1008", name: "Wi-Fi Router AX", category: "Networking", price: 199, stock: 5, status: "LOWSTOCK" },
+  { id: 10, code: "P-1009", name: "Graphics Tablet", category: "Creative", price: 399, stock: 13, status: "INSTOCK" },
+  { id: 11, code: "P-1010", name: "Studio Microphone", category: "Audio", price: 249, stock: 7, status: "LOWSTOCK" },
+  { id: 12, code: "P-1011", name: "Smart Light Bar", category: "Home Office", price: 99, stock: 0, status: "OUTOFSTOCK" }
+];
+
+const BASE_COLUMNS = [
+  { field: "code", header: "Code", sortable: true },
+  { field: "name", header: "Name", sortable: true },
+  { field: "category", header: "Category", sortable: true },
+  { field: "price", header: "Price", sortable: true, align: "right" },
+  { field: "stock", header: "Stock", sortable: true, align: "right" }
+];
+
+export default function ControlledDatatableExample() {
+  const [controlledSort, setControlledSort] = React.useState<{ sortField: string | null; sortOrder: SgDatatableSortOrder }>({ sortField: "name", sortOrder: 1 });
+  const [controlledPage, setControlledPage] = React.useState<{ first: number; rows: number }>({ first: 0, rows: 4 });
+
+  return (
+    <>
+      <SgGrid columns={{ base: 2, md: 4 }} gap={8}>
+        <SgButton onClick={() => { setControlledSort({ sortField: "price", sortOrder: -1 }); setControlledPage({ first: 0, rows: controlledPage.rows }); }}>
+          sort by price desc
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => setControlledPage((prev) => ({ ...prev, first: Math.max(0, prev.first - prev.rows) }))}>
+          prev page
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => setControlledPage((prev) => ({ ...prev, first: prev.first + prev.rows }))}>
+          next page
+        </SgButton>
+      </SgGrid>
+
+      <SgDatatable
+        id="datatable-controlled"
+        title="Controlled state"
+        value={PRODUCT_ROWS}
+        columns={BASE_COLUMNS}
+        dataKey="id"
+        paginator
+        rows={controlledPage.rows}
+        first={controlledPage.first}
+        sortField={controlledSort.sortField}
+        sortOrder={controlledSort.sortOrder}
+        onSort={(event: SgDatatableSortEvent) => setControlledSort({ sortField: event.sortField, sortOrder: event.sortOrder })}
+        onPage={(event: SgDatatablePageEvent) => setControlledPage({ first: event.first, rows: event.rows })}
+      />
+
+      <p className="text-xs text-muted-foreground">
+        sort: {controlledSort.sortField ?? "none"} ({controlledSort.sortOrder}) | first: {controlledPage.first} | rows: {controlledPage.rows}
+      </p>
+    </>
+  );
+}

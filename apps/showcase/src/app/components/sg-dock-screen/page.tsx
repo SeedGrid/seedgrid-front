@@ -259,7 +259,7 @@ export default function SgDockScreenPage() {
               <div className="pointer-events-none text-sm text-muted-foreground">Area central livre</div>
             </SgDockZone>
           </SgDockScreen>
-          <SgCodeBlockBase code={DOCK_SCREEN_BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/sg-dock-screen/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -267,7 +267,7 @@ export default function SgDockScreenPage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={DOCK_SCREEN_PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-dock-screen/sg-dock-screen.tsx.playground"
             height={560}
             defaultOpen
           />

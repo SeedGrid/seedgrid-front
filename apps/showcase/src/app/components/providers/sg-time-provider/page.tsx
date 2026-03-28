@@ -22,8 +22,8 @@ function Section(props: { title: string; description?: string; children: React.R
   );
 }
 
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 function LiveClock() {
@@ -77,30 +77,7 @@ export default function SgTimeProviderPage() {
           description={t(i18n, "showcase.component.timeProvider.sections.basic.description")}
         >
           <LiveClockWithProvider />
-          <CodeBlock
-            code={`import { SgTimeProvider, useSgTime } from "@seedgrid/fe-components";
-
-function LiveClock() {
-  const time = useSgTime();
-  const date = new Date(time.nowMs());
-  const pad = (n: number) => String(n).padStart(2, "0");
-
-  return (
-    <span>
-      {pad(date.getHours())}:{pad(date.getMinutes())}:{pad(date.getSeconds())}
-    </span>
-  );
-}
-
-// initialServerTime normalmente vem de getServerSideProps ou Server Component
-export default function App() {
-  return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      <LiveClock />
-    </SgTimeProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-time-provider/samples/uso-basico.tsx.sample" />
         </Section>
 
         <Section
@@ -108,36 +85,14 @@ export default function App() {
           description={t(i18n, "showcase.component.timeProvider.sections.fallback.description")}
         >
           <LiveClock />
-          <CodeBlock
-            code={`import { useSgTime } from "@seedgrid/fe-components";
-
-// Sem SgTimeProvider, useSgTime retorna um fallback baseado em Date.now()
-// Os componentes funcionam mas sem sincronizacao com o servidor
-function LiveClock() {
-  const time = useSgTime();
-  const date = new Date(time.nowMs());
-  return <span>{date.toLocaleTimeString()}</span>;
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-time-provider/samples/sem-provedor-fallback.tsx.sample" />
         </Section>
 
         <Section
           title={t(i18n, "showcase.component.timeProvider.sections.nextjs.title")}
           description={t(i18n, "showcase.component.timeProvider.sections.nextjs.description")}
         >
-          <CodeBlock
-            code={`// layout.tsx (Server Component)
-import { SgTimeProvider } from "@seedgrid/fe-components";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Date.now() executado no servidor garante sincronizacao
-  return (
-    <SgTimeProvider initialServerTime={new Date().toISOString()}>
-      {children}
-    </SgTimeProvider>
-  );
-}`}
-          />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/providers/sg-time-provider/samples/integracao-com-nextjs.tsx.sample" />
         </Section>
 
         <ShowcasePropsReference rows={TIME_PROVIDER_PROPS} />

@@ -1,0 +1,17 @@
+import React from "react";
+import { SgFloatActionButton } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="flex gap-6 items-center">
+      <div className="flex flex-col items-center gap-2">
+        <SgFloatActionButton disabled onClick={() => {}} style={{ position: "relative" }} />
+        <span className="text-xs text-muted-foreground">disabled</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SgFloatActionButton loading onClick={() => {}} style={{ position: "relative" }} />
+        <span className="text-xs text-muted-foreground">loading</span>
+      </div>
+    </div>
+  );
+}

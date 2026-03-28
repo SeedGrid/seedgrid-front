@@ -1,0 +1,18 @@
+import { SgComponentsI18nProvider, componentsMessagesEnUs } from "@seedgrid/fe-components";
+
+const myOverrides = {
+  "sg.input.clear": "Reset",
+  "sg.input.password.show": "Reveal",
+  "sg.input.password.hide": "Conceal",
+};
+
+export default function App() {
+  return (
+    <SgComponentsI18nProvider
+      locale="en-US"
+      messages={{ ...componentsMessagesEnUs, ...myOverrides }}
+    >
+      <div>mensagens sobrescritas</div>
+    </SgComponentsI18nProvider>
+  );
+}

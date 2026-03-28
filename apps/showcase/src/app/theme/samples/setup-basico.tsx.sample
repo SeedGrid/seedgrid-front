@@ -1,0 +1,21 @@
+import { SeedThemeProvider } from "@seedgrid/fe-theme";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="pt-BR">
+      <body>
+        <SeedThemeProvider
+          initialTheme={{
+            seed: "#16803D",
+            mode: "auto",
+            radius: 8,
+            persistMode: true,
+          }}
+          applyTo="html"
+        >
+          {children}
+        </SeedThemeProvider>
+      </body>
+    </html>
+  );
+}

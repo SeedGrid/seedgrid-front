@@ -1,0 +1,29 @@
+import React from "react";
+import { SgButton, SgDialog } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <SgButton appearance="outline" onClick={() => setOpen(true)}>Abrir modo estrito</SgButton>
+      <SgDialog
+        open={open}
+        onOpenChange={setOpen}
+        closeable={false}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+        title="Confirmacao obrigatoria"
+        subtitle="Nao fecha por ESC nem overlay"
+        footer={
+          <>
+            <SgButton appearance="ghost" onClick={() => setOpen(false)}>Cancelar</SgButton>
+            <SgButton onClick={() => setOpen(false)}>Confirmar</SgButton>
+          </>
+        }
+      >
+        <div className="text-sm text-muted-foreground">Use este modo quando o usuario precisa tomar uma decisao explicita.</div>
+      </SgDialog>
+    </>
+  );
+}

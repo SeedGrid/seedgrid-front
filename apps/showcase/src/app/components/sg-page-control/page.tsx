@@ -25,8 +25,8 @@ function Section(props: { title: string; description?: string; children: React.R
     </section>
   );
 }
-function CodeBlock(props: { code: string }) {
-  return <SgCodeBlockBase code={props.code} />;
+function CodeBlock(props: { sampleFile: string }) {
+  return <SgCodeBlockBase sampleFile={props.sampleFile} />;
 }
 
 const EXAMPLE_BASIC_CODE = `import React from "react";
@@ -333,7 +333,7 @@ export default function SgPageControlShowcasePage() {
               Access content
             </SgPageControlPage>
           </SgPageControl>
-          <CodeBlock code={EXAMPLE_BASIC_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-page-control/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[1] ?? ""} description={texts.sectionDescriptions[1] ?? ""}>
@@ -362,7 +362,7 @@ export default function SgPageControlShowcasePage() {
           <p className="text-sm text-muted-foreground">
             Current active page: <span className="font-semibold text-foreground">{activePageId}</span>
           </p>
-          <CodeBlock code={EXAMPLE_CONTROLLED_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-page-control/samples/controle-externo.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[2] ?? ""} description={texts.sectionDescriptions[2] ?? ""}>
@@ -394,7 +394,7 @@ export default function SgPageControlShowcasePage() {
               Integrations content
             </SgPageControlPage>
           </SgPageControl>
-          <CodeBlock code={EXAMPLE_HIDDEN_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-page-control/samples/ocultar-pagina-externamente.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[3] ?? ""} description={texts.sectionDescriptions[3] ?? ""}>
@@ -424,7 +424,7 @@ export default function SgPageControlShowcasePage() {
               Access content
             </SgPageControlPage>
           </SgPageControl>
-          <CodeBlock code={EXAMPLE_HINT_CODE} />
+          <CodeBlock sampleFile="apps/showcase/src/app/components/sg-page-control/samples/com-hint-nas-abas.tsx.sample" />
         </Section>
 
         <Section title={texts.sectionTitles[4] ?? ""} description={texts.sectionDescriptions[4] ?? ""}>
@@ -432,7 +432,7 @@ export default function SgPageControlShowcasePage() {
             title={texts.playgroundTitle}
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/sg-page-control/sg-page-control.tsx.playground"
             height={620}
             defaultOpen
           />

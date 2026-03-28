@@ -1,0 +1,49 @@
+import React from "react";
+import { SgInputEmail, SgInputText, SgWizard, SgWizardPage } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [formValues, setFormValues] = React.useState({ name: "", email: "" });
+
+  return (
+    <SgWizard
+      validateStep={(index) => {
+        if (index === 0) {
+          return Boolean(formValues.name.trim()) && Boolean(formValues.email.trim());
+        }
+        return true;
+      }}
+      onFinish={() => {}}
+    >
+      <SgWizardPage title="Campos obrigatorios">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <SgInputText
+            id="validate-step-name"
+            label="Nome"
+            inputProps={{
+              value: formValues.name,
+              onChange: (event) =>
+                setFormValues((prev) => ({ ...prev, name: event.target.value })),
+            }}
+          />
+          <SgInputEmail
+            id="validate-step-email"
+            label="Email"
+            inputProps={{
+              value: formValues.email,
+              onChange: (event) =>
+                setFormValues((prev) => ({ ...prev, email: event.target.value })),
+            }}
+          />
+        </div>
+      </SgWizardPage>
+      <SgWizardPage title="Etapa liberada">
+        <div className="rounded border border-border bg-foreground/5 p-4">
+          <div className="text-sm font-semibold">Etapa seguinte</div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            So abre quando nome e email foram preenchidos.
+          </p>
+        </div>
+      </SgWizardPage>
+    </SgWizard>
+  );
+}

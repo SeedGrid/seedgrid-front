@@ -605,37 +605,37 @@ export default function SgFadeDigitShowcase() {
         {/* 1 */}
         <Section title={texts.section1Title} description={texts.section1Description}>
           <Ex1 />
-          <SgCodeBlockBase code={EX1_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/basico-0-9.tsx.sample" />
         </Section>
 
         {/* 2 */}
         <Section title={texts.section2Title} description={texts.section2Description}>
           <Ex2 />
-          <SgCodeBlockBase code={EX2_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/letras-a-z.tsx.sample" />
         </Section>
 
         {/* 3 */}
         <Section title={texts.section3Title} description={texts.section3Description}>
           <Ex3 />
-          <SgCodeBlockBase code={EX3_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/cores-customizadas.tsx.sample" />
         </Section>
 
         {/* 4 */}
         <Section title={texts.section4Title} description={texts.section4Description}>
           <Ex4 />
-          <SgCodeBlockBase code={EX4_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/auto-increment.tsx.sample" />
         </Section>
 
         {/* 5 */}
         <Section title={texts.section5Title} description={texts.section5Description}>
           <Ex5 />
-          <SgCodeBlockBase code={EX5_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/sequencia-estilo-relogio.tsx.sample" />
         </Section>
 
         {/* 6 */}
         <Section title={texts.section6Title} description={texts.section6Description}>
           <Ex6 />
-          <SgCodeBlockBase code={EX6_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-fade-digit/samples/tamanhos.tsx.sample" />
         </Section>
 
         {/* Playground */}
@@ -644,7 +644,7 @@ export default function SgFadeDigitShowcase() {
             title="SgFadeDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-fade-digit/sg-fade-digit.tsx.playground"
             height={560}
             defaultOpen
           />

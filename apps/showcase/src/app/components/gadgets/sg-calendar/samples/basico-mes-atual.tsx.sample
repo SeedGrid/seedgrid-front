@@ -1,0 +1,15 @@
+"use client";
+
+import { SgCalendar } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <SgCalendar
+      locale="pt-BR"
+      defaultValue="2026-03-10"
+      defaultViewDate="2026-03-01"
+      cardTitle="Calendario base"
+      cardProps={{ id: "showcase-calendar-basic", dragPersistKey: "showcase-calendar-basic" }}
+    />
+  );
+}

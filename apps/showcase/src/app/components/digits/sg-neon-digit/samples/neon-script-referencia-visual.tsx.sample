@@ -1,0 +1,14 @@
+"use client";
+
+import { SgGrid, SgNeonDigit } from "@seedgrid/fe-components";
+
+const SCRIPT_FONT = "\"Brush Script MT\", \"Segoe Script\", \"Lucida Handwriting\", cursive";
+
+export default function Example() {
+  return (
+    <SgGrid columns={{ base: 1, md: 2 }} gap={12}>
+      <SgNeonDigit value="Your Text" color="#e4fbff" backgroundColor="#090f22" shadowColor="#47d1ff" font={SCRIPT_FONT} fontWeight={500} fontSize={62} padding={18} shadowStrength={1.25} />
+      <SgNeonDigit value="Your Text" color="#fff7e5" backgroundColor="#1c120b" shadowColor="#ffae1a" font={SCRIPT_FONT} fontWeight={500} fontSize={62} padding={18} shadowStrength={1.25} />
+    </SgGrid>
+  );
+}

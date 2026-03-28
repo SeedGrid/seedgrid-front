@@ -1,0 +1,23 @@
+import React from "react";
+import { SgTreeView, type SgTreeNode } from "@seedgrid/fe-components";
+
+const nodes: SgTreeNode[] = [
+  {
+    id: "root",
+    label: "Admin",
+    children: [
+      {
+        id: "users",
+        label: "Users",
+        children: [
+          { id: "users.list", label: "List users" },
+          { id: "users.create", label: "Create user" }
+        ]
+      }
+    ]
+  }
+];
+
+export default function Example() {
+  return <SgTreeView nodes={nodes} iconTone="primary" searchable searchPlaceholder="Search..." />;
+}

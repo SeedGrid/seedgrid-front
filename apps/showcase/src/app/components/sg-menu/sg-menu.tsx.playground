@@ -1,0 +1,41 @@
+import * as React from "react";
+import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
+import { SgButton, SgMenu, type SgMenuNode } from "@seedgrid/fe-components";
+
+const MENU: SgMenuNode[] = [
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
+  { id: "customers", label: "Customers", icon: <Users className="size-4" />, children: [{ id: "customers-new", label: "New", icon: <LayoutGrid className="size-4" /> }, { id: "customers-reports", label: "Reports", icon: <ClipboardList className="size-4" /> }] },
+  { id: "orders", label: "Orders", icon: <LayoutGrid className="size-4" />, children: [{ id: "orders-sales", label: "Sales", icon: <Search className="size-4" /> }] },
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
+];
+
+export default function App() {
+  const [activeId, setActiveId] = React.useState("dashboard");
+  const [menuStyle, setMenuStyle] = React.useState<"sidebar" | "drawer" | "inline" | "hybrid">("sidebar");
+  const [menuVariantStyle, setMenuVariantStyle] = React.useState<"panel" | "tiered" | "mega-horizontal" | "mega-vertical">("panel");
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div className="space-y-4 p-2">
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuStyle("sidebar")}>sidebar</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuStyle("drawer")}>drawer</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuStyle("inline")}>inline</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuStyle("hybrid")}>hybrid</SgButton>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-4">
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuVariantStyle("panel")}>panel</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuVariantStyle("tiered")}>tiered</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuVariantStyle("mega-horizontal")}>mega-h</SgButton>
+        <SgButton size="sm" appearance="outline" onClick={() => setMenuVariantStyle("mega-vertical")}>mega-v</SgButton>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <SgButton size="sm" appearance="outline" onClick={() => setCollapsed((v) => !v)}>toggle collapsed</SgButton>
+        <SgButton size="sm" onClick={() => setOpen((v) => !v)}>toggle open</SgButton>
+      </div>
+      <div className="h-[420px] overflow-hidden rounded-lg border border-border">
+        <SgMenu menu={MENU} selection={{ activeId }} menuStyle={menuStyle} menuVariantStyle={menuVariantStyle} collapsed={collapsed} onCollapsedChange={setCollapsed} open={open} onOpenChange={setOpen} showCollapseButton onNavigate={(node) => setActiveId(node.id)} search={{ enabled: true, placeholder: "Search..." }} />
+      </div>
+    </div>
+  );
+}

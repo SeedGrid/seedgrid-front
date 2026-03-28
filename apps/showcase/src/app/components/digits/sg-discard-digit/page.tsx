@@ -519,7 +519,7 @@ export default function SgDiscardDigitShowcase() {
               <SgButton size="sm" severity="secondary" onClick={removeSheet}>{texts.section1PreviousButton}</SgButton>
             </div>
           </div>
-          <SgCodeBlockBase code={BASIC_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/basico.tsx.sample" />
         </Section>
 
         <Section title={texts.section2Title} description={texts.section2Description}>
@@ -533,7 +533,7 @@ export default function SgDiscardDigitShowcase() {
             />
             <SgButton size="sm" onClick={nextPage}>{texts.section2DiscardButton}</SgButton>
           </div>
-          <SgCodeBlockBase code={PAGES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/folhas-sequenciais.tsx.sample" />
         </Section>
 
         <Section title={texts.section3Title} description={texts.section3Description}>
@@ -566,7 +566,7 @@ export default function SgDiscardDigitShowcase() {
               />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={THEMES_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/variacoes-de-papel.tsx.sample" />
         </Section>
 
         <Section title={texts.section4Title} description={texts.section4Description}>
@@ -592,7 +592,7 @@ export default function SgDiscardDigitShowcase() {
               />
             </div>
           </SgGrid>
-          <SgCodeBlockBase code={FONT_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/fontes.tsx.sample" />
         </Section>
 
         <Section title={texts.section5Title} description={texts.section5Description}>
@@ -610,7 +610,7 @@ export default function SgDiscardDigitShowcase() {
               {running ? texts.section5StopButton : texts.section5StartButton}
             </SgButton>
           </div>
-          <SgCodeBlockBase code={AUTO_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/auto-descarte.tsx.sample" />
         </Section>
 
         <Section title={texts.section6Title} description={texts.section6Description}>
@@ -637,7 +637,7 @@ export default function SgDiscardDigitShowcase() {
               </div>
             </div>
           </div>
-          <SgCodeBlockBase code={PAGINATION_CODE} />
+          <SgCodeBlockBase sampleFile="apps/showcase/src/app/components/digits/sg-discard-digit/samples/paginacao-imperativa-ref.tsx.sample" />
         </Section>
 
         <Section title={texts.section7Title} description={texts.section7Description}>
@@ -645,7 +645,7 @@ export default function SgDiscardDigitShowcase() {
             title="SgDiscardDigit Playground"
             interactive
             codeContract="appFile"
-            code={PLAYGROUND_CODE}
+            playgroundFile="apps/showcase/src/app/components/digits/sg-discard-digit/sg-discard-digit.tsx.playground"
             height={760}
             defaultOpen
           />
