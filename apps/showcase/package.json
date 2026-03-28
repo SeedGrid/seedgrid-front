@@ -5,7 +5,7 @@
     "scripts":  {
                     "predev":  "pnpm -C ../../packages/seedgrid-fe-components build \u0026\u0026 pnpm -C ../../packages/seedgrid-fe-playground build",
                     "dev":  "next dev --port 3100",
-                    "build":  "next build",
+                    "build":  "node scripts/validate-showcase-snippets.mjs \u0026\u0026 next build",
                     "start":  "next start",
                     "typecheck":  "tsc --noEmit",
                     "test:playground-snippets":  "node --test tests/playground-app-file-imports.test.mjs tests/showcase-contracts.test.mjs"

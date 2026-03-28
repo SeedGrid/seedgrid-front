@@ -286,7 +286,7 @@ export default function ThemeShowcase() {
         </Section>
 
         <Section title={texts.cssVarsTitle} description={texts.cssVarsDescription}>
-          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/css-variables.tsx.sample" />
+          <CodeBlock sampleFile="apps/showcase/src/app/theme/samples/css-variables.txt.sample" />
         </Section>
 
         <Section title={texts.paletteTitle} description={texts.paletteDescription}>

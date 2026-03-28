@@ -1,13 +1,13 @@
 import {
   SgComponentsI18nProvider,
   componentsMessagesEnUs,
-  t,
+  tComponents,
   useComponentsI18n,
 } from "@seedgrid/fe-components";
 
 function MyComponent() {
   const i18n = useComponentsI18n();
-  const clearLabel = t(i18n, "sg.input.clear");
+  const clearLabel = tComponents(i18n, "sg.input.clear");
 
   return <span>{clearLabel}</span>;
 }
