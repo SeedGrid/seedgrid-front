@@ -1,0 +1,35 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const runDemo = React.useCallback(async () => {
+    try {
+      await sgWhistle.promise(
+        async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+          if (Math.random() < 0.35) throw new Error("simulated network error");
+          return { protocol: "SG-2026-031" };
+        },
+        {
+          loading: { title: "Submitting report", message: "Waiting for the server..." },
+          success: (value) => ({ title: "Report sent", message: `Protocol ${value.protocol} generated.` }),
+          error: (error) => ({
+            title: "Submission failed",
+            message: error instanceof Error ? error.message : "Unknown error"
+          })
+        }
+      );
+    } catch {
+      // represented by sgWhistle.promise
+    }
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <SgButton onClick={runDemo}>Run promise demo</SgButton>
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost />
+      </div>
+    </div>
+  );
+}

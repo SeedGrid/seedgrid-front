@@ -1,0 +1,47 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle, type SgWhistleId } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [id, setId] = React.useState<SgWhistleId | null>(null);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <SgButton
+          onClick={() =>
+            setId(
+              sgWhistle.loading({
+                title: "Synchronizing",
+                message: "This whistle will be updated in place.",
+                dismissible: false
+              })
+            )
+          }
+        >
+          Start loading
+        </SgButton>
+        <SgButton
+          severity="success"
+          onClick={() =>
+            id &&
+            sgWhistle.update(id, {
+              severity: "success",
+              title: "Sync complete",
+              message: "The existing whistle id was reused.",
+              dismissible: true
+            })
+          }
+        >
+          Finish success
+        </SgButton>
+        <SgButton severity="danger" appearance="outline" onClick={() => id && sgWhistle.dismiss(id)}>
+          Dismiss active
+        </SgButton>
+      </div>
+
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost />
+      </div>
+    </div>
+  );
+}

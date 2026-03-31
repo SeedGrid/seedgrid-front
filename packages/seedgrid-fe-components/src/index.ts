@@ -98,6 +98,8 @@ export type {
 } from "./commons/SgToaster";
 export { SgToastHost } from "./commons/SgToastHost";
 export type { SgToastHostProps } from "./commons/SgToastHost";
+export { SgWhistleHost } from "./commons/SgWhistleHost";
+export type { SgWhistleHostProps } from "./commons/SgWhistleHost";
 export { buildFabStorageKey, parseStoredFabDragPosition } from "./buttons/fab-helpers";
 export { buildDockMenuStorageKey, buildToolbarStorageKey, parseStoredPanelDragPosition } from "./layout/drag-position";
 export { buildToolbarLayoutState, resolveToolbarDockOrientationDirection, resolveToolbarOrientationDirection } from "./layout/toolbar-logic";
@@ -157,6 +159,17 @@ export type {
   SgToastRecord,
   SgToastPromiseMessages
 } from "./commons/SgToast";
+export { sgWhistle, dismissSgWhistle, subscribeSgWhistles } from "./commons/SgWhistle";
+export type {
+  SgWhistleId,
+  SgWhistleSeverity,
+  SgWhistleBorderStyle,
+  SgWhistleAction,
+  SgWhistleOptions,
+  SgWhistleCustomOptions,
+  SgWhistleRecord,
+  SgWhistlePromiseStates
+} from "./commons/SgWhistle";
 export {
   onlyDigits,
   maskCpf,

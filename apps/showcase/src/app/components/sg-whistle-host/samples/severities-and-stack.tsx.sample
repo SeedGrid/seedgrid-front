@@ -1,0 +1,35 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle, type SgWhistleSeverity } from "@seedgrid/fe-components";
+
+export default function Example() {
+  const [newestOnTop, setNewestOnTop] = React.useState(false);
+
+  const fire = React.useCallback((severity: SgWhistleSeverity) => {
+    sgWhistle.show({
+      severity,
+      title: severity,
+      message: `Severity ${severity} dispatched to the inline host.`,
+      duration: severity === "loading" ? 0 : 5000
+    });
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <SgButton onClick={() => fire("default")}>default</SgButton>
+        <SgButton severity="success" onClick={() => fire("success")}>success</SgButton>
+        <SgButton severity="info" onClick={() => fire("info")}>info</SgButton>
+        <SgButton severity="warning" onClick={() => fire("warning")}>warning</SgButton>
+        <SgButton severity="danger" onClick={() => fire("error")}>error</SgButton>
+        <SgButton appearance="outline" onClick={() => fire("loading")}>loading</SgButton>
+        <SgButton appearance="outline" onClick={() => setNewestOnTop((value) => !value)}>
+          newestOnTop: {String(newestOnTop)}
+        </SgButton>
+      </div>
+
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost max={3} gap={10} newestOnTop={newestOnTop} />
+      </div>
+    </div>
+  );
+}

@@ -195,6 +195,7 @@ const COMPONENTS = [
   { group: "Wizard", slug: "sg-wizard", label: "SgWizard", icon: <Wand2 className="size-4" /> },
   { group: "Utils", slug: "sg-toaster", label: "SgToaster", icon: <BellRing className="size-4" /> },
   { group: "Utils", slug: "sg-toast-host", label: "SgToastHost", icon: <BellDot className="size-4" /> },
+  { group: "Utils", slug: "sg-whistle-host", label: "SgWhistleHost", icon: <BellDot className="size-4" /> },
   // { group: "Utils", slug: "sg-playground", label: "SgPlayground" },
   { group: "Utils", slug: "sg-benchmark", label: "Benchmark", icon: <Activity className="size-4" /> }
 ];
@@ -500,6 +501,12 @@ const COMPONENT_HINT_TEXTS_BY_SLUG: Record<string, Partial<Record<ShowcaseLocale
     "pt-PT": "Marca o local onde os toasts aparecem. Quando multiplos hosts existem, o mais profundo na arvore tem prioridade.",
     "en-US": "Marks where toasts appear. When multiple hosts exist, the deepest in the tree takes priority.",
     es: "Marca donde aparecen los toasts. Cuando existen multiples hosts, el mas profundo en el arbol tiene prioridad."
+  },
+  "sg-whistle-host": {
+    "pt-BR": "Sistema de mensagens contextuais em fluxo, com host inline e API imperativa via sgWhistle.",
+    "pt-PT": "Sistema de mensagens contextuais em fluxo, com host inline e API imperativa via sgWhistle.",
+    "en-US": "Inline contextual messaging system with an in-flow host and an imperative sgWhistle API.",
+    es: "Sistema de mensajes contextuales en flujo, con host inline y API imperativa sgWhistle."
   },
   "sg-toggle-switch": {
     "pt-BR": "Toggle switch com suporte a icones, estados disabled/readonly e integracao com react-hook-form.",

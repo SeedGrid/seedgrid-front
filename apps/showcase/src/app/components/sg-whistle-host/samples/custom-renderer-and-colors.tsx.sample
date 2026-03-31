@@ -1,0 +1,43 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle } from "@seedgrid/fe-components";
+
+const warmColors = {
+  default: { bg: "#fff7ed", fg: "#7c2d12", border: "#fdba74" },
+  success: { bg: "#ecfdf5", fg: "#065f46", border: "#34d399" },
+  info: { bg: "#eff6ff", fg: "#1d4ed8", border: "#60a5fa" },
+  warning: { bg: "#fffbeb", fg: "#92400e", border: "#f59e0b" },
+  error: { bg: "#fef2f2", fg: "#b91c1c", border: "#f87171" },
+  loading: { bg: "#f5f3ff", fg: "#6d28d9", border: "#a78bfa" }
+};
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <SgButton
+        onClick={() =>
+          sgWhistle.custom(
+            (id) => (
+              <div className="space-y-2">
+                <div className="text-sm font-semibold">Custom renderer</div>
+                <p className="text-sm opacity-90">Free-form JSX rendered by sgWhistle.custom(...).</p>
+                <SgButton size="sm" onClick={() => sgWhistle.dismiss(id)}>Close</SgButton>
+              </div>
+            ),
+            {
+              message: "custom",
+              duration: 0,
+              dismissible: false,
+              borderStyle: "full-accent"
+            }
+          )
+        }
+      >
+        Custom whistle
+      </SgButton>
+
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost customColors={warmColors} />
+      </div>
+    </div>
+  );
+}

@@ -29,6 +29,8 @@ const {
   SgAvatar,
   SgComponentsI18nProvider,
   setComponentsI18n,
+  subscribeSgWhistles,
+  dismissSgWhistle,
   subscribeSgToasts,
   dismissSgToast,
   getActiveHostId,
@@ -37,6 +39,7 @@ const {
   registerHost,
   subscribeHostRegistry,
   unregisterHost,
+  sgWhistle,
   toast
 } = require("../dist/sandbox.cjs");
 
@@ -156,4 +159,66 @@ test("toast host registry ignores duplicate registration and unsubscribes listen
   unregisterHost(id);
 
   assert.equal(calls, 2);
+});
+
+test("sgWhistle.promise uses the translated loading fallback and updates the same record", async () => {
+  dismissSgWhistle();
+  setComponentsI18n({ locale: "fr" });
+
+  let snapshot = [];
+  const unsubscribe = subscribeSgWhistles((items) => {
+    snapshot = items;
+  });
+
+  try {
+    const result = await sgWhistle.promise(Promise.resolve("ok"), {
+      success: (value) => ({ message: `Done ${value}` })
+    });
+
+    assert.equal(result, "ok");
+    assert.equal(snapshot.length, 1);
+    assert.equal(snapshot[0]?.message, "Done ok");
+    assert.equal(snapshot[0]?.severity, "success");
+    assert.equal(snapshot[0]?.id?.startsWith("sg-whistle-"), true);
+  } finally {
+    unsubscribe();
+    dismissSgWhistle();
+    setComponentsI18n({ locale: "en-US" });
+  }
+});
+
+test("sgWhistle.update merges an existing whistle and dismiss triggers onClose", () => {
+  dismissSgWhistle();
+
+  let snapshot = [];
+  let closeCalls = 0;
+  const unsubscribe = subscribeSgWhistles((items) => {
+    snapshot = items;
+  });
+
+  try {
+    const id = sgWhistle.warning({
+      title: "Pending",
+      message: "Working",
+      onClose: () => {
+        closeCalls += 1;
+      }
+    });
+
+    sgWhistle.update(id, {
+      message: "Finished",
+      severity: "success"
+    });
+
+    assert.equal(snapshot.length, 1);
+    assert.equal(snapshot[0]?.message, "Finished");
+    assert.equal(snapshot[0]?.severity, "success");
+
+    sgWhistle.dismiss(id);
+    assert.equal(snapshot.length, 0);
+    assert.equal(closeCalls, 1);
+  } finally {
+    unsubscribe();
+    dismissSgWhistle();
+  }
 });

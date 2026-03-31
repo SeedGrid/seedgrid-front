@@ -30,7 +30,7 @@
     "build:sandbox": "tsup --config tsup.sandbox.config.ts",
     "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm run build && node --test tests/i18n.test.mjs tests/rhf.test.mjs tests/rhf-components-contract.test.mjs tests/i18n-components-contract.test.mjs tests/providers-hooks.test.mjs tests/providers-hooks-dom.test.mjs tests/commons.test.mjs tests/overlay.test.mjs tests/buttons-menus.test.mjs tests/buttons-menus-dom.test.mjs tests/menu-logic.test.mjs tests/inputs-i18n.test.mjs tests/gadgets.test.mjs tests/gadgets-dom.test.mjs tests/gauge-math.test.mjs tests/clock-theme-picker.test.mjs tests/wizard.test.mjs tests/wizard-logic.test.mjs tests/utils.test.mjs"
+    "test": "pnpm run build && node --test tests/i18n.test.mjs tests/rhf.test.mjs tests/rhf-components-contract.test.mjs tests/i18n-components-contract.test.mjs tests/providers-hooks.test.mjs tests/providers-hooks-dom.test.mjs tests/commons.test.mjs tests/commons-dom.test.mjs tests/overlay.test.mjs tests/buttons-menus.test.mjs tests/buttons-menus-dom.test.mjs tests/menu-logic.test.mjs tests/inputs-i18n.test.mjs tests/gadgets.test.mjs tests/gadgets-dom.test.mjs tests/gauge-math.test.mjs tests/clock-theme-picker.test.mjs tests/wizard.test.mjs tests/wizard-logic.test.mjs tests/utils.test.mjs"
   },
   "peerDependencies": {
     "@tiptap/core": "^2.9.1",

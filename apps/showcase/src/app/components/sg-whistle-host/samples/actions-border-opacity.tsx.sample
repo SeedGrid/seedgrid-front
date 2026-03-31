@@ -1,0 +1,50 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <SgButton
+          severity="warning"
+          onClick={() =>
+            sgWhistle.warning({
+              title: "Archived section",
+              message: "The action is reversible for a few seconds.",
+              borderStyle: "left-accent",
+              opacity: 0.96,
+              action: {
+                label: "Undo",
+                onClick: () =>
+                  sgWhistle.success({
+                    title: "Undo applied",
+                    message: "The section returned to the active list.",
+                    borderStyle: "soft"
+                  })
+              }
+            })
+          }
+        >
+          Action + undo
+        </SgButton>
+        <SgButton
+          appearance="outline"
+          onClick={() =>
+            sgWhistle.info({
+              title: "Visual emphasis",
+              message: "Try borderStyle and opacity together.",
+              borderStyle: "full-accent",
+              opacity: 0.9
+            })
+          }
+        >
+          Accent example
+        </SgButton>
+      </div>
+
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost />
+      </div>
+    </div>
+  );
+}

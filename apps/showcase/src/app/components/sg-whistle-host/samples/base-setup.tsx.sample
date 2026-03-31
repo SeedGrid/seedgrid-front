@@ -1,0 +1,39 @@
+import React from "react";
+import { SgButton, SgWhistleHost, sgWhistle } from "@seedgrid/fe-components";
+
+export default function Example() {
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-dashed border-border p-4">
+        <SgWhistleHost />
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <SgButton
+          onClick={() =>
+            sgWhistle.show({
+              title: "Base example",
+              message: "A default whistle rendered inside the host."
+            })
+          }
+        >
+          sgWhistle.show
+        </SgButton>
+        <SgButton
+          severity="success"
+          onClick={() =>
+            sgWhistle.success({
+              title: "Saved",
+              message: "The feedback remained inside the layout flow."
+            })
+          }
+        >
+          sgWhistle.success
+        </SgButton>
+        <SgButton appearance="outline" onClick={() => sgWhistle.dismiss()}>
+          Clear
+        </SgButton>
+      </div>
+    </div>
+  );
+}
