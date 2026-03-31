@@ -133,7 +133,7 @@ function renderDockItem(
         ...(item.minHeightPx !== undefined ? { minHeight: `${item.minHeightPx}px` } : null),
         ...(heightCss !== undefined
           ? { height: heightCss, flex: `0 0 ${heightCss}` }
-          : { height: "100%", flex: "1 1 0%" })
+          : { height: "auto", flex: "0 0 auto" })
       },
       "w-full min-w-0"
     );
@@ -151,7 +151,7 @@ function renderDockItem(
         ...(item.minWidthPx !== undefined ? { minWidth: `${item.minWidthPx}px` } : null),
         ...(widthCss !== undefined
           ? { width: widthCss, flex: `0 0 ${widthCss}` }
-          : { width: "100%", flex: "1 1 0%" })
+          : { width: "auto", flex: "0 0 auto" })
       },
       "h-full min-h-0 min-w-0"
     );
