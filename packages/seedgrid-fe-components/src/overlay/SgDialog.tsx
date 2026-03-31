@@ -491,6 +491,11 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
     if (e.target === overlayRef.current) close();
   };
 
+  const onViewportMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!closeOnOverlayClick) return;
+    if (e.target === e.currentTarget) close();
+  };
+
   if (!mounted) return null;
   if (!present) return null;
 
@@ -538,7 +543,10 @@ export function SgDialog(props: Readonly<SgDialogProps>) {
         style={transitionStyle}
       />
 
-      <div className="fixed inset-0 flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0 flex items-center justify-center p-4"
+        onMouseDown={onViewportMouseDown}
+      >
         <div
           ref={contentRef}
           className={cn(

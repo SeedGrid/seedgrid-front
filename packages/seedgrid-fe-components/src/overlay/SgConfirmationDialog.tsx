@@ -175,6 +175,21 @@ export function SgConfirmationDialog(props: Readonly<SgConfirmationDialogProps>)
 
   const cancelSeverity = cancelButton?.severity ?? "secondary";
   const confirmSeverity = confirmButton?.severity ?? resolveButtonSeverity(severity, "primary");
+  const resolvedCancelCustomColors =
+    cancelButton?.appearance === undefined &&
+    cancelButton?.severity === undefined &&
+    cancelButton?.className === undefined
+      ? {
+          // SgButton outline uses `bg` as the text color token, so keep it visible here.
+          bg: "hsl(var(--foreground))",
+          fg: "hsl(var(--foreground))",
+          border: "hsl(var(--border))",
+          hoverBg: "hsl(var(--muted) / 0.8)",
+          hoverFg: "hsl(var(--foreground))",
+          hoverBorder: "hsl(var(--border))",
+          activeBg: "hsl(var(--muted))",
+        }
+      : undefined;
 
   const messageBlock = (
     <div className="text-sm text-muted-foreground">
@@ -199,11 +214,12 @@ export function SgConfirmationDialog(props: Readonly<SgConfirmationDialogProps>)
         <>
           <SgButton
             size="sm"
-            appearance={cancelButton?.appearance ?? "ghost"}
+            appearance={cancelButton?.appearance ?? "outline"}
             severity={cancelSeverity}
             shape={cancelButton?.shape ?? "rounded"}
             disabled={cancelButton?.disabled}
             className={cancelButton?.className}
+            customColors={resolvedCancelCustomColors}
             leftIcon={cancelIcon}
             onClick={handleCancel}
           >
