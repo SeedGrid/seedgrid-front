@@ -180,12 +180,17 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     return value.length;
   });
 
-  React.useEffect(() => {
-    const next = (inputRef.current?.value ?? "").length > 0;
-    if (next !== isFilled) setIsFilled(next);
-    const nextLength = (inputRef.current?.value ?? "").length;
+  const syncFilledStateFromDom = React.useCallback(() => {
+    const nextValue = inputRef.current?.value ?? "";
+    const nextFilled = nextValue.length > 0;
+    const nextLength = nextValue.length;
+    setIsFilled((prev) => (prev === nextFilled ? prev : nextFilled));
     setValueLength((prev) => (prev === nextLength ? prev : nextLength));
-  }, [isFilled]);
+  }, []);
+
+  React.useEffect(() => {
+    syncFilledStateFromDom();
+  }, [syncFilledStateFromDom]);
 
   React.useEffect(() => {
     if (inputProps.value === undefined) return;
@@ -193,6 +198,31 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     setIsFilled(raw.length > 0);
     setValueLength(raw.length);
   }, [inputProps.value, stripAffixes]);
+
+  React.useEffect(() => {
+    const node = inputRef.current;
+    if (!node) return;
+
+    const sync = () => {
+      syncFilledStateFromDom();
+    };
+
+    // Browsers/password managers may hydrate the value without dispatching React events.
+    const timers = [
+      window.setTimeout(sync, 0),
+      window.setTimeout(sync, 100),
+      window.setTimeout(sync, 300)
+    ];
+
+    node.addEventListener("input", sync);
+    node.addEventListener("change", sync);
+
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      node.removeEventListener("input", sync);
+      node.removeEventListener("change", sync);
+    };
+  }, [syncFilledStateFromDom]);
 
   React.useLayoutEffect(() => {
     if (prefixRef.current) {
@@ -290,6 +320,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
   };
 
   const handleFocus = () => {
+    syncFilledStateFromDom();
     props.onEnter?.();
   };
 
@@ -388,6 +419,17 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
     : undefined;
   const fieldNode = (
     <>
+      <style>{`
+        @keyframes sg-input-autofill-detect {
+          from {}
+          to {}
+        }
+
+        input:-webkit-autofill {
+          animation-name: sg-input-autofill-detect;
+          animation-duration: 0.01s;
+        }
+      `}</style>
       <div className="relative">
         {prefixText ? (
           <span
@@ -433,6 +475,7 @@ function SgInputTextBase(props: SgInputTextBaseProps) {
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
+          onAnimationStart={syncFilledStateFromDom}
         />
         {suffixText ? (
           <span

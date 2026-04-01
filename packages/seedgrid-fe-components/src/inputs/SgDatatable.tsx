@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { createPortal } from "react-dom";
 import { Check, GripVertical, SlidersHorizontal } from "lucide-react";
 import { SgButton } from "../buttons/SgButton";
 import { SgGroupBox, type SgGroupBoxProps } from "../layout/SgGroupBox";
@@ -312,8 +313,11 @@ function SgDatatableBase<T extends SgDatatableRow>(
   const [internalFilters, setInternalFilters] = React.useState<Record<string, string>>(() => normalizeFilters(filters));
 
   const columnManagerRef = React.useRef<HTMLDivElement | null>(null);
+  const columnManagerButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const columnManagerPanelRef = React.useRef<HTMLDivElement | null>(null);
   const [isColumnManagerOpen, setIsColumnManagerOpen] = React.useState(false);
   const [draggingColumnKey, setDraggingColumnKey] = React.useState<string | null>(null);
+  const [columnManagerPosition, setColumnManagerPosition] = React.useState<{ top: number; left: number } | null>(null);
 
   const columnDescriptors = React.useMemo(
     () =>
@@ -392,14 +396,55 @@ function SgDatatableBase<T extends SgDatatableRow>(
     if (!isColumnManagerOpen) return;
 
     const handlePointerDown = (event: MouseEvent) => {
-      if (!columnManagerRef.current) return;
-      if (columnManagerRef.current.contains(event.target as Node)) return;
+      const target = event.target as Node;
+      if (columnManagerRef.current?.contains(target)) return;
+      if (columnManagerPanelRef.current?.contains(target)) return;
       setIsColumnManagerOpen(false);
     };
 
     document.addEventListener("mousedown", handlePointerDown);
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, [isColumnManagerOpen]);
+
+  const updateColumnManagerPosition = React.useCallback(() => {
+    const button = columnManagerButtonRef.current;
+    if (!button) return;
+
+    const rect = button.getBoundingClientRect();
+    const panelWidth = 300;
+    const viewportPadding = 12;
+    const left = Math.min(
+      Math.max(rect.left, viewportPadding),
+      Math.max(viewportPadding, window.innerWidth - panelWidth - viewportPadding)
+    );
+
+    setColumnManagerPosition({
+      top: rect.bottom + 8,
+      left
+    });
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (!isColumnManagerOpen) return;
+
+    updateColumnManagerPosition();
+    const raf = window.requestAnimationFrame(updateColumnManagerPosition);
+    return () => window.cancelAnimationFrame(raf);
+  }, [isColumnManagerOpen, updateColumnManagerPosition]);
+
+  React.useEffect(() => {
+    if (!isColumnManagerOpen) return;
+
+    const handleViewportChange = () => updateColumnManagerPosition();
+    const useCapture = true;
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, useCapture);
+
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, useCapture);
+    };
+  }, [isColumnManagerOpen, updateColumnManagerPosition]);
 
   const orderedColumns = React.useMemo(() => {
     const map = new Map(columnDescriptors.map((item) => [item.key, item] as const));
@@ -786,6 +831,7 @@ function SgDatatableBase<T extends SgDatatableRow>(
             {showColumnManager ? (
               <div className="mb-2 flex items-center justify-start">
                 <button
+                  ref={columnManagerButtonRef}
                   type="button"
                   aria-label={resolvedColumnManagerLabel}
                   title={resolvedColumnManagerLabel}
@@ -797,106 +843,116 @@ function SgDatatableBase<T extends SgDatatableRow>(
               </div>
             ) : null}
 
-            {showColumnManager && isColumnManagerOpen ? (
-              <div className="absolute left-0 top-11 z-30 w-[300px] rounded-xl border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] shadow-xl">
-                <div className="flex items-center gap-2 border-b border-[rgb(var(--sg-border))] px-4 py-3">
-                  <SlidersHorizontal size={18} className="text-[rgb(var(--sg-primary-600))]" />
-                  <span className="text-sm font-semibold text-[rgb(var(--sg-text))]">{resolvedColumnManagerLabel}</span>
-                </div>
+            {showColumnManager && isColumnManagerOpen && columnManagerPosition && typeof document !== "undefined"
+              ? createPortal(
+                  <div
+                    ref={columnManagerPanelRef}
+                    className="fixed z-[1400] w-[300px] rounded-xl border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] shadow-xl"
+                    style={{
+                      top: columnManagerPosition.top,
+                      left: columnManagerPosition.left
+                    }}
+                  >
+                    <div className="flex items-center gap-2 border-b border-[rgb(var(--sg-border))] px-4 py-3">
+                      <SlidersHorizontal size={18} className="text-[rgb(var(--sg-primary-600))]" />
+                      <span className="text-sm font-semibold text-[rgb(var(--sg-text))]">{resolvedColumnManagerLabel}</span>
+                    </div>
 
-                <div
-                  className="overflow-y-auto px-2 py-2"
-                  style={{ maxHeight: toCssSize(columnManagerMaxHeight) }}
-                >
-                  <div className="space-y-1">
-                    {orderedColumns.map((item) => {
-                      const isHidden = Boolean(hiddenColumnsMap[item.key]);
-                      const isHideable = item.column.hideable !== false;
-                      const isReorderable = item.column.reorderable !== false;
-                      const canHideThisColumn = isHideable && (!isHidden ? visibleColumnCount > 1 : true);
-                      const columnLabel =
-                        typeof item.column.header === "string" || typeof item.column.header === "number"
-                          ? String(item.column.header)
-                          : item.column.field ?? item.key;
+                    <div
+                      className="overflow-y-auto px-2 py-2"
+                      style={{ maxHeight: toCssSize(columnManagerMaxHeight) }}
+                    >
+                      <div className="space-y-1">
+                        {orderedColumns.map((item) => {
+                          const isHidden = Boolean(hiddenColumnsMap[item.key]);
+                          const isHideable = item.column.hideable !== false;
+                          const isReorderable = item.column.reorderable !== false;
+                          const canHideThisColumn = isHideable && (!isHidden ? visibleColumnCount > 1 : true);
+                          const columnLabel =
+                            typeof item.column.header === "string" || typeof item.column.header === "number"
+                              ? String(item.column.header)
+                              : item.column.field ?? item.key;
 
-                      return (
-                        <div
-                          key={`manager-${item.key}`}
-                          draggable={isReorderable}
-                          onDragStart={() => setDraggingColumnKey(item.key)}
-                          onDragOver={(event) => {
-                            if (!isReorderable) return;
-                            event.preventDefault();
-                          }}
-                          onDrop={(event) => {
-                            event.preventDefault();
-                            if (!isReorderable) return;
-                            if (!draggingColumnKey || draggingColumnKey === item.key) return;
-                            handleReorderColumn(draggingColumnKey, item.key);
-                            setDraggingColumnKey(null);
-                          }}
-                          onDragEnd={() => setDraggingColumnKey(null)}
-                          className={cn(
-                            "flex items-center gap-3 rounded-md px-2 py-2",
-                            draggingColumnKey === item.key ? "opacity-60" : "",
-                            "hover:bg-[rgb(var(--sg-primary-50))]"
-                          )}
-                        >
-                          <button
-                            type="button"
-                            disabled={!canHideThisColumn}
-                            onClick={() => toggleColumnVisibility(item.key)}
-                            className={cn(
-                              "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition",
-                              !isHidden
-                                ? "border-[rgb(var(--sg-primary-600))] bg-[rgb(var(--sg-primary-600))] text-white"
-                                : "border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] text-transparent",
-                              !canHideThisColumn ? "cursor-not-allowed opacity-50" : "hover:scale-[1.02]"
-                            )}
-                          >
-                            <Check size={14} />
-                          </button>
+                          return (
+                            <div
+                              key={`manager-${item.key}`}
+                              draggable={isReorderable}
+                              onDragStart={() => setDraggingColumnKey(item.key)}
+                              onDragOver={(event) => {
+                                if (!isReorderable) return;
+                                event.preventDefault();
+                              }}
+                              onDrop={(event) => {
+                                event.preventDefault();
+                                if (!isReorderable) return;
+                                if (!draggingColumnKey || draggingColumnKey === item.key) return;
+                                handleReorderColumn(draggingColumnKey, item.key);
+                                setDraggingColumnKey(null);
+                              }}
+                              onDragEnd={() => setDraggingColumnKey(null)}
+                              className={cn(
+                                "flex items-center gap-3 rounded-md px-2 py-2",
+                                draggingColumnKey === item.key ? "opacity-60" : "",
+                                "hover:bg-[rgb(var(--sg-primary-50))]"
+                              )}
+                            >
+                              <button
+                                type="button"
+                                disabled={!canHideThisColumn}
+                                onClick={() => toggleColumnVisibility(item.key)}
+                                className={cn(
+                                  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition",
+                                  !isHidden
+                                    ? "border-[rgb(var(--sg-primary-600))] bg-[rgb(var(--sg-primary-600))] text-white"
+                                    : "border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] text-transparent",
+                                  !canHideThisColumn ? "cursor-not-allowed opacity-50" : "hover:scale-[1.02]"
+                                )}
+                              >
+                                <Check size={14} />
+                              </button>
 
-                          <button
-                            type="button"
-                            disabled={!canHideThisColumn}
-                            onClick={() => toggleColumnVisibility(item.key)}
-                            className={cn(
-                              "flex-1 truncate text-left text-sm",
-                              isHidden
-                                ? "text-[rgb(var(--sg-muted))]"
-                                : "text-[rgb(var(--sg-text))]",
-                              !canHideThisColumn ? "cursor-not-allowed" : ""
-                            )}
-                          >
-                            {columnLabel}
-                          </button>
+                              <button
+                                type="button"
+                                disabled={!canHideThisColumn}
+                                onClick={() => toggleColumnVisibility(item.key)}
+                                className={cn(
+                                  "flex-1 truncate text-left text-sm",
+                                  isHidden
+                                    ? "text-[rgb(var(--sg-muted))]"
+                                    : "text-[rgb(var(--sg-text))]",
+                                  !canHideThisColumn ? "cursor-not-allowed" : ""
+                                )}
+                              >
+                                {columnLabel}
+                              </button>
 
-                          <div
-                            className={cn(
-                              "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[rgb(var(--sg-muted))]",
-                              isReorderable ? "cursor-grab active:cursor-grabbing" : "opacity-40"
-                            )}
-                            title={dragHandleLabel}
-                          >
-                            <GripVertical size={16} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                              <div
+                                className={cn(
+                                  "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[rgb(var(--sg-muted))]",
+                                  isReorderable ? "cursor-grab active:cursor-grabbing" : "opacity-40"
+                                )}
+                                title={dragHandleLabel}
+                              >
+                                <GripVertical size={16} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
 
-                <div className="flex items-center gap-2 border-t border-[rgb(var(--sg-border))] px-3 py-3">
-                  <SgButton size="sm" appearance="outline" onClick={restoreDefaultColumns}>
-                    {restoreColumnsLabel}
-                  </SgButton>
-                  <SgButton size="sm" appearance="outline" onClick={showAllColumns}>
-                    {showAllColumnsLabel}
-                  </SgButton>
-                </div>
-              </div>
-            ) : null}
+                    <div className="flex items-center gap-2 border-t border-[rgb(var(--sg-border))] px-3 py-3">
+                      <SgButton size="sm" appearance="outline" onClick={restoreDefaultColumns}>
+                        {restoreColumnsLabel}
+                      </SgButton>
+                      <SgButton size="sm" appearance="outline" onClick={showAllColumns}>
+                        {showAllColumnsLabel}
+                      </SgButton>
+                    </div>
+                  </div>,
+                  document.body
+                )
+              : null}
 
             <div className="overflow-x-auto rounded-lg border border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))]">
               <table id={id} className={cn("min-w-full border-collapse text-sm", tableClassName)}>
