@@ -156,6 +156,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
   const requestIdRef = React.useRef(0);
   const openRef = React.useRef(false);
   openRef.current = open;
+  // While the user is focused (typing), every incoming `value` prop change is
+  // just the parent echoing back our own onChange. Overwriting inputValue in
+  // that window drops characters typed faster than one render cycle.
+  const isFocusedRef = React.useRef(false);
   const resolvedBorderRadius = React.useMemo(() => {
     if (borderRadius === undefined) return undefined;
     return typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius;
@@ -163,8 +167,10 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
 
   React.useEffect(() => {
     if (value === undefined) return;
-    setInputValue(value);
     setLastSelected(value);
+    // Never clobber what the user is actively typing.
+    if (isFocusedRef.current) return;
+    setInputValue(value);
   }, [value]);
 
   React.useEffect(() => {
@@ -296,6 +302,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
       }, 0);
       return;
     }
+    isFocusedRef.current = false;
     if (!allowCustomValue && lastSelected && inputValue !== lastSelected) {
       setInputValue(lastSelected);
       onChange?.(lastSelected);
@@ -305,6 +312,7 @@ function SgAutocompleteBase<T>(props: SgAutocompleteBaseProps<T>) {
   };
 
   const handleFocus = () => {
+    isFocusedRef.current = true;
     if (renderValue && selectedItem) {
       const selection = formatSelection ? formatSelection(selectedItem) : selectedItem.label;
       setInputValue(selection);

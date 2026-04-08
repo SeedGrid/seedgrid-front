@@ -38,12 +38,6 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - name: Force npm v11 (OIDC friendly)
-        run: |
-          npm i -g npm@^11
-          npm -v
-          node -v
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
