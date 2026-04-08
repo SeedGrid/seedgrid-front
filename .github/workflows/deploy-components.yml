@@ -17,6 +17,7 @@ jobs:
     environment: npm
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
     permissions:
       contents: read
       id-token: write
@@ -37,6 +38,32 @@ jobs:
           node-version: 20
           cache: pnpm
           registry-url: https://registry.npmjs.org
+          scope: '@seedgrid'
+
+      - name: Configure npm auth
+        shell: bash
+        run: |
+          if [[ -z "${NODE_AUTH_TOKEN}" ]]; then
+            echo "::error::Missing NODE_AUTH_TOKEN secret in environment 'npm'"
+            exit 1
+          fi
+
+          echo "::add-mask::${NODE_AUTH_TOKEN}"
+
+          cat > ~/.npmrc <<EOF
+          @seedgrid:registry=https://registry.npmjs.org/
+          //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
+          always-auth=true
+          EOF
+
+          echo "User .npmrc created:"
+          sed 's/_authToken=.*/_authToken=***MASKED***/' ~/.npmrc
+
+      - name: Verify npm auth
+        shell: bash
+        run: |
+          npm whoami
+          npm ping
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -54,6 +81,7 @@ jobs:
 
       - name: Define publish mode
         id: mode
+        shell: bash
         run: |
           if [[ "${GITHUB_REF_NAME}" == "develop" ]]; then
             echo "is_rc=true" >> "$GITHUB_OUTPUT"
@@ -63,9 +91,6 @@ jobs:
             echo "tag=latest" >> "$GITHUB_OUTPUT"
           fi
 
-      # ============================================================
-      # FUNÇÃO INLINE PRA GERAR VERSION (com rc)
-      # ============================================================
       - name: Function - resolve version
         id: version_fn
         run: echo "helper"
@@ -75,6 +100,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Resolve version for fe-core
         id: core_version
+        shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-core"
           NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
@@ -97,12 +123,14 @@ jobs:
         run: pnpm -C packages/seedgrid-fe-core build
 
       - name: Publish fe-core
+        shell: bash
         env:
           PUBLISH_VERSION: ${{ steps.core_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
+          npm whoami
           npm config set registry https://registry.npmjs.org/
-          export NPM_TAG=${NPM_TAG}
+          export NPM_TAG="${NPM_TAG}"
           ./publish-core.sh none
 
       # ------------------------------------------------------------
@@ -110,6 +138,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Resolve version for fe-commons
         id: commons_version
+        shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-commons"
           NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
@@ -132,12 +161,14 @@ jobs:
         run: pnpm -C packages/seedgrid-fe-commons build
 
       - name: Publish fe-commons
+        shell: bash
         env:
           PUBLISH_VERSION: ${{ steps.commons_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
+          npm whoami
           npm config set registry https://registry.npmjs.org/
-          export NPM_TAG=${NPM_TAG}
+          export NPM_TAG="${NPM_TAG}"
           ./publish-commons.sh none
 
       # ------------------------------------------------------------
@@ -145,6 +176,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Resolve version for fe-theme
         id: theme_version
+        shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-theme"
           NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
@@ -167,12 +199,14 @@ jobs:
         run: pnpm -C packages/seedgrid-fe-theme build
 
       - name: Publish fe-theme
+        shell: bash
         env:
           PUBLISH_VERSION: ${{ steps.theme_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
+          npm whoami
           npm config set registry https://registry.npmjs.org/
-          export NPM_TAG=${NPM_TAG}
+          export NPM_TAG="${NPM_TAG}"
           ./publish-theme.sh none
 
       # ------------------------------------------------------------
@@ -180,6 +214,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Resolve version for fe-components
         id: components_version
+        shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-components"
           NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
@@ -202,12 +237,14 @@ jobs:
         run: pnpm -C packages/seedgrid-fe-components build
 
       - name: Publish fe-components
+        shell: bash
         env:
           PUBLISH_VERSION: ${{ steps.components_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
+          npm whoami
           npm config set registry https://registry.npmjs.org/
-          export NPM_TAG=${NPM_TAG}
+          export NPM_TAG="${NPM_TAG}"
           ./publish-components.sh none
 
       # ------------------------------------------------------------
@@ -215,6 +252,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Resolve version for fe-playground
         id: playground_version
+        shell: bash
         run: |
           PKG_DIR="packages/seedgrid-fe-playground"
           NAME=$(node -p "require('./${PKG_DIR}/package.json').name")
@@ -237,19 +275,21 @@ jobs:
         run: pnpm -C packages/seedgrid-fe-playground build
 
       - name: Publish fe-playground
+        shell: bash
         env:
           PUBLISH_VERSION: ${{ steps.playground_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
+          npm whoami
           npm config set registry https://registry.npmjs.org/
-          export NPM_TAG=${NPM_TAG}
+          export NPM_TAG="${NPM_TAG}"
           ./publish-playground.sh none
 
   build-and-deploy-showcase:
     name: Build & Push Showcase Docker Image + Deploy EasyPanel
     runs-on: ubuntu-latest
     needs: publish-fe-packages
-    if: always()
+    if: needs.publish-fe-packages.result == 'success'
 
     permissions:
       contents: read
