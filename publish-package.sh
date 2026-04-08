@@ -16,7 +16,7 @@ Notes:
   - Default bump type is "patch".
   - Pass "none" to skip version bump.
   - Set PUBLISH_VERSION=1.2.3 to force a specific version and skip bumping.
-  - NPM_OTP=123456 ./publish-package.sh packages/seedgrid-fe-components
+  - Intended for npm Trusted Publishing (OIDC) in GitHub Actions.
 USAGE
 }
 
@@ -68,6 +68,12 @@ if [[ -z "${NPM_BIN}" ]]; then
   exit 1
 fi
 
+NODE_BIN="$(resolve_bin node || true)"
+if [[ -z "${NODE_BIN}" ]]; then
+  echo "node/node.exe not found in PATH."
+  exit 1
+fi
+
 if ! ABS_PKG_DIR="$(cd "${PKG_DIR_RAW}" && pwd)"; then
   echo "Cannot access package directory: ${PKG_DIR_RAW}"
   exit 1
@@ -83,22 +89,17 @@ echo "==> Current working dir before anything: $(pwd)"
 echo "==> package.json contents:"
 cat "${ABS_PKG_DIR}/package.json"
 
-PKG_NAME="$(node -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
-PKG_VERSION_BEFORE="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
+PKG_NAME="$("${NODE_BIN}" -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
+PKG_VERSION_BEFORE="$("${NODE_BIN}" -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
 
 if [[ -z "${PKG_NAME}" ]]; then
   echo "Invalid package.json: missing 'name' in ${ABS_PKG_DIR}/package.json"
   exit 1
 fi
 
-if ! "${NPM_BIN}" whoami >/dev/null 2>&1; then
-  if [[ -n "${NODE_AUTH_TOKEN:-}" || -n "${NPM_TOKEN:-}" ]]; then
-    echo "npm whoami failed, but a token is present; continuing."
-  else
-    echo "You are not logged in to npm. Run: npm login"
-    exit 1
-  fi
-fi
+echo "==> Trusted Publishing mode"
+echo "==> Node version: $("${NODE_BIN}" --version)"
+echo "==> npm version: $("${NPM_BIN}" --version)"
 
 echo "==> Typecheck ${PKG_NAME}"
 "${PNPM_BIN}" -C "${ABS_PKG_DIR}" typecheck
@@ -122,8 +123,8 @@ else
   echo "==> Skipping version bump"
 fi
 
-PKG_NAME_RESOLVED="$(node -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
-PKG_VERSION="$(node -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
+PKG_NAME_RESOLVED="$("${NODE_BIN}" -p "require('${ABS_PKG_DIR}/package.json').name || ''")"
+PKG_VERSION="$("${NODE_BIN}" -p "require('${ABS_PKG_DIR}/package.json').version || ''")"
 
 echo "==> Package version before: ${PKG_VERSION_BEFORE:-<empty>}"
 echo "==> Package version resolved: ${PKG_VERSION}"
@@ -133,31 +134,39 @@ if [[ -z "${PKG_NAME_RESOLVED}" || -z "${PKG_VERSION}" ]]; then
   exit 1
 fi
 
-# pnpm pack resolves workspace:* → real version natively (based on local package.json versions).
-# This guarantees no workspace protocol leaks into the published artifact.
-# npm publish <tarball> is used to upload so OIDC/NODE_AUTH_TOKEN auth is preserved.
-#
-# Use a dedicated temp dir so we can find the .tgz unambiguously regardless of pnpm output format.
 PACK_DIR="$(mktemp -d)"
+cleanup() {
+  rm -rf "${PACK_DIR}"
+}
+trap cleanup EXIT
+
 echo "==> Packing ${PKG_NAME_RESOLVED}@${PKG_VERSION} (pnpm resolves workspace:* dependencies)"
-(cd "${ABS_PKG_DIR}" && "${PNPM_BIN}" pack --pack-destination "${PACK_DIR}")
-TARBALL_PATH="$(ls "${PACK_DIR}"/*.tgz)"
+(
+  cd "${ABS_PKG_DIR}"
+  "${PNPM_BIN}" pack --pack-destination "${PACK_DIR}"
+)
+
+TARBALL_PATH="$(find "${PACK_DIR}" -maxdepth 1 -name '*.tgz' -print -quit)"
+if [[ -z "${TARBALL_PATH}" || ! -f "${TARBALL_PATH}" ]]; then
+  echo "Failed to locate packed tarball in ${PACK_DIR}"
+  exit 1
+fi
+
 echo "==> Tarball: ${TARBALL_PATH}"
 
 PUBLISH_ARGS=(--access public)
 
-if [[ -n "${NPM_OTP:-}" ]]; then
-  PUBLISH_ARGS+=(--otp "${NPM_OTP}")
-fi
-
-if [[ "${PKG_VERSION}" == *-* ]]; then
+if [[ -n "${NPM_TAG:-}" ]]; then
+  echo "==> Using explicit npm tag from env: ${NPM_TAG}"
+  PUBLISH_ARGS+=(--tag "${NPM_TAG}")
+elif [[ "${PKG_VERSION}" == *-* ]]; then
   echo "==> Detected prerelease version, publishing with --tag next"
   PUBLISH_ARGS+=(--tag next)
+else
+  echo "==> Publishing stable version with default npm tag"
 fi
 
 echo "==> Publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}"
 "${NPM_BIN}" publish "${TARBALL_PATH}" "${PUBLISH_ARGS[@]}"
-
-rm -rf "${PACK_DIR}"
 
 echo "Done publishing ${PKG_NAME_RESOLVED}@${PKG_VERSION}."

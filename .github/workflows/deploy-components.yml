@@ -17,7 +17,6 @@ jobs:
     environment: npm
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
     permissions:
       contents: read
       id-token: write
@@ -35,35 +34,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.14.0
           cache: pnpm
           registry-url: https://registry.npmjs.org
           scope: '@seedgrid'
 
-      - name: Configure npm auth
+      - name: Show Node and npm versions
         shell: bash
         run: |
-          if [[ -z "${NODE_AUTH_TOKEN}" ]]; then
-            echo "::error::Missing NODE_AUTH_TOKEN secret in environment 'npm'"
-            exit 1
-          fi
-
-          echo "::add-mask::${NODE_AUTH_TOKEN}"
-
-          cat > ~/.npmrc <<EOF
-          @seedgrid:registry=https://registry.npmjs.org/
-          //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
-          always-auth=true
-          EOF
-
-          echo "User .npmrc created:"
-          sed 's/_authToken=.*/_authToken=***MASKED***/' ~/.npmrc
-
-      - name: Verify npm auth
-        shell: bash
-        run: |
-          npm whoami
-          npm ping
+          node --version
+          npm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -128,7 +108,6 @@ jobs:
           PUBLISH_VERSION: ${{ steps.core_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
-          npm whoami
           npm config set registry https://registry.npmjs.org/
           export NPM_TAG="${NPM_TAG}"
           ./publish-core.sh none
@@ -166,7 +145,6 @@ jobs:
           PUBLISH_VERSION: ${{ steps.commons_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
-          npm whoami
           npm config set registry https://registry.npmjs.org/
           export NPM_TAG="${NPM_TAG}"
           ./publish-commons.sh none
@@ -204,7 +182,6 @@ jobs:
           PUBLISH_VERSION: ${{ steps.theme_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
-          npm whoami
           npm config set registry https://registry.npmjs.org/
           export NPM_TAG="${NPM_TAG}"
           ./publish-theme.sh none
@@ -242,7 +219,6 @@ jobs:
           PUBLISH_VERSION: ${{ steps.components_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
-          npm whoami
           npm config set registry https://registry.npmjs.org/
           export NPM_TAG="${NPM_TAG}"
           ./publish-components.sh none
@@ -280,7 +256,6 @@ jobs:
           PUBLISH_VERSION: ${{ steps.playground_version.outputs.version }}
           NPM_TAG: ${{ steps.mode.outputs.tag }}
         run: |
-          npm whoami
           npm config set registry https://registry.npmjs.org/
           export NPM_TAG="${NPM_TAG}"
           ./publish-playground.sh none
