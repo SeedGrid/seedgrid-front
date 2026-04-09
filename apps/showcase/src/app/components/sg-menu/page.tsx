@@ -9,6 +9,7 @@ import {
   SgRadioGroup,
   SgToolBar,
   SgToolbarIconButton,
+  toast,
   type SgMenuNode,
   type SgRadioGroupOption,
 } from "@seedgrid/fe-components";
@@ -66,6 +67,53 @@ const MENU: SgMenuNode[] = [
     ]
   },
   { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" /> }
+];
+
+const TIERED_MENU: SgMenuNode[] = [
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" />, onClick: () => toast.message("Dashboard") },
+  {
+    id: "customers",
+    label: "Customers",
+    icon: <Users className="size-4" />,
+    children: [
+      {
+        id: "customers-new",
+        label: "New",
+        icon: <LayoutGrid className="size-4" />,
+        children: [
+          { id: "customer-create", label: "Customer", url: "/customers/new/customer", onClick: () => toast.message("Customer") },
+          { id: "customer-duplicate", label: "Duplicate", url: "/customers/new/duplicate", onClick: () => toast.message("Duplicate") }
+        ]
+      },
+      {
+        id: "customers-reports",
+        label: "Reports",
+        icon: <ClipboardList className="size-4" />,
+        children: [
+          { id: "customers-cohort", label: "Cohort", url: "/customers/reports/cohort", onClick: () => toast.message("Cohort") },
+          { id: "customers-churn", label: "Churn", url: "/customers/reports/churn", onClick: () => toast.message("Churn") }
+        ]
+      }
+    ]
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    icon: <LayoutGrid className="size-4" />,
+    children: [
+      {
+        id: "orders-sales",
+        label: "Sales",
+        icon: <Search className="size-4" />,
+        children: [
+          { id: "orders-open", label: "Open Orders", url: "/orders/sales/open", badge: 4, onClick: () => toast.message("Open Orders") },
+          { id: "orders-closed", label: "Closed Orders", url: "/orders/sales/closed", onClick: () => toast.message("Closed Orders") }
+        ]
+      },
+      { id: "orders-returns", label: "Returns", url: "/orders/returns", badge: 7, onClick: () => toast.message("Returns") }
+    ]
+  },
+  { id: "profile", label: "Profile", url: "/profile", icon: <Settings className="size-4" />, onClick: () => toast.message("Profile") }
 ];
 
 const MEGA_MENU: SgMenuNode[] = [
@@ -1218,7 +1266,14 @@ export default function SgMenuPage() {
         <Section title={texts.section4Title} description={texts.section4Description}>
           <div className="rounded-lg border border-border p-3">
             <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
-              <SgMenu menu={MENU} selection={{ activeId }} menuStyle="inline" menuVariantStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} />
+              <SgMenu
+                menu={TIERED_MENU}
+                selection={{ activeId }}
+                menuStyle="inline"
+                menuVariantStyle="Tiered"
+                onNavigate={(node) => setActiveId(node.id)}
+                onItemClick={(node) => setActiveId(node.id)}
+              />
             </div>
           </div>
           <CodeBlock sampleFile="apps/showcase/src/app/components/sg-menu/samples/tiered.tsx.sample" />

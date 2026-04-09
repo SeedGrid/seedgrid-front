@@ -1,13 +1,51 @@
 import React from "react";
-import { ClipboardList, Home, LayoutGrid, Search, Settings, Users } from "lucide-react";
-import { SgMenu, type SgMenuNode } from "@seedgrid/fe-components";
+import { ClipboardList, Home, LayoutGrid, Users } from "lucide-react";
+import { SgMenu, toast, type SgMenuNode } from "@seedgrid/fe-components";
 
 const MENU: SgMenuNode[] = [
-  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" /> },
-  { id: "customers", label: "Customers", icon: <Users className="size-4" />, children: [{ id: "customers-new", label: "New", icon: <LayoutGrid className="size-4" /> }, { id: "customers-reports", label: "Reports", icon: <ClipboardList className="size-4" /> }] }
+  { id: "dashboard", label: "Dashboard", url: "/dashboard", icon: <Home className="size-4" />, onClick: () => toast.message("Dashboard") },
+  {
+    id: "customers",
+    label: "Customers",
+    icon: <Users className="size-4" />,
+    children: [
+      {
+        id: "customers-new",
+        label: "New",
+        icon: <LayoutGrid className="size-4" />,
+        children: [
+          { id: "customer-create", label: "Customer", url: "/customers/new/customer", onClick: () => toast.message("Customer") },
+          { id: "customer-duplicate", label: "Duplicate", url: "/customers/new/duplicate", onClick: () => toast.message("Duplicate") }
+        ]
+      },
+      {
+        id: "customers-reports",
+        label: "Reports",
+        icon: <ClipboardList className="size-4" />,
+        children: [
+          { id: "customers-cohort", label: "Cohort", url: "/customers/reports/cohort", onClick: () => toast.message("Cohort") },
+          { id: "customers-churn", label: "Churn", url: "/customers/reports/churn", onClick: () => toast.message("Churn") }
+        ]
+      }
+    ]
+  }
 ];
 
 export default function Example() {
   const [activeId, setActiveId] = React.useState("dashboard");
-  return <div className="rounded-lg border border-border p-3"><div className="h-[320px] overflow-visible rounded-md border border-border p-2"><SgMenu menu={MENU} selection={{ activeId }} menuStyle="inline" menuVariantStyle="Tiered" onNavigate={(node) => setActiveId(node.id)} /></div></div>;
+
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
+        <SgMenu
+          menu={MENU}
+          selection={{ activeId }}
+          menuStyle="inline"
+          menuVariantStyle="Tiered"
+          onNavigate={(node) => setActiveId(node.id)}
+          onItemClick={(node) => setActiveId(node.id)}
+        />
+      </div>
+    </div>
+  );
 }
