@@ -1178,6 +1178,7 @@ export default function SgMenuPage() {
   const i18n = useShowcaseI18n();
   const texts = React.useMemo(() => getMenuShowcaseTexts(i18n.locale), [i18n.locale]);
   const [activeId, setActiveId] = React.useState("dashboard");
+  const [tieredActiveId, setTieredActiveId] = React.useState("dashboard");
   const [dockActiveId, setDockActiveId] = React.useState("dashboard");
   const [dockMenuStyle, setDockMenuStyle] = React.useState<"PanelMenu" | "Tiered">("PanelMenu");
   const [collapsed, setCollapsed] = React.useState(false);
@@ -1268,11 +1269,11 @@ export default function SgMenuPage() {
             <div className="h-[320px] overflow-visible rounded-md border border-border p-2">
               <SgMenu
                 menu={TIERED_MENU}
-                selection={{ activeId }}
+                selection={{ activeId: tieredActiveId }}
                 menuStyle="inline"
                 menuVariantStyle="Tiered"
-                onNavigate={(node) => setActiveId(node.id)}
-                onItemClick={(node) => setActiveId(node.id)}
+                onNavigate={(node) => setTieredActiveId(node.id)}
+                onItemClick={(node) => setTieredActiveId(node.id)}
               />
             </div>
           </div>
