@@ -130,8 +130,7 @@ export function resolveTieredActiveState<T extends MenuLogicNode>(args: {
 
   const parentChain = collectParentChain(maps.parentById, effectiveActiveId, rootParentId).reverse();
   const activeNode = maps.nodeById.get(effectiveActiveId);
-  const tieredPath = [...parentChain];
-  if (activeNode?.children?.length) tieredPath.push(activeNode.id);
+  const tieredPath = activeNode?.children?.length ? [...parentChain, activeNode.id] : [];
 
   return {
     tieredPath,

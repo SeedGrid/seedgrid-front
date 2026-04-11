@@ -180,7 +180,7 @@ test("resolveTieredActiveState derives tiered path and mega-active root", () => 
       rootParentId
     }),
     {
-      tieredPath: ["customers"],
+      tieredPath: [],
       megaActiveId: "customers"
     }
   );
