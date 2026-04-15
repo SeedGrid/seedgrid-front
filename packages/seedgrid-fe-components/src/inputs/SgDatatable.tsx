@@ -901,10 +901,10 @@ function SgDatatableBase<T extends SgDatatableRow>(
                                 disabled={!canHideThisColumn}
                                 onClick={() => toggleColumnVisibility(item.key)}
                                 className={cn(
-                                  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition",
+                                  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border shadow-sm transition",
                                   !isHidden
                                     ? "border-[rgb(var(--sg-primary-600))] bg-[rgb(var(--sg-primary-600))] text-white"
-                                    : "border-[rgb(var(--sg-border))] bg-[rgb(var(--sg-surface))] text-transparent",
+                                    : "border-[rgb(var(--sg-primary-300))] bg-[rgb(var(--sg-primary-50))] text-transparent",
                                   !canHideThisColumn ? "cursor-not-allowed opacity-50" : "hover:scale-[1.02]"
                                 )}
                               >
