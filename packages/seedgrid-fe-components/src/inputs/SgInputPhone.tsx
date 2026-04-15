@@ -95,6 +95,8 @@ export function SgInputPhone(props: Readonly<SgInputPhoneProps>) {
   return (
     <SgInputText
       {...rest}
+      required={required}
+      requiredMessage={requiredMessage}
       error={resolveFieldError(error, internalError ?? undefined)}
       textInputType={props.textInputType ?? "numeric"}
       onClear={() => {

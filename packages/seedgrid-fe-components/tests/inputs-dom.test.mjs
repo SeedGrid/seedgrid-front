@@ -26,7 +26,7 @@ Module._load = function patchedLoad(request, parent, isMain) {
   return originalLoad.call(this, request, parent, isMain);
 };
 
-const { SgAutocomplete, SgInputText } = require("../dist/sandbox.cjs");
+const { SgAutocomplete, SgInputPhone, SgInputText } = require("../dist/sandbox.cjs");
 
 Module._load = originalLoad;
 
@@ -78,6 +78,21 @@ function RhfControlledInputText(props = {}) {
     control,
     label: "Input text",
     placeholder: "Type here",
+    ...props
+  });
+}
+
+function ControlledInputPhone(props = {}) {
+  const [value, setValue] = React.useState("");
+
+  return React.createElement(SgInputPhone, {
+    id: "input-phone-native-input",
+    label: "Phone",
+    required: true,
+    inputProps: {
+      value,
+      onChange: (event) => setValue(event.currentTarget.value)
+    },
     ...props
   });
 }
@@ -236,6 +251,21 @@ test("SgInputText keeps the typed value when controlled through react-hook-form"
     }
 
     assert.equal(input.value, word);
+  } finally {
+    harness.restore();
+  }
+});
+
+test("SgInputPhone shows the required asterisk when required is true", async () => {
+  const harness = setupDomHarness();
+
+  try {
+    await harness.render(React.createElement(ControlledInputPhone));
+    await flushDom();
+
+    const label = harness.document.querySelector('label[for="input-phone-native-input"]');
+    assert.ok(label);
+    assert.match(label.textContent ?? "", /Phone\s*\*/);
   } finally {
     harness.restore();
   }
