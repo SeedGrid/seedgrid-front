@@ -67,6 +67,12 @@ async function main() {
     loadComponentMeta(path.join("commons", "SgToaster.meta.js")),
     loadComponentMeta(path.join("commons", "SgToastHost.meta.js")),
     loadComponentMeta(path.join("commons", "SgWhistleHost.meta.js")),
+    loadComponentMeta(path.join("commons", "toast.meta.js")),
+    loadComponentMeta(path.join("commons", "dismissSgToast.meta.js")),
+    loadComponentMeta(path.join("commons", "subscribeSgToasts.meta.js")),
+    loadComponentMeta(path.join("commons", "whistle.meta.js")),
+    loadComponentMeta(path.join("commons", "dismissSgWhistle.meta.js")),
+    loadComponentMeta(path.join("commons", "subscribeSgWhistles.meta.js")),
     loadComponentMeta(path.join("overlay", "SgConfirmationDialog.meta.js")),
     loadComponentMeta(path.join("overlay", "SgDialog.meta.js")),
     loadComponentMeta(path.join("overlay", "SgPopup.meta.js")),
@@ -95,7 +101,9 @@ async function main() {
     loadComponentMeta(path.join("gadgets", "calendar", "SgCalendar.meta.js")),
     loadComponentMeta(path.join("gadgets", "clock", "SgClock.meta.js")),
     loadComponentMeta(path.join("gadgets", "clock", "SgTimeProvider.meta.js")),
+    loadComponentMeta(path.join("gadgets", "clock", "useSgTime.meta.js")),
     loadComponentMeta(path.join("gadgets", "clock", "themes", "SgClockThemePicker.meta.js")),
+    loadComponentMeta(path.join("gadgets", "clock", "themes", "useSgClockThemeResolver.meta.js")),
     loadComponentMeta(path.join("gadgets", "clock", "themes", "SgClockThemePreview.meta.js")),
     loadComponentMeta(path.join("gadgets", "clock", "themes", "SgClockThemeProvider.meta.js")),
     loadComponentMeta(path.join("gadgets", "gauge", "SgLinearGauge.meta.js")),
@@ -111,7 +119,12 @@ async function main() {
     loadComponentMeta(path.join("digits", "segment-digit", "SgSegmentDigit.meta.js")),
     loadComponentMeta(path.join("digits", "seven-segment-digit", "SgSevenSegmentDigit.meta.js")),
     loadComponentMeta(path.join("environment", "SgEnvironmentProvider.meta.js")),
-    loadComponentMeta(path.join("i18n", "SgComponentsI18nProvider.meta.js"))
+    loadComponentMeta(path.join("environment", "useSgEnvironment.meta.js")),
+    loadComponentMeta(path.join("environment", "useSgNamespaceProvider.meta.js")),
+    loadComponentMeta(path.join("environment", "useSgPersistence.meta.js")),
+    loadComponentMeta(path.join("environment", "useSgPersistentState.meta.js")),
+    loadComponentMeta(path.join("i18n", "SgComponentsI18nProvider.meta.js")),
+    loadComponentMeta(path.join("i18n", "useComponentsI18n.meta.js"))
   ]);
 
   const manifest = {

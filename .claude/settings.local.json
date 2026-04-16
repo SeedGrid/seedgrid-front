@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/lucia/.claude/**)",
+      "Read(//c/empreendedorismo/seedgrid/**)",
+      "Bash(xargs grep *)",
+      "Bash(ls c:/empreendedorismo/seedgrid/front/seedgrid-fe-components/packages/seedgrid-fe-components/src/commons/*.meta.ts)",
+      "Bash(pnpm run *)",
+      "Bash(timeout 5 node dist/server.js)",
+      "Bash(cat)",
+      "Bash(chmod +x /tmp/test-mcp.sh)",
+      "Bash(bash /tmp/test-mcp.sh)"
+    ],
+    "additionalDirectories": [
+      "c:\\empreendedorismo\\seedgrid\\seedgrid-components-mcp"
+    ]
+  }
+}
