@@ -11,7 +11,9 @@ const metaFiles = [
   "persistence-localstorage.meta.js",
   "persistence-api.meta.js",
   "persistence-composite.meta.js",
+  "useDebouncedValue.meta.js",
   "http/api-client.meta.js",
+  "http/api-errors.meta.js",
   "http/api-exception-handler.meta.js",
 ];
 
