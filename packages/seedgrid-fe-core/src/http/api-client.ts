@@ -98,7 +98,7 @@ export function createApiClient(config: ApiClientConfig) {
             console.log("[API Request] Headers:", requestInit.headers);
 
             const response = await fetch(url, requestInit);
-
+            console.log('aqui ', response);
             if (
               response.status === 401 &&
               !refreshedToken &&
@@ -171,6 +171,7 @@ export function createApiClient(config: ApiClientConfig) {
             }
             throw error;
           } catch (error) {
+            console.log('chegou no catch ', error);
             if (shouldRetryNetworkFailure(error, retry, attempt)) {
               await sleep(backoffDelay(retry.baseDelayMs, attempt));
               continue;
