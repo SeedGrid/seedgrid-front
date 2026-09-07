@@ -3,11 +3,14 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import {
+  ArrowDown,
+  ArrowUp,
   Check,
   ChevronFirst,
   ChevronLast,
   ChevronLeft,
   ChevronRight,
+  ChevronsUpDown,
   GripVertical,
   MoreHorizontal,
   SlidersHorizontal
@@ -1196,15 +1199,18 @@ function SgDatatableBase<T extends SgDatatableRow>(
                     {visibleColumns.map((column, columnIndex) => {
                       const sortCandidate = column.sortField ?? column.field;
                       const isSorted = Boolean(sortCandidate) && sortCandidate === currentSortField;
-                      const sortIcon = !column.sortable
-                        ? null
-                        : isSorted
-                          ? currentSortOrder === 1
-                            ? " ^"
-                            : currentSortOrder === -1
-                              ? " v"
-                              : " <>"
-                          : " <>";
+                      // O indicador de ordenacao era TEXTO literal (" ^", " v", " <>"), entao o
+                      // cabecalho aparecia como "Status <>" na tela. Sao icones: a coluna sem
+                      // ordem aplicada mostra o par de setas (ordenavel), e a ordenada mostra a
+                      // direcao. `aria-hidden` no wrapper mantem o leitor de tela lendo so' o
+                      // rotulo, como antes.
+                      const sortIcon = !column.sortable ? null : isSorted && currentSortOrder === 1 ? (
+                        <ArrowUp size={14} />
+                      ) : isSorted && currentSortOrder === -1 ? (
+                        <ArrowDown size={14} />
+                      ) : (
+                        <ChevronsUpDown size={14} className="opacity-60" />
+                      );
 
                       return (
                         <th
@@ -1229,7 +1235,9 @@ function SgDatatableBase<T extends SgDatatableRow>(
                               )}
                             >
                               <span>{column.header}</span>
-                              <span aria-hidden="true">{sortIcon}</span>
+                              <span aria-hidden="true" className="inline-flex items-center">
+                                {sortIcon}
+                              </span>
                             </button>
                           ) : (
                             <span>{column.header}</span>
