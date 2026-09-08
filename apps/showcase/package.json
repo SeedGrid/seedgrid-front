@@ -1,44 +1,43 @@
 {
-    "name":  "showcase",
-    "private":  true,
-    "type":  "module",
-    "scripts":  {
-                    "predev":  "pnpm -C ../../packages/seedgrid-fe-components build \u0026\u0026 pnpm -C ../../packages/seedgrid-fe-playground build",
-                    "dev":  "next dev --port 3100",
-                    "build":  "node scripts/validate-showcase-snippets.mjs \u0026\u0026 next build",
-                    "start":  "next start",
-                    "typecheck":  "tsc --noEmit",
-                    "test:playground-snippets":  "node --test tests/playground-app-file-imports.test.mjs tests/showcase-contracts.test.mjs tests/i18n-parity.test.mjs"
-                },
-    "dependencies":  {
-                         "lucide-react":  "^1.18.0",
-                         "next":  "15.0.7",
-                         "react":  "19.0.0",
-                         "react-dom":  "19.0.0",
-                         "@seedgrid/fe-components":  "workspace:*",
-                         "@seedgrid/fe-theme":  "workspace:*",
-                         "@tiptap/react":  "^2.9.1",
-                         "@tiptap/starter-kit":  "^2.9.1",
-                         "@tiptap/extension-underline":  "^2.9.1",
-                         "@tiptap/extension-link":  "^2.9.1",
-                         "@tiptap/extension-image":  "^2.9.1",
-                         "@tiptap/extension-text-align":  "^2.9.1",
-                         "@tiptap/extension-text-style":  "^2.9.1",
-                         "@tiptap/extension-color":  "^2.9.1",
-                         "@tiptap/extension-highlight":  "^2.9.1",
-                         "@tiptap/extension-subscript":  "^2.9.1",
-                         "@tiptap/extension-superscript":  "^2.9.1",
-                         "@tiptap/extension-font-family":  "^2.9.1",
-                         "@seedgrid/fe-playground":  "workspace:*"
-                     },
-    "devDependencies":  {
-                            "tailwindcss":  "^3.4.10",
-                            "tailwindcss-animate":  "^1.0.7",
-                            "postcss":  "^8.4.45",
-                            "autoprefixer":  "^10.4.20",
-                            "typescript":  "^5.5.4",
-                            "@types/react":  "^19.0.0",
-                            "@types/react-dom":  "^19.0.0"
-                        }
+  "name": "showcase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/ensure-workspace-deps-built.mjs",
+    "dev": "next dev --port 3100",
+    "build": "node scripts/validate-showcase-snippets.mjs && next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test:playground-snippets": "node --test tests/playground-app-file-imports.test.mjs tests/showcase-contracts.test.mjs tests/i18n-parity.test.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^1.18.0",
+    "next": "15.0.7",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "@seedgrid/fe-components": "workspace:*",
+    "@seedgrid/fe-theme": "workspace:*",
+    "@tiptap/react": "^2.9.1",
+    "@tiptap/starter-kit": "^2.9.1",
+    "@tiptap/extension-underline": "^2.9.1",
+    "@tiptap/extension-link": "^2.9.1",
+    "@tiptap/extension-image": "^2.9.1",
+    "@tiptap/extension-text-align": "^2.9.1",
+    "@tiptap/extension-text-style": "^2.9.1",
+    "@tiptap/extension-color": "^2.9.1",
+    "@tiptap/extension-highlight": "^2.9.1",
+    "@tiptap/extension-subscript": "^2.9.1",
+    "@tiptap/extension-superscript": "^2.9.1",
+    "@tiptap/extension-font-family": "^2.9.1",
+    "@seedgrid/fe-playground": "workspace:*"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10",
+    "tailwindcss-animate": "^1.0.7",
+    "postcss": "^8.4.45",
+    "autoprefixer": "^10.4.20",
+    "typescript": "^5.5.4",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0"
+  }
 }
-

@@ -16,6 +16,7 @@ import { execFileSync } from "node:child_process";
 import { register } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
+import os from "node:os";
 import fs from "node:fs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -32,7 +33,20 @@ const { generateComponentTokens } = await import(pathToFileURL(path.join(themeDi
 const tailwindBin = path.join(root, "..", "node_modules", ".bin", process.platform === "win32" ? "tailwindcss.cmd" : "tailwindcss");
 const input = path.join(root, "..", "styles", "tailwind.css");
 const outDir = path.join(root, "..", "dist");
-const utilitiesOut = path.join(outDir, ".tailwind-utilities.css");
+// Intermediario do tailwind FORA do `dist/` e com nome unico por processo.
+//
+// Ficava em `dist/.tailwind-utilities.css`, nome fixo. Duas execucoes simultaneas deste script
+// disputavam o mesmo arquivo, e pior: o `clean` do `build` (`rmSync('dist')`) apagava o `dist`
+// inteiro no meio da execucao alheia. `turbo dev` roda `fe-components:dev` (que chama este script)
+// em paralelo com o `predev` do showcase (que chama `build`, e portanto `clean`) — e o
+// `readFileSync` abaixo estourava ENOENT dependendo de milissegundos.
+//
+// Ninguem consome este arquivo: ele so' existe entre o tailwind escrever e a linha que o le'.
+// Fora do diretorio de saida, nenhum `clean` alcanca.
+const utilitiesOut = path.join(
+  fs.mkdtempSync(path.join(os.tmpdir(), "seedgrid-fe-style-")),
+  "tailwind-utilities.css",
+);
 const finalOut = path.join(outDir, "style.css");
 
 fs.mkdirSync(outDir, { recursive: true });
@@ -55,8 +69,12 @@ const rootBlock = `:root{${Object.entries(vars)
 const utilities = fs.readFileSync(utilitiesOut, "utf8");
 const css = `/* Default light theme (defaultSeedTheme). Mount SeedThemeProvider to customize at runtime. */\n${rootBlock}\n${utilities}`;
 
+// Recria `dist/` aqui, e nao so' no inicio: um `clean` concorrente pode te-lo levado embora
+// depois do mkdir la' de cima, e ai' este write falharia por diretorio inexistente.
+fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(finalOut, css);
-fs.rmSync(utilitiesOut);
+// Leva o diretorio temporario junto, nao so' o arquivo.
+fs.rmSync(path.dirname(utilitiesOut), { recursive: true, force: true });
 
 const generatedDir = path.join(root, "..", "src", "generated");
 fs.mkdirSync(generatedDir, { recursive: true });
